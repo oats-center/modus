@@ -1,0 +1,15 @@
+{
+  "name": "modus-monorepo",
+  "description": "Monorepo for all OATS Center Modus-related code and utilities",
+  "repository": "git@github.com/oats-center/modus",
+  "author": "Aaron Ault <aultac@gmail.com>",
+  "license": "Apache-2.0",
+  "version": "1.0.0",
+  "packageManager": "yarn@3.2.1",
+  "workspaces": [
+    "libs/*"
+  ],
+  "devDependencies": {
+    "typescript": "^4.7.4"
+  }
+}
