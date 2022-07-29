@@ -1,0 +1,59 @@
+{
+  "name": "@modusjs/convert",
+  "packageManager": "yarn@3.2.1",
+  "version": "0.0.1",
+  "description": "Universal library for interacting with Modus XML files",
+  "type": "module",
+  "comment1": "dist/node/index.js is normal output of tsc, used for node",
+  "main": "dist/node/index.js",
+  "types": "dist/node/index.d.ts",
+  "browser": "dist-browser/browser/index.js",
+  "comment2": "dist-browser/bundle.mjs is rolled up with rollup from dist-browser/ to import directly into a browser if you are not using a bundler",
+  "files": [
+    "dist",
+    "dist-browser"
+  ],
+  "scripts": {
+    "build:node": "tsc -b",
+    "build:browser": "tsc -p tsconfig.browser.json",
+    "build:rollup": "rollup --config=rollup.config.js",
+    "build": "yarn run build:node && yarn run build:browser && yarn run build:rollup",
+    "dev:node": "tsc -b -w",
+    "dev:browser": "tsc -w -p tsconfig.browser.json",
+    "dev:rollup": "rollup --config rollup.config.js --watch",
+    "comment3": "You need the first build to make sure rollup has files to rollup the first time",
+    "dev": "yarn run build && concurrently \"yarn run dev:node\" \"yarn run dev:browser\" \"yarn run dev:rollup\"",
+    "test:browser": "live-server --port=8080 --host=localhost --wait=1000 --watch=dist-browser --open=src/test/index.html",
+    "test:node": "DEBUG=\"@modusjs*,${DEBUG}\" nodemon --enable-source-maps --config nodemon.config.json dist/test/node/index.js",
+    "test": "concurrently \"yarn run test:browser\" \"yarn run test:node\"",
+    "clean": "rm -rf dist dist-browser"
+  },
+  "author": "Aaron Ault <aultac@gmail.com>",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@modusjs/examples": "workspace:^",
+    "@oada/formats": "^3.0.6",
+    "@rollup/plugin-commonjs": "^22.0.0",
+    "@rollup/plugin-json": "^4.1.0",
+    "@rollup/plugin-node-resolve": "^13.3.0",
+    "@tsconfig/node16": "^1.0.3",
+    "@types/debug": "^4",
+    "@types/node": "^18.0.0",
+    "concurrently": "^7.2.2",
+    "live-server": "^1.2.2",
+    "nodemon": "^2.0.16",
+    "rollup": "^2.75.6",
+    "rollup-plugin-pnp-resolve": "^2.0.0",
+    "rollup-plugin-terser": "^7.0.2",
+    "typescript": "^4.7.4"
+  },
+  "dependencies": {
+    "@oada/types": "^3.0.6",
+    "chalk": "^4.0.0",
+    "cheerio": "^1.0.0-rc.12",
+    "debug": "^4.3.4",
+    "domhandler": "^5.0.3",
+    "htmlparser2": "^8.0.1",
+    "tslib": "^2.4.0"
+  }
+}
