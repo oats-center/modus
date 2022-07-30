@@ -1,7 +1,7 @@
 {
   "name": "@modusjs/examples",
   "packageManager": "yarn@3.2.1",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Universal library for interacting with Modus XML files",
   "type": "module",
   "typings": "index.d.ts",

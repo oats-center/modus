@@ -26,12 +26,12 @@
           "City": "N MANCHESTER",
           "State": "IN"
         },
-        "Reports": {
-          "1": {
+        "Reports": [
+          {
             "ReportID": "1",
             "LabReportID": "F21271-0035"
           }
-        }
+        ]
       },
       "FMISMetaData": {
         "FMISEventID":"ece3a2a8-4340-48b1-ae1f-d48d1f1e1692",
@@ -44,8 +44,8 @@
       },
       "EventSamples": {
         "Soil": {
-          "DepthRefs": {
-            "1": {
+          "DepthRefs": [
+            {
               "DepthID": 1,
               "Name": "Unknown Depth",
               "StartingDepth": 0,
@@ -53,7 +53,7 @@
               "ColumnDepth": 8,
               "DepthUnit": "in"
             }
-          },
+          ],
           "SoilSamples": [
             {
               "SampleMetaData": {
