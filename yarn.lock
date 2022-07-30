@@ -134,8 +134,8 @@ __metadata:
   resolution: "@modusjs/convert@workspace:convert"
   dependencies:
     "@modusjs/examples": "workspace:^"
-    "@oada/formats": ^3.0.7
-    "@oada/types": ^3.0.7
+    "@oada/formats": ^3.1.2
+    "@oada/types": ^3.1.2
     "@rollup/plugin-commonjs": ^22.0.0
     "@rollup/plugin-json": ^4.1.0
     "@rollup/plugin-node-resolve": ^13.3.0
@@ -189,9 +189,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@oada/formats@npm:^3.0.7":
-  version: 3.1.1
-  resolution: "@oada/formats@npm:3.1.1"
+"@oada/formats@npm:^3.1.2":
+  version: 3.1.2
+  resolution: "@oada/formats@npm:3.1.2"
   dependencies:
     "@apidevtools/json-schema-ref-parser": ^9.0.9
     "@oada/media-types": ^3.0.0
@@ -202,7 +202,7 @@ __metadata:
     glob: ^8.0.3
     glob-promise: ^5.0.0
     tslib: ^2.4.0
-  checksum: 4ce7a4d28fbb5743acc2892ec1b90b51aa42f9e2d0c9e56602c9c087d9c06dad85d19b002a44b9ece69b950a9d5cb3587d21ee47f4e517a7bf5e072ad158aa14
+  checksum: e2011d05add83792956ee4d9c93d48458459d95c7f6cc6939b4dc4ddd4af7dff9a48ee1c8854410edd8b7591e0b4d2499b359098f8fc5200f751dbbc70533de4
   languageName: node
   linkType: hard
 
@@ -216,15 +216,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@oada/types@npm:^3.0.7":
-  version: 3.1.1
-  resolution: "@oada/types@npm:3.1.1"
+"@oada/types@npm:^3.1.2":
+  version: 3.1.2
+  resolution: "@oada/types@npm:3.1.2"
   dependencies:
     ajv: 8.11.0
     ajv-formats: ^2.1.1
     ajv-formats-draft2019: ^1.6.1
     tslib: ^2.4.0
-  checksum: 5bd1c88a7c3f37e705675278d59ae26bf1bfc7c31f1877943a2a5965f076aa80927ddadfb26e88c44c7505a488086388ad945ae97465d38cbb44d4721bee48e9
+  checksum: f6f34522cf7a97a6dd786ea23bc9ecb793a6d72357c2a8be3656b57d12d0df219dc35181056c664164bb5deb458ffc60b7560a04831fc74ec62268e19a0d3809
   languageName: node
   linkType: hard
 
@@ -2961,6 +2961,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "modus-monorepo@workspace:."
   dependencies:
+    "@oada/formats": ^3.1.2
+    "@oada/types": ^3.1.2
     typescript: ^4.7.4
   languageName: unknown
   linkType: soft

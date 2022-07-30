@@ -48,6 +48,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         [null, {\
           "packageLocation": "./",\
           "packageDependencies": [\
+            ["@oada/formats", "npm:3.1.2"],\
+            ["@oada/types", "npm:3.1.2"],\
             ["typescript", "patch:typescript@npm%3A4.7.4#~builtin<compat/typescript>::version=4.7.4&hash=7ad353"]\
           ],\
           "linkType": "SOFT"\
@@ -201,8 +203,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@modusjs/convert", "workspace:convert"],\
             ["@modusjs/examples", "workspace:examples"],\
-            ["@oada/formats", "npm:3.1.1"],\
-            ["@oada/types", "npm:3.1.1"],\
+            ["@oada/formats", "npm:3.1.2"],\
+            ["@oada/types", "npm:3.1.2"],\
             ["@rollup/plugin-commonjs", "virtual:9d6fed0a8e96c4f612c80abbacb686363c2c71fa1031b8803f418e66230c2cfdf06edc45bdd1b6bd5530b642bab2ad7d49d148d36777531d1e54b0d62109b519#npm:22.0.0"],\
             ["@rollup/plugin-json", "virtual:9d6fed0a8e96c4f612c80abbacb686363c2c71fa1031b8803f418e66230c2cfdf06edc45bdd1b6bd5530b642bab2ad7d49d148d36777531d1e54b0d62109b519#npm:4.1.0"],\
             ["@rollup/plugin-node-resolve", "virtual:9d6fed0a8e96c4f612c80abbacb686363c2c71fa1031b8803f418e66230c2cfdf06edc45bdd1b6bd5530b642bab2ad7d49d148d36777531d1e54b0d62109b519#npm:13.3.0"],\
@@ -262,18 +264,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@oada/formats", [\
-        ["npm:3.1.1", {\
-          "packageLocation": "./.yarn/cache/@oada-formats-npm-3.1.1-43288ff784-4ce7a4d28f.zip/node_modules/@oada/formats/",\
+        ["npm:3.1.2", {\
+          "packageLocation": "./.yarn/cache/@oada-formats-npm-3.1.2-aeb12b16f1-e2011d05ad.zip/node_modules/@oada/formats/",\
           "packageDependencies": [\
-            ["@oada/formats", "npm:3.1.1"],\
+            ["@oada/formats", "npm:3.1.2"],\
             ["@apidevtools/json-schema-ref-parser", "npm:9.0.9"],\
             ["@oada/media-types", "npm:3.0.2"],\
             ["ajv", "npm:8.11.0"],\
-            ["ajv-formats", "virtual:43288ff784d5124d270db75ffb3a8de19233f75dc7f7396e6cca77b865326b68c6162fc214ee7ccee4b25dd1b29e7a564362b5eb418c3112da7bcb863b09adad#npm:2.1.1"],\
-            ["ajv-formats-draft2019", "virtual:43288ff784d5124d270db75ffb3a8de19233f75dc7f7396e6cca77b865326b68c6162fc214ee7ccee4b25dd1b29e7a564362b5eb418c3112da7bcb863b09adad#npm:1.6.1"],\
+            ["ajv-formats", "virtual:aeb12b16f1c6333c462adfb7695a95eab104d8754cbd2e13012ff2a209ccad038a5cc747aaff932919f43ee8c6e30551e7603384596791830cc7a371df584b24#npm:2.1.1"],\
+            ["ajv-formats-draft2019", "virtual:aeb12b16f1c6333c462adfb7695a95eab104d8754cbd2e13012ff2a209ccad038a5cc747aaff932919f43ee8c6e30551e7603384596791830cc7a371df584b24#npm:1.6.1"],\
             ["axios", "npm:0.27.2"],\
             ["glob", "npm:8.0.3"],\
-            ["glob-promise", "virtual:43288ff784d5124d270db75ffb3a8de19233f75dc7f7396e6cca77b865326b68c6162fc214ee7ccee4b25dd1b29e7a564362b5eb418c3112da7bcb863b09adad#npm:5.0.0"],\
+            ["glob-promise", "virtual:aeb12b16f1c6333c462adfb7695a95eab104d8754cbd2e13012ff2a209ccad038a5cc747aaff932919f43ee8c6e30551e7603384596791830cc7a371df584b24#npm:5.0.0"],\
             ["tslib", "npm:2.4.0"]\
           ],\
           "linkType": "HARD"\
@@ -291,13 +293,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@oada/types", [\
-        ["npm:3.1.1", {\
-          "packageLocation": "./.yarn/cache/@oada-types-npm-3.1.1-1206c785b7-5bd1c88a7c.zip/node_modules/@oada/types/",\
+        ["npm:3.1.2", {\
+          "packageLocation": "./.yarn/cache/@oada-types-npm-3.1.2-122579606b-f6f34522cf.zip/node_modules/@oada/types/",\
           "packageDependencies": [\
-            ["@oada/types", "npm:3.1.1"],\
+            ["@oada/types", "npm:3.1.2"],\
             ["ajv", "npm:8.11.0"],\
-            ["ajv-formats", "virtual:43288ff784d5124d270db75ffb3a8de19233f75dc7f7396e6cca77b865326b68c6162fc214ee7ccee4b25dd1b29e7a564362b5eb418c3112da7bcb863b09adad#npm:2.1.1"],\
-            ["ajv-formats-draft2019", "virtual:43288ff784d5124d270db75ffb3a8de19233f75dc7f7396e6cca77b865326b68c6162fc214ee7ccee4b25dd1b29e7a564362b5eb418c3112da7bcb863b09adad#npm:1.6.1"],\
+            ["ajv-formats", "virtual:aeb12b16f1c6333c462adfb7695a95eab104d8754cbd2e13012ff2a209ccad038a5cc747aaff932919f43ee8c6e30551e7603384596791830cc7a371df584b24#npm:2.1.1"],\
+            ["ajv-formats-draft2019", "virtual:aeb12b16f1c6333c462adfb7695a95eab104d8754cbd2e13012ff2a209ccad038a5cc747aaff932919f43ee8c6e30551e7603384596791830cc7a371df584b24#npm:1.6.1"],\
             ["tslib", "npm:2.4.0"]\
           ],\
           "linkType": "HARD"\
@@ -640,10 +642,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:43288ff784d5124d270db75ffb3a8de19233f75dc7f7396e6cca77b865326b68c6162fc214ee7ccee4b25dd1b29e7a564362b5eb418c3112da7bcb863b09adad#npm:2.1.1", {\
-          "packageLocation": "./.yarn/__virtual__/ajv-formats-virtual-ecc48e6b83/0/cache/ajv-formats-npm-2.1.1-3cec02eae9-4a287d937f.zip/node_modules/ajv-formats/",\
+        ["virtual:aeb12b16f1c6333c462adfb7695a95eab104d8754cbd2e13012ff2a209ccad038a5cc747aaff932919f43ee8c6e30551e7603384596791830cc7a371df584b24#npm:2.1.1", {\
+          "packageLocation": "./.yarn/__virtual__/ajv-formats-virtual-706989f442/0/cache/ajv-formats-npm-2.1.1-3cec02eae9-4a287d937f.zip/node_modules/ajv-formats/",\
           "packageDependencies": [\
-            ["ajv-formats", "virtual:43288ff784d5124d270db75ffb3a8de19233f75dc7f7396e6cca77b865326b68c6162fc214ee7ccee4b25dd1b29e7a564362b5eb418c3112da7bcb863b09adad#npm:2.1.1"],\
+            ["ajv-formats", "virtual:aeb12b16f1c6333c462adfb7695a95eab104d8754cbd2e13012ff2a209ccad038a5cc747aaff932919f43ee8c6e30551e7603384596791830cc7a371df584b24#npm:2.1.1"],\
             ["@types/ajv", null],\
             ["ajv", "npm:8.11.0"]\
           ],\
@@ -662,10 +664,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:43288ff784d5124d270db75ffb3a8de19233f75dc7f7396e6cca77b865326b68c6162fc214ee7ccee4b25dd1b29e7a564362b5eb418c3112da7bcb863b09adad#npm:1.6.1", {\
-          "packageLocation": "./.yarn/__virtual__/ajv-formats-draft2019-virtual-db777e556c/0/cache/ajv-formats-draft2019-npm-1.6.1-f511ae4339-281f802f76.zip/node_modules/ajv-formats-draft2019/",\
+        ["virtual:aeb12b16f1c6333c462adfb7695a95eab104d8754cbd2e13012ff2a209ccad038a5cc747aaff932919f43ee8c6e30551e7603384596791830cc7a371df584b24#npm:1.6.1", {\
+          "packageLocation": "./.yarn/__virtual__/ajv-formats-draft2019-virtual-e9235620b3/0/cache/ajv-formats-draft2019-npm-1.6.1-f511ae4339-281f802f76.zip/node_modules/ajv-formats-draft2019/",\
           "packageDependencies": [\
-            ["ajv-formats-draft2019", "virtual:43288ff784d5124d270db75ffb3a8de19233f75dc7f7396e6cca77b865326b68c6162fc214ee7ccee4b25dd1b29e7a564362b5eb418c3112da7bcb863b09adad#npm:1.6.1"],\
+            ["ajv-formats-draft2019", "virtual:aeb12b16f1c6333c462adfb7695a95eab104d8754cbd2e13012ff2a209ccad038a5cc747aaff932919f43ee8c6e30551e7603384596791830cc7a371df584b24#npm:1.6.1"],\
             ["@types/ajv", null],\
             ["ajv", "npm:8.11.0"],\
             ["punycode", "npm:2.1.1"],\
@@ -2325,10 +2327,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:43288ff784d5124d270db75ffb3a8de19233f75dc7f7396e6cca77b865326b68c6162fc214ee7ccee4b25dd1b29e7a564362b5eb418c3112da7bcb863b09adad#npm:5.0.0", {\
-          "packageLocation": "./.yarn/__virtual__/glob-promise-virtual-0fd55932fc/0/cache/glob-promise-npm-5.0.0-91cf9ab35f-2c48c52fda.zip/node_modules/glob-promise/",\
+        ["virtual:aeb12b16f1c6333c462adfb7695a95eab104d8754cbd2e13012ff2a209ccad038a5cc747aaff932919f43ee8c6e30551e7603384596791830cc7a371df584b24#npm:5.0.0", {\
+          "packageLocation": "./.yarn/__virtual__/glob-promise-virtual-c0c10c1bc2/0/cache/glob-promise-npm-5.0.0-91cf9ab35f-2c48c52fda.zip/node_modules/glob-promise/",\
           "packageDependencies": [\
-            ["glob-promise", "virtual:43288ff784d5124d270db75ffb3a8de19233f75dc7f7396e6cca77b865326b68c6162fc214ee7ccee4b25dd1b29e7a564362b5eb418c3112da7bcb863b09adad#npm:5.0.0"],\
+            ["glob-promise", "virtual:aeb12b16f1c6333c462adfb7695a95eab104d8754cbd2e13012ff2a209ccad038a5cc747aaff932919f43ee8c6e30551e7603384596791830cc7a371df584b24#npm:5.0.0"],\
             ["@types/glob", "npm:7.2.0"],\
             ["glob", "npm:8.0.3"]\
           ],\
@@ -3463,6 +3465,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./",\
           "packageDependencies": [\
             ["modus-monorepo", "workspace:."],\
+            ["@oada/formats", "npm:3.1.2"],\
+            ["@oada/types", "npm:3.1.2"],\
             ["typescript", "patch:typescript@npm%3A4.7.4#~builtin<compat/typescript>::version=4.7.4&hash=7ad353"]\
           ],\
           "linkType": "SOFT"\
