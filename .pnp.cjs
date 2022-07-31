@@ -183,6 +183,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./cli/",\
           "packageDependencies": [\
             ["@modusjs/cli", "workspace:cli"],\
+            ["@modusjs/convert", "workspace:convert"],\
             ["@tsconfig/node16", "npm:1.0.3"],\
             ["@types/debug", "npm:4.1.7"],\
             ["@types/node", "npm:18.0.0"],\
@@ -192,7 +193,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["execa", "npm:6.1.0"],\
             ["nodemon", "npm:2.0.16"],\
             ["tslib", "npm:2.4.0"],\
-            ["typescript", "patch:typescript@npm%3A4.7.4#~builtin<compat/typescript>::version=4.7.4&hash=7ad353"]\
+            ["typescript", "patch:typescript@npm%3A4.7.4#~builtin<compat/typescript>::version=4.7.4&hash=7ad353"],\
+            ["yesno", "npm:0.4.0"]\
           ],\
           "linkType": "SOFT"\
         }]\
@@ -5296,6 +5298,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/yargs-parser-npm-21.0.1-b778fd3462-c3ea2ed12c.zip/node_modules/yargs-parser/",\
           "packageDependencies": [\
             ["yargs-parser", "npm:21.0.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["yesno", [\
+        ["npm:0.4.0", {\
+          "packageLocation": "./.yarn/cache/yesno-npm-0.4.0-1490732b8f-d5e7bc2ef8.zip/node_modules/yesno/",\
+          "packageDependencies": [\
+            ["yesno", "npm:0.4.0"]\
           ],\
           "linkType": "HARD"\
         }]\

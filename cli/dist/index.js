@@ -1,56 +1,54 @@
 import { program } from 'commander';
 import debug from 'debug';
 import chalk from 'chalk';
-import { load } from 'cheerio/lib/slim';
 import fs from 'fs/promises';
-import { parse } from './xsd2json.js';
-import 'domutils';
+import yesno from 'yesno';
+import { xml as modusxml } from '@modusjs/convert';
 const warn = debug('@modusjs/xsd2json#index:warn');
 const info = debug('@modusjs/xsd2json#index:info');
 const trace = debug('@modusjs/xsd2json#index:trace');
 const { red, cyan } = chalk;
 program
-    .command('xsd2json')
+    .command('tojson')
+    .argument('<xmlfiles...>')
     .version(process.env.npm_package_version)
-    .requiredOption('-d,--definitions <path>', 'path to definitions file to use for refs')
-    .argument('<xsd file>', 'Path to modus_result.')
-    .description('Convert a Modus XSD file to JSONSchema, with support for refs')
-    .action(async (xsdfile, { definitions }) => {
-    info('Converting file ', cyan(xsdfile), ' with ref definitions from ', cyan(definitions));
-    const xmlopts = {
-        xmlMode: true,
-        decodeEntities: true,
-        withStartIndices: false,
-        withEndIndices: false, // Add an `endIndex` property to nodes.
-    };
-    const xsd = load(await fs.readFile(xsdfile), { xml: true });
-    const defs = load(await fs.readFile(definitions), { xml: true });
-    // Grab all the xs:element's and xs:simpletypes under "xs:schema":
-    const defs_schema = defs('xs\\:schema').get(0);
-    const xsd_schema = xsd('xs\\:schema').get(0);
-    if (!defs_schema) {
-        throw new Error('ERROR: definitions file had no xs:schema tag');
+    .description('Convert one or more Modus XML files to json')
+    .action(async (xmlfilenames) => {
+    trace('received args of ', xmlfilenames);
+    for (const xmlfilename of xmlfilenames) {
+        const output_filename = xmlfilename.replace(/\.xml$/, '.json');
+        if (xmlfilename === output_filename) {
+            warn(red('ERROR:'), 'output filename', output_filename, 'would be the same as input filename.  Not converting.');
+            continue;
+        }
+        const stat = await fs.stat(output_filename).catch(() => null); // throws if it does not exist
+        if (stat) {
+            const ok = await yesno({ question: `Output file ${output_filename} exists.  Overwrite?` });
+            if (!ok) {
+                info('Skipping file ', xmlfilename);
+                continue;
+            }
+        }
+        info('Converting file ', cyan(xmlfilename), ' to JSON');
+        try {
+            const xmlstring = (await fs.readFile(xmlfilename)).toString();
+            const mr = modusxml.parseModusResult(xmlstring);
+            await fs.writeFile(output_filename, JSON.stringify(mr));
+            info('Successfully converted', xmlfilename, 'into ', output_filename);
+        }
+        catch (e) {
+            if (e.errors && e.input && Array.isArray(e.errors)) { // AJV error
+                warn(red('ERROR: failed to validate file'), xmlfilename);
+                for (const ajv_error of e.errors) {
+                    warn('Path', ajv_error.instancePath, ajv_error.message); // '/path/to/item' 'must be an array'
+                }
+            }
+            else {
+                warn(red('ERROR: failed to read file', xmlfilename));
+                console.log(e);
+            }
+        }
     }
-    if (!xsd_schema) {
-        throw new Error('ERROR: xsd file had no xs:schema tag');
-    }
-    const defsJson = parse(defs, defs_schema);
-    const xsdJson = parse(xsd, xsd_schema);
-    /*
-    const defs('xs\\:schema > xs\\:element').each((index,e) => {
-      if (!e.attribs.name) {
-        warn('Found top-level xs:element without a name, skipping...');
-        return;
-      }
-      const name = e.attribs.name;
-      // Grab the element description if present
-      const documentation = defs('xs\\:annotation > xs\\:documentation', e.children);
-      let description = !documentation ? '' : documentation.text();
-      
-
-      //info('Element: ', name, ', description: ', description);
-    });
-    */
 });
 program.parse();
 //# sourceMappingURL=index.js.map
