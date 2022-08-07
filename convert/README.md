@@ -1,9 +1,7 @@
 # convert
 -----
 Universal library for reading/writing/validating Modus files/resources.  Converts between:
-- Modus v1 XML <-> Modus v1 JSON (xml2JSON)
-- Modus v1 JSON <-> Modus v1 JSON Slim
-- Modus v1 XML <-> Modus v1 JSON Slim
+- Modus v1 XML -> Modus v1 JSON
 
 
 ## Development

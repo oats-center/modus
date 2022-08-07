@@ -1,17 +1,24 @@
 Modus-related monorepo
 ------------------------------------------------------------------------
-A monorepo for packages hosted on npm under the `@modusjs` org.  Most (all?) of the 
+A monorepo for packages hosted on npm under the `@modusjs` org.  All of the 
 underlying packages are Typescript.
 
 
-libs/xml
+convert/
 ----------
-Package for parsing and validating Modus XML files.
+Universal (node + browser) library for converting between and validating Modus formats (XML, JSON).
 
 
 examples/
 -----------
-Examples of modus soil samples, grouped by lab name.
+Examples of modus soil samples, grouped by lab name.  They are published to npm as directly importable xml strings 
+and json objects (with types).
+
+
+cli/
+----
+Command-line wrapper for running the `convert` functions on the command line.  Converts lists of files between Modus XML
+and JSON.
 
 
 Monorepo Structure
