@@ -15,6 +15,7 @@
   ],
   "scripts": {
     "build:node": "tsc -b",
+    "build:node-watch": "tsc -b --watch",
     "build:browser": "tsc -p tsconfig.browser.json",
     "build:rollup": "rollup --config=rollup.config.js",
     "build": "yarn run build:node && yarn run build:browser && yarn run build:rollup",
@@ -54,6 +55,7 @@
     "debug": "^4.3.4",
     "domhandler": "^5.0.3",
     "htmlparser2": "^8.0.1",
-    "tslib": "^2.4.0"
+    "tslib": "^2.4.0",
+    "xlsx": "^0.18.5"
   }
 }
