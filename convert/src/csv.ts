@@ -12,13 +12,14 @@ const trace = debug('@modusjs/convert:trace');
 // parse: wrapper function for particular parsing functions found down below.
 //
 // Ppssible input parameters for xlsx/csv parsing:
-// Either give an already-parsed workbook, an entire CSV as a string, or an arraybuffer
-function parse(
-  { wb, str, arrbuf, format }:
+// Either give an already-parsed workbook, an entire CSV as a string, or an arraybuffer, or a base64 string
+export function parse(
+  { wb, str, arrbuf, base64, format }:
   { 
     wb?: xlsx.WorkBook, 
     str?: string, 
     arrbuf?: ArrayBuffer,
+    base64?: string, // base64 string
     format: 'tomkat' | 'generic', // add others here as more become known
   }
 ): ModusResult[] {
@@ -27,7 +28,8 @@ function parse(
   if (!wb) {
     try {
       if (str) wb = xlsx.read(str, { type: 'string' });
-      if (arrbuf) wb = xlsx.read(str, { type: 'array' });
+      if (arrbuf) wb = xlsx.read(arrbuf, { type: 'array' });
+      if (base64) wb = xlsx.read(base64, { type: 'base64' });
     } catch(e: any) {
       throw oerror.tag(e, 'Failed to parse input data with xlsx/csv reader');
     }
@@ -55,6 +57,7 @@ function parseTomKat({ wb }: { wb: xlsx.WorkBook }): ModusResult[] {
   const pointmeta: { [pointid: string]: any } = {}; // just build this as we go to keep code simpler
   // Split the sheet names into the metadata sheets and the data sheets
   const metadatasheets = wb.SheetNames.filter(isPointMetadataSheetname);
+  trace('metadatasheets:', metadatasheets);
   if (metadatasheets) {
     for (const sheetname of metadatasheets) {
       // If you don't put { raw: false } for sheet_to_json, it will parse dates as ints instead of the formatted strings
@@ -69,6 +72,7 @@ function parseTomKat({ wb }: { wb: xlsx.WorkBook }): ModusResult[] {
 
   // Start walking through all the sheets to grab the main data:
   const datasheets = wb.SheetNames.filter(sn => !isPointMetadataSheetname(sn));
+  trace('datasheets:', datasheets);
   const ret: ModusResult[] = [];
 
   for (const sheetname of datasheets) {
@@ -193,7 +197,7 @@ function keysToUpperNoSpacesDashesOrUnderscores(obj: any) {
 }
 
 function isPointMetadataSheetname(name: string) {
-  return name.replace(/[ -_,]*/,'').toUpperCase().match('POINTMETA');
+  return name.replace(/([ _,]|-)*/g,'').toUpperCase().match('POINTMETA');
 }
 
 type UnitsOverrides = { [colname: string]: string };
@@ -202,7 +206,7 @@ function extractUnitOverrides(rows: any[]) {
   const unitrows = rows.filter(isUnitRow);
   // There really should only be one units row
   for (const r of unitrows) {
-    for (const [key, val] of r) {
+    for (const [key, val] of Object.entries(r as object)) {
       if (!val) continue; // type-inferred 'nothing' should just not be here
       // keep all the key/value pairs EXCEPT the one that indicated this was a UNITS row
       if (typeof val === 'string' && val.trim() === 'UNITS') continue;

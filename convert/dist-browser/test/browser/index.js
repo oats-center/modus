@@ -1,7 +1,8 @@
 import debug from 'debug';
 import chalk from 'chalk';
-import readTests from '../xml.test.js';
-const info = debug('@modusjs/xml#test-browser:info');
+import xmlTests from '../xml.test.js';
+import csvTests from '../csv.test.js';
+const info = debug('@modusjs/convert-browser:info');
 const { red } = chalk;
 // Set your browser debugging level in localStorage.debug
 localStorage.debug = '*';
@@ -13,7 +14,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             throw new Error('ERROR: did not find root HTML element!');
         root.innerHTML = "Tests from <pre>dist/test/index.mjs are running!  Check the console.";
         // Run all the tests you want here:
-        await readTests(libsundertest);
+        info('testing xml');
+        await xmlTests(libsundertest);
+        info('testing xml');
+        await csvTests(libsundertest);
     }
     catch (e) {
         info(red('FAILED: tests threw exception: '));

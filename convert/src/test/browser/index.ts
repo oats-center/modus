@@ -2,9 +2,10 @@ import type * as libs from '../../browser/index.js';
 import debug from 'debug';
 import chalk from 'chalk';
 
-import readTests from '../xml.test.js';
+import xmlTests from '../xml.test.js';
+import csvTests from '../csv.test.js';
 
-const info = debug('@modusjs/xml#test-browser:info');
+const info = debug('@modusjs/convert-browser:info');
 const { red } = chalk;
 
 // Set your browser debugging level in localStorage.debug
@@ -22,7 +23,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     root.innerHTML = "Tests from <pre>dist/test/index.mjs are running!  Check the console.";
 
     // Run all the tests you want here:
-    await readTests(libsundertest);
+    info('testing xml');
+    await xmlTests(libsundertest);
+
+    info('testing xml');
+    await csvTests(libsundertest);
 
   } catch(e: any) {
     info(red('FAILED: tests threw exception: '));
