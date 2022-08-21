@@ -273,8 +273,22 @@ function parseSampleID(row: any): string {
 // Make a WKT from point meta's Latitude_DD and Longitude_DD.  Do a "tolerant" parse so anything
 // with latitude or longitude (can insensitive) or "lat" and "lon" or "long" would still get a WKT
 function parseWKTFromPointMeta(meta: any): string {
-  return `POINT(${meta["Longitude_DD"]} ${meta["Latitude_DD"]})`;
+  let copy = keysToUpperNoSpacesDashesOrUnderscores(meta);
 
+  let longKey = Object.keys(copy).find(key => key.includes("LONGITUDE"))
+  let latKey = Object.keys(copy).find(key => key.includes("LATITUDE"))
+
+  if (copy["LONG"]) longKey = "LONG";
+  if (copy["LNG"]) longKey = "LNG";
+  if (copy["LAT"]) latKey = "LAT";
+
+  if (!longKey) throw new Error(`Longitude value not for point meta ${meta.POINTID}`);
+  if (!latKey) throw new Error(`Latitude value not for point meta ${meta.POINTID}`);
+
+  let long = copy[longKey];
+  let lat = copy[latKey];
+
+  return `POINT(${long} ${lat})`;
 }
 
 let nutrientColHeaders: Record<string,any> = {
