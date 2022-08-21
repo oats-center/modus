@@ -51,6 +51,8 @@ async function parse(path: string) {
     }]
   };
 
+
+
   //@ts-ignore
   output.Events[0].EventSamples.Soil.DepthRefs = rows.map((obj:any) => ({
     StartingDepth: obj["B Depth"],
@@ -208,4 +210,303 @@ async function parse(path: string) {
     })
 
   })
+}
+
+let elems: Record<string, ElementMatcher[]> = {
+  "pH": [
+    {
+      name: "1:1 Soil pH"
+    }, {
+      name: "pH",
+    }
+  ],
+  "OM": [
+    {
+      name: "Organic Matter LOI %",
+      units: "%"
+    },{
+      name: "Organic Matter",
+      units: "%"
+    }
+  ],
+  "P": [
+    {
+      name: "Olsen P ppm P",
+      units: "ppm"
+    }, {
+      name: "Bray P-1 ppm P",
+      units: "ppm"
+    }, {
+      name: "Olsen P",
+      units: "ug/g"
+    }
+  ],
+  "K": [
+    {
+      name: "Potassium ppm K",
+      units: "ppm"
+    }, {
+      name: "Potassium",
+      units: "cmol(+)/kg"
+    }
+  ],
+  "Ca": [
+    {
+      name: "Calcium ppm Ca",
+      units: "ppm"
+    }, {
+      name: "Calcium",
+      units: "cmol(+)/kg"
+    }
+  ],
+  "Mg": [
+    {
+      name: "Magnesium ppm Mg",
+      units: "ppm"
+    },{
+      name: "Magnesium",
+      units: "cmol(+)/kg"
+    }
+  ],
+  "CEC": [
+    {
+      name: "CEC/Sum of Cations me/100g"
+    }, {
+      name: "CEC (Estimated)",
+      units: "cmol(+)/kg"
+    }
+  ],
+  "BS-Ca": [
+    {
+      name: "%Ca Sat",
+      units: "%"
+    }
+  ],
+  "BS-Mg": [
+    {
+      name: "%Mg Sat",
+      units: "%"
+    }
+  ],
+  "BS-K":[
+    {
+      name: "%K Sat",
+      units: "%"
+    }
+  ],
+  "BS-Na": [
+    {
+      name: "%Na Sat",
+      units: "%"
+    }
+  ],
+  "BS-H": [
+    {
+      name: "%H Sat",
+      units: "%"
+    }
+  ],
+  "SO4-S": [
+    {
+      name: "Sulfate-S ppm S",
+      units: "ppm"
+    }
+  ],
+  "Zn": [
+    {
+      name: "Zinc ppm Zn",
+      units: "ppm"
+    }
+  ],
+  "Mn": [
+    {
+      name: "Manganese ppm Mn",
+      units: "ppm"
+    }
+  ],
+  "B": [
+    {
+      name: "Boron ppm B",
+      units: "ppm"
+    }
+  ],
+  "Fe": [
+    {
+      name: "Iron ppm Mg",
+      units: "ppm"
+    },
+    {
+      name: "Iron",
+      units: "ppm"
+    }
+  ],
+  "Cu": [
+    {
+      name: "Copper ppm Mg",
+      units: "ppm"
+    }
+  ],
+  "Lime Rec":[
+    {
+      name: "Excess Lime"
+    }
+  ],
+  "BpH": [
+    {
+      name: "WRDF Buffer pH"
+    }
+  ],
+  "SS": [
+    {
+      name: "1:1 S Salts mmho/cm",
+      units: "mmho/cm"
+    }
+  ],
+  "NO3-N": [
+    {
+      name: "Nitrate-N ppm N",
+      units: "ppm"
+    },
+    {
+      name: "Nitrate",
+      units: "ppm"
+    }
+  ],
+  "Na": [
+    {
+      name: "Sodium ppm Na",
+      units: "ppm"
+    }, {
+      name: "Sodium",
+      units: "cmol(+)/kg"
+    }
+  ],
+  "Al": [
+    {
+      name: "Aluminium ppm Na",
+      units: "ppm"
+    },
+    {
+      name: "Aluminium",
+      units: "ppm"
+    }
+  ],
+  "Cl": [
+    {
+      name: "Chloride ppm Na",
+      units: "ppm"
+    }
+  ],
+  "TN": [
+    {
+      name: "Total N ppm",
+      units: "ppm"
+    }, {
+      name: "Total Nitrogen^",
+      units: "%"
+    }
+  ],
+  "TP": [
+    {
+      name: "Total P ppm",
+      units: "ppm"
+    }
+  ],
+  "Sand": [
+    {
+      name: "% Sand",
+      units: "%"
+    }, {
+      name: "Sand",
+      units: "%"
+    }
+  ],
+  "Silt": [
+    {
+      name: "% Silt",
+      units: "%"
+    }, {
+      name: "Silt",
+      units: "%",
+    }
+  ],
+  "Clay": [
+    {
+      name: "% Clay",
+      units: "%"
+    }, {
+      name: "Clay",
+      units: "%"
+    }
+  ],
+  "Texture": [
+    {
+      name: "Texture"
+    },{
+      name: "Texture*"
+    }
+  ],
+  "Bulk Density": [
+    {
+      name: "Bulk Density",
+      units: "g/cm3"
+    }
+  ],
+  "TOC": [
+    {
+      name: "Total Org Carbon",
+      units: "%"
+    }
+  ],
+  "TN (W)": [
+    {
+      name: "Water Extractable Total N",
+      units: "ppm"
+    }
+  ],
+  "TC (W)": [
+    {
+      name: "Water Extractable Total C",
+      units: "ppm"
+    }
+  ],
+
+  /*
+  "Total Microbial Biomass": [],
+  "Total Bacteria Biomass": [],
+  "Actinomycetes Biomass": [],
+  "Gram (-) Biomass": [],
+  "Rhizobia Biomass": [],
+  "Gram (+) Biomass": [],
+  "Total Fungi Biomass": [],
+  "Arbuscular Mycorrhizal Biomass": [],
+  "Saprophyte Biomass": [],
+  "Protozoa Biomass": [],
+  "Fungi:Bacteria": [],
+  "Gram(+):Gram(-)": [],
+  "Sat:Unsat": [],
+  "Mono:Poly": []
+  */
+}
+
+interface ElementMatcher {
+  name: string;
+  units?: string;
+}
+
+function getElements(row: any, units?: any): any[] {
+  let elements = [];
+  Object.entries(elems).forEach(([key, elementMatchers]) => {
+    let match = elementMatchers.find(({name}) => name in row)
+    if (match) {
+      elements.push({
+        Element: key,
+        // prioritize user-specified units (from "UNITS" row indicator) over
+        // matcher-based units, else "none".
+        ValueUnit: units[row.name] || match.units || "none",
+        Value: row[match.name]
+      })
+    }
+  })
+  return elements;
 }
