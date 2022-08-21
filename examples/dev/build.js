@@ -26,24 +26,41 @@ import fs from 'fs/promises';
     let local_all = [];
     for (const f of files) {
       const input_filepath = `${input_path}/${f}`;
-      if (!input_filepath.match(/\.(xml|json)$/)) {
+      if (!input_filepath.match(/\.(xml|json|csv|xlsx)$/)) {
         continue; // skip non-xml and non-json files
       }
+      if (input_filepath.match(/^~.*\.xlsx/)) { // excel swap file
+        continue;
+      }
       // turn ./build/dir/hand-modus.xml into ./build/dir/hand-modus_xml.js
-      const output_filename = f.replace(/\.(xml|json)$/, '_$1.ts');
+      const output_filename = f.replace(/\.(xml|json|csv|xlsx)$/, '_$1.ts');
       const output_filepath = `${output_path}/${output_filename}`;
       // The export will have name like hand_modus_xml from hand-modus.xml
       const output_varname = output_filename.replace(/\.ts$/,'').replaceAll('-','_');
 
-      let str = (await fs.readFile(input_filepath)).toString();
-      // If it's an XML file, wrap the string we read in backticks so we can preserve the original structure (and escape any backticks)
-      if (f.match(/\.(xml)/)) {
-        str = '`'+str.replaceAll('`','\\`')+'`';
+      const isxml = f.match(/\.xml/);
+      const iscsv = f.match(/\.csv/);
+      const isjson = f.match(/\.json/);
+      const isxlsx = f.match(/\.xlsx/);
+      let finalcontents = '';
+      // XML, CSV, JSON files become regular strings:
+      if (isxml || iscsv || isjson) {
+        let str = (await fs.readFile(input_filepath)).toString();
+        // If it's an XML or CSV file, wrap the string we read in backticks so we can preserve the original structure (and escape any backticks)
+        if (isxml || iscsv) {
+          str = '`'+str.replaceAll('`','\\`')+'`';
+        }
+        finalcontents = `export default ${str}`;
+
+      // XLSX files become base64 encoded strings:
+      } else if (isxlsx) {
+        const str = (await fs.readFile(input_filepath)).toString('base64');
+        finalcontents = `export default "${str}"`;
       }
 
       // Create equivalent path in the build/ folder
       await fs.mkdir(output_path, { recursive: true } );
-      await fs.writeFile(output_filepath, `export default ${str};`);
+      await fs.writeFile(output_filepath, finalcontents);
       console.log(`Converted example at ${input_filepath} to default export at ${output_filepath}`);
 
       const output_js_filename = output_filename.replace(/\.ts$/,'.js');
@@ -54,6 +71,7 @@ import fs from 'fs/promises';
     global_all[dir] = local_all;
 
     // Write the local index file:
+    await fs.mkdir(output_path, { recursive: true } ); // if the directory is empty, the mkdir never ran
     await fs.writeFile(`${output_path}/index.ts`, local_index);
     
     // Add this local index file to the global index
