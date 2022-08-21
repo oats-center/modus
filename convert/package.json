@@ -11,7 +11,9 @@
   "comment2": "dist-browser/bundle.mjs is rolled up with rollup from dist-browser/ to import directly into a browser if you are not using a bundler",
   "files": [
     "dist",
-    "dist-browser"
+    "dist-browser",
+    "!dist/test",
+    "!dist-browser/test"
   ],
   "scripts": {
     "build:node": "tsc -b",
