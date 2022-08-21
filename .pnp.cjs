@@ -205,8 +205,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@modusjs/convert", "workspace:convert"],\
             ["@modusjs/examples", "workspace:examples"],\
-            ["@oada/formats", "npm:3.1.2"],\
-            ["@oada/types", "npm:3.1.2"],\
+            ["@oada/formats", "npm:3.1.4"],\
+            ["@oada/types", "npm:3.1.4"],\
             ["@overleaf/o-error", "npm:3.4.0"],\
             ["@rollup/plugin-commonjs", "virtual:9d6fed0a8e96c4f612c80abbacb686363c2c71fa1031b8803f418e66230c2cfdf06edc45bdd1b6bd5530b642bab2ad7d49d148d36777531d1e54b0d62109b519#npm:22.0.0"],\
             ["@rollup/plugin-json", "virtual:9d6fed0a8e96c4f612c80abbacb686363c2c71fa1031b8803f418e66230c2cfdf06edc45bdd1b6bd5530b642bab2ad7d49d148d36777531d1e54b0d62109b519#npm:4.1.0"],\
@@ -283,6 +283,22 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["tslib", "npm:2.4.0"]\
           ],\
           "linkType": "HARD"\
+        }],\
+        ["npm:3.1.4", {\
+          "packageLocation": "./.yarn/cache/@oada-formats-npm-3.1.4-9ddfcd5d66-45686e0358.zip/node_modules/@oada/formats/",\
+          "packageDependencies": [\
+            ["@oada/formats", "npm:3.1.4"],\
+            ["@apidevtools/json-schema-ref-parser", "npm:9.0.9"],\
+            ["@oada/media-types", "npm:3.0.2"],\
+            ["ajv", "npm:8.11.0"],\
+            ["ajv-formats", "virtual:aeb12b16f1c6333c462adfb7695a95eab104d8754cbd2e13012ff2a209ccad038a5cc747aaff932919f43ee8c6e30551e7603384596791830cc7a371df584b24#npm:2.1.1"],\
+            ["ajv-formats-draft2019", "virtual:aeb12b16f1c6333c462adfb7695a95eab104d8754cbd2e13012ff2a209ccad038a5cc747aaff932919f43ee8c6e30551e7603384596791830cc7a371df584b24#npm:1.6.1"],\
+            ["axios", "npm:0.27.2"],\
+            ["glob", "npm:8.0.3"],\
+            ["glob-promise", "virtual:aeb12b16f1c6333c462adfb7695a95eab104d8754cbd2e13012ff2a209ccad038a5cc747aaff932919f43ee8c6e30551e7603384596791830cc7a371df584b24#npm:5.0.0"],\
+            ["tslib", "npm:2.4.0"]\
+          ],\
+          "linkType": "HARD"\
         }]\
       ]],\
       ["@oada/media-types", [\
@@ -301,6 +317,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@oada-types-npm-3.1.2-122579606b-f6f34522cf.zip/node_modules/@oada/types/",\
           "packageDependencies": [\
             ["@oada/types", "npm:3.1.2"],\
+            ["ajv", "npm:8.11.0"],\
+            ["ajv-formats", "virtual:aeb12b16f1c6333c462adfb7695a95eab104d8754cbd2e13012ff2a209ccad038a5cc747aaff932919f43ee8c6e30551e7603384596791830cc7a371df584b24#npm:2.1.1"],\
+            ["ajv-formats-draft2019", "virtual:aeb12b16f1c6333c462adfb7695a95eab104d8754cbd2e13012ff2a209ccad038a5cc747aaff932919f43ee8c6e30551e7603384596791830cc7a371df584b24#npm:1.6.1"],\
+            ["tslib", "npm:2.4.0"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:3.1.4", {\
+          "packageLocation": "./.yarn/cache/@oada-types-npm-3.1.4-655e88aa65-7e6d98da10.zip/node_modules/@oada/types/",\
+          "packageDependencies": [\
+            ["@oada/types", "npm:3.1.4"],\
             ["ajv", "npm:8.11.0"],\
             ["ajv-formats", "virtual:aeb12b16f1c6333c462adfb7695a95eab104d8754cbd2e13012ff2a209ccad038a5cc747aaff932919f43ee8c6e30551e7603384596791830cc7a371df584b24#npm:2.1.1"],\
             ["ajv-formats-draft2019", "virtual:aeb12b16f1c6333c462adfb7695a95eab104d8754cbd2e13012ff2a209ccad038a5cc747aaff932919f43ee8c6e30551e7603384596791830cc7a371df584b24#npm:1.6.1"],\
