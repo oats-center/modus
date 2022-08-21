@@ -61,7 +61,7 @@ function parseTomKat({ wb }: { wb: xlsx.WorkBook }): ModusResult[] {
       const rows = xlsx.utils.sheet_to_json(wb.Sheets[sheetname]!, { raw: false }).map(keysToUpperNoSpacesDashesOrUnderscores);
       for (const r of rows ) {
         const id = r['POINTID'];
-        if (id) continue;
+        if (!id) continue;
         pointmeta[id] = r;
       }
     }
@@ -94,6 +94,7 @@ function parseTomKat({ wb }: { wb: xlsx.WorkBook }): ModusResult[] {
     // Determine a "date" column for this dataset
     let datecol = colnames.sort().find(name => name.toUpperCase().match('DATE'));
     if (!datecol) {
+      error('No date column in sheet', sheetname);
       throw new Error(`Could not find a column containing 'date' in the name to use as the date in sheet ${sheetname}.  A date is required.`);
     }
 
@@ -114,7 +115,7 @@ function parseTomKat({ wb }: { wb: xlsx.WorkBook }): ModusResult[] {
     for (const [date, g_rows] of Object.entries(grouped_rows)) {
 
       // Start to build the modus output, this is one "Event"
-      const output: ModusResult = {
+      const output: ModusResult | any = {
         Events: [{
           EventMetaData: {
             EventDate: date, // TODO: process this into the actual date format we are allowed to have in schema.
@@ -159,10 +160,17 @@ function parseTomKat({ wb }: { wb: xlsx.WorkBook }): ModusResult[] {
         samples.push(sample);
 
       } // end rows for this group
+      try {
+        assertModusResult(output);
+      } catch(e: any) {
+        error('assertModusResult failed for sheetname', sheetname, ', group date', date);
+        throw oerror.tag(e, `Could not construct a valid ModusResult from sheet ${sheetname}, group date ${date}`);
+      }
       ret.push(output);
 
     } // end looping over all groups
   } // end looping over all the sheets
+  
   return ret;
 } // end parseTomKat function
 
@@ -214,8 +222,35 @@ function isCommentRow(row: any): boolean {
 function isUnitRow(row: any): boolean {
   return !!Object.values(row).find(val => typeof val === 'string' && val.trim() === 'UNITS');
 }
+type Depth = {
+  DepthID?: number, // only the DepthRef has this, don't have it just from the row
+  Name: string,
+  StartingDepth: number,
+  EndingDepth: number,
+  ColumnDepth: number,
+  DepthUnit: "cm" | "in",
+};
+function parseDepth(row: any): Depth {
+  throw new Error('parseDepth NOT IMPLEMENTED');
+}
+function ensureDepthInDepthRefs(depth: Depth, depthrefs: Depth[]): number {
+  throw new Error('ensureDepthInDepthRefs NOT IMPLEMENTED');
+}
+type NutrientResult = {
+  Element: string,
+  Value: number,
+  ValueUnit: string,
+};
+function parseNutrientResults(row: any): NutrientResult[] {
+  throw new Error('parseNutrientResults NOT IMPLEMENTED');
+}
+function parseSampleID(row: any): string {
+  const copy = keysToUpperNoSpacesDashesOrUnderscores(row);
+  return copy['POINTID'] || '';
+}
 
 // Make a WKT from point meta's Latitude_DD and Longitude_DD.  Do a "tolerant" parse so anything
 // with latitude or longitude (can insensitive) or "lat" and "lon" or "long" would still get a WKT
 function parseWKTFromPointMeta(meta: any): string {
+  throw new Error('parseWKTFromPointMeta NOT IMPLEMENTED');
 }
