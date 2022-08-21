@@ -33,7 +33,7 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "@modusjs/examples": "workspace:^",
-    "@oada/formats": "^3.1.2",
+    "@oada/formats": "^3.1.4",
     "@rollup/plugin-commonjs": "^22.0.0",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^13.3.0",
@@ -49,7 +49,7 @@
     "typescript": "^4.7.4"
   },
   "dependencies": {
-    "@oada/types": "^3.1.2",
+    "@oada/types": "^3.1.4",
     "@overleaf/o-error": "^3.4.0",
     "chalk": "^4.0.0",
     "cheerio": "^1.0.0-rc.12",
