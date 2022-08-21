@@ -214,7 +214,14 @@ function extractUnitOverrides(rows: any[]) {
 
 // A row is a "data row" if it is not a COMMENT row or a UNIT row
 function isDataRow(row: any): boolean {
-  return !isCommentRow(row) && !isUnitRow(row);
+  return !isCommentRow(row) && !isUnitRow(row) && !isEmptyRow(row);
+}
+function isEmptyRow(row: any): boolean {
+  if (typeof row !== 'object') return true;
+  for (const val of Object.values(row)) {
+    if (val) return true; // found anything in the object that is not empty
+  }
+  return false;
 }
 function isCommentRow(row: any): boolean {
   return !!Object.values(row).find(val => typeof val === 'string' && val.trim() === 'COMMENT');
