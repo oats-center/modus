@@ -82,13 +82,14 @@ function parseTomKat({ wb }: { wb: xlsx.WorkBook }): ModusResult[] {
     // Grab the unit overrides and get rid of comment/units columns
     const unit_overrides = extractUnitOverrides(allrows);
     const rows = allrows.filter(isDataRow); 
+    trace('Have', rows.length, 'rows from sheetname: ', sheetname);
 
     // Get a list of all the header names for future reference as needed.  Since objects that have no
     // value in a column might not have that column, we have to look through all the rows and accumulate
     // the unique set of names.
     const colnames_map: { [name: string]: true } = {};
     for (const r of rows) {
-      for (const key of Object.keys(r as any)) {
+      for (const key of Object.keys(r as object)) {
         colnames_map[key] = true;
       }
     }
@@ -96,7 +97,8 @@ function parseTomKat({ wb }: { wb: xlsx.WorkBook }): ModusResult[] {
 
 
     // Determine a "date" column for this dataset
-    let datecol = colnames.sort().find(name => name.toUpperCase().match('DATE'));
+    let datecol = colnames.sort().find(name => name.toUpperCase().match(/DATE/));
+    trace('datecol = ', datecol, ', colnames uppercase = ', colnames.map(c => c.toUpperCase()));
     if (!datecol) {
       error('No date column in sheet', sheetname);
       throw new Error(`Could not find a column containing 'date' in the name to use as the date in sheet ${sheetname}.  A date is required.`);
@@ -140,7 +142,7 @@ function parseTomKat({ wb }: { wb: xlsx.WorkBook }): ModusResult[] {
 
       for (const [index, row] of g_rows.entries()) {
         // Grab the "depth" for this sample:
-        const depth = parseDepth(row, unit_overrides); // SAM: need to write this to figure out a Depth object
+        const depth = parseDepth(row, unit_overrides, sheetname); // SAM: need to write this to figure out a Depth object
         const DepthID = ensureDepthInDepthRefs(depth, depthrefs); // mutates depthrefs if missing, returns depthid
         const NutrientResults = parseNutrientResults(row, unit_overrides);
         const id = parseSampleID(row);
@@ -190,7 +192,7 @@ function parseTomKat({ wb }: { wb: xlsx.WorkBook }): ModusResult[] {
 function keysToUpperNoSpacesDashesOrUnderscores(obj: any) {
   const ret: any = {};
   for (const [key, val] of Object.entries(obj)) {
-    const newkey = key.toUpperCase().replace(/[ -_]*/,'')
+    const newkey = key.toUpperCase().replace(/([ _]|-)*/g,'')
     ret[newkey] = typeof val === 'object' ? keysToUpperNoSpacesDashesOrUnderscores(val) : val;
   }
   return ret;
@@ -218,14 +220,17 @@ function extractUnitOverrides(rows: any[]) {
 
 // A row is a "data row" if it is not a COMMENT row or a UNIT row
 function isDataRow(row: any): boolean {
-  return !isCommentRow(row) && !isUnitRow(row) && !isEmptyRow(row);
+  const first = !isCommentRow(row);
+  const second = !isUnitRow(row);
+  const third = !isEmptyRow(row);
+  return first && second && third;
 }
 function isEmptyRow(row: any): boolean {
   if (typeof row !== 'object') return true;
   for (const val of Object.values(row)) {
-    if (val) return true; // found anything in the object that is not empty
+    if (val) return false; // found anything in the object that is not empty
   }
-  return false;
+  return true;
 }
 function isCommentRow(row: any): boolean {
   return !!Object.values(row).find(val => typeof val === 'string' && val.trim() === 'COMMENT');
@@ -527,7 +532,8 @@ function parseNutrientResults(row: any, units?: Record<string,string>): Nutrient
     }))
 }
 
-function parseDepth(row: any, units?: any): Depth {
+// sheetname is just for debugging
+function parseDepth(row: any, units?: any, sheetname?: string): Depth {
   let obj : any = {
     DepthUnit: "cm" //default to cm
   }
@@ -535,16 +541,16 @@ function parseDepth(row: any, units?: any): Depth {
   // Get columns with the word depth
   const copy = keysToUpperNoSpacesDashesOrUnderscores(row);
   const unitsCopy = keysToUpperNoSpacesDashesOrUnderscores(units);
-  let depthKey = Object.keys(copy).find(key => key.includes("DEPTH"))
+  let depthKey = Object.keys(copy).find(key => key.match(/DEPTH/))
   if (depthKey) {
     let value = copy[depthKey];
     if (unitsCopy[depthKey]) obj.DepthUnit = unitsCopy[depthKey];
 
-    if (value.includes(" to ")) {
+    if (value.match(' to ')) {
       obj.StartingDepth = +(value.split(" to ")[0]);
       obj.EndingDepth = +(value.split(" to ")[1]);
       obj.Name = value;
-    } else if (value.includes(" - ")) {
+    } else if (value.match(' - ')) {
       obj.StartingDepth = +(value.split(" - ")[0]);
       obj.EndingDepth = +(value.split(" - ")[1]);
       obj.Name = value;
@@ -561,8 +567,9 @@ function parseDepth(row: any, units?: any): Depth {
 
 
   //Insufficient data found
-  if (!obj.StartingDepth) {
-    warn('No depth data was found. Falling back to default depth object.')
+  if (typeof obj.StartingDepth === 'undefined') {
+    warn('No depth data was found in sheetname', sheetname, '. Falling back to default depth object.')
+    trace('Row without depth was: ', row);
     return {
       StartingDepth: 0,
       EndingDepth: 8,
