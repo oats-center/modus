@@ -8,6 +8,9 @@ const warn = debug('@modusjs/convert#csv:error');
 const info = debug('@modusjs/convert:info');
 const trace = debug('@modusjs/convert:trace');
 
+export const supportedFormats = [ 'tomkat', 'generic' ];
+export type SupportedFormats = 'tomkat' | 'generic';
+
 //--------------------------------------------------------------------------------------
 // parse: wrapper function for particular parsing functions found down below.
 //
@@ -118,11 +121,19 @@ function parseTomKat({ wb }: { wb: xlsx.WorkBook }): ModusResult[] {
     }, ({} as DateGroupedRows));
 
     // Now we can loop through all the groups and actually make the darn Modus file:
+    let groupcount = 1;
     for (const [date, g_rows] of Object.entries(grouped_rows)) {
-
       // Start to build the modus output, this is one "Event"
       const output: ModusResult | any = {
         Events: [{
+          LabMetaData: {
+            Reports: [
+              { 
+                ReportID: "1",
+                FileDescription: `${sheetname}_${groupcount++}`,
+              }
+            ],
+          },
           EventMetaData: {
             EventDate: date, // TODO: process this into the actual date format we are allowed to have in schema.
             EventType: { Soil: true },
@@ -143,15 +154,15 @@ function parseTomKat({ wb }: { wb: xlsx.WorkBook }): ModusResult[] {
       for (const [index, row] of g_rows.entries()) {
         // Grab the "depth" for this sample:
         const depth = parseDepth(row, unit_overrides, sheetname); // SAM: need to write this to figure out a Depth object
-        const DepthID = ensureDepthInDepthRefs(depth, depthrefs); // mutates depthrefs if missing, returns depthid
+        const DepthID = ''+ensureDepthInDepthRefs(depth, depthrefs); // mutates depthrefs if missing, returns depthid
         const NutrientResults = parseNutrientResults(row, unit_overrides);
         const id = parseSampleID(row);
-        const meta = pointmeta[id] || {}; // where does the pointmeta go again (Latitude_DD, Longitude_DD, Field, Acreage, etc.)
+        const meta = pointmeta[id] || null; // where does the pointmeta go again (Latitude_DD, Longitude_DD, Field, Acreage, etc.)
 
         const sample: any = {
           SampleMetaData: {
-            SampleNumber: index,
-            ReportID: id,
+            SampleNumber: ''+index,
+            ReportID: ''+id,
           },
           Depths: [
             { DepthID, NutrientResults }
@@ -160,7 +171,7 @@ function parseTomKat({ wb }: { wb: xlsx.WorkBook }): ModusResult[] {
         if (meta) {
           const wkt = parseWKTFromPointMeta(meta);
           if (wkt) {
-            sample.SampleMetaData.Geometry = wkt;
+            sample.SampleMetaData.Geometry = { wkt };
           }
         }
         samples.push(sample);
@@ -291,8 +302,14 @@ function parseWKTFromPointMeta(meta: any): string {
   if (copy["LNG"]) longKey = "LNG";
   if (copy["LAT"]) latKey = "LAT";
 
-  if (!longKey) throw new Error(`Longitude value not for point meta ${meta.POINTID}`);
-  if (!latKey) throw new Error(`Latitude value not for point meta ${meta.POINTID}`);
+  if (!longKey) {
+    error('No longitude for point meta: ', meta);
+    throw new Error(`Longitude value not present for point meta ${copy.POINTID}`);
+  }
+  if (!latKey) {
+    error('No latitude for point meta: ', meta);
+    throw new Error(`Latitude value not present for point meta ${copy.POINTID}`);
+  }
 
   let long = copy[longKey];
   let lat = copy[latKey];
@@ -543,7 +560,7 @@ function parseDepth(row: any, units?: any, sheetname?: string): Depth {
   const unitsCopy = keysToUpperNoSpacesDashesOrUnderscores(units);
   let depthKey = Object.keys(copy).find(key => key.match(/DEPTH/))
   if (depthKey) {
-    let value = copy[depthKey];
+    let value = copy[depthKey].toString();
     if (unitsCopy[depthKey]) obj.DepthUnit = unitsCopy[depthKey];
 
     if (value.match(' to ')) {

@@ -1,0 +1,62 @@
+{
+  "Events": [
+    {
+      "LabMetaData": {
+        "Reports": [
+          {
+            "ReportID": "1",
+            "FileDescription": "2018_RMN 0-10cm_7"
+          }
+        ]
+      },
+      "EventMetaData": {
+        "EventDate": "43124",
+        "EventType": {
+          "Soil": true
+        }
+      },
+      "EventSamples": {
+        "Soil": {
+          "DepthRefs": [
+            {
+              "DepthUnit": "cm",
+              "StartingDepth": 0,
+              "EndingDepth": 10,
+              "Name": "0 to 10",
+              "ColumnDepth": 10,
+              "DepthID": 1
+            }
+          ],
+          "SoilSamples": [
+            {
+              "SampleMetaData": {
+                "SampleNumber": "0",
+                "ReportID": "TOKA-122",
+                "Geometry": {
+                  "wkt": "POINT(-122.3643707 37.2633573)"
+                }
+              },
+              "Depths": [
+                {
+                  "DepthID": "1",
+                  "NutrientResults": [
+                    {
+                      "Element": "Bulk Density",
+                      "ValueUnit": "g/cm3",
+                      "Value": 1.01545871264845
+                    },
+                    {
+                      "Element": "TOC",
+                      "ValueUnit": "%",
+                      "Value": 3.3
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

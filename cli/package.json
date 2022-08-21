@@ -1,7 +1,7 @@
 {
   "name": "@modusjs/cli",
   "packageManager": "yarn@3.2.1",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Conversion utility to generate a JSON schema from the Modus XSD files.",
   "type": "module",
   "main": "dist/index.js",
@@ -17,7 +17,6 @@
     "dev": "tsc -b -w",
     "test": "DEBUG=\"@modusjs*,${DEBUG}\" nodemon --enable-source-maps --config nodemon.config.json dist/test/index.js",
     "tojson": "yarn run cli tojson",
-    "toxml": "yarn run cli toxml",
     "cli": "node dist/index.js",
     "clean": "rm -rf dist"
   },

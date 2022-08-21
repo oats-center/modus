@@ -256,7 +256,7 @@ export function parse(xmlstring: string): any {
     },
     parseAsNumbers: {
       SampleGroupID: true,
-      ReportID: true,
+      //ReportID: true,
       epsg: true,
       SubSampleNumber: true,
       StartingDepth: true,
@@ -272,7 +272,7 @@ export function parse(xmlstring: string): any {
     pathRegexParseAsStrings: [
       /Variables\/[^\/]+\/Value/, // SiteAttributes/Variables/*/Value, Recommendation/Variables/*/Value
       /LifeStageValues\/[^\/]+\/Value/, // LifeStageValues/*/Value
-      /LabMetaData\/Reports\/[^\/]+\/ReportID/, // LabMetaData/Reports/*/ReportID
+      // /LabMetaData\/Reports\/[^\/]+\/ReportID/, // LabMetaData/Reports/*/ReportID
       /Depths\/[^\/]+\/DepthID/, // LabMetaData/Reports/*/ReportID
     ],
     ignoreKeys: {

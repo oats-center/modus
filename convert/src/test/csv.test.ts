@@ -22,6 +22,11 @@ export default async function run(lib: typeof MainLib) {
     throw new Error(`No results from parse`);
   }
 
+  test('First result has LabMetaData.Reports[0].FileDescription');
+  if (!results[0]!.Events?.[0]?.LabMetaData?.Reports?.[0]?.FileDescription) {
+    throw new Error('First result did not have a report with FileDescription');
+  }
+
 
   test('All parse tests passed');
 }

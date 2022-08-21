@@ -1,0 +1,398 @@
+{
+  "Events": [
+    {
+      "LabMetaData": {
+        "Reports": [
+          {
+            "ReportID": "1",
+            "FileDescription": "2016_Intern Project 10-40cm_1"
+          }
+        ]
+      },
+      "EventMetaData": {
+        "EventDate": "42592",
+        "EventType": {
+          "Soil": true
+        }
+      },
+      "EventSamples": {
+        "Soil": {
+          "DepthRefs": [
+            {
+              "DepthUnit": "cm",
+              "StartingDepth": 10,
+              "EndingDepth": 40,
+              "Name": "10 to 40",
+              "ColumnDepth": 30,
+              "DepthID": 1
+            }
+          ],
+          "SoilSamples": [
+            {
+              "SampleMetaData": {
+                "SampleNumber": "0",
+                "ReportID": "FRONT FIELD"
+              },
+              "Depths": [
+                {
+                  "DepthID": "1",
+                  "NutrientResults": [
+                    {
+                      "Element": "OM",
+                      "ValueUnit": "%",
+                      "Value": 6.5
+                    },
+                    {
+                      "Element": "TN (W)",
+                      "ValueUnit": "ppm",
+                      "Value": 28
+                    },
+                    {
+                      "Element": "NO3-N",
+                      "ValueUnit": "ppm",
+                      "Value": 2.1
+                    },
+                    {
+                      "Element": "K",
+                      "ValueUnit": "ppm",
+                      "Value": 109
+                    },
+                    {
+                      "Element": "Ca",
+                      "ValueUnit": "ppm",
+                      "Value": 418
+                    },
+                    {
+                      "Element": "Fe",
+                      "ValueUnit": "ppm",
+                      "Value": 546.1
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "SampleMetaData": {
+                "SampleNumber": "1",
+                "ReportID": "TOKA-022",
+                "Geometry": {
+                  "wkt": "POINT(-122.3665960 37.2669748)"
+                }
+              },
+              "Depths": [
+                {
+                  "DepthID": "1",
+                  "NutrientResults": [
+                    {
+                      "Element": "OM",
+                      "ValueUnit": "%",
+                      "Value": 5.5
+                    },
+                    {
+                      "Element": "TN (W)",
+                      "ValueUnit": "ppm",
+                      "Value": 23.7
+                    },
+                    {
+                      "Element": "NO3-N",
+                      "ValueUnit": "ppm",
+                      "Value": 0.8
+                    },
+                    {
+                      "Element": "K",
+                      "ValueUnit": "ppm",
+                      "Value": 79
+                    },
+                    {
+                      "Element": "Ca",
+                      "ValueUnit": "ppm",
+                      "Value": 163
+                    },
+                    {
+                      "Element": "Fe",
+                      "ValueUnit": "ppm",
+                      "Value": 401.6
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "SampleMetaData": {
+                "SampleNumber": "2",
+                "ReportID": "TOKA-104",
+                "Geometry": {
+                  "wkt": "POINT(-122.3801294 37.2670464)"
+                }
+              },
+              "Depths": [
+                {
+                  "DepthID": "1",
+                  "NutrientResults": [
+                    {
+                      "Element": "OM",
+                      "ValueUnit": "%",
+                      "Value": 3.2
+                    },
+                    {
+                      "Element": "TN (W)",
+                      "ValueUnit": "ppm",
+                      "Value": 12.4
+                    },
+                    {
+                      "Element": "NO3-N",
+                      "ValueUnit": "ppm",
+                      "Value": 0.5
+                    },
+                    {
+                      "Element": "K",
+                      "ValueUnit": "ppm",
+                      "Value": 37
+                    },
+                    {
+                      "Element": "Ca",
+                      "ValueUnit": "ppm",
+                      "Value": 105
+                    },
+                    {
+                      "Element": "Fe",
+                      "ValueUnit": "ppm",
+                      "Value": 254.2
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "SampleMetaData": {
+                "SampleNumber": "3",
+                "ReportID": "TOKA-007",
+                "Geometry": {
+                  "wkt": "POINT(-122.3801146 37.2688491)"
+                }
+              },
+              "Depths": [
+                {
+                  "DepthID": "1",
+                  "NutrientResults": [
+                    {
+                      "Element": "OM",
+                      "ValueUnit": "%",
+                      "Value": 2.6
+                    },
+                    {
+                      "Element": "TN (W)",
+                      "ValueUnit": "ppm",
+                      "Value": 15.3
+                    },
+                    {
+                      "Element": "NO3-N",
+                      "ValueUnit": "ppm",
+                      "Value": 0.3
+                    },
+                    {
+                      "Element": "K",
+                      "ValueUnit": "ppm",
+                      "Value": 81
+                    },
+                    {
+                      "Element": "Ca",
+                      "ValueUnit": "ppm",
+                      "Value": 89
+                    },
+                    {
+                      "Element": "Fe",
+                      "ValueUnit": "ppm",
+                      "Value": 501
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "SampleMetaData": {
+                "SampleNumber": "4",
+                "ReportID": "TOKA-060",
+                "Geometry": {
+                  "wkt": "POINT(-122.3552566 37.2741247)"
+                }
+              },
+              "Depths": [
+                {
+                  "DepthID": "1",
+                  "NutrientResults": [
+                    {
+                      "Element": "OM",
+                      "ValueUnit": "%",
+                      "Value": 4.9
+                    },
+                    {
+                      "Element": "TN (W)",
+                      "ValueUnit": "ppm",
+                      "Value": 19.3
+                    },
+                    {
+                      "Element": "NO3-N",
+                      "ValueUnit": "ppm",
+                      "Value": 1
+                    },
+                    {
+                      "Element": "K",
+                      "ValueUnit": "ppm",
+                      "Value": 82
+                    },
+                    {
+                      "Element": "Ca",
+                      "ValueUnit": "ppm",
+                      "Value": 279
+                    },
+                    {
+                      "Element": "Fe",
+                      "ValueUnit": "ppm",
+                      "Value": 263.7
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "SampleMetaData": {
+                "SampleNumber": "5",
+                "ReportID": "TOKA-064",
+                "Geometry": {
+                  "wkt": "POINT(-122.3530163 37.2723097)"
+                }
+              },
+              "Depths": [
+                {
+                  "DepthID": "1",
+                  "NutrientResults": [
+                    {
+                      "Element": "OM",
+                      "ValueUnit": "%",
+                      "Value": 5.9
+                    },
+                    {
+                      "Element": "TN (W)",
+                      "ValueUnit": "ppm",
+                      "Value": 26.9
+                    },
+                    {
+                      "Element": "NO3-N",
+                      "ValueUnit": "ppm",
+                      "Value": 2.2
+                    },
+                    {
+                      "Element": "K",
+                      "ValueUnit": "ppm",
+                      "Value": 131
+                    },
+                    {
+                      "Element": "Ca",
+                      "ValueUnit": "ppm",
+                      "Value": 256
+                    },
+                    {
+                      "Element": "Fe",
+                      "ValueUnit": "ppm",
+                      "Value": 530.9
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "SampleMetaData": {
+                "SampleNumber": "6",
+                "ReportID": "TOKA-068",
+                "Geometry": {
+                  "wkt": "POINT(-122.3531397 37.2578881)"
+                }
+              },
+              "Depths": [
+                {
+                  "DepthID": "1",
+                  "NutrientResults": [
+                    {
+                      "Element": "OM",
+                      "ValueUnit": "%",
+                      "Value": 4.7
+                    },
+                    {
+                      "Element": "TN (W)",
+                      "ValueUnit": "ppm",
+                      "Value": 18.3
+                    },
+                    {
+                      "Element": "NO3-N",
+                      "ValueUnit": "ppm",
+                      "Value": 1
+                    },
+                    {
+                      "Element": "K",
+                      "ValueUnit": "ppm",
+                      "Value": 61
+                    },
+                    {
+                      "Element": "Ca",
+                      "ValueUnit": "ppm",
+                      "Value": 283
+                    },
+                    {
+                      "Element": "Fe",
+                      "ValueUnit": "ppm",
+                      "Value": 419.7
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "SampleMetaData": {
+                "SampleNumber": "7",
+                "ReportID": "PRB0"
+              },
+              "Depths": [
+                {
+                  "DepthID": "1",
+                  "NutrientResults": [
+                    {
+                      "Element": "OM",
+                      "ValueUnit": "%",
+                      "Value": 4.9
+                    },
+                    {
+                      "Element": "TN (W)",
+                      "ValueUnit": "ppm",
+                      "Value": 27.6
+                    },
+                    {
+                      "Element": "NO3-N",
+                      "ValueUnit": "ppm",
+                      "Value": 2.5
+                    },
+                    {
+                      "Element": "K",
+                      "ValueUnit": "ppm",
+                      "Value": 129
+                    },
+                    {
+                      "Element": "Ca",
+                      "ValueUnit": "ppm",
+                      "Value": 317
+                    },
+                    {
+                      "Element": "Fe",
+                      "ValueUnit": "ppm",
+                      "Value": 443.9
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

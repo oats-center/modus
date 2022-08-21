@@ -1,7 +1,7 @@
 {
   "name": "@modusjs/convert",
   "packageManager": "yarn@3.2.1",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Universal library for interacting with Modus XML files",
   "type": "module",
   "comment1": "dist/node/index.js is normal output of tsc, used for node",
@@ -35,7 +35,7 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "@modusjs/examples": "workspace:^",
-    "@oada/formats": "^3.1.4",
+    "@oada/formats": "^3.1.5",
     "@rollup/plugin-commonjs": "^22.0.0",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^13.3.0",
@@ -51,7 +51,7 @@
     "typescript": "^4.7.4"
   },
   "dependencies": {
-    "@oada/types": "^3.1.4",
+    "@oada/types": "^3.1.5",
     "@overleaf/o-error": "^3.4.0",
     "chalk": "^4.0.0",
     "cheerio": "^1.0.0-rc.12",

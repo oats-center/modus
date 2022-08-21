@@ -1,0 +1,71 @@
+{
+  "Events": [
+    {
+      "LabMetaData": {
+        "Reports": [
+          {
+            "ReportID": "1",
+            "FileDescription": "2018_RMN 10-40cm_5"
+          }
+        ]
+      },
+      "EventMetaData": {
+        "EventDate": "43122",
+        "EventType": {
+          "Soil": true
+        }
+      },
+      "EventSamples": {
+        "Soil": {
+          "DepthRefs": [
+            {
+              "DepthUnit": "cm",
+              "StartingDepth": 10,
+              "EndingDepth": 40,
+              "Name": "10 to 40",
+              "ColumnDepth": 30,
+              "DepthID": 1
+            }
+          ],
+          "SoilSamples": [
+            {
+              "SampleMetaData": {
+                "SampleNumber": "0",
+                "ReportID": "TOKA-035",
+                "Geometry": {
+                  "wkt": "POINT(-122.3619935 37.2777667)"
+                }
+              },
+              "Depths": [
+                {
+                  "DepthID": "1",
+                  "NutrientResults": [
+                    {
+                      "ValueUnit": "%",
+                      "Value": 51.9
+                    },
+                    {
+                      "Element": "Silt",
+                      "ValueUnit": "%",
+                      "Value": 23.1
+                    },
+                    {
+                      "Element": "Clay",
+                      "ValueUnit": "%",
+                      "Value": 25
+                    },
+                    {
+                      "Element": "TOC",
+                      "ValueUnit": "%",
+                      "Value": 2.3
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

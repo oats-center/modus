@@ -1,0 +1,106 @@
+{
+  "Events": [
+    {
+      "LabMetaData": {
+        "Reports": [
+          {
+            "ReportID": "1",
+            "FileDescription": "2018_RMN 10-40cm_15"
+          }
+        ]
+      },
+      "EventMetaData": {
+        "EventDate": "43144",
+        "EventType": {
+          "Soil": true
+        }
+      },
+      "EventSamples": {
+        "Soil": {
+          "DepthRefs": [
+            {
+              "DepthUnit": "cm",
+              "StartingDepth": 10,
+              "EndingDepth": 40,
+              "Name": "10 to 40",
+              "ColumnDepth": 30,
+              "DepthID": 1
+            }
+          ],
+          "SoilSamples": [
+            {
+              "SampleMetaData": {
+                "SampleNumber": "0",
+                "ReportID": "TOKA-013",
+                "Geometry": {
+                  "wkt": "POINT(-122.3733328 37.2706162)"
+                }
+              },
+              "Depths": [
+                {
+                  "DepthID": "1",
+                  "NutrientResults": [
+                    {
+                      "Element": "P",
+                      "ValueUnit": "ug/g",
+                      "Value": 8.1
+                    },
+                    {
+                      "ValueUnit": "%",
+                      "Value": 18.8
+                    },
+                    {
+                      "Element": "Silt",
+                      "ValueUnit": "%",
+                      "Value": 41.2
+                    },
+                    {
+                      "Element": "Clay",
+                      "ValueUnit": "%",
+                      "Value": 40
+                    },
+                    {
+                      "Element": "pH",
+                      "ValueUnit": "none",
+                      "Value": 5.9
+                    },
+                    {
+                      "Element": "CEC",
+                      "ValueUnit": "cmol(+)/kg",
+                      "Value": 32.3
+                    },
+                    {
+                      "Element": "Ca",
+                      "ValueUnit": "cmol(+)/kg",
+                      "Value": 11.99
+                    },
+                    {
+                      "Element": "Mg",
+                      "ValueUnit": "cmol(+)/kg",
+                      "Value": 9.2
+                    },
+                    {
+                      "Element": "K",
+                      "ValueUnit": "cmol(+)/kg",
+                      "Value": 0.6717948717948717
+                    },
+                    {
+                      "Element": "Na",
+                      "ValueUnit": "cmol(+)/kg",
+                      "Value": 0.40869565217391307
+                    },
+                    {
+                      "Element": "TOC",
+                      "ValueUnit": "%",
+                      "Value": 2.8
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
