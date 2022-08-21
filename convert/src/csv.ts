@@ -21,7 +21,7 @@ function parse(
     arrbuf?: ArrayBuffer,
     format: 'tomkat' | 'generic', // add others here as more become known
   }
-): ModusResult {
+): ModusResult[] {
 
   // Make sure we have an actual workbook to work with:
   if (!wb) {
@@ -47,7 +47,7 @@ function parse(
 //-------------------------------------------------------------------------------------------
 // Parse the specific spreadsheet with data from TomKat ranch provided at the 
 // 2022 Fixing the Soil Health Tech Stack Hackathon.
-function parseTomKat({ wb }: { wb: xlsx.WorkBook }): ModusResult {
+function parseTomKat({ wb }: { wb: xlsx.WorkBook }): ModusResult[] {
 
   // Grab the point meta data out of any master sheet:
   // Any sheet whose name contains "point meta" regardless of spacing, case, or punctuation will be considered
@@ -69,6 +69,8 @@ function parseTomKat({ wb }: { wb: xlsx.WorkBook }): ModusResult {
 
   // Start walking through all the sheets to grab the main data:
   const datasheets = wb.SheetNames.filter(sn => !isPointMetadataSheetname(sn));
+  const ret: ModusResult[] = [];
+
   for (const sheetname of datasheets) {
     const sheet = wb.Sheets[sheetname]!;
     const allrows = xlsx.utils.sheet_to_json(sheet);
@@ -129,6 +131,7 @@ function parseTomKat({ wb }: { wb: xlsx.WorkBook }): ModusResult {
 
       const event = output.Events![0]!;
       const depthrefs = event.EventSamples!.Soil!.DepthRefs!;
+      const samples = event.EventSamples!.Soil!.SoilSamples!;
 
       for (const [index, row] of g_rows.entries()) {
         // Grab the "depth" for this sample:
@@ -153,170 +156,22 @@ function parseTomKat({ wb }: { wb: xlsx.WorkBook }): ModusResult {
             sample.SampleMetaData.Geometry = wkt;
           }
         }
+        samples.push(sample);
 
-      // Grab the unique depthref's from spreadsheet
-      output.Events![0].EventSamples.Soil.DepthRefs = rows.map((obj:any) => ({
-        StartingDepth: obj["B Depth"],
-        EndingDepth: obj["E Depth"],
-        ColumnDepth: obj["E Depth"] - obj["B Depth"],
-        DepthUnit: "in" //????Not documented in the example
-      }))
-  .filter((v: any, i: number, s: any[]) => s.indexOf(v) === i)
-  .sort((a, b) => a.StartingDepth > b.StartingDepth ? 1 : -1)
-  .map((v, i) => ({
-    ...v,
-    DepthID: i,
-    Name: `Depth-${i}`
-  }))
+      } // end rows for this group
+      ret.push(output);
 
-  let minDate = rows.reduce((min, obj) => {
-    if (!obj['Date Recd']) return min; // no date on this object
-    const thisdate = new Date(+(obj['Date Recd']));
-    return (thisdate < min ? thisdate : min);
-  }, 0);
-
-  rows.forEach((row: any, i) => {
-  //@ts-ignore
-    output.Events[0]!.EventSamples.Soil.SoilSamples.push({
-      SampleMetaData: {
-        SampleNumber: i.toString(),
-        ReportID: row["Sample ID"],
-        NutrientResults: [{
-          Element: "pH",
-          Value: row["1:1 Soil pH"],
-          ValueUnit: "none"
-        }, {
-          Element: "OM",
-          Value: row["Organic Matter LOI %"],
-          ValueUnit: "%"
-        }, {
-          Element: "P",
-          Value: row["Olsen P ppm P"],
-          ValueUnit: "ppm"
-        }, {
-          Element: "K",
-          Value: row["Potassium ppm K"],
-          ValueUnit: "ppm"
-        }, {
-          Element: "Ca",
-          Value: row["Calcium ppm Ca"],
-          ValueUnit: "ppm"
-        }, {
-          Element: "Mg",
-          Value: row["Magnesium ppm Mg"],
-          ValueUnit: "ppm"
-        }, {
-          Element: "CEC",
-          Value: row["CEC/Sum of Cations me/100g"],
-          ValueUnit: "Sum of Cations me/100g",     //TODO
-        }, {
-          Element: "BS-Ca",
-          Value: row["%Ca Sat"],
-          ValueUnit: "%"
-        }, {
-          Element: "BS-Mg",
-          Value: row["%Mg Sat"],
-          ValueUnit: "%"
-        }, {
-          Element: "BS-K",
-          Value: row["%K Sat"],
-          ValueUnit: "%"
-        }, {
-          Element: "BS-Na",
-          Value: row["%Na Sat"],
-          ValueUnit: "%"
-        }, {
-          Element: "BS-H",
-          Value: row["%H Sat"],
-          ValueUnit: "%"
-        }, {
-          Element: "SO4-S",
-          Value: row["Sulfate-S ppm S"],
-          ValueUnit: "ppm"
-        }, {
-          Element: "Zn",
-          Value: row["Zinc ppm Zn"],
-          ValueUnit: "ppm"
-        }, {
-          Element: "Mn",
-          Value: row["Manganese ppm Mn"],
-          ValueUnit: "ppm"
-        }, {
-          Element: "B",
-          Value: row["Boron ppm B"],
-          ValueUnit: "none"
-        }, {
-          Element: "Fe",
-          Value: row["Iron ppm Mg"],
-          ValueUnit: "ppm"
-        }, {
-          Element: "Cu",
-          Value: row["Copper ppm Mg"],
-          ValueUnit: "ppm"
-        }, {
-          Element: "Lime Rec",
-          Value: row["Excess Lime"],
-          ValueUnit: "none" //TODO
-        }, {
-          Element: "BpH",
-          Value: row["WRDF Buffer pH"],
-          ValueUnit: "none"
-        }, {
-          Element: "SS",
-          Value: row["1:1 S Salts mmho/cm"],
-          ValueUnit: "mmho/cm"
-        }, {
-          Element: "NO3-N",
-          Value: row["Nitrate-N ppm N"],
-          ValueUnit: "ppm"
-        }, {
-          Element: "P",
-          Value: row["Bray P-1 ppm P"],
-          ValueUnit: "ppm"
-        }, {
-          Element: "Na",
-          Value: row["Sodium ppm Na"],
-          ValueUnit: "ppm"
-        }, {
-          Element: "Al",
-          Value: row["Aluminium ppm Na"],
-          ValueUnit: "ppm"
-        }, {
-          Element: "Cl",
-          Value: row["Chloride ppm Na"],
-          ValueUnit: "ppm"
-        }, {
-          Element: "TN",
-          Value: row["Total N ppm"],
-          ValueUnit: "ppm"
-        }, {
-          Element: "TP",
-          Value: row["Total P ppm"],
-          ValueUnit: "ppm"
-        }, {
-          Element: "Sand",
-          Value: row["% Sand"],
-          ValueUnit: "%"
-        }, {
-          Element: "Silt",
-          Value: row["% Silt"],
-          ValueUnit: "%"
-        }, {
-          Element: "Clay",
-          Value: row["% Clay"],
-          ValueUnit: "%"
-        }, {
-          Element: "Texture",
-          Value: row["Texture"],
-          ValueUnit: "none"
-        }]
-      }
-    })
-
-  })
-}
+    } // end looping over all groups
+  } // end looping over all the sheets
+  return ret;
+} // end parseTomKat function
 
 
+
+
+//----------------------------------------------
+// Helpers
+//----------------------------------------------
 
 
 // Return a new object where all keys are the upper-case equivalents of keys from input object.
@@ -362,5 +217,5 @@ function isUnitRow(row: any): boolean {
 
 // Make a WKT from point meta's Latitude_DD and Longitude_DD.  Do a "tolerant" parse so anything
 // with latitude or longitude (can insensitive) or "lat" and "lon" or "long" would still get a WKT
-function parseWKTFromPointMeta(meta: any) {
+function parseWKTFromPointMeta(meta: any): string {
 }
