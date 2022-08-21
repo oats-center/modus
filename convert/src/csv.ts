@@ -136,9 +136,9 @@ function parseTomKat({ wb }: { wb: xlsx.WorkBook }): ModusResult[] {
 
       for (const [index, row] of g_rows.entries()) {
         // Grab the "depth" for this sample:
-        const depth = parseDepth(row); // SAM: need to write this to figure out a Depth object
+        const depth = parseDepth(row, unit_overrides); // SAM: need to write this to figure out a Depth object
         const DepthID = ensureDepthInDepthRefs(depth, depthrefs); // mutates depthrefs if missing, returns depthid
-        const NutrientResults = parseNutrientResults(row);
+        const NutrientResults = parseNutrientResults(row, unit_overrides);
         const id = parseSampleID(row);
         const meta = pointmeta[id] || {}; // where does the pointmeta go again (Latitude_DD, Longitude_DD, Field, Acreage, etc.)
 
@@ -230,20 +230,34 @@ type Depth = {
   ColumnDepth: number,
   DepthUnit: "cm" | "in",
 };
-function parseDepth(row: any): Depth {
-  throw new Error('parseDepth NOT IMPLEMENTED');
+
+function depthsEqual(ref: Depth, depth: Depth) {
+  if (ref["DepthUnit"] !== depth["DepthUnit"]) return false;
+  if (ref["StartingDepth"] !== depth["StartingDepth"]) return false;
+  if (ref["ColumnDepth"] !== depth["ColumnDepth"]) return false;
+  if (ref["Name"] !== depth["Name"]) return false;
+  if (ref["EndingDepth"] !== depth["EndingDepth"]) return false;
+  return true;
 }
+
 function ensureDepthInDepthRefs(depth: Depth, depthrefs: Depth[]): number {
-  throw new Error('ensureDepthInDepthRefs NOT IMPLEMENTED');
+  let match = depthrefs.find(ref => depthsEqual(ref, depth));
+  if (!match) {
+    let DepthID = depthrefs.length+1;
+    depthrefs.push({
+      ...depth,
+      DepthID
+    });
+    return DepthID
+  }
+  return match.DepthID!;
 }
+
 type NutrientResult = {
   Element: string,
   Value: number,
   ValueUnit: string,
 };
-function parseNutrientResults(row: any): NutrientResult[] {
-  throw new Error('parseNutrientResults NOT IMPLEMENTED');
-}
 function parseSampleID(row: any): string {
   const copy = keysToUpperNoSpacesDashesOrUnderscores(row);
   return copy['POINTID'] || '';
@@ -252,7 +266,8 @@ function parseSampleID(row: any): string {
 // Make a WKT from point meta's Latitude_DD and Longitude_DD.  Do a "tolerant" parse so anything
 // with latitude or longitude (can insensitive) or "lat" and "lon" or "long" would still get a WKT
 function parseWKTFromPointMeta(meta: any): string {
-  throw new Error('parseWKTFromPointMeta NOT IMPLEMENTED');
+  return `POINT(${meta["Longitude_DD"]} ${meta["Latitude_DD"]})`;
+
 }
 
 let nutrientColHeaders: Record<string,any> = {
@@ -474,23 +489,69 @@ let nutrientColHeaders: Record<string,any> = {
   "Mono:Poly": []
   */
 
-interface ElementMatcher {
-string: {}
-  units?: string;
-}
-
-function getElements(row: any, units?: any): any[] {
+function parseNutrientResults(row: any, units?: Record<string,string>): NutrientResult[] {
   return Object.keys(row)
     .filter(key => key in nutrientColHeaders)
+    .filter(key => !isNaN(row[key]))
     .map(key => ({
       Element: nutrientColHeaders[key].Element,
       // prioritize user-specified units (from "UNITS" row indicator) over
       // matcher-based units, else "none".
-      ValueUnit: units[key] || nutrientColHeaders[key].ValueUnit || "none",
-      Value: row[key]
+      ValueUnit: units![key] || nutrientColHeaders[key].ValueUnit || "none",
+      Value: +(row[key])
     }))
 }
 
-function parseDepths() {
+function parseDepth(row: any, units?: any): Depth {
+  let obj : any = {
+    DepthUnit: "cm" //default to cm
+  }
 
+  // Get columns with the word depth
+  const copy = keysToUpperNoSpacesDashesOrUnderscores(row);
+  const unitsCopy = keysToUpperNoSpacesDashesOrUnderscores(units);
+  let depthKey = Object.keys(copy).find(key => key.includes("DEPTH"))
+  if (depthKey) {
+    let value = copy[depthKey];
+    if (unitsCopy[depthKey]) obj.DepthUnit = unitsCopy[depthKey];
+
+    if (value.includes(" to ")) {
+      obj.StartingDepth = +(value.split(" to ")[0]);
+      obj.EndingDepth = +(value.split(" to ")[1]);
+      obj.Name = value;
+    } else if (value.includes(" - ")) {
+      obj.StartingDepth = +(value.split(" - ")[0]);
+      obj.EndingDepth = +(value.split(" - ")[1]);
+      obj.Name = value;
+    } else {
+      obj.StartingDepth = +(value);
+      obj.Name = value;
+    }
+  }
+
+  if (row["B Depth"]) obj.StartingDepth = +(row["B Depth"]);
+  if (row["B Depth"]) obj.Name = row["B Depth"];
+  if (units["B Depth"]) obj.DepthUnit = units["B Depth"]; // Assume same for both top and bottom
+  if (row["E Depth"]) obj.EndingDepth = +(row["E Depth"]);
+
+
+  //Insufficient data found
+  if (!obj.StartingDepth) {
+    warn('No depth data was found. Falling back to default depth object.')
+    return {
+      StartingDepth: 0,
+      EndingDepth: 8,
+      DepthUnit: 'in',
+      Name: "Unknown Depth",
+      ColumnDepth: 8,
+    }
+  }
+
+  //Handle single depth value
+  obj.EndingDepth = obj.EndingDepth || obj.StartingDepth;
+
+  //Now compute column depth
+  obj.ColumnDepth = Math.abs(obj.EndingDepth - obj.StartingDepth);
+
+  return obj;
 }
