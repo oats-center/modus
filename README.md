@@ -14,6 +14,11 @@ examples/
 Examples of modus soil samples, grouped by lab name.  They are published to npm as directly importable xml strings 
 and json objects (with types).
 
+Data in the examples repository is released into the public domain under the Creative Commons CCO 1.0 Universal Public Domain Dedication.
+
+Thanks to Point Blue Conservation Science (https://pointblue.org) and TomKat Ranch (https://tomkatranch.org) for providing historic 
+soil sampling data in the `tomkat-historic` directory.
+
 
 cli/
 ----

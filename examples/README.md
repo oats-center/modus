@@ -31,3 +31,10 @@ using `dev/build.js`.  Then, it will compile that with typescript into javascrip
 typescript declaration files.
 
 `yarn test` will test that everything imports in browser and in node.
+
+## Acknowledgements and Licenses
+--------------------------------
+All data in this repo is released under the Creative Commons CCO 1.0 Universal Public License.
+
+Thanks to Point Blue Conservation Science (https://pointblue.org) and TomKat Ranch (https://tomkatranch.org) for providing historic 
+soil sampling data in the `tomkat-historic` directory.
