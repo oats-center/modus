@@ -4,6 +4,7 @@ import chalk from 'chalk';
 import type * as MainLib from '../index.js';
 
 import tomkat from '@modusjs/examples/dist/tomkat-historic/tomkat_source_data2015_RMN0-10cm_1_json.js';
+import xlsx from 'xlsx';
 
 import type ModusResult from '@oada/types/modus/v1/modus-result.js';
 
@@ -19,49 +20,32 @@ export default async function run(lib: typeof MainLib) {
 
   let { wb, str } = lib.csv.toCsv(tomkat as ModusResult)
 
-  let keys = [
-    "ReportID",
-    "Latitude",
-    "Longitude",
-    "DepthID",
-    "StartingDepth",
-    "EndingDepth",
-    "EventType",
-    "FileDescription"
-  ]
-  test('Have greater than zero results from parsing tomkat historic data');
+  let data = xlsx.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]!] as xlsx.WorkSheet)
 
-  test('First result has LabMetaData.Reports[0].FileDescription');
-  throw new Error('First result did not have a report with FileDescription');
-
-
-  test('All parse tests passed');
-}
-
-function deepdiff(a: any, b: any, path?: string, differences?: string[]): string[] {
-  if (!differences) differences = [];
-  path = path || '';
-
-  // Same type:
-  if (typeof a !== typeof b) {
-    differences.push(`a is a ${typeof a} but b is a ${typeof b} at path ${path}`);
-    return differences;
+  if (data!.length === 0) {
+    throw new Error("CSV had no rows")
   }
 
-  // they are the same at this point if they are not an object
-  if (typeof a !== 'object') {
-    return differences;
+  let results: Record<string,string> = {
+    "ReportID": 'string',
+    "Latitude": 'number',
+    "Longitude": 'number',
+    "DepthID": 'string',
+    "StartingDepth [cm]": 'number',
+    "EndingDepth [cm]": 'number',
+    "ColumnDepth [cm]": 'number',
+    "EventType": 'string',
+    "FileDescription": 'string',
+    "EventDate": 'string',
+    'P [ug/g]': 'number'
   }
+  let rowOne: any = data![0];
 
-  if (Array.isArray(a) !== Array.isArray(b)) {
-    differences.push(`isArray(a) is ${Array.isArray(a)}, but isArray(b) is ${Array.isArray(b)} at path ${path}`);
-    return differences;
-  }
-
-  // They both have keys/values, so compare them
-  for (const [key, value] of Object.entries(a)) {
-    differences = deepdiff(value, b[key], `${path}/${key}`, differences);
-  }
-
-  return differences;
+  test('Checking that first row has several columns with values of the appropriate types.')
+  Object.keys(results).forEach(key=> {
+    if (rowOne![key] === undefined || typeof rowOne![key] !== results[key]) {
+      error('Bad row:', rowOne)
+      throw new Error(`Column ${key} was undefined or did not match expected type ${results[key]}`)
+    }
+  })
 }

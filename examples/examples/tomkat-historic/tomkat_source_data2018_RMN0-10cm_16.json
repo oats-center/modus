@@ -31,7 +31,8 @@
             {
               "SampleMetaData": {
                 "SampleNumber": "0",
-                "ReportID": "TOKA-122",
+                "ReportID": "1",
+                "FMISSampleID": "TOKA-122",
                 "Geometry": {
                   "wkt": "POINT(-122.3643707 37.2633573)"
                 }

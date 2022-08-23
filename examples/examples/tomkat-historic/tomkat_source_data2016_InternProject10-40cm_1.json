@@ -31,7 +31,8 @@
             {
               "SampleMetaData": {
                 "SampleNumber": "0",
-                "ReportID": "FRONT FIELD"
+                "ReportID": "1",
+                "FMISSampleID": "FRONT FIELD"
               },
               "Depths": [
                 {
@@ -74,7 +75,8 @@
             {
               "SampleMetaData": {
                 "SampleNumber": "1",
-                "ReportID": "TOKA-022",
+                "ReportID": "1",
+                "FMISSampleID": "TOKA-022",
                 "Geometry": {
                   "wkt": "POINT(-122.3665960 37.2669748)"
                 }
@@ -120,7 +122,8 @@
             {
               "SampleMetaData": {
                 "SampleNumber": "2",
-                "ReportID": "TOKA-104",
+                "ReportID": "1",
+                "FMISSampleID": "TOKA-104",
                 "Geometry": {
                   "wkt": "POINT(-122.3801294 37.2670464)"
                 }
@@ -166,7 +169,8 @@
             {
               "SampleMetaData": {
                 "SampleNumber": "3",
-                "ReportID": "TOKA-007",
+                "ReportID": "1",
+                "FMISSampleID": "TOKA-007",
                 "Geometry": {
                   "wkt": "POINT(-122.3801146 37.2688491)"
                 }
@@ -212,7 +216,8 @@
             {
               "SampleMetaData": {
                 "SampleNumber": "4",
-                "ReportID": "TOKA-060",
+                "ReportID": "1",
+                "FMISSampleID": "TOKA-060",
                 "Geometry": {
                   "wkt": "POINT(-122.3552566 37.2741247)"
                 }
@@ -258,7 +263,8 @@
             {
               "SampleMetaData": {
                 "SampleNumber": "5",
-                "ReportID": "TOKA-064",
+                "ReportID": "1",
+                "FMISSampleID": "TOKA-064",
                 "Geometry": {
                   "wkt": "POINT(-122.3530163 37.2723097)"
                 }
@@ -304,7 +310,8 @@
             {
               "SampleMetaData": {
                 "SampleNumber": "6",
-                "ReportID": "TOKA-068",
+                "ReportID": "1",
+                "FMISSampleID": "TOKA-068",
                 "Geometry": {
                   "wkt": "POINT(-122.3531397 37.2578881)"
                 }
@@ -350,7 +357,8 @@
             {
               "SampleMetaData": {
                 "SampleNumber": "7",
-                "ReportID": "PRB0"
+                "ReportID": "1",
+                "FMISSampleID": "PRB0"
               },
               "Depths": [
                 {

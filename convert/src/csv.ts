@@ -915,6 +915,7 @@ function toSampleMetaObj(sampleMeta: any, allReports: any) {
     ...allReports[sampleMeta.ReportID],
     Latitude: +(ll[0]),
     Longitude: +(ll[1]),
+    FMISSampleID: sampleMeta.FMISSampleID
   }
 }
 
@@ -922,10 +923,10 @@ function toDepthRefsObj(depthRefs: any) : any  {
   return Object.fromEntries(
     depthRefs.map(
       (dr: Depth) => [dr.DepthID, {
-        DepthID: dr.DepthID,
-        [`StartingDepth: (${dr.DepthUnit})`]: dr.StartingDepth,
-        [`EndingDepth (${dr.DepthUnit})`]: dr.EndingDepth,
-        [`ColumnDepth (${dr.DepthUnit})`]: dr.ColumnDepth,
+        DepthID: ''+dr.DepthID,
+        [`StartingDepth [${dr.DepthUnit}]`]: dr.StartingDepth,
+        [`EndingDepth [${dr.DepthUnit}]`]: dr.EndingDepth,
+        [`ColumnDepth [${dr.DepthUnit}]`]: dr.ColumnDepth,
       }]
     )
   )
@@ -934,7 +935,8 @@ function toDepthRefsObj(depthRefs: any) : any  {
 function toReportsObj(reports: any) : any  {
   return Object.fromEntries(
     reports.map((r: any) => [r.ReportID, {
-      FileDescription: r.FileDescription
+      FileDescription: r.FileDescription,
+      ReportID: r.ReportID
     }])
   )
 }
@@ -942,7 +944,7 @@ function toReportsObj(reports: any) : any  {
 function toNutrientResultsObj(sampleDepth: any) {
   return Object.fromEntries(
     sampleDepth.NutrientResults.map(
-      (nr: NutrientResult) => [`${nr.Element} (${nr.ValueUnit})`, nr.Value]
+      (nr: NutrientResult) => [`${nr.Element} [${nr.ValueUnit}]`, nr.Value]
     )
   )
 }
