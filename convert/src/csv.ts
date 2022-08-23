@@ -331,7 +331,7 @@ let nutrientColHeaders: Record<string,any> = {
   },
   "OM": {
     Element: "OM",
-    ValueUnit: "ppm"
+    ValueUnit: "%"
   },
   "Organic Matter LOI %": {
     Element: "OM (LOI)",
@@ -339,6 +339,10 @@ let nutrientColHeaders: Record<string,any> = {
   },
   "Organic Matter": {
      Element: "OM",
+     ValueUnit: "%"
+  },
+  "OM (LOI)": {
+     Element: "OM (LOI)",
      ValueUnit: "%"
   },
   "Olsen P ppm P": {
@@ -357,11 +361,23 @@ let nutrientColHeaders: Record<string,any> = {
     Element: "P",
     ValueUnit: "ppm"
   },
+  "P": {
+    Element: "P",
+    ValueUnit: "ppm"
+  },
   "Pb lead": {
     Element: "Pb",
     ValueUnit: "ppm"
   },
+  "Pb": {
+    Element: "Pb",
+    ValueUnit: "ppm"
+  },
   "Potassium ppm K": {
+    Element: "K",
+    ValueUnit: "ppm"
+  },
+  "K": {
     Element: "K",
     ValueUnit: "ppm"
   },
@@ -371,6 +387,10 @@ let nutrientColHeaders: Record<string,any> = {
   },
   "K potassium": {
     Element: "K",
+    ValueUnit: "ppm"
+  },
+  "Ca": {
+    Element: "Ca",
     ValueUnit: "ppm"
   },
   "Calcium ppm Ca": {
@@ -389,11 +409,23 @@ let nutrientColHeaders: Record<string,any> = {
     Element: "Cd",
     ValueUnit: "ppm"
   },
-  "Cr chromium": {
+  "Cd": {
     Element: "Cd",
     ValueUnit: "ppm"
   },
+  "Cr chromium": {
+    Element: "Cr",
+    ValueUnit: "ppm"
+  },
+  "Cr": {
+    Element: "Cr",
+    ValueUnit: "ppm"
+  },
   "Magnesium ppm Mg": {
+    Element: "Mg",
+    ValueUnit: "ppm"
+  },
+  "Mg": {
     Element: "Mg",
     ValueUnit: "ppm"
   },
@@ -405,6 +437,10 @@ let nutrientColHeaders: Record<string,any> = {
     Element: "Mg",
     ValueUnit: "ppm"
   },
+  "Mo": {
+    Element: "Mo",
+    ValueUnit: "ppm"
+  },
   "Mo molybdenum": {
     Element: "Mo",
     ValueUnit: "ppm"
@@ -412,6 +448,10 @@ let nutrientColHeaders: Record<string,any> = {
   "CEC/Sum of Cations me/100g": {
     Element: "CEC",
     ValueUnit: "Sum of Cations me/100g"
+  },
+  "CEC": {
+    Element: "CEC",
+    ValueUnit: "cmol(+)/kg"
   },
   "CEC (Estimated)": {
     Element: "CEC",
@@ -421,12 +461,28 @@ let nutrientColHeaders: Record<string,any> = {
     Element: "BS-Ca",
     ValueUnit: "%"
   },
+  "BS-Ca": {
+    Element: "BS-Ca",
+    ValueUnit: "%"
+  },
+  "BS-Mg": {
+    Element: "BS-Mg",
+    ValueUnit: "%"
+  },
   "%Mg Sat": {
     Element: "BS-Mg",
     ValueUnit: "%"
   },
+  "BS-K": {
+    Element: "BS-K",
+    ValueUnit: "%"
+  },
   "%K Sat": {
     Element: "BS-K",
+    ValueUnit: "%"
+  },
+  "BS-Na": {
+    Element: "BS-Na",
     ValueUnit: "%"
   },
   "%Na Sat": {
@@ -437,7 +493,15 @@ let nutrientColHeaders: Record<string,any> = {
     Element: "BS-H",
     ValueUnit: "%"
   },
+  "BS-H": {
+    Element: "BS-H",
+    ValueUnit: "%"
+  },
   "Sulfate-S ppm S": {
+    Element: "SO4-S",
+    ValueUnit: "ppm"
+  },
+  "SO4-S": {
     Element: "SO4-S",
     ValueUnit: "ppm"
   },
@@ -445,7 +509,15 @@ let nutrientColHeaders: Record<string,any> = {
     Element: "S",
     ValueUnit: "ppm"
   },
+  "S": {
+    Element: "S",
+    ValueUnit: "ppm"
+  },
   "Zinc ppm Zn": {
+    Element: "Zn",
+    ValueUnit: "ppm",
+  },
+  "Zn": {
     Element: "Zn",
     ValueUnit: "ppm",
   },
@@ -457,11 +529,19 @@ let nutrientColHeaders: Record<string,any> = {
     Element: "Mn",
     ValueUnit: "ppm"
   },
+  "Mn": {
+    Element: "Mn",
+    ValueUnit: "ppm"
+  },
   "Mn manganese": {
     Element: "Mn",
     ValueUnit: "ppm"
   },
   "Boron ppm B": {
+    Element: "B",
+    ValueUnit: "ppm"
+  },
+  "B": {
     Element: "B",
     ValueUnit: "ppm"
   },
@@ -481,7 +561,15 @@ let nutrientColHeaders: Record<string,any> = {
     Element: "Fe",
     ValueUnit: "ppm"
   },
+  "Fe": {
+    Element: "Fe",
+    ValueUnit: "ppm"
+  },
   "Cu copper": {
+    Element: "Cu",
+    ValueUnit: "ppm"
+  },
+  "Cu": {
     Element: "Cu",
     ValueUnit: "ppm"
   },
@@ -492,11 +580,22 @@ let nutrientColHeaders: Record<string,any> = {
   "Excess Lime": {
     Element: "Lime Rec",
   },
+  "Lime Rec": {
+    Element: "Lime Rec",
+  },
   "WRDF Buffer pH": {
-    Element: "BpH",
+    Element: "B-pH (W)",
+  },
+  "BpH (W)": {
+    Element: "BpH (W)",
   },
   "1:1 S Salts mmho/cm": {
-    ValueUnit: "mmho/cm"
+    ValueUnit: "mmho/cm",
+    Element: "SS"
+  },
+  "SS": {
+    ValueUnit: "mmho/cm",
+    Element: "SS"
   },
   "Nitrate-N ppm N": {
     Element: "NO3-N",
@@ -506,7 +605,15 @@ let nutrientColHeaders: Record<string,any> = {
     Element: "NO3-N",
     ValueUnit: "ppm"
   },
+  "NO3-N": {
+    Element: "NO3-N",
+    ValueUnit: "ppm"
+  },
   "Ni nickel": {
+    Element: "Ni",
+    ValueUnit: "ppm"
+  },
+  "Ni": {
     Element: "Ni",
     ValueUnit: "ppm"
   },
@@ -518,11 +625,19 @@ let nutrientColHeaders: Record<string,any> = {
     Element: "Na",
     ValueUnit: "ppm"
   },
+  "Na": {
+    Element: "Na",
+    ValueUnit: "ppm"
+  },
   "Sodium": {
     Element: "Na",
     ValueUnit: "cmol(+)/kg"
   },
-  "Aluminium ppm Na": {
+  "Aluminium ppm Al": {
+    Element: "Al",
+    ValueUnit: "ppm"
+  },
+  "Al": {
     Element: "Al",
     ValueUnit: "ppm"
   },
@@ -538,11 +653,23 @@ let nutrientColHeaders: Record<string,any> = {
     Element: "As",
     ValueUnit: "ppm"
   },
-  "Chloride ppm Na": {
+  "As": {
+    Element: "As",
+    ValueUnit: "ppm"
+  },
+  "Chloride ppm Cl": {
+    Element: "Cl",
+    ValueUnit: "ppm"
+  },
+  "Cl": {
     Element: "Cl",
     ValueUnit: "ppm"
   },
   "Total N ppm": {
+    Element: "TN",
+    ValueUnit: "ppm"
+  },
+  "TN": {
     Element: "TN",
     ValueUnit: "ppm"
   },
@@ -591,8 +718,20 @@ let nutrientColHeaders: Record<string,any> = {
     Element: "TOC",
     ValueUnit: "%"
   },
+  "TOC": {
+    Element: "TOC",
+    ValueUnit: "%"
+  },
+  "TN (W)": {
+    Element: "TN (W)",
+    ValueUnit: "ppm"
+  },
   "Water Extractable Total N": {
     Element: "TN (W)",
+    ValueUnit: "ppm"
+  },
+  "TC (W)": {
+    Element: "TC (W)",
     ValueUnit: "ppm"
   },
   "Water Extractable Total C": {
@@ -605,30 +744,6 @@ let nutrientColHeaders: Record<string,any> = {
   },
   "TC": {
     Element: "TC",
-    ValueUnit: "ppm"
-  },
-  "Ca": {
-    Element: "Ca",
-    ValueUnit: "ppm"
-  },
-  "K": {
-    Element: "K",
-    ValueUnit: "ppm"
-  },
-  "Mg": {
-    Element: "Mg",
-    ValueUnit: "ppm"
-  },
-  "Mn": {
-    Element: "Mn",
-    ValueUnit: "ppm"
-  },
-  "P": {
-    Element: "P",
-    ValueUnit: "ppm"
-  },
-  "Zn": {
-    Element: "Zn",
     ValueUnit: "ppm"
   },
   /* Didn't see these in the official modus element list
