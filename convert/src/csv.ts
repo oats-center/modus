@@ -328,8 +328,12 @@ let nutrientColHeaders: Record<string,any> = {
   "pH": {
     Element: "pH",
   },
-  "Organic Matter LOI %": {
+  "OM": {
     Element: "OM",
+    ValueUnit: "ppm"
+  },
+  "Organic Matter LOI %": {
+    Element: "OM (LOI)",
     ValueUnit: "%"
   },
   "Organic Matter": {
@@ -348,6 +352,14 @@ let nutrientColHeaders: Record<string,any> = {
     Element: "P",
     ValueUnit: "ug/g"
   },
+  "P phosphorus": {
+    Element: "P",
+    ValueUnit: "ppm"
+  },
+  "Pb lead": {
+    Element: "Pb",
+    ValueUnit: "ppm"
+  },
   "Potassium ppm K": {
     Element: "K",
     ValueUnit: "ppm"
@@ -355,6 +367,10 @@ let nutrientColHeaders: Record<string,any> = {
   "Potassium": {
     Element: "K",
     ValueUnit: "cmol(+)/kg"
+  },
+  "K potassium": {
+    Element: "K",
+    ValueUnit: "ppm"
   },
   "Calcium ppm Ca": {
     Element: "Ca",
@@ -364,6 +380,18 @@ let nutrientColHeaders: Record<string,any> = {
     Element: "Ca",
     ValueUnit: "cmol(+)/kg"
   },
+  "Ca calcium": {
+    Element: "Ca",
+    ValueUnit: "ppm"
+  },
+  "Cd cadmium": {
+    Element: "Cd",
+    ValueUnit: "ppm"
+  },
+  "Cr chromium": {
+    Element: "Cd",
+    ValueUnit: "ppm"
+  },
   "Magnesium ppm Mg": {
     Element: "Mg",
     ValueUnit: "ppm"
@@ -371,6 +399,14 @@ let nutrientColHeaders: Record<string,any> = {
   "Magnesium": {
     Element: "Mg",
     ValueUnit: "cmol(+)/kg"
+  },
+  "Mg magnesium": {
+    Element: "Mg",
+    ValueUnit: "ppm"
+  },
+  "Mo molybdenum": {
+    Element: "Mo",
+    ValueUnit: "ppm"
   },
   "CEC/Sum of Cations me/100g": {
     Element: "CEC",
@@ -404,7 +440,15 @@ let nutrientColHeaders: Record<string,any> = {
     Element: "SO4-S",
     ValueUnit: "ppm"
   },
+  "S sulfur": {
+    Element: "S",
+    ValueUnit: "ppm"
+  },
   "Zinc ppm Zn": {
+    Element: "Zn",
+    ValueUnit: "ppm",
+  },
+  "Zn zinc": {
     Element: "Zn",
     ValueUnit: "ppm",
   },
@@ -412,7 +456,15 @@ let nutrientColHeaders: Record<string,any> = {
     Element: "Mn",
     ValueUnit: "ppm"
   },
+  "Mn manganese": {
+    Element: "Mn",
+    ValueUnit: "ppm"
+  },
   "Boron ppm B": {
+    Element: "B",
+    ValueUnit: "ppm"
+  },
+  "B boron": {
     Element: "B",
     ValueUnit: "ppm"
   },
@@ -424,7 +476,15 @@ let nutrientColHeaders: Record<string,any> = {
     Element: "Fe",
     ValueUnit: "ppm"
   },
-  "Copper ppm Mg": {
+  "Fe Iron": {
+    Element: "Fe",
+    ValueUnit: "ppm"
+  },
+  "Cu copper": {
+    Element: "Cu",
+    ValueUnit: "ppm"
+  },
+  "Copper ppm": {
     Element: "Cu",
     ValueUnit: "ppm"
   },
@@ -445,7 +505,15 @@ let nutrientColHeaders: Record<string,any> = {
     Element: "NO3-N",
     ValueUnit: "ppm"
   },
+  "Ni nickel": {
+    Element: "Ni",
+    ValueUnit: "ppm"
+  },
   "Sodium ppm Na": {
+    Element: "Na",
+    ValueUnit: "ppm"
+  },
+  "Na sodium": {
     Element: "Na",
     ValueUnit: "ppm"
   },
@@ -457,8 +525,16 @@ let nutrientColHeaders: Record<string,any> = {
     Element: "Al",
     ValueUnit: "ppm"
   },
+  "Al aluminium": {
+    Element: "Al",
+    ValueUnit: "ppm"
+  },
   "Aluminium": {
     Element: "Al",
+    ValueUnit: "ppm"
+  },
+  "As arsenic": {
+    Element: "As",
     ValueUnit: "ppm"
   },
   "Chloride ppm Na": {
@@ -521,9 +597,51 @@ let nutrientColHeaders: Record<string,any> = {
   "Water Extractable Total C": {
     Element: "TC (W)",
     ValueUnit: "ppm"
-  }
+  },
+  "Moisture (Grav)": {
+    Element: "Moisture (Grav)",
+    ValueUnit: "%"
+  },
+  "TC": {
+    Element: "TC",
+    ValueUnit: "ppm"
+  },
+  "Ca": {
+    Element: "Ca",
+    ValueUnit: "ppm"
+  },
+  "K": {
+    Element: "K",
+    ValueUnit: "ppm"
+  },
+  "Mg": {
+    Element: "Mg",
+    ValueUnit: "ppm"
+  },
+  "Mn": {
+    Element: "Mn",
+    ValueUnit: "ppm"
+  },
+  "P": {
+    Element: "P",
+    ValueUnit: "ppm"
+  },
+  "Zn": {
+    Element: "Zn",
+    ValueUnit: "ppm"
+  },
+  /* Didn't see these in the official modus element list
+  "LBC 1": {
+    Element: "Ca",
+    ValueUnit: "ppm"
+  },
+  "LBC 1": {
+    Element: "Ca",
+    ValueUnit: "ppm"
+  },
+  */
 }
-  /*
+  /* Didn't see these in the official modus element list
        Element: "Total Microbial Biomass": ,
   "Total Bacteria Biomass": [],
   "Actinomycetes Biomass": [],
@@ -544,6 +662,8 @@ function parseNutrientResults(row: any, units?: Record<string,string>): Nutrient
   return Object.keys(row)
     .filter(key => key in nutrientColHeaders)
     .filter(key => !isNaN(row[key]))
+    .map(key => key.replace(/\n/g, ' '))
+    .map(key => key.replace(/ +/g, ' ').trim())
     .map(key => ({
       Element: nutrientColHeaders[key].Element,
       // prioritize user-specified units (from "UNITS" row indicator) over

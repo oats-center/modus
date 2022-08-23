@@ -1,0 +1,396 @@
+{
+  "Events": [
+    {
+      "LabMetaData": {
+        "Reports": [
+          {
+            "ReportID": "1",
+            "FileDescription": "TO2223.13_1"
+          }
+        ]
+      },
+      "EventMetaData": {
+        "EventDate": "44749",
+        "EventType": {
+          "Soil": true
+        }
+      },
+      "EventSamples": {
+        "Soil": {
+          "DepthRefs": [
+            {
+              "StartingDepth": 0,
+              "EndingDepth": 8,
+              "DepthUnit": "in",
+              "Name": "Unknown Depth",
+              "ColumnDepth": 8,
+              "DepthID": 1
+            }
+          ],
+          "SoilSamples": [
+            {
+              "SampleMetaData": {
+                "SampleNumber": "0",
+                "ReportID": "DS4-A5 0-10"
+              },
+              "Depths": [
+                {
+                  "DepthID": "1",
+                  "NutrientResults": []
+                }
+              ]
+            },
+            {
+              "SampleMetaData": {
+                "SampleNumber": "1",
+                "ReportID": "DS4-A5 10-20"
+              },
+              "Depths": [
+                {
+                  "DepthID": "1",
+                  "NutrientResults": []
+                }
+              ]
+            },
+            {
+              "SampleMetaData": {
+                "SampleNumber": "2",
+                "ReportID": "DS4-A5 20-30"
+              },
+              "Depths": [
+                {
+                  "DepthID": "1",
+                  "NutrientResults": []
+                }
+              ]
+            },
+            {
+              "SampleMetaData": {
+                "SampleNumber": "3",
+                "ReportID": "DS4-A5 30-40"
+              },
+              "Depths": [
+                {
+                  "DepthID": "1",
+                  "NutrientResults": []
+                }
+              ]
+            },
+            {
+              "SampleMetaData": {
+                "SampleNumber": "4",
+                "ReportID": "DS4-A5 40-50"
+              },
+              "Depths": [
+                {
+                  "DepthID": "1",
+                  "NutrientResults": []
+                }
+              ]
+            },
+            {
+              "SampleMetaData": {
+                "SampleNumber": "5",
+                "ReportID": "DS6-A5 0-10"
+              },
+              "Depths": [
+                {
+                  "DepthID": "1",
+                  "NutrientResults": []
+                }
+              ]
+            },
+            {
+              "SampleMetaData": {
+                "SampleNumber": "6",
+                "ReportID": "DS6-A5 10-20"
+              },
+              "Depths": [
+                {
+                  "DepthID": "1",
+                  "NutrientResults": []
+                }
+              ]
+            },
+            {
+              "SampleMetaData": {
+                "SampleNumber": "7",
+                "ReportID": "DS6-A5 20-30"
+              },
+              "Depths": [
+                {
+                  "DepthID": "1",
+                  "NutrientResults": []
+                }
+              ]
+            },
+            {
+              "SampleMetaData": {
+                "SampleNumber": "8",
+                "ReportID": "DS6-A5 30-40"
+              },
+              "Depths": [
+                {
+                  "DepthID": "1",
+                  "NutrientResults": []
+                }
+              ]
+            },
+            {
+              "SampleMetaData": {
+                "SampleNumber": "9",
+                "ReportID": "DS6-A5 40-50"
+              },
+              "Depths": [
+                {
+                  "DepthID": "1",
+                  "NutrientResults": []
+                }
+              ]
+            },
+            {
+              "SampleMetaData": {
+                "SampleNumber": "10",
+                "ReportID": "MS2-A5 0-10"
+              },
+              "Depths": [
+                {
+                  "DepthID": "1",
+                  "NutrientResults": []
+                }
+              ]
+            },
+            {
+              "SampleMetaData": {
+                "SampleNumber": "11",
+                "ReportID": "MS2-A5 10-20"
+              },
+              "Depths": [
+                {
+                  "DepthID": "1",
+                  "NutrientResults": []
+                }
+              ]
+            },
+            {
+              "SampleMetaData": {
+                "SampleNumber": "12",
+                "ReportID": "MS2-A5 20-30"
+              },
+              "Depths": [
+                {
+                  "DepthID": "1",
+                  "NutrientResults": []
+                }
+              ]
+            },
+            {
+              "SampleMetaData": {
+                "SampleNumber": "13",
+                "ReportID": "MS2-A5 30-40"
+              },
+              "Depths": [
+                {
+                  "DepthID": "1",
+                  "NutrientResults": []
+                }
+              ]
+            },
+            {
+              "SampleMetaData": {
+                "SampleNumber": "14",
+                "ReportID": "MS2-A5 40-50"
+              },
+              "Depths": [
+                {
+                  "DepthID": "1",
+                  "NutrientResults": []
+                }
+              ]
+            },
+            {
+              "SampleMetaData": {
+                "SampleNumber": "15",
+                "ReportID": "MS4-A5 0-10"
+              },
+              "Depths": [
+                {
+                  "DepthID": "1",
+                  "NutrientResults": []
+                }
+              ]
+            },
+            {
+              "SampleMetaData": {
+                "SampleNumber": "16",
+                "ReportID": "MS4-A5 10-20"
+              },
+              "Depths": [
+                {
+                  "DepthID": "1",
+                  "NutrientResults": []
+                }
+              ]
+            },
+            {
+              "SampleMetaData": {
+                "SampleNumber": "17",
+                "ReportID": "MS4-A5 20-30"
+              },
+              "Depths": [
+                {
+                  "DepthID": "1",
+                  "NutrientResults": []
+                }
+              ]
+            },
+            {
+              "SampleMetaData": {
+                "SampleNumber": "18",
+                "ReportID": "MS4-A5 30-40"
+              },
+              "Depths": [
+                {
+                  "DepthID": "1",
+                  "NutrientResults": []
+                }
+              ]
+            },
+            {
+              "SampleMetaData": {
+                "SampleNumber": "19",
+                "ReportID": "MS4-A5 40-50"
+              },
+              "Depths": [
+                {
+                  "DepthID": "1",
+                  "NutrientResults": []
+                }
+              ]
+            },
+            {
+              "SampleMetaData": {
+                "SampleNumber": "20",
+                "ReportID": "US3-A5 0-10"
+              },
+              "Depths": [
+                {
+                  "DepthID": "1",
+                  "NutrientResults": []
+                }
+              ]
+            },
+            {
+              "SampleMetaData": {
+                "SampleNumber": "21",
+                "ReportID": "US3-A5 10-20"
+              },
+              "Depths": [
+                {
+                  "DepthID": "1",
+                  "NutrientResults": []
+                }
+              ]
+            },
+            {
+              "SampleMetaData": {
+                "SampleNumber": "22",
+                "ReportID": "US3-A5 20-30"
+              },
+              "Depths": [
+                {
+                  "DepthID": "1",
+                  "NutrientResults": []
+                }
+              ]
+            },
+            {
+              "SampleMetaData": {
+                "SampleNumber": "23",
+                "ReportID": "US3-A5 30-40"
+              },
+              "Depths": [
+                {
+                  "DepthID": "1",
+                  "NutrientResults": []
+                }
+              ]
+            },
+            {
+              "SampleMetaData": {
+                "SampleNumber": "24",
+                "ReportID": "US3-A5 40-50"
+              },
+              "Depths": [
+                {
+                  "DepthID": "1",
+                  "NutrientResults": []
+                }
+              ]
+            },
+            {
+              "SampleMetaData": {
+                "SampleNumber": "25",
+                "ReportID": "US5-A5 0-10"
+              },
+              "Depths": [
+                {
+                  "DepthID": "1",
+                  "NutrientResults": []
+                }
+              ]
+            },
+            {
+              "SampleMetaData": {
+                "SampleNumber": "26",
+                "ReportID": "US5-A5 10-20"
+              },
+              "Depths": [
+                {
+                  "DepthID": "1",
+                  "NutrientResults": []
+                }
+              ]
+            },
+            {
+              "SampleMetaData": {
+                "SampleNumber": "27",
+                "ReportID": "US5-A5 20-30"
+              },
+              "Depths": [
+                {
+                  "DepthID": "1",
+                  "NutrientResults": []
+                }
+              ]
+            },
+            {
+              "SampleMetaData": {
+                "SampleNumber": "28",
+                "ReportID": "US5-A5 30-40"
+              },
+              "Depths": [
+                {
+                  "DepthID": "1",
+                  "NutrientResults": []
+                }
+              ]
+            },
+            {
+              "SampleMetaData": {
+                "SampleNumber": "29",
+                "ReportID": "US5-A5 40-50"
+              },
+              "Depths": [
+                {
+                  "DepthID": "1",
+                  "NutrientResults": []
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
