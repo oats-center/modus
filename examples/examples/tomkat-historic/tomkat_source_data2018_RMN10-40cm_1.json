@@ -31,7 +31,8 @@
             {
               "SampleMetaData": {
                 "SampleNumber": "0",
-                "ReportID": "TOKA-001",
+                "ReportID": "1",
+                "FMISSampleID": "TOKA-001",
                 "Geometry": {
                   "wkt": "POINT(-122.3846552 37.2652672)"
                 }
@@ -72,7 +73,8 @@
             {
               "SampleMetaData": {
                 "SampleNumber": "1",
-                "ReportID": "TOKA-006",
+                "ReportID": "1",
+                "FMISSampleID": "TOKA-006",
                 "Geometry": {
                   "wkt": "POINT(-122.3801442 37.2652437)"
                 }
@@ -148,7 +150,8 @@
             {
               "SampleMetaData": {
                 "SampleNumber": "2",
-                "ReportID": "TOKA-007",
+                "ReportID": "1",
+                "FMISSampleID": "TOKA-007",
                 "Geometry": {
                   "wkt": "POINT(-122.3801146 37.2688491)"
                 }
@@ -224,7 +227,8 @@
             {
               "SampleMetaData": {
                 "SampleNumber": "3",
-                "ReportID": "TOKA-104",
+                "ReportID": "1",
+                "FMISSampleID": "TOKA-104",
                 "Geometry": {
                   "wkt": "POINT(-122.3801294 37.2670464)"
                 }

@@ -869,7 +869,6 @@ export function toCsv(input: ModusResult | ModusResult[]) {
   } else {
     data = toCsvObject(input);
   }
-  console.log(JSON.stringify({data}, null, 2))
   let sheet = xlsx.utils.json_to_sheet(data);
 
   return {
@@ -911,12 +910,13 @@ function toCsvObject(input: ModusResult) {
 
 function toSampleMetaObj(sampleMeta: any, allReports: any) {
   let ll = sampleMeta.Geometry.wkt.replace("POINT(", "").replace(")", "").trim().split(' ');
-  console.log({sampleMeta, allReports})
+
   return {
     SampleNumber: sampleMeta.SampleNumber,
     ...allReports[sampleMeta.ReportID],
     Latitude: +(ll[0]),
     Longitude: +(ll[1]),
+    FMISSampleID: sampleMeta.FMISSampleID
   }
 }
 
@@ -924,10 +924,10 @@ function toDepthRefsObj(depthRefs: any) : any  {
   return Object.fromEntries(
     depthRefs.map(
       (dr: Depth) => [dr.DepthID, {
-        DepthID: dr.DepthID,
-        [`StartingDepth: (${dr.DepthUnit})`]: dr.StartingDepth,
-        [`EndingDepth (${dr.DepthUnit})`]: dr.EndingDepth,
-        [`ColumnDepth (${dr.DepthUnit})`]: dr.ColumnDepth,
+        DepthID: ''+dr.DepthID,
+        [`StartingDepth [${dr.DepthUnit}]`]: dr.StartingDepth,
+        [`EndingDepth [${dr.DepthUnit}]`]: dr.EndingDepth,
+        [`ColumnDepth [${dr.DepthUnit}]`]: dr.ColumnDepth,
       }]
     )
   )
@@ -936,7 +936,8 @@ function toDepthRefsObj(depthRefs: any) : any  {
 function toReportsObj(reports: any) : any  {
   return Object.fromEntries(
     reports.map((r: any) => [r.ReportID, {
-      FileDescription: r.FileDescription
+      FileDescription: r.FileDescription,
+      ReportID: r.ReportID
     }])
   )
 }
@@ -944,7 +945,7 @@ function toReportsObj(reports: any) : any  {
 function toNutrientResultsObj(sampleDepth: any) {
   return Object.fromEntries(
     sampleDepth.NutrientResults.map(
-      (nr: NutrientResult) => [`${nr.Element} (${nr.ValueUnit})`, nr.Value]
+      (nr: NutrientResult) => [`${nr.Element} [${nr.ValueUnit}]`, nr.Value]
     )
   )
 }
