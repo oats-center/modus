@@ -46,6 +46,7 @@
                       "Value": 6
                     },
                     {
+                      "Element": "Sand",
                       "ValueUnit": "%",
                       "Value": 22.5
                     },
@@ -121,6 +122,7 @@
                       "Value": 4.4
                     },
                     {
+                      "Element": "Sand",
                       "ValueUnit": "%",
                       "Value": 25
                     },
@@ -191,6 +193,7 @@
                   "DepthID": "1",
                   "NutrientResults": [
                     {
+                      "Element": "Sand",
                       "ValueUnit": "%",
                       "Value": 60
                     },

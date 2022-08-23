@@ -51,6 +51,7 @@
                       "Value": 4.7
                     },
                     {
+                      "Element": "Sand",
                       "ValueUnit": "%",
                       "Value": 55
                     },
@@ -68,6 +69,11 @@
                       "Element": "pH",
                       "ValueUnit": "none",
                       "Value": 5.8
+                    },
+                    {
+                      "Element": "CEC",
+                      "ValueUnit": "cmol(+)/kg",
+                      "Value": 26
                     },
                     {
                       "Element": "Ca",
@@ -121,6 +127,7 @@
                       "Value": 9.6
                     },
                     {
+                      "Element": "Sand",
                       "ValueUnit": "%",
                       "Value": 30
                     },
@@ -138,6 +145,11 @@
                       "Element": "pH",
                       "ValueUnit": "none",
                       "Value": 5.7
+                    },
+                    {
+                      "Element": "CEC",
+                      "ValueUnit": "cmol(+)/kg",
+                      "Value": 45
                     },
                     {
                       "Element": "Ca",
@@ -191,6 +203,7 @@
                       "Value": 11
                     },
                     {
+                      "Element": "Sand",
                       "ValueUnit": "%",
                       "Value": 41.2
                     },
@@ -208,6 +221,11 @@
                       "Element": "pH",
                       "ValueUnit": "none",
                       "Value": 6.3
+                    },
+                    {
+                      "Element": "CEC",
+                      "ValueUnit": "cmol(+)/kg",
+                      "Value": 46
                     },
                     {
                       "Element": "Ca",
@@ -261,6 +279,11 @@
                       "Value": 6.1
                     },
                     {
+                      "Element": "CEC",
+                      "ValueUnit": "cmol(+)/kg",
+                      "Value": 43
+                    },
+                    {
                       "Element": "Ca",
                       "ValueUnit": "cmol(+)/kg",
                       "Value": 17
@@ -312,6 +335,7 @@
                       "Value": 6.6
                     },
                     {
+                      "Element": "Sand",
                       "ValueUnit": "%",
                       "Value": 26.2
                     },
@@ -329,6 +353,11 @@
                       "Element": "pH",
                       "ValueUnit": "none",
                       "Value": 5.1
+                    },
+                    {
+                      "Element": "CEC",
+                      "ValueUnit": "cmol(+)/kg",
+                      "Value": 27
                     },
                     {
                       "Element": "Ca",
@@ -382,6 +411,7 @@
                       "Value": 9.3
                     },
                     {
+                      "Element": "Sand",
                       "ValueUnit": "%",
                       "Value": 20
                     },
@@ -399,6 +429,11 @@
                       "Element": "pH",
                       "ValueUnit": "none",
                       "Value": 5.9
+                    },
+                    {
+                      "Element": "CEC",
+                      "ValueUnit": "cmol(+)/kg",
+                      "Value": 50
                     },
                     {
                       "Element": "Ca",
@@ -452,6 +487,11 @@
                       "Value": 5.8
                     },
                     {
+                      "Element": "CEC",
+                      "ValueUnit": "cmol(+)/kg",
+                      "Value": 65
+                    },
+                    {
                       "Element": "Ca",
                       "ValueUnit": "cmol(+)/kg",
                       "Value": 23
@@ -503,6 +543,7 @@
                       "Value": 4.2
                     },
                     {
+                      "Element": "Sand",
                       "ValueUnit": "%",
                       "Value": 27.5
                     },
@@ -520,6 +561,11 @@
                       "Element": "pH",
                       "ValueUnit": "none",
                       "Value": 5.6
+                    },
+                    {
+                      "Element": "CEC",
+                      "ValueUnit": "cmol(+)/kg",
+                      "Value": 33
                     },
                     {
                       "Element": "Ca",
@@ -573,6 +619,11 @@
                       "Value": 6
                     },
                     {
+                      "Element": "CEC",
+                      "ValueUnit": "cmol(+)/kg",
+                      "Value": 59
+                    },
+                    {
                       "Element": "Ca",
                       "ValueUnit": "cmol(+)/kg",
                       "Value": 23
@@ -619,6 +670,7 @@
                       "Value": 13
                     },
                     {
+                      "Element": "Sand",
                       "ValueUnit": "%",
                       "Value": 25
                     },
@@ -636,6 +688,11 @@
                       "Element": "pH",
                       "ValueUnit": "none",
                       "Value": 6
+                    },
+                    {
+                      "Element": "CEC",
+                      "ValueUnit": "cmol(+)/kg",
+                      "Value": 41
                     },
                     {
                       "Element": "Ca",
@@ -684,6 +741,7 @@
                       "Value": 15
                     },
                     {
+                      "Element": "Sand",
                       "ValueUnit": "%",
                       "Value": 25
                     },
@@ -701,6 +759,11 @@
                       "Element": "pH",
                       "ValueUnit": "none",
                       "Value": 6
+                    },
+                    {
+                      "Element": "CEC",
+                      "ValueUnit": "cmol(+)/kg",
+                      "Value": 45
                     },
                     {
                       "Element": "Ca",
@@ -754,6 +817,7 @@
                       "Value": 12
                     },
                     {
+                      "Element": "Sand",
                       "ValueUnit": "%",
                       "Value": 37.5
                     },
@@ -771,6 +835,11 @@
                       "Element": "pH",
                       "ValueUnit": "none",
                       "Value": 6
+                    },
+                    {
+                      "Element": "CEC",
+                      "ValueUnit": "cmol(+)/kg",
+                      "Value": 45
                     },
                     {
                       "Element": "Ca",
@@ -824,6 +893,7 @@
                       "Value": 8.3
                     },
                     {
+                      "Element": "Sand",
                       "ValueUnit": "%",
                       "Value": 17.5
                     },
@@ -841,6 +911,11 @@
                       "Element": "pH",
                       "ValueUnit": "none",
                       "Value": 5.7
+                    },
+                    {
+                      "Element": "CEC",
+                      "ValueUnit": "cmol(+)/kg",
+                      "Value": 40
                     },
                     {
                       "Element": "Ca",
@@ -894,6 +969,7 @@
                       "Value": 4.7
                     },
                     {
+                      "Element": "Sand",
                       "ValueUnit": "%",
                       "Value": 22.5
                     },
@@ -911,6 +987,11 @@
                       "Element": "pH",
                       "ValueUnit": "none",
                       "Value": 5.6
+                    },
+                    {
+                      "Element": "CEC",
+                      "ValueUnit": "cmol(+)/kg",
+                      "Value": 56
                     },
                     {
                       "Element": "Ca",

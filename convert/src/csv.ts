@@ -686,6 +686,7 @@ let nutrientColHeaders: Record<string,any> = {
     ValueUnit: "%"
   },
   "Sand": {
+    Element: "Sand",
     ValueUnit: "%"
   },
   "% Silt": {
@@ -776,6 +777,7 @@ let nutrientColHeaders: Record<string,any> = {
 
 function parseNutrientResults(row: any, units?: Record<string,string>): NutrientResult[] {
   return Object.keys(row)
+    .map(key => key.trim())
     .filter(key => key in nutrientColHeaders)
     .filter(key => !isNaN(row[key]))
     .map(key => key.replace(/\n/g, ' '))
@@ -844,3 +846,98 @@ function parseDepth(row: any, units?: any, sheetname?: string): Depth {
 
   return obj;
 }
+
+export function toCsv(input: ModusResult | ModusResult[]) {
+
+  let data = [];
+
+  if (Array.isArray(input)) {
+    data = input.map((mr: ModusResult) => toCsvObject(mr)).flat(1);
+  } else {
+    data = toCsvObject(input);
+  }
+  console.log(JSON.stringify({data}, null, 2))
+  let sheet = xlsx.utils.json_to_sheet(data);
+
+  return {
+    wb: {
+      Sheets: {"Sheet1": sheet},
+      SheetNames: ["Sheet1"]
+    } as xlsx.WorkBook,
+    str: xlsx.utils.sheet_to_csv(sheet)
+  }
+}
+
+function toCsvObject(input: ModusResult) {
+  return input.Events!.map(event => {
+    let eventMeta = {
+      EventDate: event.EventMetaData!.EventDate,
+      EventType: "Soil" // Hard-coded for now. This is all soil data at the moment
+    };
+
+    let allReports = toReportsObj(event.LabMetaData!.Reports);
+
+    let allDepthRefs = toDepthRefsObj(event.EventSamples!.Soil!.DepthRefs)
+
+    return event.EventSamples!.Soil!.SoilSamples!.map(sample => {
+      let sampleMeta = toSampleMetaObj(sample.SampleMetaData, allReports);
+
+      return sample.Depths!.map(depth => {
+        let nutrients = toNutrientResultsObj(depth)
+
+        return {
+          ...eventMeta,
+          ...sampleMeta,
+          ...allDepthRefs[depth.DepthID!],
+          ...nutrients,
+        }
+      })
+    })
+  }).flat(3)
+}
+
+function toSampleMetaObj(sampleMeta: any, allReports: any) {
+  let ll = sampleMeta.Geometry.wkt.replace("POINT(", "").replace(")", "").trim().split(' ');
+  console.log({sampleMeta, allReports})
+  return {
+    SampleNumber: sampleMeta.SampleNumber,
+    ...allReports[sampleMeta.ReportID],
+    Latitude: +(ll[0]),
+    Longitude: +(ll[1]),
+  }
+}
+
+function toDepthRefsObj(depthRefs: any) : any  {
+  return Object.fromEntries(
+    depthRefs.map(
+      (dr: Depth) => [dr.DepthID, {
+        DepthID: dr.DepthID,
+        [`StartingDepth: (${dr.DepthUnit})`]: dr.StartingDepth,
+        [`EndingDepth (${dr.DepthUnit})`]: dr.EndingDepth,
+        [`ColumnDepth (${dr.DepthUnit})`]: dr.ColumnDepth,
+      }]
+    )
+  )
+}
+
+function toReportsObj(reports: any) : any  {
+  return Object.fromEntries(
+    reports.map((r: any) => [r.ReportID, {
+      FileDescription: r.FileDescription
+    }])
+  )
+}
+
+function toNutrientResultsObj(sampleDepth: any) {
+  return Object.fromEntries(
+    sampleDepth.NutrientResults.map(
+      (nr: NutrientResult) => [`${nr.Element} (${nr.ValueUnit})`, nr.Value]
+    )
+  )
+}
+
+type ModusCsvRow = {
+  ReportID: string,
+}
+
+type ModusCsv = ModusCsvRow[];

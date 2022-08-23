@@ -5,6 +5,7 @@ import * as mainlib from '../../node/index.js';
 
 import xmlTests from '../xml.test.js';
 import csvTests from '../csv.test.js';
+import toCsvTests from '../toCsv.test.js';
 
 const info = debug('@modusjs/xml#test-node:info');
 const { red } = chalk;
@@ -17,6 +18,9 @@ const { red } = chalk;
 
     info('testing csv');
     await csvTests(mainlib);
+
+    info('testing toCsv');
+    await toCsvTests(mainlib);
 
   } catch(e: any) {
     info(red(`ERROR: tests through exception: `), JSON.stringify(e, null, '  '));

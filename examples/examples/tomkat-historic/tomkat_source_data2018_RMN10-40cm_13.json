@@ -46,6 +46,7 @@
                       "Value": 19.5
                     },
                     {
+                      "Element": "Sand",
                       "ValueUnit": "%",
                       "Value": 45
                     },
@@ -121,6 +122,7 @@
                       "Value": 6.8
                     },
                     {
+                      "Element": "Sand",
                       "ValueUnit": "%",
                       "Value": 52.5
                     },
@@ -196,6 +198,7 @@
                       "Value": 7.9
                     },
                     {
+                      "Element": "Sand",
                       "ValueUnit": "%",
                       "Value": 27.5
                     },
@@ -271,6 +274,7 @@
                       "Value": 3
                     },
                     {
+                      "Element": "Sand",
                       "ValueUnit": "%",
                       "Value": 36.2
                     },
