@@ -31,6 +31,9 @@
     "test": "concurrently \"yarn run test:browser\" \"yarn run test:node\"",
     "clean": "rm -rf dist dist-browser"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "author": "Aaron Ault <aultac@gmail.com>",
   "license": "Apache-2.0",
   "devDependencies": {

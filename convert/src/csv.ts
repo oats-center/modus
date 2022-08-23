@@ -582,7 +582,7 @@ function parseDepth(row: any, units?: any, sheetname?: string): Depth {
   }
 
   if (row["B Depth"]) obj.StartingDepth = +(row["B Depth"]);
-  if (row["B Depth"]) obj.Name = row["B Depth"];
+  if (row["B Depth"]) obj.Name = ''+row["B Depth"];
   if (units["B Depth"]) obj.DepthUnit = units["B Depth"]; // Assume same for both top and bottom
   if (row["E Depth"]) obj.EndingDepth = +(row["E Depth"]);
 

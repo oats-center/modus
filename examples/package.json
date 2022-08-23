@@ -1,11 +1,14 @@
 {
   "name": "@modusjs/examples",
   "packageManager": "yarn@3.2.1",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Universal library for interacting with Modus XML files",
   "type": "module",
   "typings": "index.d.ts",
   "comment1": "Import files from the examples folder directly",
+  "publishConfig": {
+    "access": "public"
+  },
   "files": [
     "dist"
   ],

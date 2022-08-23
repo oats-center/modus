@@ -1,0 +1,1790 @@
+{
+  "Events": [
+    {
+      "LabMetaData": {
+        "Reports": [
+          {
+            "ReportID": "1",
+            "FileDescription": "Sheet1_1"
+          }
+        ]
+      },
+      "EventMetaData": {
+        "EventDate": "44630",
+        "EventType": {
+          "Soil": true
+        }
+      },
+      "EventSamples": {
+        "Soil": {
+          "DepthRefs": [
+            {
+              "DepthUnit": "cm",
+              "StartingDepth": 0,
+              "Name": "0",
+              "EndingDepth": 4,
+              "ColumnDepth": 4,
+              "DepthID": 1
+            },
+            {
+              "DepthUnit": "cm",
+              "StartingDepth": 4,
+              "Name": "4",
+              "EndingDepth": 16,
+              "ColumnDepth": 12,
+              "DepthID": 2
+            }
+          ],
+          "SoilSamples": [
+            {
+              "SampleMetaData": {
+                "SampleNumber": "0",
+                "ReportID": ""
+              },
+              "Depths": [
+                {
+                  "DepthID": "1",
+                  "NutrientResults": [
+                    {
+                      "Element": "pH",
+                      "ValueUnit": "none",
+                      "Value": 6
+                    },
+                    {
+                      "ValueUnit": "mmho/cm",
+                      "Value": 0.2
+                    },
+                    {
+                      "Element": "OM",
+                      "ValueUnit": "%",
+                      "Value": 7.5
+                    },
+                    {
+                      "Element": "NO3-N",
+                      "ValueUnit": "ppm",
+                      "Value": 1.9
+                    },
+                    {
+                      "Element": "P",
+                      "ValueUnit": "ppm",
+                      "Value": 6.9
+                    },
+                    {
+                      "Element": "K",
+                      "ValueUnit": "ppm",
+                      "Value": 341
+                    },
+                    {
+                      "Element": "SO4-S",
+                      "ValueUnit": "ppm",
+                      "Value": 8
+                    },
+                    {
+                      "Element": "Ca",
+                      "ValueUnit": "ppm",
+                      "Value": 2380
+                    },
+                    {
+                      "Element": "Mg",
+                      "ValueUnit": "ppm",
+                      "Value": 815
+                    },
+                    {
+                      "Element": "Na",
+                      "ValueUnit": "ppm",
+                      "Value": 59
+                    },
+                    {
+                      "Element": "CEC",
+                      "ValueUnit": "Sum of Cations me/100g",
+                      "Value": 28.2
+                    },
+                    {
+                      "Element": "BS-H",
+                      "ValueUnit": "%",
+                      "Value": 30
+                    },
+                    {
+                      "Element": "BS-K",
+                      "ValueUnit": "%",
+                      "Value": 3
+                    },
+                    {
+                      "Element": "BS-Ca",
+                      "ValueUnit": "%",
+                      "Value": 42
+                    },
+                    {
+                      "Element": "BS-Mg",
+                      "ValueUnit": "%",
+                      "Value": 24
+                    },
+                    {
+                      "Element": "BS-Na",
+                      "ValueUnit": "%",
+                      "Value": 1
+                    },
+                    {
+                      "Element": "TN",
+                      "ValueUnit": "ppm",
+                      "Value": 3812
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "SampleMetaData": {
+                "SampleNumber": "1",
+                "ReportID": ""
+              },
+              "Depths": [
+                {
+                  "DepthID": "2",
+                  "NutrientResults": [
+                    {
+                      "Element": "pH",
+                      "ValueUnit": "none",
+                      "Value": 6.1
+                    },
+                    {
+                      "ValueUnit": "mmho/cm",
+                      "Value": 0.15
+                    },
+                    {
+                      "Element": "OM",
+                      "ValueUnit": "%",
+                      "Value": 5.7
+                    },
+                    {
+                      "Element": "NO3-N",
+                      "ValueUnit": "ppm",
+                      "Value": 1.4
+                    },
+                    {
+                      "Element": "P",
+                      "ValueUnit": "ppm",
+                      "Value": 5.8
+                    },
+                    {
+                      "Element": "K",
+                      "ValueUnit": "ppm",
+                      "Value": 221
+                    },
+                    {
+                      "Element": "SO4-S",
+                      "ValueUnit": "ppm",
+                      "Value": 6.6
+                    },
+                    {
+                      "Element": "Ca",
+                      "ValueUnit": "ppm",
+                      "Value": 2486
+                    },
+                    {
+                      "Element": "Mg",
+                      "ValueUnit": "ppm",
+                      "Value": 940
+                    },
+                    {
+                      "Element": "Na",
+                      "ValueUnit": "ppm",
+                      "Value": 78
+                    },
+                    {
+                      "Element": "CEC",
+                      "ValueUnit": "Sum of Cations me/100g",
+                      "Value": 30
+                    },
+                    {
+                      "Element": "BS-H",
+                      "ValueUnit": "%",
+                      "Value": 29
+                    },
+                    {
+                      "Element": "BS-K",
+                      "ValueUnit": "%",
+                      "Value": 2
+                    },
+                    {
+                      "Element": "BS-Ca",
+                      "ValueUnit": "%",
+                      "Value": 41
+                    },
+                    {
+                      "Element": "BS-Mg",
+                      "ValueUnit": "%",
+                      "Value": 26
+                    },
+                    {
+                      "Element": "BS-Na",
+                      "ValueUnit": "%",
+                      "Value": 1
+                    },
+                    {
+                      "Element": "TN",
+                      "ValueUnit": "ppm",
+                      "Value": 2941
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "SampleMetaData": {
+                "SampleNumber": "2",
+                "ReportID": ""
+              },
+              "Depths": [
+                {
+                  "DepthID": "1",
+                  "NutrientResults": [
+                    {
+                      "Element": "pH",
+                      "ValueUnit": "none",
+                      "Value": 5.8
+                    },
+                    {
+                      "ValueUnit": "mmho/cm",
+                      "Value": 0.09
+                    },
+                    {
+                      "Element": "OM",
+                      "ValueUnit": "%",
+                      "Value": 5.5
+                    },
+                    {
+                      "Element": "NO3-N",
+                      "ValueUnit": "ppm",
+                      "Value": 0.8
+                    },
+                    {
+                      "Element": "P",
+                      "ValueUnit": "ppm",
+                      "Value": 6.5
+                    },
+                    {
+                      "Element": "K",
+                      "ValueUnit": "ppm",
+                      "Value": 226
+                    },
+                    {
+                      "Element": "SO4-S",
+                      "ValueUnit": "ppm",
+                      "Value": 8.5
+                    },
+                    {
+                      "Element": "Ca",
+                      "ValueUnit": "ppm",
+                      "Value": 1186
+                    },
+                    {
+                      "Element": "Mg",
+                      "ValueUnit": "ppm",
+                      "Value": 646
+                    },
+                    {
+                      "Element": "Na",
+                      "ValueUnit": "ppm",
+                      "Value": 55
+                    },
+                    {
+                      "Element": "CEC",
+                      "ValueUnit": "Sum of Cations me/100g",
+                      "Value": 21.5
+                    },
+                    {
+                      "Element": "BS-H",
+                      "ValueUnit": "%",
+                      "Value": 44
+                    },
+                    {
+                      "Element": "BS-K",
+                      "ValueUnit": "%",
+                      "Value": 3
+                    },
+                    {
+                      "Element": "BS-Ca",
+                      "ValueUnit": "%",
+                      "Value": 27
+                    },
+                    {
+                      "Element": "BS-Mg",
+                      "ValueUnit": "%",
+                      "Value": 25
+                    },
+                    {
+                      "Element": "BS-Na",
+                      "ValueUnit": "%",
+                      "Value": 1
+                    },
+                    {
+                      "Element": "TN",
+                      "ValueUnit": "ppm",
+                      "Value": 2540
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "SampleMetaData": {
+                "SampleNumber": "3",
+                "ReportID": ""
+              },
+              "Depths": [
+                {
+                  "DepthID": "2",
+                  "NutrientResults": [
+                    {
+                      "Element": "pH",
+                      "ValueUnit": "none",
+                      "Value": 5.8
+                    },
+                    {
+                      "ValueUnit": "mmho/cm",
+                      "Value": 0.07
+                    },
+                    {
+                      "Element": "OM",
+                      "ValueUnit": "%",
+                      "Value": 3
+                    },
+                    {
+                      "Element": "NO3-N",
+                      "ValueUnit": "ppm",
+                      "Value": 0.7
+                    },
+                    {
+                      "Element": "P",
+                      "ValueUnit": "ppm",
+                      "Value": 5.5
+                    },
+                    {
+                      "Element": "K",
+                      "ValueUnit": "ppm",
+                      "Value": 126
+                    },
+                    {
+                      "Element": "SO4-S",
+                      "ValueUnit": "ppm",
+                      "Value": 6.5
+                    },
+                    {
+                      "Element": "Ca",
+                      "ValueUnit": "ppm",
+                      "Value": 953
+                    },
+                    {
+                      "Element": "Mg",
+                      "ValueUnit": "ppm",
+                      "Value": 738
+                    },
+                    {
+                      "Element": "Na",
+                      "ValueUnit": "ppm",
+                      "Value": 82
+                    },
+                    {
+                      "Element": "CEC",
+                      "ValueUnit": "Sum of Cations me/100g",
+                      "Value": 20.5
+                    },
+                    {
+                      "Element": "BS-H",
+                      "ValueUnit": "%",
+                      "Value": 43
+                    },
+                    {
+                      "Element": "BS-K",
+                      "ValueUnit": "%",
+                      "Value": 2
+                    },
+                    {
+                      "Element": "BS-Ca",
+                      "ValueUnit": "%",
+                      "Value": 23
+                    },
+                    {
+                      "Element": "BS-Mg",
+                      "ValueUnit": "%",
+                      "Value": 30
+                    },
+                    {
+                      "Element": "BS-Na",
+                      "ValueUnit": "%",
+                      "Value": 2
+                    },
+                    {
+                      "Element": "TN",
+                      "ValueUnit": "ppm",
+                      "Value": 1309
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "SampleMetaData": {
+                "SampleNumber": "4",
+                "ReportID": ""
+              },
+              "Depths": [
+                {
+                  "DepthID": "1",
+                  "NutrientResults": [
+                    {
+                      "Element": "pH",
+                      "ValueUnit": "none",
+                      "Value": 6.1
+                    },
+                    {
+                      "ValueUnit": "mmho/cm",
+                      "Value": 0.13
+                    },
+                    {
+                      "Element": "OM",
+                      "ValueUnit": "%",
+                      "Value": 6.4
+                    },
+                    {
+                      "Element": "NO3-N",
+                      "ValueUnit": "ppm",
+                      "Value": 1.6
+                    },
+                    {
+                      "Element": "P",
+                      "ValueUnit": "ppm",
+                      "Value": 6.1
+                    },
+                    {
+                      "Element": "K",
+                      "ValueUnit": "ppm",
+                      "Value": 290
+                    },
+                    {
+                      "Element": "SO4-S",
+                      "ValueUnit": "ppm",
+                      "Value": 7.2
+                    },
+                    {
+                      "Element": "Ca",
+                      "ValueUnit": "ppm",
+                      "Value": 1909
+                    },
+                    {
+                      "Element": "Mg",
+                      "ValueUnit": "ppm",
+                      "Value": 573
+                    },
+                    {
+                      "Element": "Na",
+                      "ValueUnit": "ppm",
+                      "Value": 42
+                    },
+                    {
+                      "Element": "CEC",
+                      "ValueUnit": "Sum of Cations me/100g",
+                      "Value": 23.5
+                    },
+                    {
+                      "Element": "BS-H",
+                      "ValueUnit": "%",
+                      "Value": 35
+                    },
+                    {
+                      "Element": "BS-K",
+                      "ValueUnit": "%",
+                      "Value": 3
+                    },
+                    {
+                      "Element": "BS-Ca",
+                      "ValueUnit": "%",
+                      "Value": 41
+                    },
+                    {
+                      "Element": "BS-Mg",
+                      "ValueUnit": "%",
+                      "Value": 20
+                    },
+                    {
+                      "Element": "BS-Na",
+                      "ValueUnit": "%",
+                      "Value": 1
+                    },
+                    {
+                      "Element": "TN",
+                      "ValueUnit": "ppm",
+                      "Value": 3438
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "SampleMetaData": {
+                "SampleNumber": "5",
+                "ReportID": ""
+              },
+              "Depths": [
+                {
+                  "DepthID": "2",
+                  "NutrientResults": [
+                    {
+                      "Element": "pH",
+                      "ValueUnit": "none",
+                      "Value": 6
+                    },
+                    {
+                      "ValueUnit": "mmho/cm",
+                      "Value": 0.08
+                    },
+                    {
+                      "Element": "OM",
+                      "ValueUnit": "%",
+                      "Value": 4.7
+                    },
+                    {
+                      "Element": "NO3-N",
+                      "ValueUnit": "ppm",
+                      "Value": 1.2
+                    },
+                    {
+                      "Element": "P",
+                      "ValueUnit": "ppm",
+                      "Value": 6
+                    },
+                    {
+                      "Element": "K",
+                      "ValueUnit": "ppm",
+                      "Value": 187
+                    },
+                    {
+                      "Element": "SO4-S",
+                      "ValueUnit": "ppm",
+                      "Value": 6.3
+                    },
+                    {
+                      "Element": "Ca",
+                      "ValueUnit": "ppm",
+                      "Value": 1855
+                    },
+                    {
+                      "Element": "Mg",
+                      "ValueUnit": "ppm",
+                      "Value": 531
+                    },
+                    {
+                      "Element": "Na",
+                      "ValueUnit": "ppm",
+                      "Value": 59
+                    },
+                    {
+                      "Element": "CEC",
+                      "ValueUnit": "Sum of Cations me/100g",
+                      "Value": 22.5
+                    },
+                    {
+                      "Element": "BS-H",
+                      "ValueUnit": "%",
+                      "Value": 36
+                    },
+                    {
+                      "Element": "BS-K",
+                      "ValueUnit": "%",
+                      "Value": 2
+                    },
+                    {
+                      "Element": "BS-Ca",
+                      "ValueUnit": "%",
+                      "Value": 41
+                    },
+                    {
+                      "Element": "BS-Mg",
+                      "ValueUnit": "%",
+                      "Value": 20
+                    },
+                    {
+                      "Element": "BS-Na",
+                      "ValueUnit": "%",
+                      "Value": 1
+                    },
+                    {
+                      "Element": "TN",
+                      "ValueUnit": "ppm",
+                      "Value": 2788
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "SampleMetaData": {
+                "SampleNumber": "6",
+                "ReportID": ""
+              },
+              "Depths": [
+                {
+                  "DepthID": "1",
+                  "NutrientResults": [
+                    {
+                      "Element": "pH",
+                      "ValueUnit": "none",
+                      "Value": 5.8
+                    },
+                    {
+                      "ValueUnit": "mmho/cm",
+                      "Value": 0.09
+                    },
+                    {
+                      "Element": "OM",
+                      "ValueUnit": "%",
+                      "Value": 4.1
+                    },
+                    {
+                      "Element": "NO3-N",
+                      "ValueUnit": "ppm",
+                      "Value": 1.1
+                    },
+                    {
+                      "Element": "P",
+                      "ValueUnit": "ppm",
+                      "Value": 8.5
+                    },
+                    {
+                      "Element": "K",
+                      "ValueUnit": "ppm",
+                      "Value": 139
+                    },
+                    {
+                      "Element": "SO4-S",
+                      "ValueUnit": "ppm",
+                      "Value": 5.5
+                    },
+                    {
+                      "Element": "Ca",
+                      "ValueUnit": "ppm",
+                      "Value": 1034
+                    },
+                    {
+                      "Element": "Mg",
+                      "ValueUnit": "ppm",
+                      "Value": 478
+                    },
+                    {
+                      "Element": "Na",
+                      "ValueUnit": "ppm",
+                      "Value": 57
+                    },
+                    {
+                      "Element": "CEC",
+                      "ValueUnit": "Sum of Cations me/100g",
+                      "Value": 18
+                    },
+                    {
+                      "Element": "BS-H",
+                      "ValueUnit": "%",
+                      "Value": 46
+                    },
+                    {
+                      "Element": "BS-K",
+                      "ValueUnit": "%",
+                      "Value": 2
+                    },
+                    {
+                      "Element": "BS-Ca",
+                      "ValueUnit": "%",
+                      "Value": 29
+                    },
+                    {
+                      "Element": "BS-Mg",
+                      "ValueUnit": "%",
+                      "Value": 22
+                    },
+                    {
+                      "Element": "BS-Na",
+                      "ValueUnit": "%",
+                      "Value": 1
+                    },
+                    {
+                      "Element": "TN",
+                      "ValueUnit": "ppm",
+                      "Value": 2023
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "SampleMetaData": {
+                "SampleNumber": "7",
+                "ReportID": ""
+              },
+              "Depths": [
+                {
+                  "DepthID": "2",
+                  "NutrientResults": [
+                    {
+                      "Element": "pH",
+                      "ValueUnit": "none",
+                      "Value": 5.9
+                    },
+                    {
+                      "ValueUnit": "mmho/cm",
+                      "Value": 0.06
+                    },
+                    {
+                      "Element": "OM",
+                      "ValueUnit": "%",
+                      "Value": 2.6
+                    },
+                    {
+                      "Element": "NO3-N",
+                      "ValueUnit": "ppm",
+                      "Value": 5.1
+                    },
+                    {
+                      "Element": "P",
+                      "ValueUnit": "ppm",
+                      "Value": 6.3
+                    },
+                    {
+                      "Element": "K",
+                      "ValueUnit": "ppm",
+                      "Value": 71
+                    },
+                    {
+                      "Element": "SO4-S",
+                      "ValueUnit": "ppm",
+                      "Value": 4.9
+                    },
+                    {
+                      "Element": "Ca",
+                      "ValueUnit": "ppm",
+                      "Value": 1151
+                    },
+                    {
+                      "Element": "Mg",
+                      "ValueUnit": "ppm",
+                      "Value": 498
+                    },
+                    {
+                      "Element": "Na",
+                      "ValueUnit": "ppm",
+                      "Value": 70
+                    },
+                    {
+                      "Element": "CEC",
+                      "ValueUnit": "Sum of Cations me/100g",
+                      "Value": 18.9
+                    },
+                    {
+                      "Element": "BS-H",
+                      "ValueUnit": "%",
+                      "Value": 45
+                    },
+                    {
+                      "Element": "BS-K",
+                      "ValueUnit": "%",
+                      "Value": 1
+                    },
+                    {
+                      "Element": "BS-Ca",
+                      "ValueUnit": "%",
+                      "Value": 30
+                    },
+                    {
+                      "Element": "BS-Mg",
+                      "ValueUnit": "%",
+                      "Value": 22
+                    },
+                    {
+                      "Element": "BS-Na",
+                      "ValueUnit": "%",
+                      "Value": 2
+                    },
+                    {
+                      "Element": "TN",
+                      "ValueUnit": "ppm",
+                      "Value": 1438
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "SampleMetaData": {
+                "SampleNumber": "8",
+                "ReportID": ""
+              },
+              "Depths": [
+                {
+                  "DepthID": "1",
+                  "NutrientResults": [
+                    {
+                      "Element": "pH",
+                      "ValueUnit": "none",
+                      "Value": 6.1
+                    },
+                    {
+                      "ValueUnit": "mmho/cm",
+                      "Value": 0.24
+                    },
+                    {
+                      "Element": "OM",
+                      "ValueUnit": "%",
+                      "Value": 8.6
+                    },
+                    {
+                      "Element": "NO3-N",
+                      "ValueUnit": "ppm",
+                      "Value": 2.2
+                    },
+                    {
+                      "Element": "P",
+                      "ValueUnit": "ppm",
+                      "Value": 48.6
+                    },
+                    {
+                      "Element": "K",
+                      "ValueUnit": "ppm",
+                      "Value": 373
+                    },
+                    {
+                      "Element": "SO4-S",
+                      "ValueUnit": "ppm",
+                      "Value": 9.5
+                    },
+                    {
+                      "Element": "Ca",
+                      "ValueUnit": "ppm",
+                      "Value": 2974
+                    },
+                    {
+                      "Element": "Mg",
+                      "ValueUnit": "ppm",
+                      "Value": 886
+                    },
+                    {
+                      "Element": "Na",
+                      "ValueUnit": "ppm",
+                      "Value": 80
+                    },
+                    {
+                      "Element": "CEC",
+                      "ValueUnit": "Sum of Cations me/100g",
+                      "Value": 31.8
+                    },
+                    {
+                      "Element": "BS-H",
+                      "ValueUnit": "%",
+                      "Value": 26
+                    },
+                    {
+                      "Element": "BS-K",
+                      "ValueUnit": "%",
+                      "Value": 3
+                    },
+                    {
+                      "Element": "BS-Ca",
+                      "ValueUnit": "%",
+                      "Value": 47
+                    },
+                    {
+                      "Element": "BS-Mg",
+                      "ValueUnit": "%",
+                      "Value": 23
+                    },
+                    {
+                      "Element": "BS-Na",
+                      "ValueUnit": "%",
+                      "Value": 1
+                    },
+                    {
+                      "Element": "TN",
+                      "ValueUnit": "ppm",
+                      "Value": 4488
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "SampleMetaData": {
+                "SampleNumber": "9",
+                "ReportID": ""
+              },
+              "Depths": [
+                {
+                  "DepthID": "2",
+                  "NutrientResults": [
+                    {
+                      "Element": "pH",
+                      "ValueUnit": "none",
+                      "Value": 6.4
+                    },
+                    {
+                      "ValueUnit": "mmho/cm",
+                      "Value": 0.3
+                    },
+                    {
+                      "Element": "OM",
+                      "ValueUnit": "%",
+                      "Value": 5.3
+                    },
+                    {
+                      "Element": "NO3-N",
+                      "ValueUnit": "ppm",
+                      "Value": 4.6
+                    },
+                    {
+                      "Element": "P",
+                      "ValueUnit": "ppm",
+                      "Value": 46.7
+                    },
+                    {
+                      "Element": "K",
+                      "ValueUnit": "ppm",
+                      "Value": 347
+                    },
+                    {
+                      "Element": "SO4-S",
+                      "ValueUnit": "ppm",
+                      "Value": 7.7
+                    },
+                    {
+                      "Element": "Ca",
+                      "ValueUnit": "ppm",
+                      "Value": 3777
+                    },
+                    {
+                      "Element": "Mg",
+                      "ValueUnit": "ppm",
+                      "Value": 1063
+                    },
+                    {
+                      "Element": "Na",
+                      "ValueUnit": "ppm",
+                      "Value": 109
+                    },
+                    {
+                      "Element": "CEC",
+                      "ValueUnit": "Sum of Cations me/100g",
+                      "Value": 34.2
+                    },
+                    {
+                      "Element": "BS-H",
+                      "ValueUnit": "%",
+                      "Value": 15
+                    },
+                    {
+                      "Element": "BS-K",
+                      "ValueUnit": "%",
+                      "Value": 3
+                    },
+                    {
+                      "Element": "BS-Ca",
+                      "ValueUnit": "%",
+                      "Value": 55
+                    },
+                    {
+                      "Element": "BS-Mg",
+                      "ValueUnit": "%",
+                      "Value": 26
+                    },
+                    {
+                      "Element": "BS-Na",
+                      "ValueUnit": "%",
+                      "Value": 1
+                    },
+                    {
+                      "Element": "TN",
+                      "ValueUnit": "ppm",
+                      "Value": 3025
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "SampleMetaData": {
+                "SampleNumber": "10",
+                "ReportID": ""
+              },
+              "Depths": [
+                {
+                  "DepthID": "1",
+                  "NutrientResults": [
+                    {
+                      "Element": "pH",
+                      "ValueUnit": "none",
+                      "Value": 6
+                    },
+                    {
+                      "ValueUnit": "mmho/cm",
+                      "Value": 0.19
+                    },
+                    {
+                      "Element": "OM",
+                      "ValueUnit": "%",
+                      "Value": 5.5
+                    },
+                    {
+                      "Element": "NO3-N",
+                      "ValueUnit": "ppm",
+                      "Value": 1
+                    },
+                    {
+                      "Element": "P",
+                      "ValueUnit": "ppm",
+                      "Value": 7.2
+                    },
+                    {
+                      "Element": "K",
+                      "ValueUnit": "ppm",
+                      "Value": 365
+                    },
+                    {
+                      "Element": "SO4-S",
+                      "ValueUnit": "ppm",
+                      "Value": 6.7
+                    },
+                    {
+                      "Element": "Ca",
+                      "ValueUnit": "ppm",
+                      "Value": 2575
+                    },
+                    {
+                      "Element": "Mg",
+                      "ValueUnit": "ppm",
+                      "Value": 996
+                    },
+                    {
+                      "Element": "Na",
+                      "ValueUnit": "ppm",
+                      "Value": 60
+                    },
+                    {
+                      "Element": "CEC",
+                      "ValueUnit": "Sum of Cations me/100g",
+                      "Value": 30.2
+                    },
+                    {
+                      "Element": "BS-H",
+                      "ValueUnit": "%",
+                      "Value": 26
+                    },
+                    {
+                      "Element": "BS-K",
+                      "ValueUnit": "%",
+                      "Value": 3
+                    },
+                    {
+                      "Element": "BS-Ca",
+                      "ValueUnit": "%",
+                      "Value": 42
+                    },
+                    {
+                      "Element": "BS-Mg",
+                      "ValueUnit": "%",
+                      "Value": 28
+                    },
+                    {
+                      "Element": "BS-Na",
+                      "ValueUnit": "%",
+                      "Value": 1
+                    },
+                    {
+                      "Element": "TN",
+                      "ValueUnit": "ppm",
+                      "Value": 2727
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "SampleMetaData": {
+                "SampleNumber": "11",
+                "ReportID": ""
+              },
+              "Depths": [
+                {
+                  "DepthID": "2",
+                  "NutrientResults": [
+                    {
+                      "Element": "pH",
+                      "ValueUnit": "none",
+                      "Value": 6.1
+                    },
+                    {
+                      "ValueUnit": "mmho/cm",
+                      "Value": 0.17
+                    },
+                    {
+                      "Element": "OM",
+                      "ValueUnit": "%",
+                      "Value": 4.3
+                    },
+                    {
+                      "Element": "NO3-N",
+                      "ValueUnit": "ppm",
+                      "Value": 0.6
+                    },
+                    {
+                      "Element": "P",
+                      "ValueUnit": "ppm",
+                      "Value": 6.1
+                    },
+                    {
+                      "Element": "K",
+                      "ValueUnit": "ppm",
+                      "Value": 175
+                    },
+                    {
+                      "Element": "SO4-S",
+                      "ValueUnit": "ppm",
+                      "Value": 5.8
+                    },
+                    {
+                      "Element": "Ca",
+                      "ValueUnit": "ppm",
+                      "Value": 2442
+                    },
+                    {
+                      "Element": "Mg",
+                      "ValueUnit": "ppm",
+                      "Value": 968
+                    },
+                    {
+                      "Element": "Na",
+                      "ValueUnit": "ppm",
+                      "Value": 68
+                    },
+                    {
+                      "Element": "CEC",
+                      "ValueUnit": "Sum of Cations me/100g",
+                      "Value": 29
+                    },
+                    {
+                      "Element": "BS-H",
+                      "ValueUnit": "%",
+                      "Value": 28
+                    },
+                    {
+                      "Element": "BS-K",
+                      "ValueUnit": "%",
+                      "Value": 2
+                    },
+                    {
+                      "Element": "BS-Ca",
+                      "ValueUnit": "%",
+                      "Value": 41
+                    },
+                    {
+                      "Element": "BS-Mg",
+                      "ValueUnit": "%",
+                      "Value": 28
+                    },
+                    {
+                      "Element": "BS-Na",
+                      "ValueUnit": "%",
+                      "Value": 1
+                    },
+                    {
+                      "Element": "TN",
+                      "ValueUnit": "ppm",
+                      "Value": 2234
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "SampleMetaData": {
+                "SampleNumber": "12",
+                "ReportID": ""
+              },
+              "Depths": [
+                {
+                  "DepthID": "1",
+                  "NutrientResults": [
+                    {
+                      "Element": "pH",
+                      "ValueUnit": "none",
+                      "Value": 5.9
+                    },
+                    {
+                      "ValueUnit": "mmho/cm",
+                      "Value": 0.17
+                    },
+                    {
+                      "Element": "OM",
+                      "ValueUnit": "%",
+                      "Value": 5.5
+                    },
+                    {
+                      "Element": "NO3-N",
+                      "ValueUnit": "ppm",
+                      "Value": 0.6
+                    },
+                    {
+                      "Element": "P",
+                      "ValueUnit": "ppm",
+                      "Value": 8.7
+                    },
+                    {
+                      "Element": "K",
+                      "ValueUnit": "ppm",
+                      "Value": 318
+                    },
+                    {
+                      "Element": "SO4-S",
+                      "ValueUnit": "ppm",
+                      "Value": 10.5
+                    },
+                    {
+                      "Element": "Ca",
+                      "ValueUnit": "ppm",
+                      "Value": 2164
+                    },
+                    {
+                      "Element": "Mg",
+                      "ValueUnit": "ppm",
+                      "Value": 885
+                    },
+                    {
+                      "Element": "Na",
+                      "ValueUnit": "ppm",
+                      "Value": 51
+                    },
+                    {
+                      "Element": "CEC",
+                      "ValueUnit": "Sum of Cations me/100g",
+                      "Value": 28.1
+                    },
+                    {
+                      "Element": "BS-H",
+                      "ValueUnit": "%",
+                      "Value": 32
+                    },
+                    {
+                      "Element": "BS-K",
+                      "ValueUnit": "%",
+                      "Value": 3
+                    },
+                    {
+                      "Element": "BS-Ca",
+                      "ValueUnit": "%",
+                      "Value": 38
+                    },
+                    {
+                      "Element": "BS-Mg",
+                      "ValueUnit": "%",
+                      "Value": 26
+                    },
+                    {
+                      "Element": "BS-Na",
+                      "ValueUnit": "%",
+                      "Value": 1
+                    },
+                    {
+                      "Element": "TN",
+                      "ValueUnit": "ppm",
+                      "Value": 3003
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "SampleMetaData": {
+                "SampleNumber": "13",
+                "ReportID": ""
+              },
+              "Depths": [
+                {
+                  "DepthID": "2",
+                  "NutrientResults": [
+                    {
+                      "Element": "pH",
+                      "ValueUnit": "none",
+                      "Value": 5.4
+                    },
+                    {
+                      "ValueUnit": "mmho/cm",
+                      "Value": 0.17
+                    },
+                    {
+                      "Element": "OM",
+                      "ValueUnit": "%",
+                      "Value": 3.8
+                    },
+                    {
+                      "Element": "NO3-N",
+                      "ValueUnit": "ppm",
+                      "Value": 0.8
+                    },
+                    {
+                      "Element": "P",
+                      "ValueUnit": "ppm",
+                      "Value": 6.1
+                    },
+                    {
+                      "Element": "K",
+                      "ValueUnit": "ppm",
+                      "Value": 198
+                    },
+                    {
+                      "Element": "SO4-S",
+                      "ValueUnit": "ppm",
+                      "Value": 6.1
+                    },
+                    {
+                      "Element": "Ca",
+                      "ValueUnit": "ppm",
+                      "Value": 1908
+                    },
+                    {
+                      "Element": "Mg",
+                      "ValueUnit": "ppm",
+                      "Value": 1122
+                    },
+                    {
+                      "Element": "Na",
+                      "ValueUnit": "ppm",
+                      "Value": 85
+                    },
+                    {
+                      "Element": "CEC",
+                      "ValueUnit": "Sum of Cations me/100g",
+                      "Value": 33.1
+                    },
+                    {
+                      "Element": "BS-H",
+                      "ValueUnit": "%",
+                      "Value": 40
+                    },
+                    {
+                      "Element": "BS-K",
+                      "ValueUnit": "%",
+                      "Value": 2
+                    },
+                    {
+                      "Element": "BS-Ca",
+                      "ValueUnit": "%",
+                      "Value": 29
+                    },
+                    {
+                      "Element": "BS-Mg",
+                      "ValueUnit": "%",
+                      "Value": 28
+                    },
+                    {
+                      "Element": "BS-Na",
+                      "ValueUnit": "%",
+                      "Value": 1
+                    },
+                    {
+                      "Element": "TN",
+                      "ValueUnit": "ppm",
+                      "Value": 2153
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "SampleMetaData": {
+                "SampleNumber": "14",
+                "ReportID": ""
+              },
+              "Depths": [
+                {
+                  "DepthID": "1",
+                  "NutrientResults": [
+                    {
+                      "Element": "pH",
+                      "ValueUnit": "none",
+                      "Value": 5.8
+                    },
+                    {
+                      "ValueUnit": "mmho/cm",
+                      "Value": 0.2
+                    },
+                    {
+                      "Element": "OM",
+                      "ValueUnit": "%",
+                      "Value": 7
+                    },
+                    {
+                      "Element": "NO3-N",
+                      "ValueUnit": "ppm",
+                      "Value": 7.4
+                    },
+                    {
+                      "Element": "P",
+                      "ValueUnit": "ppm",
+                      "Value": 7.8
+                    },
+                    {
+                      "Element": "K",
+                      "ValueUnit": "ppm",
+                      "Value": 499
+                    },
+                    {
+                      "Element": "SO4-S",
+                      "ValueUnit": "ppm",
+                      "Value": 12.5
+                    },
+                    {
+                      "Element": "Ca",
+                      "ValueUnit": "ppm",
+                      "Value": 1565
+                    },
+                    {
+                      "Element": "Mg",
+                      "ValueUnit": "ppm",
+                      "Value": 643
+                    },
+                    {
+                      "Element": "Na",
+                      "ValueUnit": "ppm",
+                      "Value": 71
+                    },
+                    {
+                      "Element": "CEC",
+                      "ValueUnit": "Sum of Cations me/100g",
+                      "Value": 26.5
+                    },
+                    {
+                      "Element": "BS-H",
+                      "ValueUnit": "%",
+                      "Value": 44
+                    },
+                    {
+                      "Element": "BS-K",
+                      "ValueUnit": "%",
+                      "Value": 5
+                    },
+                    {
+                      "Element": "BS-Ca",
+                      "ValueUnit": "%",
+                      "Value": 30
+                    },
+                    {
+                      "Element": "BS-Mg",
+                      "ValueUnit": "%",
+                      "Value": 20
+                    },
+                    {
+                      "Element": "BS-Na",
+                      "ValueUnit": "%",
+                      "Value": 1
+                    },
+                    {
+                      "Element": "TN",
+                      "ValueUnit": "ppm",
+                      "Value": 3243
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "SampleMetaData": {
+                "SampleNumber": "15",
+                "ReportID": ""
+              },
+              "Depths": [
+                {
+                  "DepthID": "2",
+                  "NutrientResults": [
+                    {
+                      "Element": "pH",
+                      "ValueUnit": "none",
+                      "Value": 5.5
+                    },
+                    {
+                      "ValueUnit": "mmho/cm",
+                      "Value": 0.14
+                    },
+                    {
+                      "Element": "OM",
+                      "ValueUnit": "%",
+                      "Value": 5.2
+                    },
+                    {
+                      "Element": "NO3-N",
+                      "ValueUnit": "ppm",
+                      "Value": 4
+                    },
+                    {
+                      "Element": "P",
+                      "ValueUnit": "ppm",
+                      "Value": 5.6
+                    },
+                    {
+                      "Element": "K",
+                      "ValueUnit": "ppm",
+                      "Value": 325
+                    },
+                    {
+                      "Element": "SO4-S",
+                      "ValueUnit": "ppm",
+                      "Value": 10.7
+                    },
+                    {
+                      "Element": "Ca",
+                      "ValueUnit": "ppm",
+                      "Value": 1480
+                    },
+                    {
+                      "Element": "Mg",
+                      "ValueUnit": "ppm",
+                      "Value": 768
+                    },
+                    {
+                      "Element": "Na",
+                      "ValueUnit": "ppm",
+                      "Value": 68
+                    },
+                    {
+                      "Element": "CEC",
+                      "ValueUnit": "Sum of Cations me/100g",
+                      "Value": 28.3
+                    },
+                    {
+                      "Element": "BS-H",
+                      "ValueUnit": "%",
+                      "Value": 47
+                    },
+                    {
+                      "Element": "BS-K",
+                      "ValueUnit": "%",
+                      "Value": 3
+                    },
+                    {
+                      "Element": "BS-Ca",
+                      "ValueUnit": "%",
+                      "Value": 26
+                    },
+                    {
+                      "Element": "BS-Mg",
+                      "ValueUnit": "%",
+                      "Value": 23
+                    },
+                    {
+                      "Element": "BS-Na",
+                      "ValueUnit": "%",
+                      "Value": 1
+                    },
+                    {
+                      "Element": "TN",
+                      "ValueUnit": "ppm",
+                      "Value": 2348
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "SampleMetaData": {
+                "SampleNumber": "16",
+                "ReportID": ""
+              },
+              "Depths": [
+                {
+                  "DepthID": "1",
+                  "NutrientResults": [
+                    {
+                      "Element": "pH",
+                      "ValueUnit": "none",
+                      "Value": 7.1
+                    },
+                    {
+                      "ValueUnit": "mmho/cm",
+                      "Value": 0.48
+                    },
+                    {
+                      "Element": "OM",
+                      "ValueUnit": "%",
+                      "Value": 6.3
+                    },
+                    {
+                      "Element": "NO3-N",
+                      "ValueUnit": "ppm",
+                      "Value": 1.1
+                    },
+                    {
+                      "Element": "P",
+                      "ValueUnit": "ppm",
+                      "Value": 15.8
+                    },
+                    {
+                      "Element": "K",
+                      "ValueUnit": "ppm",
+                      "Value": 337
+                    },
+                    {
+                      "Element": "SO4-S",
+                      "ValueUnit": "ppm",
+                      "Value": 22.6
+                    },
+                    {
+                      "Element": "Ca",
+                      "ValueUnit": "ppm",
+                      "Value": 3433
+                    },
+                    {
+                      "Element": "Mg",
+                      "ValueUnit": "ppm",
+                      "Value": 1531
+                    },
+                    {
+                      "Element": "Na",
+                      "ValueUnit": "ppm",
+                      "Value": 79
+                    },
+                    {
+                      "Element": "CEC",
+                      "ValueUnit": "Sum of Cations me/100g",
+                      "Value": 31.1
+                    },
+                    {
+                      "Element": "BS-H",
+                      "ValueUnit": "%",
+                      "Value": 0
+                    },
+                    {
+                      "Element": "BS-K",
+                      "ValueUnit": "%",
+                      "Value": 3
+                    },
+                    {
+                      "Element": "BS-Ca",
+                      "ValueUnit": "%",
+                      "Value": 55
+                    },
+                    {
+                      "Element": "BS-Mg",
+                      "ValueUnit": "%",
+                      "Value": 41
+                    },
+                    {
+                      "Element": "BS-Na",
+                      "ValueUnit": "%",
+                      "Value": 1
+                    },
+                    {
+                      "Element": "TN",
+                      "ValueUnit": "ppm",
+                      "Value": 2779
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "SampleMetaData": {
+                "SampleNumber": "17",
+                "ReportID": ""
+              },
+              "Depths": [
+                {
+                  "DepthID": "2",
+                  "NutrientResults": [
+                    {
+                      "Element": "pH",
+                      "ValueUnit": "none",
+                      "Value": 6.8
+                    },
+                    {
+                      "ValueUnit": "mmho/cm",
+                      "Value": 0.24
+                    },
+                    {
+                      "Element": "OM",
+                      "ValueUnit": "%",
+                      "Value": 3.1
+                    },
+                    {
+                      "Element": "NO3-N",
+                      "ValueUnit": "ppm",
+                      "Value": 0.6
+                    },
+                    {
+                      "Element": "P",
+                      "ValueUnit": "ppm",
+                      "Value": 6.2
+                    },
+                    {
+                      "Element": "K",
+                      "ValueUnit": "ppm",
+                      "Value": 124
+                    },
+                    {
+                      "Element": "SO4-S",
+                      "ValueUnit": "ppm",
+                      "Value": 8.1
+                    },
+                    {
+                      "Element": "Ca",
+                      "ValueUnit": "ppm",
+                      "Value": 3420
+                    },
+                    {
+                      "Element": "Mg",
+                      "ValueUnit": "ppm",
+                      "Value": 1598
+                    },
+                    {
+                      "Element": "Na",
+                      "ValueUnit": "ppm",
+                      "Value": 68
+                    },
+                    {
+                      "Element": "CEC",
+                      "ValueUnit": "Sum of Cations me/100g",
+                      "Value": 31
+                    },
+                    {
+                      "Element": "BS-H",
+                      "ValueUnit": "%",
+                      "Value": 0
+                    },
+                    {
+                      "Element": "BS-K",
+                      "ValueUnit": "%",
+                      "Value": 1
+                    },
+                    {
+                      "Element": "BS-Ca",
+                      "ValueUnit": "%",
+                      "Value": 55
+                    },
+                    {
+                      "Element": "BS-Mg",
+                      "ValueUnit": "%",
+                      "Value": 43
+                    },
+                    {
+                      "Element": "BS-Na",
+                      "ValueUnit": "%",
+                      "Value": 1
+                    },
+                    {
+                      "Element": "TN",
+                      "ValueUnit": "ppm",
+                      "Value": 1635
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
