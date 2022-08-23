@@ -795,13 +795,21 @@ function parseNutrientResults(row: any, units?: Record<string,string>): Nutrient
     .filter(key => !isNaN(row[key]))
     .map(key => key.replace(/\n/g, ' '))
     .map(key => key.replace(/ +/g, ' ').trim())
-    .map(key => ({
-      Element: nutrientColHeaders[key].Element,
-      // prioritize user-specified units (from "UNITS" row indicator) over
-      // matcher-based units, else "none".
-      ValueUnit: units![key] || nutrientColHeaders[key].ValueUnit || "none",
-      Value: +(row[key])
-    }))
+    .map(key => {
+      let unitMatches = key.match(/\[([^\]]+)\]/g)
+      let unitStr = '';
+      if (unitMatches && unitMatches.length > 0) {
+        unitStr = unitMatches[unitMatches.length-1] || '';
+        unitStr.replace('[', '').replace(']', '')
+      }
+      return {
+        Element: nutrientColHeaders[key].Element,
+        // prioritize user-specified units (from "UNITS" row indicator) over
+        // matcher-based units, else "none".
+        ValueUnit: unitStr || units![key] || nutrientColHeaders[key].ValueUnit || "none",
+        Value: +(row[key]),
+      };
+    })
 }
 
 // sheetname is just for debugging
