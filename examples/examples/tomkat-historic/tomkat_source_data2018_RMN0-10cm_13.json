@@ -10,7 +10,7 @@
         ]
       },
       "EventMetaData": {
-        "EventDate": "43140",
+        "EventDate": "2018-01-25",
         "EventType": {
           "Soil": true
         }
@@ -31,9 +31,9 @@
             {
               "SampleMetaData": {
                 "SampleNumber": "0",
-                "ReportID": "TOKA-034",
+                "ReportID": "TOKA-089",
                 "Geometry": {
-                  "wkt": "POINT(-122.3644313 37.2561465)"
+                  "wkt": "POINT(-122.3462180 37.2758779)"
                 }
               },
               "Depths": [
@@ -43,47 +43,52 @@
                     {
                       "Element": "Bulk Density",
                       "ValueUnit": "g/cm3",
-                      "Value": 1.0299779048048
+                      "Value": 1.01422114430136
                     },
                     {
                       "Element": "P",
                       "ValueUnit": "ug/g",
-                      "Value": 42.4
+                      "Value": 34.3
                     },
                     {
                       "Element": "pH",
                       "ValueUnit": "none",
-                      "Value": 6.2
+                      "Value": 5.2
                     },
                     {
                       "Element": "CEC",
                       "ValueUnit": "cmol(+)/kg",
-                      "Value": 34.9
+                      "Value": 36
                     },
                     {
                       "Element": "Ca",
                       "ValueUnit": "cmol(+)/kg",
-                      "Value": 15.105
+                      "Value": 18.735
                     },
                     {
                       "Element": "Mg",
                       "ValueUnit": "cmol(+)/kg",
-                      "Value": 10.425
+                      "Value": 6.991666666666666
                     },
                     {
                       "Element": "K",
                       "ValueUnit": "cmol(+)/kg",
-                      "Value": 0.9948717948717949
+                      "Value": 1.376923076923077
                     },
                     {
                       "Element": "Na",
                       "ValueUnit": "cmol(+)/kg",
-                      "Value": 0.4217391304347826
+                      "Value": 0.09565217391304348
                     },
                     {
                       "Element": "TOC",
                       "ValueUnit": "%",
-                      "Value": 4.9
+                      "Value": 4.5
+                    },
+                    {
+                      "Element": "TN",
+                      "ValueUnit": "%",
+                      "Value": 0.38323
                     }
                   ]
                 }
@@ -92,9 +97,9 @@
             {
               "SampleMetaData": {
                 "SampleNumber": "1",
-                "ReportID": "TOKA-126",
+                "ReportID": "TOKA-099",
                 "Geometry": {
-                  "wkt": "POINT(-122.3621152 37.2633452)"
+                  "wkt": "POINT(-122.3394662 37.2740376)"
                 }
               },
               "Depths": [
@@ -104,12 +109,12 @@
                     {
                       "Element": "Bulk Density",
                       "ValueUnit": "g/cm3",
-                      "Value": 1.20500056259903
+                      "Value": 1.03995318722384
                     },
                     {
                       "Element": "P",
                       "ValueUnit": "ug/g",
-                      "Value": 7.8
+                      "Value": 11.4
                     },
                     {
                       "Element": "pH",
@@ -119,32 +124,37 @@
                     {
                       "Element": "CEC",
                       "ValueUnit": "cmol(+)/kg",
-                      "Value": 31.1
+                      "Value": 25.1
                     },
                     {
                       "Element": "Ca",
                       "ValueUnit": "cmol(+)/kg",
-                      "Value": 12.79
+                      "Value": 9.495
                     },
                     {
                       "Element": "Mg",
                       "ValueUnit": "cmol(+)/kg",
-                      "Value": 8.9
+                      "Value": 6.558333333333334
                     },
                     {
                       "Element": "K",
                       "ValueUnit": "cmol(+)/kg",
-                      "Value": 0.7538461538461538
+                      "Value": 0.8769230769230769
                     },
                     {
                       "Element": "Na",
                       "ValueUnit": "cmol(+)/kg",
-                      "Value": 0.2782608695652174
+                      "Value": 0.12173913043478261
                     },
                     {
                       "Element": "TOC",
                       "ValueUnit": "%",
-                      "Value": 4
+                      "Value": 2.7
+                    },
+                    {
+                      "Element": "TN",
+                      "ValueUnit": "%",
+                      "Value": 0.28531
                     }
                   ]
                 }
@@ -153,9 +163,9 @@
             {
               "SampleMetaData": {
                 "SampleNumber": "2",
-                "ReportID": "TOKA-129",
+                "ReportID": "TOKA-169",
                 "Geometry": {
-                  "wkt": "POINT(-122.3621760 37.2561344)"
+                  "wkt": "POINT(-122.3440091 37.2704573)"
                 }
               },
               "Depths": [
@@ -165,37 +175,37 @@
                     {
                       "Element": "Bulk Density",
                       "ValueUnit": "g/cm3",
-                      "Value": 1.09534825271027
+                      "Value": 0.998145026614649
                     },
                     {
                       "Element": "P",
                       "ValueUnit": "ug/g",
-                      "Value": 7.2
+                      "Value": 9.5
                     },
                     {
                       "Element": "pH",
                       "ValueUnit": "none",
-                      "Value": 6
+                      "Value": 5.7
                     },
                     {
                       "Element": "CEC",
                       "ValueUnit": "cmol(+)/kg",
-                      "Value": 22.2
+                      "Value": 25.9
                     },
                     {
                       "Element": "Ca",
                       "ValueUnit": "cmol(+)/kg",
-                      "Value": 8.1
+                      "Value": 6.745
                     },
                     {
                       "Element": "Mg",
                       "ValueUnit": "cmol(+)/kg",
-                      "Value": 4.666666666666667
+                      "Value": 7.241666666666666
                     },
                     {
                       "Element": "K",
                       "ValueUnit": "cmol(+)/kg",
-                      "Value": 0.5666666666666667
+                      "Value": 0.7487179487179487
                     },
                     {
                       "Element": "Na",
@@ -205,7 +215,78 @@
                     {
                       "Element": "TOC",
                       "ValueUnit": "%",
-                      "Value": 3.5
+                      "Value": 2.3
+                    },
+                    {
+                      "Element": "TN",
+                      "ValueUnit": "%",
+                      "Value": 0.277825
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "SampleMetaData": {
+                "SampleNumber": "3",
+                "ReportID": "TOKA-170",
+                "Geometry": {
+                  "wkt": "POINT(-122.3440247 37.2686546)"
+                }
+              },
+              "Depths": [
+                {
+                  "DepthID": "1",
+                  "NutrientResults": [
+                    {
+                      "Element": "Bulk Density",
+                      "ValueUnit": "g/cm3",
+                      "Value": 1.13285968013659
+                    },
+                    {
+                      "Element": "P",
+                      "ValueUnit": "ug/g",
+                      "Value": 8.2
+                    },
+                    {
+                      "Element": "pH",
+                      "ValueUnit": "none",
+                      "Value": 6
+                    },
+                    {
+                      "Element": "CEC",
+                      "ValueUnit": "cmol(+)/kg",
+                      "Value": 25.8
+                    },
+                    {
+                      "Element": "Ca",
+                      "ValueUnit": "cmol(+)/kg",
+                      "Value": 10.45
+                    },
+                    {
+                      "Element": "Mg",
+                      "ValueUnit": "cmol(+)/kg",
+                      "Value": 6.333333333333333
+                    },
+                    {
+                      "Element": "K",
+                      "ValueUnit": "cmol(+)/kg",
+                      "Value": 0.7282051282051282
+                    },
+                    {
+                      "Element": "Na",
+                      "ValueUnit": "cmol(+)/kg",
+                      "Value": 0.1956521739130435
+                    },
+                    {
+                      "Element": "TOC",
+                      "ValueUnit": "%",
+                      "Value": 2.9
+                    },
+                    {
+                      "Element": "TN",
+                      "ValueUnit": "%",
+                      "Value": 0.29713
                     }
                   ]
                 }

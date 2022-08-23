@@ -10,7 +10,7 @@
         ]
       },
       "EventMetaData": {
-        "EventDate": "44330",
+        "EventDate": "2021-05-13",
         "EventType": {
           "Soil": true
         }
@@ -55,7 +55,7 @@
                       "Value": 0.1
                     },
                     {
-                      "Element": "OM",
+                      "Element": "OM (LOI)",
                       "ValueUnit": "%",
                       "Value": 5.4
                     },
@@ -152,7 +152,7 @@
                       "Value": 0.08
                     },
                     {
-                      "Element": "OM",
+                      "Element": "OM (LOI)",
                       "ValueUnit": "%",
                       "Value": 3.8
                     },
@@ -249,7 +249,7 @@
                       "Value": 0.1
                     },
                     {
-                      "Element": "OM",
+                      "Element": "OM (LOI)",
                       "ValueUnit": "%",
                       "Value": 4.4
                     },
@@ -346,7 +346,7 @@
                       "Value": 0.07
                     },
                     {
-                      "Element": "OM",
+                      "Element": "OM (LOI)",
                       "ValueUnit": "%",
                       "Value": 3
                     },
@@ -443,7 +443,7 @@
                       "Value": 0.09
                     },
                     {
-                      "Element": "OM",
+                      "Element": "OM (LOI)",
                       "ValueUnit": "%",
                       "Value": 5.8
                     },
@@ -540,7 +540,7 @@
                       "Value": 0.12
                     },
                     {
-                      "Element": "OM",
+                      "Element": "OM (LOI)",
                       "ValueUnit": "%",
                       "Value": 3.8
                     },
@@ -637,7 +637,7 @@
                       "Value": 0.06
                     },
                     {
-                      "Element": "OM",
+                      "Element": "OM (LOI)",
                       "ValueUnit": "%",
                       "Value": 5.8
                     },
@@ -734,7 +734,7 @@
                       "Value": 0.06
                     },
                     {
-                      "Element": "OM",
+                      "Element": "OM (LOI)",
                       "ValueUnit": "%",
                       "Value": 4.5
                     },
@@ -831,7 +831,7 @@
                       "Value": 0.11
                     },
                     {
-                      "Element": "OM",
+                      "Element": "OM (LOI)",
                       "ValueUnit": "%",
                       "Value": 6.9
                     },
@@ -928,7 +928,7 @@
                       "Value": 0.17
                     },
                     {
-                      "Element": "OM",
+                      "Element": "OM (LOI)",
                       "ValueUnit": "%",
                       "Value": 4.9
                     },
@@ -1025,7 +1025,7 @@
                       "Value": 0.14
                     },
                     {
-                      "Element": "OM",
+                      "Element": "OM (LOI)",
                       "ValueUnit": "%",
                       "Value": 6.5
                     },
@@ -1122,7 +1122,7 @@
                       "Value": 0.1
                     },
                     {
-                      "Element": "OM",
+                      "Element": "OM (LOI)",
                       "ValueUnit": "%",
                       "Value": 4.3
                     },
@@ -1219,7 +1219,7 @@
                       "Value": 0.15
                     },
                     {
-                      "Element": "OM",
+                      "Element": "OM (LOI)",
                       "ValueUnit": "%",
                       "Value": 8
                     },
@@ -1316,7 +1316,7 @@
                       "Value": 0.12
                     },
                     {
-                      "Element": "OM",
+                      "Element": "OM (LOI)",
                       "ValueUnit": "%",
                       "Value": 5.7
                     },
@@ -1413,7 +1413,7 @@
                       "Value": 0.15
                     },
                     {
-                      "Element": "OM",
+                      "Element": "OM (LOI)",
                       "ValueUnit": "%",
                       "Value": 6.1
                     },
@@ -1510,7 +1510,7 @@
                       "Value": 0.12
                     },
                     {
-                      "Element": "OM",
+                      "Element": "OM (LOI)",
                       "ValueUnit": "%",
                       "Value": 4.5
                     },
@@ -1607,7 +1607,7 @@
                       "Value": 0.16
                     },
                     {
-                      "Element": "OM",
+                      "Element": "OM (LOI)",
                       "ValueUnit": "%",
                       "Value": 6.6
                     },
@@ -1704,7 +1704,7 @@
                       "Value": 0.15
                     },
                     {
-                      "Element": "OM",
+                      "Element": "OM (LOI)",
                       "ValueUnit": "%",
                       "Value": 5.1
                     },
@@ -1801,7 +1801,7 @@
                       "Value": 0.16
                     },
                     {
-                      "Element": "OM",
+                      "Element": "OM (LOI)",
                       "ValueUnit": "%",
                       "Value": 6.6
                     },
@@ -1898,7 +1898,7 @@
                       "Value": 0.18
                     },
                     {
-                      "Element": "OM",
+                      "Element": "OM (LOI)",
                       "ValueUnit": "%",
                       "Value": 4.8
                     },
@@ -1995,7 +1995,7 @@
                       "Value": 0.17
                     },
                     {
-                      "Element": "OM",
+                      "Element": "OM (LOI)",
                       "ValueUnit": "%",
                       "Value": 5.8
                     },
@@ -2092,7 +2092,7 @@
                       "Value": 0.14
                     },
                     {
-                      "Element": "OM",
+                      "Element": "OM (LOI)",
                       "ValueUnit": "%",
                       "Value": 4.6
                     },
@@ -2189,7 +2189,7 @@
                       "Value": 0.2
                     },
                     {
-                      "Element": "OM",
+                      "Element": "OM (LOI)",
                       "ValueUnit": "%",
                       "Value": 6.6
                     },
@@ -2286,7 +2286,7 @@
                       "Value": 0.16
                     },
                     {
-                      "Element": "OM",
+                      "Element": "OM (LOI)",
                       "ValueUnit": "%",
                       "Value": 5
                     },
@@ -2383,7 +2383,7 @@
                       "Value": 0.14
                     },
                     {
-                      "Element": "OM",
+                      "Element": "OM (LOI)",
                       "ValueUnit": "%",
                       "Value": 6.8
                     },
@@ -2480,7 +2480,7 @@
                       "Value": 0.14
                     },
                     {
-                      "Element": "OM",
+                      "Element": "OM (LOI)",
                       "ValueUnit": "%",
                       "Value": 4.9
                     },
@@ -2577,7 +2577,7 @@
                       "Value": 0.21
                     },
                     {
-                      "Element": "OM",
+                      "Element": "OM (LOI)",
                       "ValueUnit": "%",
                       "Value": 8.7
                     },
@@ -2674,7 +2674,7 @@
                       "Value": 0.17
                     },
                     {
-                      "Element": "OM",
+                      "Element": "OM (LOI)",
                       "ValueUnit": "%",
                       "Value": 5.7
                     },
@@ -2771,7 +2771,7 @@
                       "Value": 0.17
                     },
                     {
-                      "Element": "OM",
+                      "Element": "OM (LOI)",
                       "ValueUnit": "%",
                       "Value": 5.2
                     },
@@ -2868,7 +2868,7 @@
                       "Value": 0.08
                     },
                     {
-                      "Element": "OM",
+                      "Element": "OM (LOI)",
                       "ValueUnit": "%",
                       "Value": 4.3
                     },

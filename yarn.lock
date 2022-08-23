@@ -148,6 +148,7 @@ __metadata:
     chalk: ^4.0.0
     cheerio: ^1.0.0-rc.12
     concurrently: ^7.2.2
+    dayjs: ^1.11.5
     debug: ^4.3.4
     domhandler: ^5.0.3
     excel-date-to-js: ^1.1.5
@@ -1315,6 +1316,13 @@ __metadata:
   version: 2.28.0
   resolution: "date-fns@npm:2.28.0"
   checksum: a0516b2e4f99b8bffc6cc5193349f185f195398385bdcaf07f17c2c4a24473c99d933eb0018be4142a86a6d46cb0b06be6440ad874f15e795acbedd6fd727a1f
+  languageName: node
+  linkType: hard
+
+"dayjs@npm:^1.11.5":
+  version: 1.11.5
+  resolution: "dayjs@npm:1.11.5"
+  checksum: e3bbaa7b4883b31be4bf75a181f1447fbb19800c29b332852125aab96baeff3ac232dcba8b88c4ea17d3b636c99dac5fb9d1af4bb6ae26615698bbc4a852dffb
   languageName: node
   linkType: hard
 

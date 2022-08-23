@@ -1,3 +1,5 @@
+#! /usr/bin/env node
+
 import { program, Option } from 'commander';
 import debug from 'debug';
 import chalk from 'chalk';
@@ -6,6 +8,8 @@ import yesno from 'yesno';
 
 import { xml as modusxml } from '@modusjs/convert';
 import { csv as moduscsv } from '@modusjs/convert';
+import type {notDeepEqual} from 'assert';
+import type {allowedNodeEnvironmentFlags} from 'process';
 
 const warn = debug('@modusjs/xsd2json#index:warn');
 const info = debug('@modusjs/xsd2json#index:info');
@@ -17,7 +21,8 @@ program
   .addOption(new Option('-f,--format <format>', 'Format for CSV or XLSX input files.').choices(moduscsv.supportedFormats))
   .option('-c,--compact', 'Compact JSON output to a single line')
   .argument('<files...>')
-  .version(process.env.npm_package_version!)
+  //.version(process.env.npm_package_version!)
+  .version('0.0.6')
   .description('Convert one or more Modus XML files, CSV files, or XLSX files to MODUS json.  CSV/XLSX files must has supported structures.')
  
   .action(async (filenames, opts) => {
