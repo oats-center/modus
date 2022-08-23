@@ -24,3 +24,17 @@ To compile/bundle everything live as you code: `yarn dev`
 
 To run all tests live as you code (you should run `yarn dev` at the same time): `yarn test`.
 
+
+### CSV
+---------------
+
+Because lab result formats are highly irregular, the CSV conversion may require some hand modifications:
+
+1. Make sure the result data headers are on row 1! If not, just drag that row up to the first row.
+2. Add the word `COMMENT` to any column of a row that you want to ignore from parsing. Do this to pretty much any non lab-result rows for the time-being.
+3. Add the word `UNITS` to any column of a row that contains unit information for the corresponding column header. This will override any unit information used by default for lab result elements.
+4. The lab results require a column containing the word 'date' in some form.
+
+With these modifications, most CSV files can be coerced into modus format.
+
+
