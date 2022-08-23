@@ -869,7 +869,6 @@ export function toCsv(input: ModusResult | ModusResult[]) {
   } else {
     data = toCsvObject(input);
   }
-  console.log(JSON.stringify({data}, null, 2))
   let sheet = xlsx.utils.json_to_sheet(data);
 
   return {
@@ -911,7 +910,6 @@ function toCsvObject(input: ModusResult) {
 
 function toSampleMetaObj(sampleMeta: any, allReports: any) {
   let ll = sampleMeta.Geometry.wkt.replace("POINT(", "").replace(")", "").trim().split(' ');
-  console.log({sampleMeta, allReports})
   return {
     SampleNumber: sampleMeta.SampleNumber,
     ...allReports[sampleMeta.ReportID],

@@ -1,7 +1,7 @@
 import debug from 'debug';
 import fs from 'fs/promises';
 import tojsonTests from './tojson.js';
-
+import tocsvTests from './tocsv.js';
 
 const info = debug('@modusjs/cli#test/index:info');
 
@@ -17,6 +17,9 @@ try {
 
   info('Testing tojson');
   await tojsonTests();
+
+  info('Testing tocsv');
+  await tocsvTests();
 
   info('All test passed!');
 
