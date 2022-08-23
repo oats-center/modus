@@ -72,7 +72,7 @@ function parseTomKat({ wb }: { wb: xlsx.WorkBook }): ModusResult[] {
       // If you don't put { raw: false } for sheet_to_json, it will parse dates as ints instead of the formatted strings
       const rows = xlsx.utils.sheet_to_json(wb.Sheets[sheetname]!, { raw: false }).map(keysToUpperNoSpacesDashesOrUnderscores);
       for (const r of rows ) {
-        const id = r['POINTID'];
+        const id = r['POINTID'] || r['FMISSAMPLEID'];
         if (!id) continue;
         pointmeta[id] = r;
       }
@@ -171,7 +171,8 @@ function parseTomKat({ wb }: { wb: xlsx.WorkBook }): ModusResult[] {
         const sample: any = {
           SampleMetaData: {
             SampleNumber: ''+index,
-            ReportID: ''+id,
+            ReportID: "1",
+            FMISSampleID: ''+id,
           },
           Depths: [
             { DepthID, NutrientResults }
@@ -303,7 +304,7 @@ type NutrientResult = {
 };
 function parseSampleID(row: any): string {
   const copy = keysToUpperNoSpacesDashesOrUnderscores(row);
-  return copy['POINTID'] || '';
+  return copy['POINTID'] || copy['FMISSAMPLEID'] || '';
 }
 
 // Make a WKT from point meta's Latitude_DD and Longitude_DD.  Do a "tolerant" parse so anything
@@ -320,11 +321,11 @@ function parseWKTFromPointMetaOrRow(meta_or_row: any): string {
   if (copy["LAT"]) latKey = "LAT";
 
   if (!longKey) {
-    error('No longitude for point: ', meta_or_row);
+    trace('No longitude for point: ', meta_or_row.POINTID || meta_or_row.FMISSAMPLEID);
     return '';
   }
   if (!latKey) {
-    error('No latitude for point: ', meta_or_row);
+    trace('No latitude for point: ', meta_or_row.POINTID || meta_or_row.FMISSAMPLEID);
     return '';
   }
 

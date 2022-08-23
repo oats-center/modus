@@ -184,6 +184,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@modusjs/cli", "workspace:cli"],\
             ["@modusjs/convert", "workspace:convert"],\
+            ["@oada/types", "npm:3.1.5"],\
             ["@tsconfig/node16", "npm:1.0.3"],\
             ["@types/debug", "npm:4.1.7"],\
             ["@types/node", "npm:18.0.0"],\

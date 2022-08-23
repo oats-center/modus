@@ -8,13 +8,14 @@ import yesno from 'yesno';
 
 import { xml as modusxml } from '@modusjs/convert';
 import { csv as moduscsv } from '@modusjs/convert';
-import type {notDeepEqual} from 'assert';
-import type {allowedNodeEnvironmentFlags} from 'process';
+import { assert as assertModusResult } from '@oada/types/modus/v1/modus-result.js';
 
 const warn = debug('@modusjs/xsd2json#index:warn');
 const info = debug('@modusjs/xsd2json#index:info');
 const trace = debug('@modusjs/xsd2json#index:trace');
 const { red, cyan } = chalk;
+
+const VERSION='0.0.7';
 
 program
   .command('tojson')
@@ -22,7 +23,7 @@ program
   .option('-c,--compact', 'Compact JSON output to a single line')
   .argument('<files...>')
   //.version(process.env.npm_package_version!)
-  .version('0.0.6')
+  .version(VERSION)
   .description('Convert one or more Modus XML files, CSV files, or XLSX files to MODUS json.  CSV/XLSX files must has supported structures.')
  
   .action(async (filenames, opts) => {
@@ -98,6 +99,22 @@ program
     }
   });
 
+program
+  .command('tocsv')
+  .requiredOption('-o,--output <filename.csv>', 'Name and path of output CSV file)')
+  .argument('<json files...>')
+  .version(VERSION)
+  .description('Condense one or more Modus JSON files into a single flat CSV with standardized headers')
+  .action(async (filenames, opts) => {
+    for (const f of filenames) {
+      let json;
+      try {
+        json = JSON.parse((await fs.readFile(f)).toString());
+      } catch(e: any) {
+        error('Failed to parse file', f, 'into a string.  
+      }
+  
+  });
 
 program.parse();
 
