@@ -18,6 +18,8 @@ export type SupportedFormats = 'tomkat' | 'generic';
 //
 // Ppssible input parameters for xlsx/csv parsing:
 // Either give an already-parsed workbook, an entire CSV as a string, or an arraybuffer, or a base64 string
+// Default CSV/XLSX format is tomkat
+
 export function parse(
   { wb, str, arrbuf, base64, format }:
   { 
@@ -42,6 +44,8 @@ export function parse(
   if (!wb) {
     throw new Error('No readable input data found.');
   }
+
+  if (!format) format = 'tomkat';
 
   switch (format) {
     case 'tomkat': return parseTomKat({ wb });
@@ -68,7 +72,7 @@ function parseTomKat({ wb }: { wb: xlsx.WorkBook }): ModusResult[] {
       // If you don't put { raw: false } for sheet_to_json, it will parse dates as ints instead of the formatted strings
       const rows = xlsx.utils.sheet_to_json(wb.Sheets[sheetname]!, { raw: false }).map(keysToUpperNoSpacesDashesOrUnderscores);
       for (const r of rows ) {
-        const id = r['POINTID'];
+        const id = r['POINTID'] || r['FMISSAMPLEID'];
         if (!id) continue;
         pointmeta[id] = r;
       }
@@ -167,17 +171,25 @@ function parseTomKat({ wb }: { wb: xlsx.WorkBook }): ModusResult[] {
         const sample: any = {
           SampleMetaData: {
             SampleNumber: ''+index,
-            ReportID: ''+id,
+            ReportID: "1",
+            FMISSampleID: ''+id,
           },
           Depths: [
             { DepthID, NutrientResults }
           ]
         };
-        if (meta) {
-          const wkt = parseWKTFromPointMeta(meta);
-          if (wkt) {
-            sample.SampleMetaData.Geometry = { wkt };
-          }
+
+        // Parse locations: either in the sample itself or in the meta.  Sample takes precedence over meta.
+        let wkt = parseWKTFromPointMetaOrRow(row);
+        if (!wkt && meta) {
+          trace('No location info found in row, checking for any in meta');
+          wkt = parseWKTFromPointMetaOrRow(meta);
+        }
+        if (!wkt) {
+          trace('No location info found for row either in the row or in the meta');
+        }
+        if (wkt) {
+          sample.SampleMetaData.Geometry = { wkt };
         }
         samples.push(sample);
 
@@ -292,28 +304,29 @@ type NutrientResult = {
 };
 function parseSampleID(row: any): string {
   const copy = keysToUpperNoSpacesDashesOrUnderscores(row);
-  return copy['POINTID'] || '';
+  return copy['POINTID'] || copy['FMISSAMPLEID'] || '';
 }
 
 // Make a WKT from point meta's Latitude_DD and Longitude_DD.  Do a "tolerant" parse so anything
 // with latitude or longitude (can insensitive) or "lat" and "lon" or "long" would still get a WKT
-function parseWKTFromPointMeta(meta: any): string {
-  let copy = keysToUpperNoSpacesDashesOrUnderscores(meta);
+function parseWKTFromPointMetaOrRow(meta_or_row: any): string {
+  let copy = keysToUpperNoSpacesDashesOrUnderscores(meta_or_row);
 
   let longKey = Object.keys(copy).find(key => key.includes("LONGITUDE"))
   let latKey = Object.keys(copy).find(key => key.includes("LATITUDE"))
 
   if (copy["LONG"]) longKey = "LONG";
   if (copy["LNG"]) longKey = "LNG";
+  if (copy["LON"]) longKey = "LON";
   if (copy["LAT"]) latKey = "LAT";
 
   if (!longKey) {
-    error('No longitude for point meta: ', meta);
-    throw new Error(`Longitude value not present for point meta ${copy.POINTID}`);
+    trace('No longitude for point: ', meta_or_row.POINTID || meta_or_row.FMISSAMPLEID);
+    return '';
   }
   if (!latKey) {
-    error('No latitude for point meta: ', meta);
-    throw new Error(`Latitude value not present for point meta ${copy.POINTID}`);
+    trace('No latitude for point: ', meta_or_row.POINTID || meta_or_row.FMISSAMPLEID);
+    return '';
   }
 
   let long = copy[longKey];
