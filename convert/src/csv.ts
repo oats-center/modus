@@ -27,7 +27,7 @@ export function parse(
     str?: string, 
     arrbuf?: ArrayBuffer,
     base64?: string, // base64 string
-    format: 'tomkat' | 'generic', // add others here as more become known
+    format?: 'tomkat' | 'generic', // add others here as more become known
   }
 ): ModusResult[] {
 
