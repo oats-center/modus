@@ -1,7 +1,7 @@
 {
   "name": "@modusjs/cli",
   "packageManager": "yarn@3.2.1",
-  "version": "0.0.2",
+  "version": "0.0.6",
   "description": "Conversion utility to generate a JSON schema from the Modus XSD files.",
   "type": "module",
   "main": "dist/index.js",

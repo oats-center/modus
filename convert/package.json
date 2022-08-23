@@ -1,7 +1,7 @@
 {
   "name": "@modusjs/convert",
   "packageManager": "yarn@3.2.1",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Universal library for interacting with Modus XML files",
   "type": "module",
   "comment1": "dist/node/index.js is normal output of tsc, used for node",
@@ -58,8 +58,10 @@
     "@overleaf/o-error": "^3.4.0",
     "chalk": "^4.0.0",
     "cheerio": "^1.0.0-rc.12",
+    "dayjs": "^1.11.5",
     "debug": "^4.3.4",
     "domhandler": "^5.0.3",
+    "excel-date-to-js": "^1.1.5",
     "htmlparser2": "^8.0.1",
     "tslib": "^2.4.0",
     "xlsx": "^0.18.5"

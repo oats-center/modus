@@ -10,7 +10,7 @@
         ]
       },
       "EventMetaData": {
-        "EventDate": "43124",
+        "EventDate": "2018-01-21",
         "EventType": {
           "Soil": true
         }
@@ -31,9 +31,9 @@
             {
               "SampleMetaData": {
                 "SampleNumber": "0",
-                "ReportID": "TOKA-122",
+                "ReportID": "TOKA-035",
                 "Geometry": {
-                  "wkt": "POINT(-122.3643707 37.2633573)"
+                  "wkt": "POINT(-122.3619935 37.2777667)"
                 }
               },
               "Depths": [
@@ -41,14 +41,9 @@
                   "DepthID": "1",
                   "NutrientResults": [
                     {
-                      "Element": "Bulk Density",
-                      "ValueUnit": "g/cm3",
-                      "Value": 1.01545871264845
-                    },
-                    {
                       "Element": "TOC",
                       "ValueUnit": "%",
-                      "Value": 3.3
+                      "Value": 4.1
                     }
                   ]
                 }

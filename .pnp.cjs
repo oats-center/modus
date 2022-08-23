@@ -217,8 +217,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["chalk", "npm:4.1.2"],\
             ["cheerio", "npm:1.0.0-rc.12"],\
             ["concurrently", "npm:7.2.2"],\
+            ["dayjs", "npm:1.11.5"],\
             ["debug", "virtual:b86a9fb34323a98c6519528ed55faa0d9b44ca8879307c0b29aa384bde47ff59a7d0c9051b31246f14521dfb71ba3c5d6d0b35c29fffc17bf875aa6ad977d9e8#npm:4.3.4"],\
             ["domhandler", "npm:5.0.3"],\
+            ["excel-date-to-js", "npm:1.1.5"],\
             ["htmlparser2", "npm:8.0.1"],\
             ["live-server", "npm:1.2.2"],\
             ["nodemon", "npm:2.0.16"],\
@@ -1590,6 +1592,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["dayjs", [\
+        ["npm:1.11.5", {\
+          "packageLocation": "./.yarn/cache/dayjs-npm-1.11.5-a825142dc5-e3bbaa7b48.zip/node_modules/dayjs/",\
+          "packageDependencies": [\
+            ["dayjs", "npm:1.11.5"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["debug", [\
         ["npm:2.6.9", {\
           "packageLocation": "./.yarn/cache/debug-npm-2.6.9-7d4cb597dc-d2f51589ca.zip/node_modules/debug/",\
@@ -1998,6 +2009,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["split", "npm:0.3.3"],\
             ["stream-combiner", "npm:0.0.4"],\
             ["through", "npm:2.3.8"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["excel-date-to-js", [\
+        ["npm:1.1.5", {\
+          "packageLocation": "./.yarn/cache/excel-date-to-js-npm-1.1.5-2ca5dca6f2-181a28528b.zip/node_modules/excel-date-to-js/",\
+          "packageDependencies": [\
+            ["excel-date-to-js", "npm:1.1.5"]\
           ],\
           "linkType": "HARD"\
         }]\

@@ -1,8 +1,8 @@
 {
   "name": "@modusjs/examples",
   "packageManager": "yarn@3.2.1",
-  "version": "0.0.6",
-  "description": "Universal library for interacting with Modus XML files",
+  "version": "0.0.7",
+  "description": "Directly import-able examples of soil tests, centered around Modus",
   "type": "module",
   "typings": "index.d.ts",
   "comment1": "Import files from the examples folder directly",

@@ -10,7 +10,7 @@
         ]
       },
       "EventMetaData": {
-        "EventDate": "43146",
+        "EventDate": "2018-01-23",
         "EventType": {
           "Soil": true
         }
@@ -31,9 +31,9 @@
             {
               "SampleMetaData": {
                 "SampleNumber": "0",
-                "ReportID": "TOKA-115",
+                "ReportID": "TOKA-122",
                 "Geometry": {
-                  "wkt": "POINT(-122.3688365 37.2687895)"
+                  "wkt": "POINT(-122.3643707 37.2633573)"
                 }
               },
               "Depths": [
@@ -43,47 +43,12 @@
                     {
                       "Element": "Bulk Density",
                       "ValueUnit": "g/cm3",
-                      "Value": 1.02198563585612
-                    },
-                    {
-                      "Element": "P",
-                      "ValueUnit": "ug/g",
-                      "Value": 6.5
-                    },
-                    {
-                      "Element": "pH",
-                      "ValueUnit": "none",
-                      "Value": 6
-                    },
-                    {
-                      "Element": "CEC",
-                      "ValueUnit": "cmol(+)/kg",
-                      "Value": 27.1
-                    },
-                    {
-                      "Element": "Ca",
-                      "ValueUnit": "cmol(+)/kg",
-                      "Value": 8.05
-                    },
-                    {
-                      "Element": "Mg",
-                      "ValueUnit": "cmol(+)/kg",
-                      "Value": 9.208333333333334
-                    },
-                    {
-                      "Element": "K",
-                      "ValueUnit": "cmol(+)/kg",
-                      "Value": 0.717948717948718
-                    },
-                    {
-                      "Element": "Na",
-                      "ValueUnit": "cmol(+)/kg",
-                      "Value": 0.34782608695652173
+                      "Value": 1.01545871264845
                     },
                     {
                       "Element": "TOC",
                       "ValueUnit": "%",
-                      "Value": 3.1
+                      "Value": 3.3
                     }
                   ]
                 }
