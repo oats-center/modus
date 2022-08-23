@@ -1,6 +1,7 @@
 import debug from 'debug';
 import * as xlsx from 'xlsx';
 import oerror from '@overleaf/o-error';
+import { getJsDateFromExcel } from 'excel-date-to-js';
 import ModusResult, { assert as assertModusResult } from '@oada/types/modus/v1/modus-result.js';
 
 const error = debug('@modusjs/convert#csv:error');
@@ -110,7 +111,10 @@ function parseTomKat({ wb }: { wb: xlsx.WorkBook }): ModusResult[] {
     // Loop through all the rows and group them by that date.  This group will become a single ModusResult file.
     type DateGroupedRows = { [date: string]: any[] };
     const grouped_rows = rows.reduce((groups: DateGroupedRows, r: any) => {
-      const date = r[datecol!]?.toString();
+      let date = r[datecol!]?.toString();
+      if (+date < 100000 && +date > 100) { // this is an excel date (# days since 1/1/1900), parse it out
+        date = getJsDateFromExcel(date);
+      }
       if (!date) {
         warn('WARNING: row does not have the column we chose for the date (', datecol, '), the row is: ', r);
         return groups;

@@ -57,6 +57,7 @@
     "cheerio": "^1.0.0-rc.12",
     "debug": "^4.3.4",
     "domhandler": "^5.0.3",
+    "excel-date-to-js": "^1.1.5",
     "htmlparser2": "^8.0.1",
     "tslib": "^2.4.0",
     "xlsx": "^0.18.5"
