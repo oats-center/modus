@@ -20,7 +20,7 @@ Except for xlxs files which will use a modified version of the sheetnames for th
 
 ```bash
 modus tojson ./path/to/xml/file1 ./path/to/xml/file2 ...etc...
-modus tojson -f tomkat ./path/to/tomkat/formatted/xlsx_file
+modus tojson -f tomkat ./path/to/tomkat/formatted/xlsx_or_csv_file
 ```
 
 
