@@ -8,11 +8,11 @@ import yesno from 'yesno';
 
 import { xml as modusxml } from '@modusjs/convert';
 import { csv as moduscsv } from '@modusjs/convert';
-import { assert as assertModusResult } from '@oada/types/modus/v1/modus-result.js';
+import ModusResult, { assert as assertModusResult } from '@oada/types/modus/v1/modus-result.js';
 
-const warn = debug('@modusjs/xsd2json#index:warn');
-const info = debug('@modusjs/xsd2json#index:info');
-const trace = debug('@modusjs/xsd2json#index:trace');
+const warn = debug('@modusjs/cli:warn');
+const info = debug('@modusjs/cli:info');
+const trace = debug('@modusjs/cli:trace');
 const { red, cyan } = chalk;
 
 const VERSION='0.0.7';
@@ -106,13 +106,21 @@ program
   .version(VERSION)
   .description('Condense one or more Modus JSON files into a single flat CSV with standardized headers')
   .action(async (filenames, opts) => {
+    const modusresults: ModusResult[] = [];
     for (const f of filenames) {
-      let json;
       try {
-        json = JSON.parse((await fs.readFile(f)).toString());
+        const json = JSON.parse((await fs.readFile(f)).toString());
+        assertModusResult(json);
+        modusresults.push(json);
       } catch(e: any) {
-        error('Failed to parse file', f, 'into a string.  
+        warn(red('ERROR:'), 'Failed to parse file', f, 'as Modus JSON.  Error was:', e);
+        continue;
       }
+    }
+    info('Parsed', cyan(modusresults.length), ' Modus JSON files for inclusion in CSV output');
+    const { str } = moduscsv.toCsv(modusresults);
+    await fs.writeFile(opts.output, str);
+    info('Successfully wrote CSV output to', opts.output, 'from', cyan(modusresults.length), 'files');
   
   });
 
