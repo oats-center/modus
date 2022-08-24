@@ -1,0 +1,64 @@
+---
+title: "Hackathon | Visualizing Modus Soil"
+format:
+  html:
+    self-contained: true
+    code-fold: true
+    
+jupyter: python3
+---
+
+
+```{python}
+import pandas as pd
+import plotly.express as px
+import json
+from pathlib import Path
+import geopandas as gpd
+from IPython.display import JSON
+
+p = Path("/tmp/soil_data")
+
+modus_jsons = [] 
+for file in p.glob("*.json"):
+    with open(file) as f:
+        modus_jsons.append(json.load(f))
+        
+        
+modus_jsons = {"Events": [x for y in modus_jsons for x in y["Events"]]}
+modus_jsons_events = modus_jsons["Events"]
+
+
+def get_collection_date(event):
+    return event["EventMetaData"].get("EventDate", None)
+
+def flatten_soil_event_samples_to_df(event):   
+    soil_samples = pd.json_normalize(event["EventSamples"]["Soil"]["SoilSamples"])
+    soil_samples = soil_samples.explode("Depths")
+    soil_samples = soil_samples.join(pd.DataFrame(soil_samples["Depths"].tolist()).explode("NutrientResults"))
+    idx = soil_samples.index
+    soil_samples = soil_samples.join(pd.DataFrame(soil_samples["NutrientResults"].tolist(), index=idx))
+    soil_samples = soil_samples.drop(["Depths", "NutrientResults"], axis=1)
+    soil_samples["DepthID"] = soil_samples["DepthID"].astype(int)
+    soil_samples = soil_samples.merge(pd.DataFrame(event["EventSamples"]["Soil"]["DepthRefs"]), on="DepthID")
+    soil_samples = soil_samples.rename({"Name": "DepthName"}, axis=1)
+    return soil_samples
+
+
+flattend_events = []
+for idx, event in enumerate(modus_jsons_events):
+    df = flatten_soil_event_samples_to_df(event)
+    df["EventDate"] = get_collection_date(event)
+    flattend_events.append(df)
+    
+flattend_data_df = pd.concat(flattend_events).drop(0, axis=1)
+flattend_data_df = gpd.GeoDataFrame(flattend_data_df, geometry=gpd.GeoSeries.from_wkt(flattend_data_df["SampleMetaData.Geometry.wkt"]))
+flattend_data_df = flattend_data_df.drop_duplicates()
+flattend_data_df["lon"] = flattend_data_df.geometry.x
+flattend_data_df["lat"] = flattend_data_df.geometry.y
+flattend_data_df["Element Unit"] = flattend_data_df["Element"] + "(" + flattend_data_df["ValueUnit"] + ")"
+```
+
+```{python}
+px.strip(flattend_data_df, y="Element Unit", x="Value", color="SampleMetaData.ReportID")
+```
