@@ -56,9 +56,17 @@ flattend_data_df = gpd.GeoDataFrame(flattend_data_df, geometry=gpd.GeoSeries.fro
 flattend_data_df = flattend_data_df.drop_duplicates()
 flattend_data_df["lon"] = flattend_data_df.geometry.x
 flattend_data_df["lat"] = flattend_data_df.geometry.y
-flattend_data_df["Element Unit"] = flattend_data_df["Element"] + "(" + flattend_data_df["ValueUnit"] + ")"
+flattend_data_df["Element Unit"] = flattend_data_df["Element"] + " (" + flattend_data_df["ValueUnit"] + ")"
 ```
 
 ```{python}
 px.strip(flattend_data_df, y="Element Unit", x="Value", color="SampleMetaData.ReportID")
+```
+
+
+## Raw data
+```{python}
+from itables import init_notebook_mode
+init_notebook_mode(all_interactive=True)
+flattend_data_df[['SampleMetaData.ReportID', 'Value',   'Element Unit', 'EventDate',]]
 ```
