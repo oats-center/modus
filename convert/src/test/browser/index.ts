@@ -5,6 +5,7 @@ import chalk from 'chalk';
 import xmlTests from '../xml.test.js';
 import csvTests from '../csv.test.js';
 import toCsvTests from '../toCsv.test.js';
+import toJsonTests from '../tojson.test';
 //import htmlTests from '../html.test.js';
 
 const info = debug('@modusjs/convert-browser:info');
@@ -33,6 +34,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     info('testing toCsv');
     await toCsvTests(libsundertest);
+
+    info('testing toJson');
+    await toJsonTests(libsundertest);
 
 //    info('testing HTML');
 //    await htmlTests(libsundertest);
