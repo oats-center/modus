@@ -14,10 +14,12 @@ const trace = debug('@modusjs/convert#html:trace');
 // a self-contained HTML report about the soil samples in the ModusResult.
 export async function toHtml(mr: ModusResult, filename?: string): Promise<string> {
   const form = new FormData();
-  form.set('file', new File([ ...JSON.stringify(mr) ], filename || 'modus.json'));
+  filename = filename || 'modus.json';
+  filename = filename.replace('/', '_').replace('\\', '_'); // no path info allowed maybe
+  form.set('files', new File([ ...JSON.stringify(mr) ], filename));
   const encoder = new FormDataEncoder(form);
  
-  const response: any = await fetch('https://soilapi.farmonapp.com/upload_soil_data', {
+  const response: any = await fetch('https://soilapi.farmonapp.com/modus_json_to_html', {
     method: 'post',
     headers: encoder.headers,
     body: Readable.from(encoder.encode()),
@@ -27,7 +29,7 @@ export async function toHtml(mr: ModusResult, filename?: string): Promise<string
     error('ERROR: API request for HTML conversion failed.  Error was:', response);
     throw new Error('Network request failed for conversion to HTML');
   }
-  const answer = await response.json();
-  trace('Received response from api: ', answer);
-  return answer['filename'] || '';
+  const answer = await response.text();
+  trace('Received response from HTML conversion api');
+  return answer || '';
 }

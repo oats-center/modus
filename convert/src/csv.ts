@@ -917,13 +917,17 @@ function toCsvObject(input: ModusResult) {
 }
 
 function toSampleMetaObj(sampleMeta: any, allReports: any) {
-  let ll = sampleMeta.Geometry.wkt.replace("POINT(", "").replace(")", "").trim().split(' ');
-  return {
+  const base = {
     SampleNumber: sampleMeta.SampleNumber,
     ...allReports[sampleMeta.ReportID],
+    FMISSampleID: sampleMeta.FMISSampleID
+  };
+  let ll = sampleMeta?.Geometry?.wkt?.replace("POINT(", "").replace(")", "").trim().split(' ');
+  if (!ll) return base;
+  return {
+    ...base,
     Latitude: +(ll[0]),
     Longitude: +(ll[1]),
-    FMISSampleID: sampleMeta.FMISSampleID
   }
 }
 
