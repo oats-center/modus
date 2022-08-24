@@ -1,0 +1,138 @@
+---
+title: "Soil Sample Presentation"
+format:
+  html:
+    self-contained: true
+    code-fold: true
+---
+
+
+```{r}
+library(leaflet)
+leaflet() %>%
+  addTiles() %>%  # Add default OpenStreetMap map tiles
+  addMarkers(lng=174.768, lat=-36.852, popup="The birthplace of R")
+```
+
+
+```{r}
+
+# import libraries
+
+library(dplyr)
+library(jsonlite)
+library(purrr)
+library(tidyr)
+
+# list all files in directory
+
+files <- list.files(
+  path = "/home/thimm/modus/examples/examples/tomkat-historic",
+  pattern = "*.json",
+  full.names = TRUE
+)
+
+# import json file
+
+data <- jsonlite::fromJSON(
+  txt = files[4],
+  flatten = TRUE
+)
+
+# unnest all lists and wrangle data
+
+df <- data$Events %>%
+  purrr::map(1) %>%
+  dplyr::bind_rows(.id = SampleMetaData.FMISSampleID) %>%
+  tidyr::unnest(cols = c(
+    LabMetaData.Reports,
+    EventSamples.Soil.DepthRefs,
+    EventSamples.Soil.SoilSamples
+  )) %>%
+  tidyr::unnest(
+    cols = Depths,
+    names_repair = "minimal"
+  ) %>%
+  tidyr::unnest(
+    cols = NutrientResults,
+    names_repair = "minimal"
+  ) %>%
+  dplyr::rename(
+    EventDate = EventMetaData.EventDate,
+    EventType.Soil = EventMetaData.EventType.Soil,
+    SampleNumber = SampleMetaData.SampleNumber,
+    FMISSampleID = SampleMetaData.FMISSampleID,
+    Geometry = SampleMetaData.Geometry.wkt
+  )
+
+# create unique SampleID from PointID and Date
+
+df$UniqueSampleID <- paste0(df$SampleMetaData.ReportID,"_",df$EventDate, "_", df$SampleNumber)
+
+  
+
+# parse coordinates into separate columns
+
+dfW <- dfW %>%
+tidyr::separate(Geometry,
+                into = c("long", "lat"),
+                sep = " "
+)
+
+dfW$long <- as.numeric(regmatches(
+dfW$long,
+gregexpr("(?>-)*[[:digit:]]+\\.*[[:digit:]]*",
+            dfW$long,
+            perl = TRUE
+)
+))
+
+dfW$lat <- as.numeric(regmatches(
+dfW$lat,
+gregexpr("(?>-)*[[:digit:]]+\\.*[[:digit:]]*",
+            dfW$lat,
+            perl = TRUE
+)
+))
+  
+```
+
+  
+  
+```{r}
+#| label: fig-airquality
+#| fig-cap: Temperature and ozone level.
+#| warning: false
+library(leaflet)
+
+# initiate the leaflet instance and store it to a variable
+m = leaflet()
+
+# we want to add map tiles so we use the addTiles() function - the default is openstreetmap
+m = addTiles(m)
+
+# we can add markers by using the addMarkers() function
+m = addMarkers(m, lng=mean(dfW$long), mean(dfW$lat), popup="Hackathon")
+
+
+
+m = addCircleMarkers(m, 
+                    lng = dfW$long, # we feed the longitude coordinates 
+                    lat = dfW$lat,
+                    #popup = dfW$, 
+                    radius = 2, 
+                    stroke = FALSE, 
+                    fillOpacity = 0.75)
+library(leaflet.minicharts)
+
+
+m %>% 
+addMinicharts(
+    dfW$long, dfW$lat, 
+    chartdata = dfW[, c("Bulk Density", "pH", "TOC")],
+    width = 45, height = 45)
+```
+  
+  
+
+

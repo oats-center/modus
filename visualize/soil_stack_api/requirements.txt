@@ -1,6 +1,5 @@
 fastapi
 uvicorn
 python-multipart
-jupyter
-numpy
 matplotlib
+aiofiles
