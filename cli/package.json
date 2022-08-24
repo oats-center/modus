@@ -8,6 +8,9 @@
   "bin": {
     "modus": "dist/index.js"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "types": "dist/index.d.ts",
   "files": [
     "dist",
