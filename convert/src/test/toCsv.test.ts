@@ -4,13 +4,13 @@ import chalk from 'chalk';
 import type * as MainLib from '../index.js';
 
 import tomkat from '@modusjs/examples/dist/tomkat-historic/tomkat_source_data2015_RMN0-10cm_1_json.js';
-import xlsx from 'xlsx';
+import * as xlsx from 'xlsx';
 
 import type ModusResult from '@oada/types/modus/v1/modus-result.js';
 
-const trace = debug('@modusjs/convert#test-csv:trace');
-const info = debug('@modusjs/convert#test-csv:info');
-const error = debug('@modusjs/convert#test-csv:error');
+const trace = debug('@modusjs/convert#test-toCsv:trace');
+const info = debug('@modusjs/convert#test-toCsv:info');
+const error = debug('@modusjs/convert#test-toCsv:error');
 
 const { green } = chalk;
 const test = (msg: string) => info(green(msg));

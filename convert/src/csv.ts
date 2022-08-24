@@ -7,8 +7,8 @@ import ModusResult, { assert as assertModusResult } from '@oada/types/modus/v1/m
 
 const error = debug('@modusjs/convert#csv:error');
 const warn = debug('@modusjs/convert#csv:error');
-const info = debug('@modusjs/convert:info');
-const trace = debug('@modusjs/convert:trace');
+const info = debug('@modusjs/convert#csv:info');
+const trace = debug('@modusjs/convert#csv:trace');
 
 export const supportedFormats = [ 'tomkat', 'generic' ];
 export type SupportedFormats = 'tomkat' | 'generic';
@@ -107,7 +107,7 @@ function parseTomKat({ wb }: { wb: xlsx.WorkBook }): ModusResult[] {
 
     // Determine a "date" column for this dataset
     let datecol = colnames.sort().find(name => name.toUpperCase().match(/DATE/));
-    trace('datecol = ', datecol, ', colnames uppercase = ', colnames.map(c => c.toUpperCase()));
+    //trace('datecol = ', datecol, ', colnames uppercase = ', colnames.map(c => c.toUpperCase()));
     if (!datecol) {
       error('No date column in sheet', sheetname);
       throw new Error(`Could not find a column containing 'date' in the name to use as the date in sheet ${sheetname}.  A date is required.`);
@@ -182,11 +182,11 @@ function parseTomKat({ wb }: { wb: xlsx.WorkBook }): ModusResult[] {
         // Parse locations: either in the sample itself or in the meta.  Sample takes precedence over meta.
         let wkt = parseWKTFromPointMetaOrRow(row);
         if (!wkt && meta) {
-          trace('No location info found in row, checking for any in meta');
+          //trace('No location info found in row, checking for any in meta');
           wkt = parseWKTFromPointMetaOrRow(meta);
         }
         if (!wkt) {
-          trace('No location info found for row either in the row or in the meta');
+          //trace('No location info found for row either in the row or in the meta');
         }
         if (wkt) {
           sample.SampleMetaData.Geometry = { wkt };
@@ -321,11 +321,11 @@ function parseWKTFromPointMetaOrRow(meta_or_row: any): string {
   if (copy["LAT"]) latKey = "LAT";
 
   if (!longKey) {
-    trace('No longitude for point: ', meta_or_row.POINTID || meta_or_row.FMISSAMPLEID);
+    //trace('No longitude for point: ', meta_or_row.POINTID || meta_or_row.FMISSAMPLEID);
     return '';
   }
   if (!latKey) {
-    trace('No latitude for point: ', meta_or_row.POINTID || meta_or_row.FMISSAMPLEID);
+    //trace('No latitude for point: ', meta_or_row.POINTID || meta_or_row.FMISSAMPLEID);
     return '';
   }
 

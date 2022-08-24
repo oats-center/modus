@@ -1,7 +1,7 @@
 {
   "name": "@modusjs/cli",
   "packageManager": "yarn@3.2.1",
-  "version": "0.0.7",
+  "version": "0.0.9",
   "description": "Conversion utility between various forms of soil test files, including CSV, XLSX, Modus XML, and Modus JSON.",
   "type": "module",
   "main": "dist/index.js",
@@ -19,6 +19,7 @@
     "test": "DEBUG=\"@modusjs*,${DEBUG}\" nodemon --enable-source-maps --config nodemon.config.json dist/test/index.js",
     "tojson": "yarn run cli tojson",
     "tocsv": "yarn run cli tocsv",
+    "tohtml": "yarn run cli tohtml",
     "cli": "node dist/index.js",
     "clean": "rm -rf dist"
   },

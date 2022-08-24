@@ -4,6 +4,8 @@ import chalk from 'chalk';
 
 import xmlTests from '../xml.test.js';
 import csvTests from '../csv.test.js';
+import toCsvTests from '../toCsv.test.js';
+//import htmlTests from '../html.test.js';
 
 const info = debug('@modusjs/convert-browser:info');
 const { red } = chalk;
@@ -26,8 +28,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     info('testing xml');
     await xmlTests(libsundertest);
 
-    info('testing xml');
+    info('testing CSV');
     await csvTests(libsundertest);
+
+    info('testing toCsv');
+    await toCsvTests(libsundertest);
+
+//    info('testing HTML');
+//    await htmlTests(libsundertest);
 
   } catch(e: any) {
     info(red('FAILED: tests threw exception: '));
