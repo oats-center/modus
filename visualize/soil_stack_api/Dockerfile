@@ -20,6 +20,7 @@ COPY ./requirements.txt /code/requirements.txt
 
 # Install python dependencies
 RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
+RUN apt-get install -y --no-install-recommends r-cran-htmlwidgets r-cran-here
 
 COPY ./app /code/app
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8812"]
