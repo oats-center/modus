@@ -1,0 +1,41 @@
+version: "3.7"
+services:
+  soilapi:
+    restart: always
+    build: soil_stack_api
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.soilapi.rule=Host(`soilapi.{HOST_DOMAIN}`)
+      - traefik.http.routers.soilapi.entrypoints=websecure
+      - traefik.http.routers.soilapi.tls.certresolver=myresolver
+      - traefik.http.routers.soilapi.entryPoints=http,https
+      - traefik.http.services.soilapi.loadbalancer.server.port=8812
+  soilupload:
+    restart: always
+    build: soil_stack_interface
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.soilupload.rule=Host(`soilupload.{HOST_DOMAIN}`)
+      - traefik.http.routers.soilupload.entrypoints=websecure
+      - traefik.http.routers.soilupload.tls.certresolver=myresolver
+      - traefik.http.routers.soilupload.entryPoints=http,https
+      - traefik.http.services.soilupload.loadbalancer.server.port=8813
+  traefik:
+    restart: always
+    command:
+      - --api.insecure=true
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --entrypoints.websecure.address=:443
+      - --certificatesresolvers.myresolver.acme.tlschallenge=true
+      - --certificatesresolvers.myresolver.acme.email={LETSENCRYPT_EMAIL}
+      - --certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json
+    container_name: traefik
+    image: traefik:v2.7
+    ports:
+      - 80:80
+      - 443:443
+      - 8080:8080
+    volumes:
+      - /mnt/volume-nbg1-1/letsencrypt:/letsencrypt
+      - /var/run/docker.sock:/var/run/docker.sock:ro
