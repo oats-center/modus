@@ -10,6 +10,7 @@ services:
       - traefik.http.routers.soilapi.tls.certresolver=myresolver
       - traefik.http.routers.soilapi.entryPoints=http,https
       - traefik.http.services.soilapi.loadbalancer.server.port=8812
+      - traefik.http.middlewares.soilapi.headers.accesscontrolalloworiginlist=*
   soilupload:
     restart: always
     build: soil_stack_interface

@@ -56,6 +56,12 @@ print(response.text)
 
 ```
 
+### Without API
+Requires the installation of jupyter and quarto.
+```bash
+quarto render visualize/soil_stack_api/app/reports/soil.qmd --to html
+```
+
 ## Run the API
 To run the API you will need to have docker installed.
 

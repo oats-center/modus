@@ -18,6 +18,8 @@ def render_quarto():
         capture_output=True
     )
     print(" ".join(cmd))
+    print(process.stdout)
+    print(process.stderr)
     with open("/code/app/reports/soil.html") as f:
         out = f.read()
     return out
@@ -27,10 +29,7 @@ def read_root():
     return RedirectResponse(url='/redoc')
 
 
-@app.post("/upload_soil_data")
-async def upload_file(file: UploadFile): 
-    """Upload a soil sample data file. It can either be a modus file or a modus/json file."""
-    return {"filename": file.filename}
+
 
 @app.post("/modus_json_to_html")
 def modus_json_to_html(files: t.List[UploadFile]): 
@@ -40,13 +39,16 @@ def modus_json_to_html(files: t.List[UploadFile]):
     
 
     for f in files:
-        destination_file_path = OUTPUT_PATH / f.filename
+        destination_file_path = OUTPUT_PATH / f"{str(uuid.uuid4())}.json"
         with destination_file_path.open("wb") as buffer:
             shutil.copyfileobj(f.file, buffer)
 
     # todo remove files after
     html = render_quarto()
-    shutil.rmtree(OUTPUT_PATH)
+    try:
+        shutil.rmtree(OUTPUT_PATH)
+    except FileNotFoundError:
+        print("deleting did not work")
     return HTMLResponse(html) 
 
 
