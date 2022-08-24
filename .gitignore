@@ -11,3 +11,4 @@
 #.pnp.*
 
 .DS_Store
+.env

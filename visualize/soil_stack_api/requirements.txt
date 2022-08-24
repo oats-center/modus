@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+python-multipart
+matplotlib
+aiofiles
+jupyter
+plotly
+pandas
+geopandas
