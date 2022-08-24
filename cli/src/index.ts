@@ -100,6 +100,7 @@ program
 program
   .command('tocsv')
   .requiredOption('-o,--output <filename.csv>', 'Name and path of output CSV file)')
+  .option('-s,--ssurgo', 'Flag to include SSURGO data for each row by location from soilsjs library')
   .argument('<json files...>')
   .version(VERSION)
   .description('Condense one or more Modus JSON files into a single flat CSV with standardized headers')
@@ -112,7 +113,9 @@ program
       allresults = [ ...allresults, ...results ];
     }
     info('Parsed', cyan(allresults.length), ' Modus JSON files for inclusion in CSV output');
-    const { str } = moduscsv.toCsv(allresults);
+    const csvopts = {};
+    if (opts.ssurgo) csvopts.ssurgo = opts.ssurgo;
+    const { str } = await moduscsv.toCsv(allresults, csvopts);
     const dowrite = await verifyOverwriteIfExists(opts.output);
     if (!dowrite) {
       return;
