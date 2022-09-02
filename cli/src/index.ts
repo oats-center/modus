@@ -6,10 +6,9 @@ import chalk from 'chalk';
 import fs from 'fs/promises';
 import yesno from 'yesno';
 
-import { csv as moduscsv, html as modushtml } from '@modusjs/convert';
+import { csv as moduscsv, html as modushtml, json as modusjson } from '@modusjs/convert';
 import type ModusResult from '@oada/types/modus/v1/modus-result.js';
 
-import { tojson, ToModusJSONResult } from './tojson.js';
 
 const warn = debug('@modusjs/cli:warn');
 const info = debug('@modusjs/cli:info');
@@ -17,24 +16,6 @@ const trace = debug('@modusjs/cli:trace');
 const { red, cyan } = chalk;
 
 const VERSION='0.0.7';
-
-async function jsonFilenameFromOriginalFilename({ 
-  mr, index, output_filename_base, results, filename, isxlsx, iscsv 
-}: { 
-  mr: ModusResult, index: number, output_filename_base: string, filename: string, results: ModusResult[], isxlsx: boolean, iscsv: boolean 
-}): Promise<string> {
-  let output_filename = output_filename_base;
-  // xslx and csv store the sheetname + group number in FileDescription, we can name things by that
-  const filedescription = mr?.Events?.[0]?.LabMetaData?.Reports?.[0]?.FileDescription;
-  if ((isxlsx || iscsv) && filedescription) {
-    output_filename = output_filename.replace(/\.json$/, `${filedescription.replace(/[^a-zA-Z0-9_\\-]*/g,'')}.json`);
-  } else {
-    if (results.length > 1) { // more than one result, have to number the output files
-      output_filename = output_filename.replace(/\.json$/, `_${index}.json`);
-    }
-  }
-  return output_filename;
-}
 
 async function verifyOverwriteIfExists(filename: string): Promise<boolean> {
   const stat = await fs.stat(filename).catch(() => null); // throws if it does not exist
@@ -55,11 +36,13 @@ program
   .argument('<files...>')
   //.version(process.env.npm_package_version!)
   .version(VERSION)
-  .description('Convert one or more Modus XML files, CSV files, or XLSX files to MODUS json.  CSV/XLSX files must has supported structures.')
+  .description('Convert one or more Modus XML files, CSV files, or XLSX files to MODUS json.  CSV/XLSX files must have supported structures.')
  
   .action(async (filenames, opts) => {
-    trace('received args of ', filenames);
-    const results_by_filename = await tojson(filenames, opts);
+    trace('Reading input files ', cyan(filenames.join(',')));
+    const results = await modusjson.json.toJson(filenames.map(filename => {
+      const base = { filename },
+      if (opts.format)({ );
     for (const { results, filename, isxlsx, iscsv } of results_by_filename) {
       info('Found',cyan(results.length),'ModusResults in input file', filename);
       const output_filename_base = filename.replace(/\.(xml|csv|xlsx)$/,'.json');

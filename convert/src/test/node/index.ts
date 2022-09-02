@@ -6,8 +6,9 @@ import * as mainlib from '../../node/index.js';
 import xmlTests from '../xml.test.js';
 import csvTests from '../csv.test.js';
 import toCsvTests from '../toCsv.test.js';
-import toJsonTests from '../tojson.test.js';
+import toJsonTests from '../toJson.test.js';
 import htmlTests from './html.test.js';
+import fileTest from './file.test.js';
 
 const info = debug('@modusjs/xml#test-node:info');
 const { red } = chalk;
@@ -29,6 +30,9 @@ const { red } = chalk;
 
     info('testing node HTML');
     await htmlTests(mainlib);
+
+    info('testing node file');
+    await fileTest(mainlib);
 
     info('All tests passed!');
 

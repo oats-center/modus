@@ -1,15 +1,15 @@
 import type * as libs from '../../browser/index.js';
 import debug from 'debug';
-import chalk from 'chalk';
+import { red } from 'chalk';
 
 import xmlTests from '../xml.test.js';
 import csvTests from '../csv.test.js';
 import toCsvTests from '../toCsv.test.js';
-import toJsonTests from '../tojson.test';
-//import htmlTests from '../html.test.js';
+import toJsonTests from '../toJson.test';
+import htmlTests from './html.test.js';
+import fileTests from './file.test.js';
 
 const info = debug('@modusjs/convert-browser:info');
-const { red } = chalk;
 
 // Set your browser debugging level in localStorage.debug
 localStorage.debug = '*';
@@ -38,8 +38,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     info('testing toJson');
     await toJsonTests(libsundertest);
 
-//    info('testing HTML');
-//    await htmlTests(libsundertest);
+    info('testing browser HTML');
+    await htmlTests(libsundertest);
+
+    info('testing browser file');
+    await fileTests(libsundertest);
 
   } catch(e: any) {
     info(red('FAILED: tests threw exception: '));

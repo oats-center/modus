@@ -1,7 +1,7 @@
 // This is handled within each individual platform (node/ browser/) intead of here.
 // Couldn't figure out how to get the multipart/form-data to work right with the
 // cross-fetch and isomorphic-form-data here
-/*import debug from 'debug';
+/* import debug from 'debug';
 import fetch from 'cross-fetch'; // universal fetch
 import type ModusResult from '@oada/types/modus/v1/modus-result.js';
 //import 'isomorphic-form-data'; // this puts global.FormData into existence
@@ -33,4 +33,4 @@ export async function toHtml(mr: ModusResult): Promise<string> {
   }
   trace('Received response from api: ', response);
   return response['filename'] || '';
-}*/
+} */

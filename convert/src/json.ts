@@ -23,7 +23,7 @@ export type ModusJSONConversionResult = {
 
 export type InputFile = {
   filename: string, // can include the path on the front
-  format?: 'tomkat' | 'generic', // only for CSV/XLSX files, default tomkat (same as generic)
+  format?: 'tomkat' | 'generic', // only for CSV/XLSX files, default tomkat (same as generic for now)
   str?: string,
   // xlsx can either be ArrayBuffer or base64 string of original file.
   // Do not use for other types, they should all just be strings.
@@ -39,11 +39,7 @@ export function toJson(files: InputFile[] | InputFile): ModusJSONConversionResul
   let results: ModusJSONConversionResult[] = [];
   for (const file of files) {
     const format = file.format || 'tomkat';
-    let original_type: SupportedFileType | null = null;
-    if (file.filename.match(/\.xml$/)) original_type = 'xml';
-    if (file.filename.match(/\.csv$/)) original_type = 'csv';
-    if (file.filename.match(/\.xlsx$/)) original_type = 'xlsx';
-    if (file.filename.match(/.json$/)) original_type = 'json';
+    let original_type = typeFromFilename(file.filename);
     if (!original_type) {
       warn('WARNING: unable to determine file type from filename',file.filename,'.  Supported types are:',supportedFileTypes,'.  Skipping file.');
       continue;
@@ -148,4 +144,10 @@ function jsonFilenameFromOriginalFilename({ modus, index, filename, type }: File
   return output_filename;
 }
 
-
+export function typeFromFilename(filename: string): SupportedFileType | null {
+  if (filename.match(/\.xml$/)) return 'xml';
+  if (filename.match(/\.csv$/)) return 'csv';
+  if (filename.match(/\.xlsx$/)) return 'xlsx';
+  if (filename.match(/.json$/)) return 'json';
+  return null;
+}

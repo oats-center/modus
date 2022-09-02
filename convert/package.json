@@ -46,6 +46,7 @@
     "@types/debug": "^4",
     "@types/isomorphic-form-data": "^2",
     "@types/node": "^18.0.0",
+    "buffer": "^6.0.3",
     "concurrently": "^7.2.2",
     "live-server": "^1.2.2",
     "nodemon": "^2.0.16",

@@ -868,7 +868,14 @@ function parseDepth(row: any, units?: any, sheetname?: string): Depth {
   return obj;
 }
 
-export function toCsv(input: ModusResult | ModusResult[]) {
+export type ToCsvOpts = {
+  ssurgo?: boolean,
+};
+export function toCsv(input: ModusResult | ModusResult[], opts?: ToCsvOpts) {
+
+  if (opts?.ssurgo) {
+    warn('SSURGO option coming soon for CSV output');
+  }
 
   let data = [];
 
