@@ -1,5 +1,6 @@
 import debug from 'debug';
 import chalk from 'chalk';
+import fs from 'fs/promises';
 
 import * as mainlib from '../../node/index.js';
 
@@ -15,6 +16,17 @@ const { red } = chalk;
 
 (async function() {
   try {
+
+    info('Cleaning up any leftover ./test-work/* before running tests');
+    try {
+      const stat = await fs.stat('./test-work');
+      await fs.rm('./test-work', { recursive: true });
+    } catch(e: any) {
+      if (e && e.errno !== -2) {
+        throw new Error('fs.stat("./test-work") failed.  Error was:', e);
+      }
+    }
+    await fs.mkdir('./test-work', { recursive: true });
 
     info('testing xml');
     await xmlTests(mainlib);

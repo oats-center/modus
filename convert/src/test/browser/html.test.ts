@@ -1,6 +1,6 @@
 import debug from 'debug';
 // Only import the type here: use the lib passed to you from node or browser in run()
-import type * as MainLib from '../../node/index.js';
+import type * as MainLib from '../../browser/index.js';
 import { green } from 'chalk';
 
 import tomkat from '@modusjs/examples/dist/tomkat-historic/tomkat_source_data2015_RMN0-10cm_1_json.js';

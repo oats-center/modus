@@ -1,7 +1,7 @@
 {
   "name": "@modusjs/bundle",
   "packageManager": "yarn@3.2.1",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "description": "All modusjs convert and examples modules in one bundle for https://cdn.skypack.dev/@modusjs/bundle",
   "type": "module",
   "main": "dist/bundle.mjs",

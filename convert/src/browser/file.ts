@@ -1,6 +1,9 @@
 import debug from 'debug';
 import { csv, json } from '../index.js';
 
+// Keep the universal things
+export * from '../file.js';
+
 const error = debug('@modusjs/convert#browser/file:error');
 const info = debug('@modusjs/convert#browser/file:info');
 const trace = debug('@modusjs/convert#browser/file:trace');
@@ -28,7 +31,7 @@ function isBrowserInputFile(obj: any): obj is BrowserInputFile {
       info('Input file format for file', obj.filename, 'must be a string');
       return false;
     }
-    if (!csv.supportedFormats.find(obj.format)) {
+    if (!csv.supportedFormats.find(sf => sf === obj.format)) {
       info('Input file formt for file', obj.filename, 'must be one of the supported formats', csv.supportedFormats);
       return false;
     }
@@ -36,15 +39,20 @@ function isBrowserInputFile(obj: any): obj is BrowserInputFile {
   return true;
 }
 
-// This function is universal, but in browser case it takes a web api File as input file, and in the
-// node case it takes { filename, format? }.  To get around typescript limitation of same typings
-// file for everything, we'll just make the API as "any"
-export async function fromFile(files: any | any[]): Promise<json.ModusJSONConversionResult[]> {
+// Trying to get the universal typings to work even thought the browser/node API is different (and node doesn't have File)
+export async function fromFile(files: any | any[]) {
   if (!Array.isArray(files)) {
     files = [ files ];
   }
   const browser_files = (files.filter(isBrowserInputFile) as BrowserInputFile[]);
-  const toconvert_promises: Promise<json.InputFile | null>[] = browser_files.map(async (bf) => {
+  return fromFileBrowser(browser_files);
+}
+
+export async function fromFileBrowser(files: BrowserInputFile | BrowserInputFile[]): Promise<json.ModusJSONConversionResult[]> {
+  if (!Array.isArray(files)) {
+    files = [ files ];
+  }
+  const toconvert_promises: Promise<json.InputFile | null>[] = files.map(async (bf) => {
     try {
       const type = json.typeFromFilename(bf.file.name);
       if (!type) {
@@ -60,6 +68,7 @@ export async function fromFile(files: any | any[]): Promise<json.ModusJSONConver
           ret.str = await readFileAsString(bf.file);
         break;
         case 'xlsx': 
+        case 'zip': 
           ret.arrbuf = await readFileAsArrayBuffer(bf.file);
         break;
       }

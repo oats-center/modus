@@ -5,14 +5,17 @@ import debug from 'debug';
 import ModusResult, { assert as assertModusResult } from '@oada/types/modus/v1/modus-result.js';
 import { parse as csvParse, supportedFormats } from './csv.js';
 import { parseModusResult as xmlParseModusResult } from './xml.js';
+import { parse as zipParse } from './zip.js';
 
 const error = debug('@modusjs/convert#tojson:error');
 const warn = debug('@modusjs/convert#tojson:error');
 const info = debug('@modusjs/convert#tojson:info');
 const trace = debug('@modusjs/convert#tojson:trace');
 
-export type SupportedFileType = 'xml' | 'csv' | 'xlsx' | 'json';
-export const supportedFileTypes = [ 'xml', 'csv', 'xlsx', 'json' ];
+export type SupportedFileType = 'xml' | 'csv' | 'xlsx' | 'json' | 'zip';
+export const supportedFileTypes = [ 'xml', 'csv', 'xlsx', 'json', 'zip' ];
+
+export { ModusResult };
 
 export type ModusJSONConversionResult = {
   original_filename: string,
@@ -25,14 +28,14 @@ export type InputFile = {
   filename: string, // can include the path on the front
   format?: 'tomkat' | 'generic', // only for CSV/XLSX files, default tomkat (same as generic for now)
   str?: string,
-  // xlsx can either be ArrayBuffer or base64 string of original file.
+  // zip or xlsx can either be ArrayBuffer or base64 string of original file.
   // Do not use for other types, they should all just be strings.
   arrbuf?: ArrayBuffer,
   base64?: string,
 };
 
 // This function will attempt to convert all the input files into an array of Modus JSON files
-export function toJson(files: InputFile[] | InputFile): ModusJSONConversionResult[] {
+export async function toJson(files: InputFile[] | InputFile): Promise<ModusJSONConversionResult[]> {
   if (!Array.isArray(files)) {
     files = [ files ];
   }
@@ -53,8 +56,9 @@ export function toJson(files: InputFile[] | InputFile): ModusJSONConversionResul
     }
     switch(original_type) {
       case 'xlsx': 
+      case 'zip':
         if (!file.arrbuf && !file.base64) {
-          warn('Type of',file.filename,'was xlsx, but xlsx must be an ArrayBuffer or Base64 encoded string.  Skipping.');
+          warn('Type of',file.filename,'was',original_type, 'but that must be an ArrayBuffer or Base64 encoded string.  Skipping.');
           continue;
         }
       break;
@@ -73,6 +77,10 @@ export function toJson(files: InputFile[] | InputFile): ModusJSONConversionResul
     let modus: ModusResult | any | null = null;
     try {
       switch(original_type) {
+        case 'zip':
+          const zip_modus = await zipParse(file);
+          results = [ ...results, ...zip_modus ];
+        break;
         case 'json': 
           modus = JSON.parse(file.str!);
           assertModusResult(modus); // catch below will inform if parsing or assertion failed.
@@ -130,11 +138,11 @@ type FilenameArgs = {
   type: SupportedFileType
 };
 function jsonFilenameFromOriginalFilename({ modus, index, filename, type }: FilenameArgs): string {
-  const output_filename_base = filename.replace(/\.(xml|csv|xlsx)$/,'.json');
+  const output_filename_base = filename.replace(/\.(xml|csv|xlsx|zip)$/,'.json');
   let output_filename = output_filename_base;
   // xslx and csv store the sheetname + group number in FileDescription, we can name things by that
   const filedescription = modus?.Events?.[0]?.LabMetaData?.Reports?.[0]?.FileDescription;
-  if ((type === 'xlsx' || type === 'csv') && filedescription) {
+  if ((type === 'xlsx' || type === 'csv' || type === 'zip') && filedescription) {
     output_filename = output_filename.replace(/\.json$/, `${filedescription.replace(/[^a-zA-Z0-9_\\-]*/g,'')}.json`);
   } else {
     if (typeof index !== 'undefined') { // more than one result, have to number the output files
@@ -149,5 +157,6 @@ export function typeFromFilename(filename: string): SupportedFileType | null {
   if (filename.match(/\.csv$/)) return 'csv';
   if (filename.match(/\.xlsx$/)) return 'xlsx';
   if (filename.match(/.json$/)) return 'json';
+  if (filename.match(/.zip/)) return 'zip';
   return null;
 }

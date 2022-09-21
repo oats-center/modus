@@ -1,6 +1,7 @@
 import fs from 'fs/promises';
 import debug from 'debug';
 import chalk from 'chalk';
+import { deepdiff } from '../util.js';
 // Only import the type here: use the lib passed to you from node or browser in run()
 import type * as MainLib from '../../node/index.js';
 
@@ -26,10 +27,25 @@ export default async function run(lib: typeof MainLib) {
   await Promise.all(files.map(f => fs.cp(f.src, f.dst)));
 
   test('Checking file.fromFile with four input files (json, xml, csv, xlsx)');
-  const result = await lib.file.fromFile(files.map(f => ({ filename: f.dst })));
-  if (result.length < 1) {
+  const original_results = await lib.file.fromFile(files.map(f => ({ filename: f.dst })));
+  if (original_results.length < 1) {
     throw new Error('fromFile failed: result is empty');
   }
   
+  test(`save will save all modus results as a zip file in ${dir}/modus_conversion.zip`);
+  await lib.file.save({ modus: original_results, outputtype: 'zip', filename: 'modus_conversion.zip', outdir: dir });
+  const saveresult = await lib.file.fromFile({ filename: `${dir}/modus_conversion.zip` });
+  for (const sr of saveresult) {
+    const or = original_results.find(o => {
+      const only_filename = o.output_filename.replace(/^(.*[\/\\])*/g,''); // get rid of path
+      return only_filename === sr.output_filename;
+    });
+    const diff = deepdiff(sr.modus, or!.modus || null);
+    if (diff.length > 0) {
+      error('save failed: results parsed from saved file',sr.output_filename, 'do not match results from original', or!.output_filename || 'undefined', 'sent to save function:', diff);
+      throw new Error('save failed: results parsed from saved file do not match results sent to save function.');
+    }
+  }
+
   test('All node file tests passed');
 }

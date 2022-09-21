@@ -1,7 +1,7 @@
 import debug from 'debug';
 import { Buffer } from 'buffer/';
 // Only import the type here: use the lib passed to you from node or browser in run()
-import type * as MainLib from '../../node/index.js';
+import type * as MainLib from '../../browser/index.js';
 import { red, green } from 'chalk'; // have to import it this way on browser
 
 import tomkat_json from '@modusjs/examples/dist/tomkat-historic/tomkat_source_data2015_RMN0-10cm_1_json.js';
@@ -29,6 +29,8 @@ export default async function run(lib: typeof MainLib) {
   if (result.length < 1) {
     throw new Error('fromFile failed to produce any results');
   }
-  
+
+  test('NOT testing file save: that is tested manually in the app');
+
   test('All file browser tests passed');
 }

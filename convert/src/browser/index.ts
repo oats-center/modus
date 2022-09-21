@@ -1,3 +1,4 @@
+// universal
 export * from '../index.js';
 
 // Brower-specific implementations

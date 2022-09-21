@@ -10,7 +10,8 @@
     "bundle",
     "convert",
     "cli",
-    "examples"
+    "examples",
+    "app"
   ],
   "devDependencies": {
     "typescript": "^4.7.4"

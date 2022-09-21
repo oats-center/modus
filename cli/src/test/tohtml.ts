@@ -17,6 +17,8 @@ async function passthru(command: string) {
 
 
 export default async function run() {
+  info('toHTML tests disabled');
+  /*
   info('copying assets from examples');
   await fs.cp('../examples/examples/tomkat-historic/tomkat_source_data2015_RMN0-10cm_1.json', './test-work/tomkat2015_1.json');
   await fs.cp('../examples/examples/tomkat-historic/tomkat_source_data2015_RMN0-10cm_2.json', './test-work/tomkat2015_2.json');
@@ -35,6 +37,7 @@ export default async function run() {
   }
   
   test('tohtml All tests passed');
+  */
 }
 
 
