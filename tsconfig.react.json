@@ -1,8 +1,0 @@
-{
-  "extends": "./tsconfig.browser.json",
-  "compilerOptions": {
-    "jsx": "react-jsx",
-    "useDefineForClassFields": true
-  },
-  "comment": "useDefineForClassFields is for mobx, see mobx readme front page"
-}
