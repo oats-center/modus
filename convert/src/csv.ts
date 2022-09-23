@@ -72,7 +72,7 @@ function parseTomKat({ wb }: { wb: xlsx.WorkBook }): ModusResult[] {
       // If you don't put { raw: false } for sheet_to_json, it will parse dates as ints instead of the formatted strings
       const rows = xlsx.utils.sheet_to_json(wb.Sheets[sheetname]!, { raw: false }).map(keysToUpperNoSpacesDashesOrUnderscores);
       for (const r of rows ) {
-        const id = r['POINTID'] || r['FMISSAMPLEID'];
+        const id = r['POINTID'] || r['FMISSAMPLEID'] || r['SAMPLEID'];
         if (!id) continue;
         pointmeta[id] = r;
       }
@@ -106,7 +106,11 @@ function parseTomKat({ wb }: { wb: xlsx.WorkBook }): ModusResult[] {
 
 
     // Determine a "date" column for this dataset
+    // Let some "known" candidates for date column name take precedence over others:
     let datecol = colnames.sort().find(name => name.toUpperCase().match(/DATE/));
+    if (colnames.find(c => c === 'DATESUB')) {
+      datecol = 'DATESUB'; // A&L West Semios
+    }
     //trace('datecol = ', datecol, ', colnames uppercase = ', colnames.map(c => c.toUpperCase()));
     if (!datecol) {
       error('No date column in sheet', sheetname);
@@ -117,9 +121,14 @@ function parseTomKat({ wb }: { wb: xlsx.WorkBook }): ModusResult[] {
     type DateGroupedRows = { [date: string]: any[] };
     const grouped_rows = rows.reduce((groups: DateGroupedRows, r: any) => {
       let date = r[datecol!]?.toString();
-      if (+date < 100000 && +date > 100) { // this is an excel date (# days since 1/1/1900), parse it out
+      if (date.match(/[0-9]{8}/)) {// YYYYMMDD
+        date = dayjs(date, 'YYYYMMDD').format('YYYY-MM-DD');
+      }
+      else if (+date < 100000 && +date > 100) { // this is an excel date (# days since 1/1/1900), parse it out
         date = dayjs(getJsDateFromExcel(date)).format('YYYY-MM-DD');
       }
+      trace('Determined row date from column',datecol,'as',date);
+
       if (!date) {
         warn('WARNING: row does not have the column we chose for the date (', datecol, '), the row is: ', r);
         return groups;
@@ -155,12 +164,16 @@ function parseTomKat({ wb }: { wb: xlsx.WorkBook }): ModusResult[] {
           },
         }],
       };
-
       const event = output.Events![0]!;
       const depthrefs = event.EventSamples!.Soil!.DepthRefs!;
       const samples = event.EventSamples!.Soil!.SoilSamples!;
 
       for (const [index, row] of g_rows.entries()) {
+        const reportid = parseReportID(row);
+        if (reportid) {
+          event.LabMetaData.Reports[0]!.ReportID = reportid; // last row will win this if they disagree
+        }
+
         // Grab the "depth" for this sample:
         const depth = parseDepth(row, unit_overrides, sheetname); // SAM: need to write this to figure out a Depth object
         const DepthID = ''+ensureDepthInDepthRefs(depth, depthrefs); // mutates depthrefs if missing, returns depthid
@@ -170,7 +183,7 @@ function parseTomKat({ wb }: { wb: xlsx.WorkBook }): ModusResult[] {
 
         const sample: any = {
           SampleMetaData: {
-            SampleNumber: ''+index,
+            SampleNumber: parseSampleNumber(row) || ''+index,
             ReportID: "1",
             FMISSampleID: ''+id,
           },
@@ -304,7 +317,7 @@ type NutrientResult = {
 };
 function parseSampleID(row: any): string {
   const copy = keysToUpperNoSpacesDashesOrUnderscores(row);
-  return copy['POINTID'] || copy['FMISSAMPLEID'] || '';
+  return copy['POINTID'] || copy['FMISSAMPLEID'] || copy['SAMPLEID'] || '';
 }
 
 // Make a WKT from point meta's Latitude_DD and Longitude_DD.  Do a "tolerant" parse so anything
@@ -321,11 +334,11 @@ function parseWKTFromPointMetaOrRow(meta_or_row: any): string {
   if (copy["LAT"]) latKey = "LAT";
 
   if (!longKey) {
-    //trace('No longitude for point: ', meta_or_row.POINTID || meta_or_row.FMISSAMPLEID);
+    //trace('No longitude for point: ', meta_or_row.POINTID || meta_or_row.FMISSAMPLEID || meta_or_row.SAMPLEID);
     return '';
   }
   if (!latKey) {
-    //trace('No latitude for point: ', meta_or_row.POINTID || meta_or_row.FMISSAMPLEID);
+    //trace('No latitude for point: ', meta_or_row.POINTID || meta_or_row.FMISSAMPLEID || meta_or_row.SAMPLEID);
     return '';
   }
 
@@ -760,6 +773,173 @@ let nutrientColHeaders: Record<string,any> = {
     Element: "TC",
     ValueUnit: "ppm"
   },
+
+  // A&L West CSV (Semios)
+  // Open Questions:
+  // - verify units
+  // - is the "P" in "HCO3_P" an HCO3 Saturated Paste or PPM or %?
+  // - is "K_PCT" (and other _PCT's) just K in mg/kg or in %?
+  // - Add support for EX__LIME-style things that are the lab's assessment of the lime level (VH, H, L, VL).  
+  //   Modus supports those kind of assessments, but need to lookup how they were represented
+  // - Molybdenum, Aluminum, SO4-S, SAR, CO3 in Modus requires extraction method, don't know it here.
+  // - Assuming B_SAT is Base Saturation - Boron, but Modus does not have BS-B
+  // - Need to verify units on EC: used dS/m from Modus, but there are 4 options
+  // - I do not know what "SAT_PCT" means, need to add it here.
+  // - What does "TYPE" mean?  It is the number 5 in at least one sheet
+  "ENR": {
+    Element: "ENR",
+    ValueUnit: "ppm",
+  },
+  "P1": {
+    Element: "P (B1 1:10)",
+    ValueUnit: "ppm",
+  },
+  "P2": {
+    Element: "P (B2 1:10)",
+    ValueUnit: "ppm",
+  },
+  "HCO3_P": {
+    Element: "HCO3 (SP)", // is "P" saturated paste or PPM or %?
+    ValueUnit: "ppm",
+  },
+  "HCO3": {
+    Element: "HCO3",
+    ValueUnit: "ppm",
+  },
+  "PH": {
+    Element: "pH",
+  },
+  "MG": {
+    Element: "Mg",
+    ValueUnit: "mg/kg",
+  },
+  "CA": {
+    Element: "Ca",
+    ValueUnit: "mg/kg",
+  },
+  "NA": {
+    Element: "Na",
+    ValueUnit: "mg/kg",
+  },
+  "BUFFER_PH": {
+    Element: "B-Ph",
+  },
+  "H": {
+    Element: "H",
+    ValueUnit: "ppm",
+  },
+  "K_PCT": {
+    Element: "K",
+    ValueUnit: "mg/kg",
+  },
+  "MG_PCT": {
+    Element: "Mg",
+    ValueUnit: "mg/kg",
+  },
+  "CA_PCT": {
+    Element: "Ca",
+    ValueUnit: "mg/kg",
+  },
+  "H_PCT": {
+    Element: "H",
+    ValueUnit: "mg/kg",
+  },
+  "NA_PCT": {
+    Element: "Na",
+    ValueUnit: "mg/kg",
+  },
+  "NO3_N": {
+    Element: "NO3-N",
+    ValueUnit: "ppm",
+  },
+  "ZN": {
+    Element: "Zn",
+    ValueUnit: "ppm",
+  },
+  "MN": {
+    Element: "Mn",
+    ValueUnit: "ppm",
+  },
+  "FE": {
+    Element: "Fe",
+    ValueUnit: "ppm",
+  },
+  "CU": {
+    Element: "Cu",
+    ValueUnit: "ppm",
+  },
+  "S__SALTS": {
+    Element: "SS", // "Soluble Salts"
+    ValueUnit: "ppm",
+  },
+  "CL": {
+    Element: "Cl",
+    ValueUnit: "ppm",
+  },
+  "MO": {
+    Element: "Mo", // Molybdenum.  
+    ValueUnit: "ppm",
+  },
+  "AL": {
+    Element: "Al", // Aluminum
+    ValueUnit: "ppm",
+  },
+  "CA_SAT": {
+    Element: "BS-Ca", // Base Saturation - Calcium
+    ValueUnit: "%",
+  },
+  "MG_SAT": {
+    Element: "BS-Mg",
+    ValueUnit: "%",
+  },
+  "NA_SAT": {
+    Element: "BS-Na",
+    ValueUnit: "%",
+  },
+  "B_SAT": {
+    Element: "BS-B", // Base Saturation - Boron?  Modus does not have this element.
+    ValueUnit: "%",
+  },
+  "ESP": {
+    Element: "ESP", // Exchangeable Sodium Percentage
+    ValueUnit: "%",
+  },
+  "NH4": {
+    Element: "NH4-N",
+    ValueUnit: "ppm",
+  },
+  "SO4_S": {
+    Element: "SO4-S",
+    ValueUnit: "ppm",
+  },
+  "SAR": {
+    Element: "SAR", // Sodium Adsorption Ratio
+  },
+  "EC": {
+    Element: "ECe",
+    ValueUnit: "dS/m", // Just guessed that this is the one, need to verify
+  },
+  "SAT_PCT": {
+    Element: "SAT_PCT", // I have no idea what this is, passing it through verbatim
+  },
+  "CO3": {
+    Element: "CO3", 
+    ValueUnit: "ppm",
+  },
+ 
+  
+
+
+
+
+
+
+
+
+
+
+
+
   /* Didn't see these in the official modus element list
   "LBC 1": {
     Element: "Ca",
@@ -866,6 +1046,22 @@ function parseDepth(row: any, units?: any, sheetname?: string): Depth {
   obj.ColumnDepth = Math.abs(obj.EndingDepth - obj.StartingDepth);
 
   return obj;
+}
+
+function parseReportID(row: any) {
+  if (row['REPORTNUM']) { // A&L West Semios
+    return row['REPORTNUM'].toString().trim();
+  }
+  return '';
+}
+
+// SampleNumber is not the same as SampleID: SampleID is what the soil sampler called it,
+// SampleNumber is what the Lab calls that sample
+function parseSampleNumber(row: any) {
+  if (row['LABNUM']) { // A&L West Semios
+    return row['LABNUM'].toString().trim();
+  }
+  return '';
 }
 
 export type ToCsvOpts = {

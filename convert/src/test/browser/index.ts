@@ -5,7 +5,7 @@ import { red } from 'chalk';
 import xmlTests from '../xml.test.js';
 import csvTests from '../csv.test.js';
 import toCsvTests from '../toCsv.test.js';
-import toJsonTests from '../toJson.test';
+import toJsonTests from '../tojson.test';
 import htmlTests from './html.test.js';
 import fileTests from './file.test.js';
 

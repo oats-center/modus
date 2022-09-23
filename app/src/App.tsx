@@ -93,7 +93,7 @@ export default function App() {
         Please note that no data leaves your browser.  Your original and converted data never leave your computer.
         <hr/>
         Thanks to the OATS Center, Farm Foundation, Mixing Bowl Hub, Ag Gateway, and all participants in the 
-        2022 "Fixing the Soil Health Tech Stack" Hckathon.
+        2022 "Fixing the Soil Health Tech Stack" Hackathon.
       </div>
 
     </div>
