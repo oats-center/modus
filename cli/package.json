@@ -1,7 +1,7 @@
 {
   "name": "@modusjs/cli",
   "packageManager": "yarn@3.2.1",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Conversion utility between various forms of soil test files, including CSV, XLSX, Modus XML, and Modus JSON.",
   "type": "module",
   "main": "dist/index.js",
