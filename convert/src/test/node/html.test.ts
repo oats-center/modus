@@ -14,9 +14,7 @@ const error = debug('@modusjs/convert#test-node/html:error');
 const { green } = chalk;
 const test = (msg: string) => info(green(msg));
 
-
 export default async function run(lib: typeof MainLib) {
-
   test('toHtml tests disabled');
   /*
   test('Checking tohtml with tomkat 2015 data json')

@@ -1,7 +1,7 @@
 {
   "_type": "application/vnd.modus.v1.modus-result+json",
   "Events": [
-    { 
+    {
       "EventMetaData": {
         "EventCode": "ece3a2a8-4340-48b1-ae1f-d48d1f1e1692",
         "EventDate": "2021-09-24",
@@ -34,7 +34,7 @@
         ]
       },
       "FMISMetaData": {
-        "FMISEventID":"ece3a2a8-4340-48b1-ae1f-d48d1f1e1692",
+        "FMISEventID": "ece3a2a8-4340-48b1-ae1f-d48d1f1e1692",
         "FMISProfile": {
           "Grower": "CARL AULT",
           "Farm": "ENYART EAST 50",
@@ -98,7 +98,11 @@
                     { "Element": "K", "Value": 190, "ValueUnit": "ppm" },
                     { "Element": "Ca", "Value": 1950, "ValueUnit": "ppm" },
                     { "Element": "Mg", "Value": 265, "ValueUnit": "ppm" },
-                    { "Element": "CEC", "Value": 12.4, "ValueUnit": "meq/100g" },
+                    {
+                      "Element": "CEC",
+                      "Value": 12.4,
+                      "ValueUnit": "meq/100g"
+                    },
                     { "Element": "BS-Ca", "Value": 78.3, "ValueUnit": "%" },
                     { "Element": "BS-Mg", "Value": 17.7, "ValueUnit": "%" },
                     { "Element": "BS-K", "Value": 3.9, "ValueUnit": "%" }
@@ -106,7 +110,7 @@
                 }
               ]
             },
-      
+
             {
               "SampleMetaData": {
                 "SampleNumber": "3",
@@ -122,7 +126,11 @@
                     { "Element": "K", "Value": 178, "ValueUnit": "ppm" },
                     { "Element": "Ca", "Value": 1600, "ValueUnit": "ppm" },
                     { "Element": "Mg", "Value": 290, "ValueUnit": "ppm" },
-                    { "Element": "CEC", "Value": 10.9, "ValueUnit": "meq/100g" },
+                    {
+                      "Element": "CEC",
+                      "Value": 10.9,
+                      "ValueUnit": "meq/100g"
+                    },
                     { "Element": "BS-Ca", "Value": 73.6, "ValueUnit": "%" },
                     { "Element": "BS-Mg", "Value": 22.2, "ValueUnit": "%" },
                     { "Element": "BS-K", "Value": 4.2, "ValueUnit": "%" },
@@ -151,7 +159,11 @@
                     { "Element": "K", "Value": 228, "ValueUnit": "ppm" },
                     { "Element": "Ca", "Value": 1600, "ValueUnit": "ppm" },
                     { "Element": "Mg", "Value": 305, "ValueUnit": "ppm" },
-                    { "Element": "CEC", "Value": 12.3, "ValueUnit": "meq/100g" },
+                    {
+                      "Element": "CEC",
+                      "Value": 12.3,
+                      "ValueUnit": "meq/100g"
+                    },
                     { "Element": "BS-Ca", "Value": 64.9, "ValueUnit": "%" },
                     { "Element": "BS-Mg", "Value": 20.6, "ValueUnit": "%" },
                     { "Element": "BS-K", "Value": 4.7, "ValueUnit": "%" },
@@ -176,7 +188,11 @@
                     { "Element": "K", "Value": 205, "ValueUnit": "ppm" },
                     { "Element": "Ca", "Value": 2250, "ValueUnit": "ppm" },
                     { "Element": "Mg", "Value": 365, "ValueUnit": "ppm" },
-                    { "Element": "CEC", "Value": 14.8, "ValueUnit": "meq/100g" },
+                    {
+                      "Element": "CEC",
+                      "Value": 14.8,
+                      "ValueUnit": "meq/100g"
+                    },
                     { "Element": "BS-Ca", "Value": 75.9, "ValueUnit": "%" },
                     { "Element": "BS-Mg", "Value": 20.5, "ValueUnit": "%" },
                     { "Element": "BS-K", "Value": 4.7, "ValueUnit": "%" },
@@ -309,7 +325,11 @@
                     { "Element": "K", "Value": 215, "ValueUnit": "ppm" },
                     { "Element": "Ca", "Value": 1450, "ValueUnit": "ppm" },
                     { "Element": "Mg", "Value": 310, "ValueUnit": "ppm" },
-                    { "Element": "CEC", "Value": 10.4, "ValueUnit": "meq/100g" },
+                    {
+                      "Element": "CEC",
+                      "Value": 10.4,
+                      "ValueUnit": "meq/100g"
+                    },
                     { "Element": "BS-Ca", "Value": 69.8, "ValueUnit": "%" },
                     { "Element": "BS-Mg", "Value": 24.9, "ValueUnit": "%" },
                     { "Element": "BS-K", "Value": 5.3, "ValueUnit": "%" }
@@ -333,7 +353,11 @@
                     { "Element": "K", "Value": 251, "ValueUnit": "ppm" },
                     { "Element": "Ca", "Value": 2900, "ValueUnit": "ppm" },
                     { "Element": "Mg", "Value": 190, "ValueUnit": "ppm" },
-                    { "Element": "CEC", "Value": 10.4, "ValueUnit": "meq/100g" },
+                    {
+                      "Element": "CEC",
+                      "Value": 10.4,
+                      "ValueUnit": "meq/100g"
+                    },
                     { "Element": "BS-Ca", "Value": 86.7, "ValueUnit": "%" },
                     { "Element": "BS-Mg", "Value": 9.5, "ValueUnit": "%" },
                     { "Element": "BS-K", "Value": 3.8, "ValueUnit": "%" },
@@ -441,7 +465,11 @@
                     { "Element": "K", "Value": 245, "ValueUnit": "ppm" },
                     { "Element": "Ca", "Value": 1600, "ValueUnit": "ppm" },
                     { "Element": "Mg", "Value": 295, "ValueUnit": "ppm" },
-                    { "Element": "CEC", "Value": 13.5, "ValueUnit": "meq/100g" },
+                    {
+                      "Element": "CEC",
+                      "Value": 13.5,
+                      "ValueUnit": "meq/100g"
+                    },
                     { "Element": "BS-Ca", "Value": 59.3, "ValueUnit": "%" },
                     { "Element": "BS-Mg", "Value": 18.2, "ValueUnit": "%" },
                     { "Element": "BS-K", "Value": 4.7, "ValueUnit": "%" },
@@ -552,7 +580,11 @@
                     { "Element": "K", "Value": 260, "ValueUnit": "ppm" },
                     { "Element": "Ca", "Value": 2050, "ValueUnit": "ppm" },
                     { "Element": "Mg", "Value": 370, "ValueUnit": "ppm" },
-                    { "Element": "CEC", "Value": 17.6, "ValueUnit": "meq/100g" },
+                    {
+                      "Element": "CEC",
+                      "Value": 17.6,
+                      "ValueUnit": "meq/100g"
+                    },
                     { "Element": "BS-Ca", "Value": 58.2, "ValueUnit": "%" },
                     { "Element": "BS-Mg", "Value": 17.5, "ValueUnit": "%" },
                     { "Element": "BS-K", "Value": 3.8, "ValueUnit": "%" },
@@ -593,6 +625,6 @@
           ]
         }
       }
-    } 
+    }
   ]
 }

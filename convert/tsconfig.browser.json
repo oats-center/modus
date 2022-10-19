@@ -4,6 +4,6 @@
     "rootDir": "src",
     "outDir": "dist-browser"
   },
-  "include": [ "src" ],
-  "exclude": [ "src/node", "src/test/node" ]
+  "include": ["src"],
+  "exclude": ["src/node", "src/test/node"]
 }

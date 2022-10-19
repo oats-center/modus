@@ -14,14 +14,13 @@ import fileTest from './file.test.js';
 const info = debug('@modusjs/xml#test-node:info');
 const { red } = chalk;
 
-(async function() {
+(async function () {
   try {
-
     info('Cleaning up any leftover ./test-work/* before running tests');
     try {
       const stat = await fs.stat('./test-work');
       await fs.rm('./test-work', { recursive: true });
-    } catch(e: any) {
+    } catch (e: any) {
       if (e && e.errno !== -2) {
         throw new Error('fs.stat("./test-work") failed.  Error was:', e);
       }
@@ -47,9 +46,11 @@ const { red } = chalk;
     await fileTest(mainlib);
 
     info('All tests passed!');
-
-  } catch(e: any) {
-    info(red(`ERROR: tests through exception: `), JSON.stringify(e, null, '  '));
+  } catch (e: any) {
+    info(
+      red(`ERROR: tests through exception: `),
+      JSON.stringify(e, null, '  ')
+    );
     throw e; // re-throw so node will show stack
   }
 })();

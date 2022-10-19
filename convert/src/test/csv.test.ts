@@ -12,7 +12,6 @@ const error = debug('@modusjs/convert#test-csv:error');
 const { green } = chalk;
 const test = (msg: string) => info(green(msg));
 
-
 export default async function run(lib: typeof MainLib) {
   test('Parsing tomkat historic xlsx sheet with parse()...');
   const results = lib.csv.parse({ base64: xlsx_sample1, format: 'tomkat' });
@@ -27,8 +26,5 @@ export default async function run(lib: typeof MainLib) {
     throw new Error('First result did not have a report with FileDescription');
   }
 
-
   test('All parse tests passed');
 }
-
-

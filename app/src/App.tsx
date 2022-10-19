@@ -1,5 +1,7 @@
 import { useState, DragEventHandler } from 'react';
-import { file as convertFile } from '@modusjs/convert/dist-browser/browser/index.js';
+import {
+  file as convertFile,
+} from '@modusjs/convert/dist-browser/browser/index.js';
 import debug from 'debug';
 import './App.css';
 import { connect } from '@oada/client';
@@ -12,7 +14,6 @@ type Output = 'json' | 'csv' | 'trellis';
 const info = debug('@modusjs/app#App:info');
 
 export default function App() {
-
   const [ output, setOutput ] = useState<Output>('json');
   const [ domain, setTrellisDomain] = useState<string>('');
   const [ token, setTrellisToken] = useState<string>('');
@@ -43,14 +44,14 @@ export default function App() {
     evt.stopPropagation();
     switch(type) {
 
-      case 'drag': 
+      case 'drag':
         if (inzone !== inout) {
           setInzone(inout || false);
           if (inout) evt.dataTransfer.dropEffect = "copy"; // makes a green plus on mac
         }
       break;
 
-      case 'drop': 
+      case 'drop':
         info('file dropped, evt = ', evt);
         const files = [ ...evt.dataTransfer.files ]; // It is dumb that I have to do this
         const all_file_results = await Promise.all(files.map(async f => {
@@ -75,10 +76,9 @@ export default function App() {
           info('File successfully saved');
         }
       break;
+      }
+    };
 
-    }
-  };
-   
   return (
     <div className="app">
       <div className="header">
@@ -88,22 +88,22 @@ export default function App() {
             <div>Modus Lab Results Converter</div>
           </h1>
           <span className="tagline">
-            Drop your soil, nutrient, water or nematode sample 
-            lab results here and get back a standard set of 
-            Modus JSON files or a standard CSV.
+            Drop your soil, nutrient, water or nematode sample lab results here
+            and get back a standard set of Modus JSON files or a standard CSV.
           </span>
         </div>
         <div style={{ flexGrow: 1 }}></div>
-        <div>
-          { /* Icons here  */ }
-        </div>
+        <div>{/* Icons here  */}</div>
       </div>
 
-      <hr/>
+      <hr />
 
       <div className="output">
         Output Format: &nbsp;&nbsp;
-        <select value={output} onChange={evt => setOutput(evt.target.value as Output)}>
+        <select
+          value={output}
+          onChange={(evt) => setOutput(evt.target.value as Output)}
+        >
           <option value="json">Modus JSON</option>
           <option value="csv">CSV</option>
           <option value="trellis">Sync to Trellis</option>
@@ -136,10 +136,11 @@ export default function App() {
       </div>}
 
       <div className="dropzone-container">
-        <div className="dropzone"
+        <div
+          className="dropzone"
           onDragOver={handleFile({ type: 'drag' })}
-          onDrop={handleFile({type: 'drop' })}
-          onDragEnter={handleFile({ type: 'drag', inout: true })} 
+          onDrop={handleFile({ type: 'drop' })}
+          onDragEnter={handleFile({ type: 'drag', inout: true })}
           onDragLeave={handleFile({ type: 'drag', inout: false })}
         >
           Drop file here to download a standard MODUS output format.
@@ -148,18 +149,21 @@ export default function App() {
 
 
       <div className="footer">
-        <hr/>
-        Please note that no data leaves your browser.  Your original and converted data never leave your computer.
-        <hr/>
+        <hr />
+        Please note that no data leaves your browser. Your original and
+        converted data never leave your computer.
+        <hr />
         Thanks to the &nbsp;
         <a href="https://oatscenter.org">OATS Center</a>,&nbsp;
         <a href="https://farmfoundation.org">Farm Foundation</a>, &nbsp;
         <a href="https://mixingbowlhub.com/">Mixing Bowl Hub</a>,&nbsp;
-        <a href="https://aggateway.org">Ag Gateway</a>,&nbsp;
-        and all participants in the <a href="https://farmfoundation.swoogo.com/soilhealthtech">2022 "Fixing the Soil Health Tech Stack" Hackathon</a>.
+        <a href="https://aggateway.org">Ag Gateway</a>,&nbsp; and all
+        participants in the{' '}
+        <a href="https://farmfoundation.swoogo.com/soilhealthtech">
+          2022 "Fixing the Soil Health Tech Stack" Hackathon
+        </a>
+        .
       </div>
-
     </div>
-  )
+  );
 }
-

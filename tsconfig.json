@@ -1,10 +1,11 @@
 {
   "compilerOptions": {
+    "composite": true,
     "target": "es2020",
-    "module": "es2020",
-    "moduleResolution": "node",
+    "module": "node16",
+    "moduleResolution": "node16",
 
-    "lib": [ "esnext" ],
+    "lib": ["esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
