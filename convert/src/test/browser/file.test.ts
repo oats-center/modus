@@ -16,13 +16,17 @@ const error = debug('@modusjs/convert#test-browser/file:error');
 const test = (msg: string) => info(green(msg));
 
 export default async function run(lib: typeof MainLib) {
-
   test('Checking file.fromFile for browser');
   const files = [
-    { file: new File([JSON.stringify(tomkat_json)], 'tomkat.json'), },
-    { file: new File([ward_csv], 'ward.csv'), },
-    { file: new File([hand_modus_xml], 'hand-modus.xml'), },
-    { file: new File([Buffer.from(tomkat_source_xlsx, 'base64')], 'tomkat_source.xlsx'), },
+    { file: new File([JSON.stringify(tomkat_json)], 'tomkat.json') },
+    { file: new File([ward_csv], 'ward.csv') },
+    { file: new File([hand_modus_xml], 'hand-modus.xml') },
+    {
+      file: new File(
+        [Buffer.from(tomkat_source_xlsx, 'base64')],
+        'tomkat_source.xlsx'
+      ),
+    },
   ];
 
   const result = await lib.file.fromFile(files);

@@ -15,37 +15,41 @@ const error = debug('@modusjs/convert#test-toCsv:error');
 const { green } = chalk;
 const test = (msg: string) => info(green(msg));
 
-
 export default async function run(lib: typeof MainLib) {
+  let { wb, str } = lib.csv.toCsv(tomkat as ModusResult);
 
-  let { wb, str } = lib.csv.toCsv(tomkat as ModusResult)
-
-  let data = xlsx.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]!] as xlsx.WorkSheet)
+  let data = xlsx.utils.sheet_to_json(
+    wb.Sheets[wb.SheetNames[0]!] as xlsx.WorkSheet
+  );
 
   if (data!.length === 0) {
-    throw new Error("CSV had no rows")
+    throw new Error('CSV had no rows');
   }
 
-  let results: Record<string,string> = {
-    "ReportID": 'string',
-    "Latitude": 'number',
-    "Longitude": 'number',
-    "DepthID": 'string',
-    "StartingDepth [cm]": 'number',
-    "EndingDepth [cm]": 'number',
-    "ColumnDepth [cm]": 'number',
-    "EventType": 'string',
-    "FileDescription": 'string',
-    "EventDate": 'string',
-    'P [ug/g]': 'number'
-  }
+  let results: Record<string, string> = {
+    'ReportID': 'string',
+    'Latitude': 'number',
+    'Longitude': 'number',
+    'DepthID': 'string',
+    'StartingDepth [cm]': 'number',
+    'EndingDepth [cm]': 'number',
+    'ColumnDepth [cm]': 'number',
+    'EventType': 'string',
+    'FileDescription': 'string',
+    'EventDate': 'string',
+    'P [ug/g]': 'number',
+  };
   let rowOne: any = data![0];
 
-  test('Checking that first row has several columns with values of the appropriate types.')
-  Object.keys(results).forEach(key=> {
+  test(
+    'Checking that first row has several columns with values of the appropriate types.'
+  );
+  Object.keys(results).forEach((key) => {
     if (rowOne![key] === undefined || typeof rowOne![key] !== results[key]) {
-      error('Bad row:', rowOne)
-      throw new Error(`Column ${key} was undefined or did not match expected type ${results[key]}`)
+      error('Bad row:', rowOne);
+      throw new Error(
+        `Column ${key} was undefined or did not match expected type ${results[key]}`
+      );
     }
-  })
+  });
 }

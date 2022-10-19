@@ -2,10 +2,10 @@
 
 :root {
   --background: #f4f0e9;
-  --highlight: #FE8529; 
-  --highlightTransparent: #FE852930;
-  --secondary: #771D00;
-  --text: #1A1A1A;
+  --highlight: #fe8529;
+  --highlightTransparent: #fe852930;
+  --secondary: #771d00;
+  --text: #1a1a1a;
 }
 
 body {

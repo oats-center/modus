@@ -5,12 +5,15 @@ import fs from 'fs/promises';
 (async () => {
   const example_dirs = await fs.readdir('./examples');
   if (!example_dirs || !example_dirs.length || example_dirs.length < 1) {
-    console.log('ERROR: there are no examples in ./examples, readdir returned ', example_dirs);
+    console.log(
+      'ERROR: there are no examples in ./examples, readdir returned ',
+      example_dirs
+    );
     throw new Error('ERROR: there are no examples in ./examples');
   }
-  
+
   // Grab all the files from ./examples
-  // Maintain a global index.ts 
+  // Maintain a global index.ts
   let global_index = '';
   let global_all = {};
 
@@ -29,14 +32,17 @@ import fs from 'fs/promises';
       if (!input_filepath.match(/\.(xml|json|csv|xlsx)$/)) {
         continue; // skip non-xml and non-json files
       }
-      if (input_filepath.match(/^~.*\.xlsx/)) { // excel swap file
+      if (input_filepath.match(/^~.*\.xlsx/)) {
+        // excel swap file
         continue;
       }
       // turn ./build/dir/hand-modus.xml into ./build/dir/hand-modus_xml.js
       const output_filename = f.replace(/\.(xml|json|csv|xlsx)$/, '_$1.ts');
       const output_filepath = `${output_path}/${output_filename}`;
       // The export will have name like hand_modus_xml from hand-modus.xml
-      const output_varname = output_filename.replace(/\.ts$/,'').replaceAll('-','_');
+      const output_varname = output_filename
+        .replace(/\.ts$/, '')
+        .replaceAll('-', '_');
 
       const isxml = f.match(/\.xml/);
       const iscsv = f.match(/\.csv/);
@@ -48,22 +54,24 @@ import fs from 'fs/promises';
         let str = (await fs.readFile(input_filepath)).toString();
         // If it's an XML or CSV file, wrap the string we read in backticks so we can preserve the original structure (and escape any backticks)
         if (isxml || iscsv) {
-          str = '`'+str.replaceAll('`','\\`')+'`';
+          str = '`' + str.replaceAll('`', '\\`') + '`';
         }
         finalcontents = `export default ${str}`;
 
-      // XLSX files become base64 encoded strings:
+        // XLSX files become base64 encoded strings:
       } else if (isxlsx) {
         const str = (await fs.readFile(input_filepath)).toString('base64');
         finalcontents = `export default "${str}"`;
       }
 
       // Create equivalent path in the build/ folder
-      await fs.mkdir(output_path, { recursive: true } );
+      await fs.mkdir(output_path, { recursive: true });
       await fs.writeFile(output_filepath, finalcontents);
-      console.log(`Converted example at ${input_filepath} to default export at ${output_filepath}`);
+      console.log(
+        `Converted example at ${input_filepath} to default export at ${output_filepath}`
+      );
 
-      const output_js_filename = output_filename.replace(/\.ts$/,'.js');
+      const output_js_filename = output_filename.replace(/\.ts$/, '.js');
       local_index += `export { default as ${output_varname} } from './${output_js_filename}';\n`;
       local_all.push(output_js_filename);
     }
@@ -71,14 +79,18 @@ import fs from 'fs/promises';
     global_all[dir] = local_all;
 
     // Write the local index file:
-    await fs.mkdir(output_path, { recursive: true } ); // if the directory is empty, the mkdir never ran
+    await fs.mkdir(output_path, { recursive: true }); // if the directory is empty, the mkdir never ran
     await fs.writeFile(`${output_path}/index.ts`, local_index);
-    
+
     // Add this local index file to the global index
-    const global_varname = dir.replaceAll('-','_');
+    const global_varname = dir.replaceAll('-', '_');
     global_index += `export * as ${global_varname} from './${dir}/index.js';\n`;
   }
   // Add the accumulated "all" object to the global index file
-  global_index += `export const all = ${JSON.stringify(global_all, null, '  ')};\n`
+  global_index += `export const all = ${JSON.stringify(
+    global_all,
+    null,
+    '  '
+  )};\n`;
   await fs.writeFile('./build/index.ts', global_index);
 })();

@@ -15,15 +15,16 @@ const info = debug('@modusjs/convert-browser:info');
 localStorage.debug = '*';
 
 type WindowWithLibs = {
-  libsundertest: typeof libs,
+  libsundertest: typeof libs;
 };
 
 document.addEventListener('DOMContentLoaded', async () => {
   try {
     const libsundertest = (window as unknown as WindowWithLibs).libsundertest;
-    const root = document.getElementById("root");
+    const root = document.getElementById('root');
     if (!root) throw new Error('ERROR: did not find root HTML element!');
-    root.innerHTML = "Tests from <pre>dist/test/index.mjs are running!  Check the console.";
+    root.innerHTML =
+      'Tests from <pre>dist/test/index.mjs are running!  Check the console.';
 
     // Run all the tests you want here:
     info('testing xml');
@@ -43,11 +44,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     info('testing browser file');
     await fileTests(libsundertest);
-
-  } catch(e: any) {
+  } catch (e: any) {
     info(red('FAILED: tests threw exception: '));
     console.log(e);
     throw e; // rethrow so browser will show stack and do source mapping
   }
 });
-

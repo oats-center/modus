@@ -4,5 +4,5 @@
     "rootDir": "build",
     "outDir": "dist"
   },
-  "include": [ "build" ]
+  "include": ["build"]
 }

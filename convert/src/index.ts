@@ -5,4 +5,4 @@ export * as json from './json.js';
 export { ModusResult } from './json.js';
 
 // exported from the platform-specific code node/ and browser/
-//export * as html from './html.js'; 
+//export * as html from './html.js';

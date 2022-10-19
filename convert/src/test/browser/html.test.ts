@@ -13,9 +13,7 @@ const error = debug('@modusjs/convert#test-browser/html:error');
 
 const test = (msg: string) => info(green(msg));
 
-
 export default async function run(lib: typeof MainLib) {
-
   test('toHtml tests disabled');
   /*
   test('Checking tohtml in browser with tomkat 2015 data json')

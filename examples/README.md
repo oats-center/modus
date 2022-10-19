@@ -1,11 +1,14 @@
 # Modus examples
-------------------------------------
+
+---
 
 Under `examples/` there are folders representing single example soil sample results in various forms (pdf, xml, csv, xlsx, json, etc.).
 All the xml, csv, xlsx, and json examples become importable javascript ESM modules.
 
 ## Usage in Typescript/Javascript
----------------------------------
+
+---
+
 ```typescript
 import xml_as_a_string from '@modusjs/examples/dist/enyart-east50-a_l_labs/hand-modus_xml.js'
 import xlsx_as_base64 from '@modusjs/examples/dist/tomkat-historic/tomkat_source_data.xlsx'
@@ -20,7 +23,7 @@ console.log('CSV can be converted to json:', csv.parse({ str: csv_as_string, for
 ```
 
 Each example folder exports a index which contains an array of all the underlying filenames for this example.
-The global index exports all the individual indexes as well as an `all` object you can loop over to just 
+The global index exports all the individual indexes as well as an `all` object you can loop over to just
 dynamic import all the underlying example files:
 
 ```javascript
@@ -32,18 +35,21 @@ for (const dir of Object.keys(examples.all)) {
 }
 ```
 
-
 ## Development
---------------
+
+---
+
 `yarn build` will convert every xml and json file in `examples` into an importable typescript module in `build/`
-using `dev/build.js`.  Then, it will compile that with typescript into javascript in `dist/` and add the appropriate
+using `dev/build.js`. Then, it will compile that with typescript into javascript in `dist/` and add the appropriate
 typescript declaration files.
 
 `yarn test` will test that everything imports in browser and in node.
 
 ## Acknowledgements and Licenses
---------------------------------
+
+---
+
 All data in this repo is released under the Creative Commons CCO 1.0 Universal Public License.
 
-Thanks to Point Blue Conservation Science (https://pointblue.org) and TomKat Ranch (https://tomkatranch.org) for providing historic 
+Thanks to Point Blue Conservation Science (https://pointblue.org) and TomKat Ranch (https://tomkatranch.org) for providing historic
 soil sampling data in the `tomkat-historic` directory.

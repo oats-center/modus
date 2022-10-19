@@ -3,14 +3,16 @@ import * as xlsx from 'xlsx';
 import oerror from '@overleaf/o-error';
 import { getJsDateFromExcel } from 'excel-date-to-js';
 import dayjs from 'dayjs';
-import ModusResult, { assert as assertModusResult } from '@oada/types/modus/v1/modus-result.js';
+import ModusResult, {
+  assert as assertModusResult,
+} from '@oada/types/modus/v1/modus-result.js';
 
 const error = debug('@modusjs/convert#csv:error');
 const warn = debug('@modusjs/convert#csv:error');
 const info = debug('@modusjs/convert#csv:info');
 const trace = debug('@modusjs/convert#csv:trace');
 
-export const supportedFormats = [ 'tomkat', 'generic' ];
+export const supportedFormats = ['tomkat', 'generic'];
 export type SupportedFormats = 'tomkat' | 'generic';
 
 //--------------------------------------------------------------------------------------
@@ -20,24 +22,26 @@ export type SupportedFormats = 'tomkat' | 'generic';
 // Either give an already-parsed workbook, an entire CSV as a string, or an arraybuffer, or a base64 string
 // Default CSV/XLSX format is tomkat
 
-export function parse(
-  { wb, str, arrbuf, base64, format }:
-  { 
-    wb?: xlsx.WorkBook, 
-    str?: string, 
-    arrbuf?: ArrayBuffer,
-    base64?: string, // base64 string
-    format?: 'tomkat' | 'generic', // add others here as more become known
-  }
-): ModusResult[] {
-
+export function parse({
+  wb,
+  str,
+  arrbuf,
+  base64,
+  format,
+}: {
+  wb?: xlsx.WorkBook;
+  str?: string;
+  arrbuf?: ArrayBuffer;
+  base64?: string; // base64 string
+  format?: 'tomkat' | 'generic'; // add others here as more become known
+}): ModusResult[] {
   // Make sure we have an actual workbook to work with:
   if (!wb) {
     try {
       if (str) wb = xlsx.read(str, { type: 'string' });
       if (arrbuf) wb = xlsx.read(arrbuf, { type: 'array' });
       if (base64) wb = xlsx.read(base64, { type: 'base64' });
-    } catch(e: any) {
+    } catch (e: any) {
       throw oerror.tag(e, 'Failed to parse input data with xlsx/csv reader');
     }
   }
@@ -48,18 +52,17 @@ export function parse(
   if (!format) format = 'tomkat';
 
   switch (format) {
-    case 'tomkat': return parseTomKat({ wb });
-    default: 
+    case 'tomkat':
+      return parseTomKat({ wb });
+    default:
       throw new Error(`format type ${format} not currently supported`);
   }
 }
 
-
 //-------------------------------------------------------------------------------------------
-// Parse the specific spreadsheet with data from TomKat ranch provided at the 
+// Parse the specific spreadsheet with data from TomKat ranch provided at the
 // 2022 Fixing the Soil Health Tech Stack Hackathon.
 function parseTomKat({ wb }: { wb: xlsx.WorkBook }): ModusResult[] {
-
   // Grab the point meta data out of any master sheet:
   // Any sheet whose name contains "point meta" regardless of spacing, case, or punctuation will be considered
   // point metadata.  i.e. 'Point Meta-Data'  would match as well as 'pointmetadata'
@@ -70,8 +73,10 @@ function parseTomKat({ wb }: { wb: xlsx.WorkBook }): ModusResult[] {
   if (metadatasheets) {
     for (const sheetname of metadatasheets) {
       // If you don't put { raw: false } for sheet_to_json, it will parse dates as ints instead of the formatted strings
-      const rows = xlsx.utils.sheet_to_json(wb.Sheets[sheetname]!, { raw: false }).map(keysToUpperNoSpacesDashesOrUnderscores);
-      for (const r of rows ) {
+      const rows = xlsx.utils
+        .sheet_to_json(wb.Sheets[sheetname]!, { raw: false })
+        .map(keysToUpperNoSpacesDashesOrUnderscores);
+      for (const r of rows) {
         const id = r['POINTID'] || r['FMISSAMPLEID'] || r['SAMPLEID'];
         if (!id) continue;
         pointmeta[id] = r;
@@ -80,7 +85,9 @@ function parseTomKat({ wb }: { wb: xlsx.WorkBook }): ModusResult[] {
   }
 
   // Start walking through all the sheets to grab the main data:
-  const datasheets = wb.SheetNames.filter(sn => !isPointMetadataSheetname(sn));
+  const datasheets = wb.SheetNames.filter(
+    (sn) => !isPointMetadataSheetname(sn)
+  );
   trace('datasheets:', datasheets);
   const ret: ModusResult[] = [];
 
@@ -90,7 +97,7 @@ function parseTomKat({ wb }: { wb: xlsx.WorkBook }): ModusResult[] {
 
     // Grab the unit overrides and get rid of comment/units columns
     const unit_overrides = extractUnitOverrides(allrows);
-    const rows = allrows.filter(isDataRow); 
+    const rows = allrows.filter(isDataRow);
     trace('Have', rows.length, 'rows from sheetname: ', sheetname);
 
     // Get a list of all the header names for future reference as needed.  Since objects that have no
@@ -104,65 +111,76 @@ function parseTomKat({ wb }: { wb: xlsx.WorkBook }): ModusResult[] {
     }
     const colnames = Object.keys(colnames_map);
 
-
     // Determine a "date" column for this dataset
     // Let some "known" candidates for date column name take precedence over others:
-    let datecol = colnames.sort().find(name => name.toUpperCase().match(/DATE/));
-    if (colnames.find(c => c === 'DATESUB')) {
+    let datecol = colnames
+      .sort()
+      .find((name) => name.toUpperCase().match(/DATE/));
+    if (colnames.find((c) => c === 'DATESUB')) {
       datecol = 'DATESUB'; // A&L West Semios
     }
     //trace('datecol = ', datecol, ', colnames uppercase = ', colnames.map(c => c.toUpperCase()));
     if (!datecol) {
       error('No date column in sheet', sheetname);
-      throw new Error(`Could not find a column containing 'date' in the name to use as the date in sheet ${sheetname}.  A date is required.`);
+      throw new Error(
+        `Could not find a column containing 'date' in the name to use as the date in sheet ${sheetname}.  A date is required.`
+      );
     }
 
     // Loop through all the rows and group them by that date.  This group will become a single ModusResult file.
     type DateGroupedRows = { [date: string]: any[] };
     const grouped_rows = rows.reduce((groups: DateGroupedRows, r: any) => {
       let date = r[datecol!]?.toString();
-      if (date.match(/[0-9]{8}/)) {// YYYYMMDD
+      if (date.match(/[0-9]{8}/)) {
+        // YYYYMMDD
         date = dayjs(date, 'YYYYMMDD').format('YYYY-MM-DD');
-      }
-      else if (+date < 100000 && +date > 100) { // this is an excel date (# days since 1/1/1900), parse it out
+      } else if (+date < 100000 && +date > 100) {
+        // this is an excel date (# days since 1/1/1900), parse it out
         date = dayjs(getJsDateFromExcel(date)).format('YYYY-MM-DD');
       }
-      trace('Determined row date from column',datecol,'as',date);
+      trace('Determined row date from column', datecol, 'as', date);
 
       if (!date) {
-        warn('WARNING: row does not have the column we chose for the date (', datecol, '), the row is: ', r);
+        warn(
+          'WARNING: row does not have the column we chose for the date (',
+          datecol,
+          '), the row is: ',
+          r
+        );
         return groups;
       }
       if (!groups[date]) groups[date] = [];
       groups[date]!.push(r);
       return groups;
-    }, ({} as DateGroupedRows));
+    }, {} as DateGroupedRows);
 
     // Now we can loop through all the groups and actually make the darn Modus file:
     let groupcount = 1;
     for (const [date, g_rows] of Object.entries(grouped_rows)) {
       // Start to build the modus output, this is one "Event"
       const output: ModusResult | any = {
-        Events: [{
-          LabMetaData: {
-            Reports: [
-              { 
-                ReportID: "1",
-                FileDescription: `${sheetname}_${groupcount++}`,
-              }
-            ],
-          },
-          EventMetaData: {
-            EventDate: date, // TODO: process this into the actual date format we are allowed to have in schema.
-            EventType: { Soil: true },
-          },
-          EventSamples: {
-            Soil: {
-              DepthRefs: [],
-              SoilSamples: [],
+        Events: [
+          {
+            LabMetaData: {
+              Reports: [
+                {
+                  ReportID: '1',
+                  FileDescription: `${sheetname}_${groupcount++}`,
+                },
+              ],
+            },
+            EventMetaData: {
+              EventDate: date, // TODO: process this into the actual date format we are allowed to have in schema.
+              EventType: { Soil: true },
+            },
+            EventSamples: {
+              Soil: {
+                DepthRefs: [],
+                SoilSamples: [],
+              },
             },
           },
-        }],
+        ],
       };
       const event = output.Events![0]!;
       const depthrefs = event.EventSamples!.Soil!.DepthRefs!;
@@ -176,20 +194,18 @@ function parseTomKat({ wb }: { wb: xlsx.WorkBook }): ModusResult[] {
 
         // Grab the "depth" for this sample:
         const depth = parseDepth(row, unit_overrides, sheetname); // SAM: need to write this to figure out a Depth object
-        const DepthID = ''+ensureDepthInDepthRefs(depth, depthrefs); // mutates depthrefs if missing, returns depthid
+        const DepthID = '' + ensureDepthInDepthRefs(depth, depthrefs); // mutates depthrefs if missing, returns depthid
         const NutrientResults = parseNutrientResults(row, unit_overrides);
         const id = parseSampleID(row);
         const meta = pointmeta[id] || null; // where does the pointmeta go again (Latitude_DD, Longitude_DD, Field, Acreage, etc.)
 
         const sample: any = {
           SampleMetaData: {
-            SampleNumber: parseSampleNumber(row) || ''+index,
-            ReportID: "1",
-            FMISSampleID: ''+id,
+            SampleNumber: parseSampleNumber(row) || '' + index,
+            ReportID: '1',
+            FMISSampleID: '' + id,
           },
-          Depths: [
-            { DepthID, NutrientResults }
-          ]
+          Depths: [{ DepthID, NutrientResults }],
         };
 
         // Parse locations: either in the sample itself or in the meta.  Sample takes precedence over meta.
@@ -205,42 +221,50 @@ function parseTomKat({ wb }: { wb: xlsx.WorkBook }): ModusResult[] {
           sample.SampleMetaData.Geometry = { wkt };
         }
         samples.push(sample);
-
       } // end rows for this group
       try {
         assertModusResult(output);
-      } catch(e: any) {
-        error('assertModusResult failed for sheetname', sheetname, ', group date', date);
-        throw oerror.tag(e, `Could not construct a valid ModusResult from sheet ${sheetname}, group date ${date}`);
+      } catch (e: any) {
+        error(
+          'assertModusResult failed for sheetname',
+          sheetname,
+          ', group date',
+          date
+        );
+        throw oerror.tag(
+          e,
+          `Could not construct a valid ModusResult from sheet ${sheetname}, group date ${date}`
+        );
       }
       ret.push(output);
-
     } // end looping over all groups
   } // end looping over all the sheets
-  
+
   return ret;
 } // end parseTomKat function
-
-
-
 
 //----------------------------------------------
 // Helpers
 //----------------------------------------------
 
-
 // Return a new object where all keys are the upper-case equivalents of keys from input object.
 function keysToUpperNoSpacesDashesOrUnderscores(obj: any) {
   const ret: any = {};
   for (const [key, val] of Object.entries(obj)) {
-    const newkey = key.toUpperCase().replace(/([ _]|-)*/g,'')
-    ret[newkey] = typeof val === 'object' ? keysToUpperNoSpacesDashesOrUnderscores(val) : val;
+    const newkey = key.toUpperCase().replace(/([ _]|-)*/g, '');
+    ret[newkey] =
+      typeof val === 'object'
+        ? keysToUpperNoSpacesDashesOrUnderscores(val)
+        : val;
   }
   return ret;
 }
 
 function isPointMetadataSheetname(name: string) {
-  return name.replace(/([ _,]|-)*/g,'').toUpperCase().match('POINTMETA');
+  return name
+    .replace(/([ _,]|-)*/g, '')
+    .toUpperCase()
+    .match('POINTMETA');
 }
 
 type UnitsOverrides = { [colname: string]: string };
@@ -274,46 +298,50 @@ function isEmptyRow(row: any): boolean {
   return true;
 }
 function isCommentRow(row: any): boolean {
-  return !!Object.values(row).find(val => typeof val === 'string' && val.trim() === 'COMMENT');
+  return !!Object.values(row).find(
+    (val) => typeof val === 'string' && val.trim() === 'COMMENT'
+  );
 }
 function isUnitRow(row: any): boolean {
-  return !!Object.values(row).find(val => typeof val === 'string' && val.trim() === 'UNITS');
+  return !!Object.values(row).find(
+    (val) => typeof val === 'string' && val.trim() === 'UNITS'
+  );
 }
 type Depth = {
-  DepthID?: number, // only the DepthRef has this, don't have it just from the row
-  Name: string,
-  StartingDepth: number,
-  EndingDepth: number,
-  ColumnDepth: number,
-  DepthUnit: "cm" | "in",
+  DepthID?: number; // only the DepthRef has this, don't have it just from the row
+  Name: string;
+  StartingDepth: number;
+  EndingDepth: number;
+  ColumnDepth: number;
+  DepthUnit: 'cm' | 'in';
 };
 
 function depthsEqual(ref: Depth, depth: Depth) {
-  if (ref["DepthUnit"] !== depth["DepthUnit"]) return false;
-  if (ref["StartingDepth"] !== depth["StartingDepth"]) return false;
-  if (ref["ColumnDepth"] !== depth["ColumnDepth"]) return false;
-  if (ref["Name"] !== depth["Name"]) return false;
-  if (ref["EndingDepth"] !== depth["EndingDepth"]) return false;
+  if (ref['DepthUnit'] !== depth['DepthUnit']) return false;
+  if (ref['StartingDepth'] !== depth['StartingDepth']) return false;
+  if (ref['ColumnDepth'] !== depth['ColumnDepth']) return false;
+  if (ref['Name'] !== depth['Name']) return false;
+  if (ref['EndingDepth'] !== depth['EndingDepth']) return false;
   return true;
 }
 
 function ensureDepthInDepthRefs(depth: Depth, depthrefs: Depth[]): number {
-  let match = depthrefs.find(ref => depthsEqual(ref, depth));
+  let match = depthrefs.find((ref) => depthsEqual(ref, depth));
   if (!match) {
-    let DepthID = depthrefs.length+1;
+    let DepthID = depthrefs.length + 1;
     depthrefs.push({
       ...depth,
-      DepthID
+      DepthID,
     });
-    return DepthID
+    return DepthID;
   }
   return match.DepthID!;
 }
 
 type NutrientResult = {
-  Element: string,
-  Value: number,
-  ValueUnit: string,
+  Element: string;
+  Value: number;
+  ValueUnit: string;
 };
 function parseSampleID(row: any): string {
   const copy = keysToUpperNoSpacesDashesOrUnderscores(row);
@@ -325,13 +353,13 @@ function parseSampleID(row: any): string {
 function parseWKTFromPointMetaOrRow(meta_or_row: any): string {
   let copy = keysToUpperNoSpacesDashesOrUnderscores(meta_or_row);
 
-  let longKey = Object.keys(copy).find(key => key.includes("LONGITUDE"))
-  let latKey = Object.keys(copy).find(key => key.includes("LATITUDE"))
+  let longKey = Object.keys(copy).find((key) => key.includes('LONGITUDE'));
+  let latKey = Object.keys(copy).find((key) => key.includes('LATITUDE'));
 
-  if (copy["LONG"]) longKey = "LONG";
-  if (copy["LNG"]) longKey = "LNG";
-  if (copy["LON"]) longKey = "LON";
-  if (copy["LAT"]) latKey = "LAT";
+  if (copy['LONG']) longKey = 'LONG';
+  if (copy['LNG']) longKey = 'LNG';
+  if (copy['LON']) longKey = 'LON';
+  if (copy['LAT']) latKey = 'LAT';
 
   if (!longKey) {
     //trace('No longitude for point: ', meta_or_row.POINTID || meta_or_row.FMISSAMPLEID || meta_or_row.SAMPLEID);
@@ -348,430 +376,430 @@ function parseWKTFromPointMetaOrRow(meta_or_row: any): string {
   return `POINT(${long} ${lat})`;
 }
 
-let nutrientColHeaders: Record<string,any> = {
-  "1:1 Soil pH": {
-    Element: "pH"
+let nutrientColHeaders: Record<string, any> = {
+  '1:1 Soil pH': {
+    Element: 'pH',
   },
-  "pH": {
-    Element: "pH",
-  },
-  "OM": {
-    Element: "OM",
-    ValueUnit: "%"
-  },
-  "Organic Matter LOI %": {
-    Element: "OM (LOI)",
-    ValueUnit: "%"
-  },
-  "Organic Matter": {
-     Element: "OM",
-     ValueUnit: "%"
-  },
-  "OM (LOI)": {
-     Element: "OM (LOI)",
-     ValueUnit: "%"
-  },
-  "Olsen P ppm P": {
-    Element: "P",
-    ValueUnit: "ppm"
-  },
-  "Bray P-1 ppm P": {
-    Element: "P",
-    ValueUnit: "ppm"
-  },
-  "Olsen P": {
-    Element: "P",
-    ValueUnit: "ug/g"
-  },
-  "P phosphorus": {
-    Element: "P",
-    ValueUnit: "ppm"
-  },
-  "P": {
-    Element: "P",
-    ValueUnit: "ppm"
-  },
-  "Pb lead": {
-    Element: "Pb",
-    ValueUnit: "ppm"
-  },
-  "Pb": {
-    Element: "Pb",
-    ValueUnit: "ppm"
-  },
-  "Potassium ppm K": {
-    Element: "K",
-    ValueUnit: "ppm"
-  },
-  "K": {
-    Element: "K",
-    ValueUnit: "ppm"
-  },
-  "Potassium": {
-    Element: "K",
-    ValueUnit: "cmol(+)/kg"
-  },
-  "K potassium": {
-    Element: "K",
-    ValueUnit: "ppm"
-  },
-  "Ca": {
-    Element: "Ca",
-    ValueUnit: "ppm"
-  },
-  "Calcium ppm Ca": {
-    Element: "Ca",
-    ValueUnit: "ppm"
-  },
-  "Calcium": {
-    Element: "Ca",
-    ValueUnit: "cmol(+)/kg"
-  },
-  "Ca calcium": {
-    Element: "Ca",
-    ValueUnit: "ppm"
-  },
-  "Cd cadmium": {
-    Element: "Cd",
-    ValueUnit: "ppm"
-  },
-  "Cd": {
-    Element: "Cd",
-    ValueUnit: "ppm"
-  },
-  "Cr chromium": {
-    Element: "Cr",
-    ValueUnit: "ppm"
-  },
-  "Cr": {
-    Element: "Cr",
-    ValueUnit: "ppm"
-  },
-  "Magnesium ppm Mg": {
-    Element: "Mg",
-    ValueUnit: "ppm"
-  },
-  "Mg": {
-    Element: "Mg",
-    ValueUnit: "ppm"
-  },
-  "Magnesium": {
-    Element: "Mg",
-    ValueUnit: "cmol(+)/kg"
-  },
-  "Mg magnesium": {
-    Element: "Mg",
-    ValueUnit: "ppm"
-  },
-  "Mo": {
-    Element: "Mo",
-    ValueUnit: "ppm"
-  },
-  "Mo molybdenum": {
-    Element: "Mo",
-    ValueUnit: "ppm"
-  },
-  "CEC/Sum of Cations me/100g": {
-    Element: "CEC",
-    ValueUnit: "Sum of Cations me/100g"
-  },
-  "CEC": {
-    Element: "CEC",
-    ValueUnit: "cmol(+)/kg"
-  },
-  "CEC (Estimated)": {
-    Element: "CEC",
-    ValueUnit: "cmol(+)/kg"
-  },
-  "%Ca Sat": {
-    Element: "BS-Ca",
-    ValueUnit: "%"
-  },
-  "BS-Ca": {
-    Element: "BS-Ca",
-    ValueUnit: "%"
-  },
-  "BS-Mg": {
-    Element: "BS-Mg",
-    ValueUnit: "%"
-  },
-  "%Mg Sat": {
-    Element: "BS-Mg",
-    ValueUnit: "%"
-  },
-  "BS-K": {
-    Element: "BS-K",
-    ValueUnit: "%"
-  },
-  "%K Sat": {
-    Element: "BS-K",
-    ValueUnit: "%"
+  'pH': {
+    Element: 'pH',
+  },
+  'OM': {
+    Element: 'OM',
+    ValueUnit: '%',
+  },
+  'Organic Matter LOI %': {
+    Element: 'OM (LOI)',
+    ValueUnit: '%',
+  },
+  'Organic Matter': {
+    Element: 'OM',
+    ValueUnit: '%',
+  },
+  'OM (LOI)': {
+    Element: 'OM (LOI)',
+    ValueUnit: '%',
+  },
+  'Olsen P ppm P': {
+    Element: 'P',
+    ValueUnit: 'ppm',
+  },
+  'Bray P-1 ppm P': {
+    Element: 'P',
+    ValueUnit: 'ppm',
+  },
+  'Olsen P': {
+    Element: 'P',
+    ValueUnit: 'ug/g',
+  },
+  'P phosphorus': {
+    Element: 'P',
+    ValueUnit: 'ppm',
+  },
+  'P': {
+    Element: 'P',
+    ValueUnit: 'ppm',
+  },
+  'Pb lead': {
+    Element: 'Pb',
+    ValueUnit: 'ppm',
+  },
+  'Pb': {
+    Element: 'Pb',
+    ValueUnit: 'ppm',
+  },
+  'Potassium ppm K': {
+    Element: 'K',
+    ValueUnit: 'ppm',
+  },
+  'K': {
+    Element: 'K',
+    ValueUnit: 'ppm',
+  },
+  'Potassium': {
+    Element: 'K',
+    ValueUnit: 'cmol(+)/kg',
+  },
+  'K potassium': {
+    Element: 'K',
+    ValueUnit: 'ppm',
+  },
+  'Ca': {
+    Element: 'Ca',
+    ValueUnit: 'ppm',
+  },
+  'Calcium ppm Ca': {
+    Element: 'Ca',
+    ValueUnit: 'ppm',
+  },
+  'Calcium': {
+    Element: 'Ca',
+    ValueUnit: 'cmol(+)/kg',
+  },
+  'Ca calcium': {
+    Element: 'Ca',
+    ValueUnit: 'ppm',
+  },
+  'Cd cadmium': {
+    Element: 'Cd',
+    ValueUnit: 'ppm',
+  },
+  'Cd': {
+    Element: 'Cd',
+    ValueUnit: 'ppm',
+  },
+  'Cr chromium': {
+    Element: 'Cr',
+    ValueUnit: 'ppm',
+  },
+  'Cr': {
+    Element: 'Cr',
+    ValueUnit: 'ppm',
+  },
+  'Magnesium ppm Mg': {
+    Element: 'Mg',
+    ValueUnit: 'ppm',
+  },
+  'Mg': {
+    Element: 'Mg',
+    ValueUnit: 'ppm',
+  },
+  'Magnesium': {
+    Element: 'Mg',
+    ValueUnit: 'cmol(+)/kg',
+  },
+  'Mg magnesium': {
+    Element: 'Mg',
+    ValueUnit: 'ppm',
+  },
+  'Mo': {
+    Element: 'Mo',
+    ValueUnit: 'ppm',
+  },
+  'Mo molybdenum': {
+    Element: 'Mo',
+    ValueUnit: 'ppm',
+  },
+  'CEC/Sum of Cations me/100g': {
+    Element: 'CEC',
+    ValueUnit: 'Sum of Cations me/100g',
+  },
+  'CEC': {
+    Element: 'CEC',
+    ValueUnit: 'cmol(+)/kg',
+  },
+  'CEC (Estimated)': {
+    Element: 'CEC',
+    ValueUnit: 'cmol(+)/kg',
+  },
+  '%Ca Sat': {
+    Element: 'BS-Ca',
+    ValueUnit: '%',
+  },
+  'BS-Ca': {
+    Element: 'BS-Ca',
+    ValueUnit: '%',
+  },
+  'BS-Mg': {
+    Element: 'BS-Mg',
+    ValueUnit: '%',
+  },
+  '%Mg Sat': {
+    Element: 'BS-Mg',
+    ValueUnit: '%',
+  },
+  'BS-K': {
+    Element: 'BS-K',
+    ValueUnit: '%',
+  },
+  '%K Sat': {
+    Element: 'BS-K',
+    ValueUnit: '%',
   },
-  "BS-Na": {
-    Element: "BS-Na",
-    ValueUnit: "%"
+  'BS-Na': {
+    Element: 'BS-Na',
+    ValueUnit: '%',
   },
-  "%Na Sat": {
-    Element: "BS-Na",
-    ValueUnit: "%"
+  '%Na Sat': {
+    Element: 'BS-Na',
+    ValueUnit: '%',
   },
-  "%H Sat": {
-    Element: "BS-H",
-    ValueUnit: "%"
+  '%H Sat': {
+    Element: 'BS-H',
+    ValueUnit: '%',
   },
-  "BS-H": {
-    Element: "BS-H",
-    ValueUnit: "%"
+  'BS-H': {
+    Element: 'BS-H',
+    ValueUnit: '%',
   },
-  "Sulfate-S ppm S": {
-    Element: "SO4-S",
-    ValueUnit: "ppm"
+  'Sulfate-S ppm S': {
+    Element: 'SO4-S',
+    ValueUnit: 'ppm',
   },
-  "SO4-S": {
-    Element: "SO4-S",
-    ValueUnit: "ppm"
+  'SO4-S': {
+    Element: 'SO4-S',
+    ValueUnit: 'ppm',
   },
-  "S sulfur": {
-    Element: "S",
-    ValueUnit: "ppm"
+  'S sulfur': {
+    Element: 'S',
+    ValueUnit: 'ppm',
   },
-  "S": {
-    Element: "S",
-    ValueUnit: "ppm"
+  'S': {
+    Element: 'S',
+    ValueUnit: 'ppm',
   },
-  "Zinc ppm Zn": {
-    Element: "Zn",
-    ValueUnit: "ppm",
+  'Zinc ppm Zn': {
+    Element: 'Zn',
+    ValueUnit: 'ppm',
   },
-  "Zn": {
-    Element: "Zn",
-    ValueUnit: "ppm",
+  'Zn': {
+    Element: 'Zn',
+    ValueUnit: 'ppm',
   },
-  "Zn zinc": {
-    Element: "Zn",
-    ValueUnit: "ppm",
+  'Zn zinc': {
+    Element: 'Zn',
+    ValueUnit: 'ppm',
   },
-  "Manganese ppm Mn": {
-    Element: "Mn",
-    ValueUnit: "ppm"
+  'Manganese ppm Mn': {
+    Element: 'Mn',
+    ValueUnit: 'ppm',
   },
-  "Mn": {
-    Element: "Mn",
-    ValueUnit: "ppm"
+  'Mn': {
+    Element: 'Mn',
+    ValueUnit: 'ppm',
   },
-  "Mn manganese": {
-    Element: "Mn",
-    ValueUnit: "ppm"
+  'Mn manganese': {
+    Element: 'Mn',
+    ValueUnit: 'ppm',
   },
-  "Boron ppm B": {
-    Element: "B",
-    ValueUnit: "ppm"
+  'Boron ppm B': {
+    Element: 'B',
+    ValueUnit: 'ppm',
   },
-  "B": {
-    Element: "B",
-    ValueUnit: "ppm"
+  'B': {
+    Element: 'B',
+    ValueUnit: 'ppm',
   },
-  "B boron": {
-    Element: "B",
-    ValueUnit: "ppm"
+  'B boron': {
+    Element: 'B',
+    ValueUnit: 'ppm',
   },
-  "Iron ppm Fe": {
-    Element: "Fe",
-    ValueUnit: "ppm"
+  'Iron ppm Fe': {
+    Element: 'Fe',
+    ValueUnit: 'ppm',
   },
-  "Iron": {
-    Element: "Fe",
-    ValueUnit: "ppm"
+  'Iron': {
+    Element: 'Fe',
+    ValueUnit: 'ppm',
   },
-  "Fe Iron": {
-    Element: "Fe",
-    ValueUnit: "ppm"
+  'Fe Iron': {
+    Element: 'Fe',
+    ValueUnit: 'ppm',
   },
-  "Fe": {
-    Element: "Fe",
-    ValueUnit: "ppm"
+  'Fe': {
+    Element: 'Fe',
+    ValueUnit: 'ppm',
   },
-  "Cu copper": {
-    Element: "Cu",
-    ValueUnit: "ppm"
+  'Cu copper': {
+    Element: 'Cu',
+    ValueUnit: 'ppm',
   },
-  "Cu": {
-    Element: "Cu",
-    ValueUnit: "ppm"
+  'Cu': {
+    Element: 'Cu',
+    ValueUnit: 'ppm',
   },
-  "Copper ppm": {
-    Element: "Cu",
-    ValueUnit: "ppm"
+  'Copper ppm': {
+    Element: 'Cu',
+    ValueUnit: 'ppm',
   },
-  "Excess Lime": {
-    Element: "Lime Rec",
+  'Excess Lime': {
+    Element: 'Lime Rec',
   },
-  "Lime Rec": {
-    Element: "Lime Rec",
+  'Lime Rec': {
+    Element: 'Lime Rec',
   },
-  "WRDF Buffer pH": {
-    Element: "B-pH (W)",
+  'WRDF Buffer pH': {
+    Element: 'B-pH (W)',
   },
-  "BpH (W)": {
-    Element: "BpH (W)",
+  'BpH (W)': {
+    Element: 'BpH (W)',
   },
-  "1:1 S Salts mmho/cm": {
-    ValueUnit: "mmho/cm",
-    Element: "SS"
+  '1:1 S Salts mmho/cm': {
+    ValueUnit: 'mmho/cm',
+    Element: 'SS',
   },
-  "SS": {
-    ValueUnit: "mmho/cm",
-    Element: "SS"
+  'SS': {
+    ValueUnit: 'mmho/cm',
+    Element: 'SS',
   },
-  "Nitrate-N ppm N": {
-    Element: "NO3-N",
-    ValueUnit: "ppm"
+  'Nitrate-N ppm N': {
+    Element: 'NO3-N',
+    ValueUnit: 'ppm',
   },
-  "Nitrate": {
-    Element: "NO3-N",
-    ValueUnit: "ppm"
+  'Nitrate': {
+    Element: 'NO3-N',
+    ValueUnit: 'ppm',
   },
-  "NO3-N": {
-    Element: "NO3-N",
-    ValueUnit: "ppm"
+  'NO3-N': {
+    Element: 'NO3-N',
+    ValueUnit: 'ppm',
   },
-  "Ni nickel": {
-    Element: "Ni",
-    ValueUnit: "ppm"
+  'Ni nickel': {
+    Element: 'Ni',
+    ValueUnit: 'ppm',
   },
-  "Ni": {
-    Element: "Ni",
-    ValueUnit: "ppm"
+  'Ni': {
+    Element: 'Ni',
+    ValueUnit: 'ppm',
   },
-  "Sodium ppm Na": {
-    Element: "Na",
-    ValueUnit: "ppm"
+  'Sodium ppm Na': {
+    Element: 'Na',
+    ValueUnit: 'ppm',
   },
-  "Na sodium": {
-    Element: "Na",
-    ValueUnit: "ppm"
+  'Na sodium': {
+    Element: 'Na',
+    ValueUnit: 'ppm',
   },
-  "Na": {
-    Element: "Na",
-    ValueUnit: "ppm"
+  'Na': {
+    Element: 'Na',
+    ValueUnit: 'ppm',
   },
-  "Sodium": {
-    Element: "Na",
-    ValueUnit: "cmol(+)/kg"
+  'Sodium': {
+    Element: 'Na',
+    ValueUnit: 'cmol(+)/kg',
   },
-  "Aluminium ppm Al": {
-    Element: "Al",
-    ValueUnit: "ppm"
+  'Aluminium ppm Al': {
+    Element: 'Al',
+    ValueUnit: 'ppm',
   },
-  "Al": {
-    Element: "Al",
-    ValueUnit: "ppm"
+  'Al': {
+    Element: 'Al',
+    ValueUnit: 'ppm',
   },
-  "Al aluminium": {
-    Element: "Al",
-    ValueUnit: "ppm"
+  'Al aluminium': {
+    Element: 'Al',
+    ValueUnit: 'ppm',
   },
-  "Aluminium": {
-    Element: "Al",
-    ValueUnit: "ppm"
+  'Aluminium': {
+    Element: 'Al',
+    ValueUnit: 'ppm',
   },
-  "As arsenic": {
-    Element: "As",
-    ValueUnit: "ppm"
+  'As arsenic': {
+    Element: 'As',
+    ValueUnit: 'ppm',
   },
-  "As": {
-    Element: "As",
-    ValueUnit: "ppm"
+  'As': {
+    Element: 'As',
+    ValueUnit: 'ppm',
   },
-  "Chloride ppm Cl": {
-    Element: "Cl",
-    ValueUnit: "ppm"
+  'Chloride ppm Cl': {
+    Element: 'Cl',
+    ValueUnit: 'ppm',
   },
-  "Cl": {
-    Element: "Cl",
-    ValueUnit: "ppm"
+  'Cl': {
+    Element: 'Cl',
+    ValueUnit: 'ppm',
   },
-  "Total N ppm": {
-    Element: "TN",
-    ValueUnit: "ppm"
+  'Total N ppm': {
+    Element: 'TN',
+    ValueUnit: 'ppm',
   },
-  "TN": {
-    Element: "TN",
-    ValueUnit: "ppm"
+  'TN': {
+    Element: 'TN',
+    ValueUnit: 'ppm',
   },
-  "Total Nitrogen^": {
-    Element: "TN",
-    ValueUnit: "%"
+  'Total Nitrogen^': {
+    Element: 'TN',
+    ValueUnit: '%',
   },
-  "Total P ppm": {
-    Element: "TP",
-    ValueUnit: "ppm"
+  'Total P ppm': {
+    Element: 'TP',
+    ValueUnit: 'ppm',
   },
-  "% Sand": {
-    Element: "Sand",
-    ValueUnit: "%"
+  '% Sand': {
+    Element: 'Sand',
+    ValueUnit: '%',
   },
-  "Sand": {
-    Element: "Sand",
-    ValueUnit: "%"
+  'Sand': {
+    Element: 'Sand',
+    ValueUnit: '%',
   },
-  "% Silt": {
-    Element: "Silt",
-    ValueUnit: "%"
+  '% Silt': {
+    Element: 'Silt',
+    ValueUnit: '%',
   },
-  "Silt": {
-    Element: "Silt",
-    ValueUnit: "%",
+  'Silt': {
+    Element: 'Silt',
+    ValueUnit: '%',
   },
-  "% Clay": {
-    Element: "Clay",
-    ValueUnit: "%"
+  '% Clay': {
+    Element: 'Clay',
+    ValueUnit: '%',
   },
-  "Clay": {
-    Element: "Clay",
-    ValueUnit: "%"
+  'Clay': {
+    Element: 'Clay',
+    ValueUnit: '%',
   },
-  "Texture": {
-    Element: "Texture",
+  'Texture': {
+    Element: 'Texture',
   },
-  "Texture*": {
-    Element: "Texture",
+  'Texture*': {
+    Element: 'Texture',
   },
-  "Bulk Density": {
-    Element: "Bulk Density",
-    ValueUnit: "g/cm3"
+  'Bulk Density': {
+    Element: 'Bulk Density',
+    ValueUnit: 'g/cm3',
   },
-  "Total Org Carbon": {
-    Element: "TOC",
-    ValueUnit: "%"
+  'Total Org Carbon': {
+    Element: 'TOC',
+    ValueUnit: '%',
   },
-  "TOC": {
-    Element: "TOC",
-    ValueUnit: "%"
+  'TOC': {
+    Element: 'TOC',
+    ValueUnit: '%',
   },
-  "TN (W)": {
-    Element: "TN (W)",
-    ValueUnit: "ppm"
+  'TN (W)': {
+    Element: 'TN (W)',
+    ValueUnit: 'ppm',
   },
-  "Water Extractable Total N": {
-    Element: "TN (W)",
-    ValueUnit: "ppm"
+  'Water Extractable Total N': {
+    Element: 'TN (W)',
+    ValueUnit: 'ppm',
   },
-  "TC (W)": {
-    Element: "TC (W)",
-    ValueUnit: "ppm"
+  'TC (W)': {
+    Element: 'TC (W)',
+    ValueUnit: 'ppm',
   },
-  "Water Extractable Total C": {
-    Element: "TC (W)",
-    ValueUnit: "ppm"
+  'Water Extractable Total C': {
+    Element: 'TC (W)',
+    ValueUnit: 'ppm',
   },
-  "Moisture (Grav)": {
-    Element: "Moisture (Grav)",
-    ValueUnit: "%"
+  'Moisture (Grav)': {
+    Element: 'Moisture (Grav)',
+    ValueUnit: '%',
   },
-  "TC": {
-    Element: "TC",
-    ValueUnit: "ppm"
+  'TC': {
+    Element: 'TC',
+    ValueUnit: 'ppm',
   },
 
   // A&L West CSV (Semios)
@@ -779,166 +807,153 @@ let nutrientColHeaders: Record<string,any> = {
   // - verify units
   // - is the "P" in "HCO3_P" an HCO3 Saturated Paste or PPM or %?
   // - is "K_PCT" (and other _PCT's) just K in mg/kg or in %?
-  // - Add support for EX__LIME-style things that are the lab's assessment of the lime level (VH, H, L, VL).  
+  // - Add support for EX__LIME-style things that are the lab's assessment of the lime level (VH, H, L, VL).
   //   Modus supports those kind of assessments, but need to lookup how they were represented
   // - Molybdenum, Aluminum, SO4-S, SAR, CO3 in Modus requires extraction method, don't know it here.
   // - Assuming B_SAT is Base Saturation - Boron, but Modus does not have BS-B
   // - Need to verify units on EC: used dS/m from Modus, but there are 4 options
   // - I do not know what "SAT_PCT" means, need to add it here.
   // - What does "TYPE" mean?  It is the number 5 in at least one sheet
-  "ENR": {
-    Element: "ENR",
-    ValueUnit: "ppm",
+  'ENR': {
+    Element: 'ENR',
+    ValueUnit: 'ppm',
   },
-  "P1": {
-    Element: "P (B1 1:10)",
-    ValueUnit: "ppm",
+  'P1': {
+    Element: 'P (B1 1:10)',
+    ValueUnit: 'ppm',
   },
-  "P2": {
-    Element: "P (B2 1:10)",
-    ValueUnit: "ppm",
+  'P2': {
+    Element: 'P (B2 1:10)',
+    ValueUnit: 'ppm',
   },
-  "HCO3_P": {
-    Element: "HCO3 (SP)", // is "P" saturated paste or PPM or %?
-    ValueUnit: "ppm",
+  'HCO3_P': {
+    Element: 'HCO3 (SP)', // is "P" saturated paste or PPM or %?
+    ValueUnit: 'ppm',
   },
-  "HCO3": {
-    Element: "HCO3",
-    ValueUnit: "ppm",
+  'HCO3': {
+    Element: 'HCO3',
+    ValueUnit: 'ppm',
   },
-  "PH": {
-    Element: "pH",
+  'PH': {
+    Element: 'pH',
   },
-  "MG": {
-    Element: "Mg",
-    ValueUnit: "mg/kg",
+  'MG': {
+    Element: 'Mg',
+    ValueUnit: 'mg/kg',
   },
-  "CA": {
-    Element: "Ca",
-    ValueUnit: "mg/kg",
+  'CA': {
+    Element: 'Ca',
+    ValueUnit: 'mg/kg',
   },
-  "NA": {
-    Element: "Na",
-    ValueUnit: "mg/kg",
+  'NA': {
+    Element: 'Na',
+    ValueUnit: 'mg/kg',
   },
-  "BUFFER_PH": {
-    Element: "B-Ph",
+  'BUFFER_PH': {
+    Element: 'B-Ph',
   },
-  "H": {
-    Element: "H",
-    ValueUnit: "ppm",
+  'H': {
+    Element: 'H',
+    ValueUnit: 'ppm',
   },
-  "K_PCT": {
-    Element: "K",
-    ValueUnit: "mg/kg",
+  'K_PCT': {
+    Element: 'K',
+    ValueUnit: 'mg/kg',
   },
-  "MG_PCT": {
-    Element: "Mg",
-    ValueUnit: "mg/kg",
+  'MG_PCT': {
+    Element: 'Mg',
+    ValueUnit: 'mg/kg',
   },
-  "CA_PCT": {
-    Element: "Ca",
-    ValueUnit: "mg/kg",
+  'CA_PCT': {
+    Element: 'Ca',
+    ValueUnit: 'mg/kg',
   },
-  "H_PCT": {
-    Element: "H",
-    ValueUnit: "mg/kg",
+  'H_PCT': {
+    Element: 'H',
+    ValueUnit: 'mg/kg',
   },
-  "NA_PCT": {
-    Element: "Na",
-    ValueUnit: "mg/kg",
+  'NA_PCT': {
+    Element: 'Na',
+    ValueUnit: 'mg/kg',
   },
-  "NO3_N": {
-    Element: "NO3-N",
-    ValueUnit: "ppm",
+  'NO3_N': {
+    Element: 'NO3-N',
+    ValueUnit: 'ppm',
   },
-  "ZN": {
-    Element: "Zn",
-    ValueUnit: "ppm",
+  'ZN': {
+    Element: 'Zn',
+    ValueUnit: 'ppm',
   },
-  "MN": {
-    Element: "Mn",
-    ValueUnit: "ppm",
+  'MN': {
+    Element: 'Mn',
+    ValueUnit: 'ppm',
   },
-  "FE": {
-    Element: "Fe",
-    ValueUnit: "ppm",
+  'FE': {
+    Element: 'Fe',
+    ValueUnit: 'ppm',
   },
-  "CU": {
-    Element: "Cu",
-    ValueUnit: "ppm",
+  'CU': {
+    Element: 'Cu',
+    ValueUnit: 'ppm',
   },
-  "S__SALTS": {
-    Element: "SS", // "Soluble Salts"
-    ValueUnit: "ppm",
+  'S__SALTS': {
+    Element: 'SS', // "Soluble Salts"
+    ValueUnit: 'ppm',
   },
-  "CL": {
-    Element: "Cl",
-    ValueUnit: "ppm",
+  'CL': {
+    Element: 'Cl',
+    ValueUnit: 'ppm',
   },
-  "MO": {
-    Element: "Mo", // Molybdenum.  
-    ValueUnit: "ppm",
+  'MO': {
+    Element: 'Mo', // Molybdenum.
+    ValueUnit: 'ppm',
   },
-  "AL": {
-    Element: "Al", // Aluminum
-    ValueUnit: "ppm",
+  'AL': {
+    Element: 'Al', // Aluminum
+    ValueUnit: 'ppm',
   },
-  "CA_SAT": {
-    Element: "BS-Ca", // Base Saturation - Calcium
-    ValueUnit: "%",
+  'CA_SAT': {
+    Element: 'BS-Ca', // Base Saturation - Calcium
+    ValueUnit: '%',
   },
-  "MG_SAT": {
-    Element: "BS-Mg",
-    ValueUnit: "%",
+  'MG_SAT': {
+    Element: 'BS-Mg',
+    ValueUnit: '%',
   },
-  "NA_SAT": {
-    Element: "BS-Na",
-    ValueUnit: "%",
+  'NA_SAT': {
+    Element: 'BS-Na',
+    ValueUnit: '%',
   },
-  "B_SAT": {
-    Element: "BS-B", // Base Saturation - Boron?  Modus does not have this element.
-    ValueUnit: "%",
+  'B_SAT': {
+    Element: 'BS-B', // Base Saturation - Boron?  Modus does not have this element.
+    ValueUnit: '%',
   },
-  "ESP": {
-    Element: "ESP", // Exchangeable Sodium Percentage
-    ValueUnit: "%",
+  'ESP': {
+    Element: 'ESP', // Exchangeable Sodium Percentage
+    ValueUnit: '%',
   },
-  "NH4": {
-    Element: "NH4-N",
-    ValueUnit: "ppm",
+  'NH4': {
+    Element: 'NH4-N',
+    ValueUnit: 'ppm',
   },
-  "SO4_S": {
-    Element: "SO4-S",
-    ValueUnit: "ppm",
+  'SO4_S': {
+    Element: 'SO4-S',
+    ValueUnit: 'ppm',
   },
-  "SAR": {
-    Element: "SAR", // Sodium Adsorption Ratio
+  'SAR': {
+    Element: 'SAR', // Sodium Adsorption Ratio
   },
-  "EC": {
-    Element: "ECe",
-    ValueUnit: "dS/m", // Just guessed that this is the one, need to verify
+  'EC': {
+    Element: 'ECe',
+    ValueUnit: 'dS/m', // Just guessed that this is the one, need to verify
   },
-  "SAT_PCT": {
-    Element: "SAT_PCT", // I have no idea what this is, passing it through verbatim
+  'SAT_PCT': {
+    Element: 'SAT_PCT', // I have no idea what this is, passing it through verbatim
   },
-  "CO3": {
-    Element: "CO3", 
-    ValueUnit: "ppm",
+  'CO3': {
+    Element: 'CO3',
+    ValueUnit: 'ppm',
   },
- 
-  
-
-
-
-
-
-
-
-
-
-
-
 
   /* Didn't see these in the official modus element list
   "LBC 1": {
@@ -950,8 +965,8 @@ let nutrientColHeaders: Record<string,any> = {
     ValueUnit: "ppm"
   },
   */
-}
-  /* Didn't see these in the official modus element list
+};
+/* Didn't see these in the official modus element list
        Element: "Total Microbial Biomass": ,
   "Total Bacteria Biomass": [],
   "Actinomycetes Biomass": [],
@@ -968,75 +983,82 @@ let nutrientColHeaders: Record<string,any> = {
   "Mono:Poly": []
   */
 
-function parseNutrientResults(row: any, units?: Record<string,string>): NutrientResult[] {
+function parseNutrientResults(
+  row: any,
+  units?: Record<string, string>
+): NutrientResult[] {
   return Object.keys(row)
-    .map(key => key.trim())
-    .filter(key => key in nutrientColHeaders)
-    .filter(key => !isNaN(row[key]))
-    .map(key => key.replace(/\n/g, ' '))
-    .map(key => key.replace(/ +/g, ' ').trim())
-    .map(key => {
-      let unitMatches = key.match(/\[([^\]]+)\]/g)
+    .map((key) => key.trim())
+    .filter((key) => key in nutrientColHeaders)
+    .filter((key) => !isNaN(row[key]))
+    .map((key) => key.replace(/\n/g, ' '))
+    .map((key) => key.replace(/ +/g, ' ').trim())
+    .map((key) => {
+      let unitMatches = key.match(/\[([^\]]+)\]/g);
       let unitStr = '';
       if (unitMatches && unitMatches.length > 0) {
-        unitStr = unitMatches[unitMatches.length-1] || '';
-        unitStr.replace('[', '').replace(']', '')
+        unitStr = unitMatches[unitMatches.length - 1] || '';
+        unitStr.replace('[', '').replace(']', '');
       }
       return {
         Element: nutrientColHeaders[key].Element,
         // prioritize user-specified units (from "UNITS" row indicator) over
         // matcher-based units, else "none".
-        ValueUnit: unitStr || units![key] || nutrientColHeaders[key].ValueUnit || "none",
-        Value: +(row[key]),
+        ValueUnit:
+          unitStr || units![key] || nutrientColHeaders[key].ValueUnit || 'none',
+        Value: +row[key],
       };
-    })
+    });
 }
 
 // sheetname is just for debugging
 function parseDepth(row: any, units?: any, sheetname?: string): Depth {
-  let obj : any = {
-    DepthUnit: "cm" //default to cm
-  }
+  let obj: any = {
+    DepthUnit: 'cm', //default to cm
+  };
 
   // Get columns with the word depth
   const copy = keysToUpperNoSpacesDashesOrUnderscores(row);
   const unitsCopy = keysToUpperNoSpacesDashesOrUnderscores(units);
-  let depthKey = Object.keys(copy).find(key => key.match(/DEPTH/))
+  let depthKey = Object.keys(copy).find((key) => key.match(/DEPTH/));
   if (depthKey) {
     let value = copy[depthKey].toString();
     if (unitsCopy[depthKey]) obj.DepthUnit = unitsCopy[depthKey];
 
     if (value.match(' to ')) {
-      obj.StartingDepth = +(value.split(" to ")[0]);
-      obj.EndingDepth = +(value.split(" to ")[1]);
+      obj.StartingDepth = +value.split(' to ')[0];
+      obj.EndingDepth = +value.split(' to ')[1];
       obj.Name = value;
     } else if (value.match(' - ')) {
-      obj.StartingDepth = +(value.split(" - ")[0]);
-      obj.EndingDepth = +(value.split(" - ")[1]);
+      obj.StartingDepth = +value.split(' - ')[0];
+      obj.EndingDepth = +value.split(' - ')[1];
       obj.Name = value;
     } else {
-      obj.StartingDepth = +(value);
+      obj.StartingDepth = +value;
       obj.Name = value;
     }
   }
 
-  if (row["B Depth"]) obj.StartingDepth = +(row["B Depth"]);
-  if (row["B Depth"]) obj.Name = ''+row["B Depth"];
-  if (units["B Depth"]) obj.DepthUnit = units["B Depth"]; // Assume same for both top and bottom
-  if (row["E Depth"]) obj.EndingDepth = +(row["E Depth"]);
-
+  if (row['B Depth']) obj.StartingDepth = +row['B Depth'];
+  if (row['B Depth']) obj.Name = '' + row['B Depth'];
+  if (units['B Depth']) obj.DepthUnit = units['B Depth']; // Assume same for both top and bottom
+  if (row['E Depth']) obj.EndingDepth = +row['E Depth'];
 
   //Insufficient data found
   if (typeof obj.StartingDepth === 'undefined') {
-    warn('No depth data was found in sheetname', sheetname, '. Falling back to default depth object.')
+    warn(
+      'No depth data was found in sheetname',
+      sheetname,
+      '. Falling back to default depth object.'
+    );
     trace('Row without depth was: ', row);
     return {
       StartingDepth: 0,
       EndingDepth: 8,
       DepthUnit: 'in',
-      Name: "Unknown Depth",
+      Name: 'Unknown Depth',
       ColumnDepth: 8,
-    }
+    };
   }
 
   //Handle single depth value
@@ -1049,7 +1071,8 @@ function parseDepth(row: any, units?: any, sheetname?: string): Depth {
 }
 
 function parseReportID(row: any) {
-  if (row['REPORTNUM']) { // A&L West Semios
+  if (row['REPORTNUM']) {
+    // A&L West Semios
     return row['REPORTNUM'].toString().trim();
   }
   return '';
@@ -1058,17 +1081,17 @@ function parseReportID(row: any) {
 // SampleNumber is not the same as SampleID: SampleID is what the soil sampler called it,
 // SampleNumber is what the Lab calls that sample
 function parseSampleNumber(row: any) {
-  if (row['LABNUM']) { // A&L West Semios
+  if (row['LABNUM']) {
+    // A&L West Semios
     return row['LABNUM'].toString().trim();
   }
   return '';
 }
 
 export type ToCsvOpts = {
-  ssurgo?: boolean,
+  ssurgo?: boolean;
 };
 export function toCsv(input: ModusResult | ModusResult[], opts?: ToCsvOpts) {
-
   if (opts?.ssurgo) {
     warn('SSURGO option coming soon for CSV output');
   }
@@ -1084,88 +1107,99 @@ export function toCsv(input: ModusResult | ModusResult[], opts?: ToCsvOpts) {
 
   return {
     wb: {
-      Sheets: {"Sheet1": sheet},
-      SheetNames: ["Sheet1"]
+      Sheets: { Sheet1: sheet },
+      SheetNames: ['Sheet1'],
     } as xlsx.WorkBook,
-    str: xlsx.utils.sheet_to_csv(sheet)
-  }
+    str: xlsx.utils.sheet_to_csv(sheet),
+  };
 }
 
 function toCsvObject(input: ModusResult) {
-  return input.Events!.map(event => {
-    let eventMeta = {
-      EventDate: event.EventMetaData!.EventDate,
-      EventType: "Soil" // Hard-coded for now. This is all soil data at the moment
-    };
+  return input
+    .Events!.map((event) => {
+      let eventMeta = {
+        EventDate: event.EventMetaData!.EventDate,
+        EventType: 'Soil', // Hard-coded for now. This is all soil data at the moment
+      };
 
-    let allReports = toReportsObj(event.LabMetaData!.Reports);
+      let allReports = toReportsObj(event.LabMetaData!.Reports);
 
-    let allDepthRefs = toDepthRefsObj(event.EventSamples!.Soil!.DepthRefs)
+      let allDepthRefs = toDepthRefsObj(event.EventSamples!.Soil!.DepthRefs);
 
-    return event.EventSamples!.Soil!.SoilSamples!.map(sample => {
-      let sampleMeta = toSampleMetaObj(sample.SampleMetaData, allReports);
+      return event.EventSamples!.Soil!.SoilSamples!.map((sample) => {
+        let sampleMeta = toSampleMetaObj(sample.SampleMetaData, allReports);
 
-      return sample.Depths!.map(depth => {
-        let nutrients = toNutrientResultsObj(depth)
+        return sample.Depths!.map((depth) => {
+          let nutrients = toNutrientResultsObj(depth);
 
-        return {
-          ...eventMeta,
-          ...sampleMeta,
-          ...allDepthRefs[depth.DepthID!],
-          ...nutrients,
-        }
-      })
+          return {
+            ...eventMeta,
+            ...sampleMeta,
+            ...allDepthRefs[depth.DepthID!],
+            ...nutrients,
+          };
+        });
+      });
     })
-  }).flat(3)
+    .flat(3);
 }
 
 function toSampleMetaObj(sampleMeta: any, allReports: any) {
   const base = {
     SampleNumber: sampleMeta.SampleNumber,
     ...allReports[sampleMeta.ReportID],
-    FMISSampleID: sampleMeta.FMISSampleID
+    FMISSampleID: sampleMeta.FMISSampleID,
   };
-  let ll = sampleMeta?.Geometry?.wkt?.replace("POINT(", "").replace(")", "").trim().split(' ');
+  let ll = sampleMeta?.Geometry?.wkt
+    ?.replace('POINT(', '')
+    .replace(')', '')
+    .trim()
+    .split(' ');
   if (!ll) return base;
   return {
     ...base,
-    Latitude: +(ll[0]),
-    Longitude: +(ll[1]),
-  }
+    Latitude: +ll[0],
+    Longitude: +ll[1],
+  };
 }
 
-function toDepthRefsObj(depthRefs: any) : any  {
+function toDepthRefsObj(depthRefs: any): any {
   return Object.fromEntries(
-    depthRefs.map(
-      (dr: Depth) => [dr.DepthID, {
-        DepthID: ''+dr.DepthID,
+    depthRefs.map((dr: Depth) => [
+      dr.DepthID,
+      {
+        DepthID: '' + dr.DepthID,
         [`StartingDepth [${dr.DepthUnit}]`]: dr.StartingDepth,
         [`EndingDepth [${dr.DepthUnit}]`]: dr.EndingDepth,
         [`ColumnDepth [${dr.DepthUnit}]`]: dr.ColumnDepth,
-      }]
-    )
-  )
+      },
+    ])
+  );
 }
 
-function toReportsObj(reports: any) : any  {
+function toReportsObj(reports: any): any {
   return Object.fromEntries(
-    reports.map((r: any) => [r.ReportID, {
-      FileDescription: r.FileDescription,
-      ReportID: r.ReportID
-    }])
-  )
+    reports.map((r: any) => [
+      r.ReportID,
+      {
+        FileDescription: r.FileDescription,
+        ReportID: r.ReportID,
+      },
+    ])
+  );
 }
 
 function toNutrientResultsObj(sampleDepth: any) {
   return Object.fromEntries(
-    sampleDepth.NutrientResults.map(
-      (nr: NutrientResult) => [`${nr.Element} [${nr.ValueUnit}]`, nr.Value]
-    )
-  )
+    sampleDepth.NutrientResults.map((nr: NutrientResult) => [
+      `${nr.Element} [${nr.ValueUnit}]`,
+      nr.Value,
+    ])
+  );
 }
 
 type ModusCsvRow = {
-  ReportID: string,
-}
+  ReportID: string;
+};
 
 type ModusCsv = ModusCsvRow[];

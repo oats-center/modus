@@ -1,0 +1,29 @@
+{
+  "search.exclude": {
+    "**/.yarn": true,
+    "**/.pnp.*": true,
+    ".history": true,
+    ".vim": true,
+    "node_modules": true,
+    "**/tags.*": true,
+    ".dccache": true,
+    "**/dist": true,
+    "**/dist-browser": true,
+    "**/*.tsbuildinfo": true
+  },
+  "files.exclude": {
+    "**/.yarn": true,
+    "**/.pnp.*": true,
+    ".history": true,
+    ".vim": true,
+    "node_modules": true,
+    "**/tags.*": true,
+    ".dccache": true,
+    "**/dist": true,
+    "**/dist-browser": true,
+    "**/*.tsbuildinfo": true
+  },
+  "typescript.tsdk": ".yarn/sdks/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "cSpell.words": ["Ault"]
+}

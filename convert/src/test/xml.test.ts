@@ -15,7 +15,6 @@ const error = debug('@modusjs/convert#test-xml:error');
 const { green } = chalk;
 const test = (msg: string) => info(green(msg));
 
-
 export default async function run(lib: typeof MainLib) {
   test('Parsing hand-modus_xml with parse()...');
   lib.xml.parse(xml_sample1);
@@ -28,7 +27,13 @@ export default async function run(lib: typeof MainLib) {
   if (diff.length > 0) {
     console.log('parsed result (a): ', mr);
     console.log('sample 1 hand-created json (b): ', json_sample1);
-    throw new Error(`Hand-created json (a) and parsed result for sample1 (b) are different and they should be the same. Differences are: ${JSON.stringify(diff, null, '  ')}`);
+    throw new Error(
+      `Hand-created json (a) and parsed result for sample1 (b) are different and they should be the same. Differences are: ${JSON.stringify(
+        diff,
+        null,
+        '  '
+      )}`
+    );
   }
 
   test('Parsing lab-modus_xml...');
@@ -39,4 +44,3 @@ export default async function run(lib: typeof MainLib) {
 
   test('All parse tests passed');
 }
-

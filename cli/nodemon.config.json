@@ -1,7 +1,5 @@
 {
   "delay": 1000,
   "verbose": true,
-  "watch": [
-    "dist"
-  ]
+  "watch": ["dist"]
 }

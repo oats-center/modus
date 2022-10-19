@@ -15,7 +15,6 @@ async function passthru(command: string) {
   return ps; // Promise<string>
 }
 
-
 export default async function run() {
   info('toHTML tests disabled');
   /*
@@ -40,15 +39,20 @@ export default async function run() {
   */
 }
 
-
-
-function deepdiff(a: any, b: any, path?: string, differences?: string[]): string[] {
+function deepdiff(
+  a: any,
+  b: any,
+  path?: string,
+  differences?: string[]
+): string[] {
   if (!differences) differences = [];
   path = path || '';
 
   // Same type:
   if (typeof a !== typeof b) {
-    differences.push(`a is a ${typeof a} but b is a ${typeof b} at path ${path}`);
+    differences.push(
+      `a is a ${typeof a} but b is a ${typeof b} at path ${path}`
+    );
     return differences;
   }
 
@@ -58,7 +62,11 @@ function deepdiff(a: any, b: any, path?: string, differences?: string[]): string
   }
 
   if (Array.isArray(a) !== Array.isArray(b)) {
-    differences.push(`isArray(a) is ${Array.isArray(a)}, but isArray(b) is ${Array.isArray(b)} at path ${path}`);
+    differences.push(
+      `isArray(a) is ${Array.isArray(a)}, but isArray(b) is ${Array.isArray(
+        b
+      )} at path ${path}`
+    );
     return differences;
   }
 

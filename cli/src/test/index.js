@@ -7,7 +7,6 @@ import htmlTests from './tohtml.js';
 const info = debug('@modusjs/cli#test/index:info');
 
 try {
-
   // if test-work is already there from last time, wipe it
   if (await fs.stat('./test-work').catch(() => null)) {
     await fs.rmdir('./test-work', { recursive: true, force: true });
@@ -26,8 +25,7 @@ try {
   await htmlTests();
 
   info('All test passed!');
-
 } finally {
-//  info('Cleaning up test-work dir');
-//  await fs.rm('./test-work', { recursive: true, force: true });
+  //  info('Cleaning up test-work dir');
+  //  await fs.rm('./test-work', { recursive: true, force: true });
 }

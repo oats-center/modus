@@ -1,0 +1,15 @@
+# Code Owners Declaration
+# This file defines the code owners for files in this repository
+# See documentation here: https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/about-code-owners
+
+# Default group of people
+* @aultac
+
+LICENSE @awlayton
+.gitignore @awlayton
+.yarn @awlayton
+.yarnrc @awlayton
+.editorconfig @awlayton
+.prettier* @awlayton
+.vscode @awlayton
+.github @awlayton
