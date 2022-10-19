@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@modusjs/convert": "workspace:^",
+    "@oada/client": "^4.3.2",
     "debug": "^4.3.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"

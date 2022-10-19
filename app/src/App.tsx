@@ -1,18 +1,42 @@
 import { useState, DragEventHandler } from 'react';
-import { file as convertFile, csv as convertCsv } from '@modusjs/convert/dist-browser/browser/index.js';
+import { file as convertFile } from '@modusjs/convert/dist-browser/browser/index.js';
 import debug from 'debug';
 import './App.css';
+import { connect } from '@oada/client';
+//import { tree } from './trellisTree';
+import type { ModusResult } from '@modusjs/convert/dist-browser/browser/index.js';
 localStorage.debug = '*';
 
-type Output = 'json' | 'csv';
+type Output = 'json' | 'csv' | 'trellis';
 
 const info = debug('@modusjs/app#App:info');
 
 export default function App() {
 
   const [ output, setOutput ] = useState<Output>('json');
+  const [ domain, setTrellisDomain] = useState<string>('');
+  const [ token, setTrellisToken] = useState<string>('');
   const [ inzone, setInzone ] = useState<boolean>(false);
   const [ isSupported, setIsSupported ] = useState<boolean>(false);
+
+  async function toTrellis ({ domain, token, results } :
+    { domain: string, token: string, results: ModusResult[] }): Promise<void> {
+    console.log(domain, token, results);
+    try {
+      const oada = await connect({ domain, token });
+      /*
+      info('Successfully connected to trellis');
+      await oada.put({
+        path: `/bookmarks/lab-results/soil`,
+        data: {},//results,
+        tree,
+        })
+     */
+      info('Successfully wrote results to trellis');
+    } catch(err) {
+
+    }
+  }
 
   const handleFile = ({type, inout} : { type: 'drop' | 'drag', inout?: boolean }): DragEventHandler  => async (evt) => {
     evt.preventDefault();
@@ -40,8 +64,16 @@ export default function App() {
         const modus_results = all_file_results.reduce((acc, arr) => [ ...acc, ...arr], []);
         info('results: ', modus_results);
         info('Saving',output,' type from results');
-        await convertFile.save({ modus: modus_results, outputtype: output });
-        info('File successfully saved');
+        if (output === 'trellis') {
+          await toTrellis({
+            domain,
+            token,
+            results: modus_results
+          })
+        } else {
+          await convertFile.save({ modus: modus_results, outputtype: output });
+          info('File successfully saved');
+        }
       break;
 
     }
@@ -74,8 +106,34 @@ export default function App() {
         <select value={output} onChange={evt => setOutput(evt.target.value as Output)}>
           <option value="json">Modus JSON</option>
           <option value="csv">CSV</option>
+          <option value="trellis">Sync to Trellis</option>
         </select>
       </div>
+
+      {output==='trellis' && <div className="oada-connect-container">
+        <h4>
+        Trellis Connection
+        </h4>
+        <div>
+        Domain: &nbsp;&nbsp;
+        <input
+          type="text"
+          value={domain}
+          onChange={evt => setTrellisDomain(evt.target.value)}
+        />
+      </div>
+      <div>
+        Token: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <input
+          type="text"
+          value={token}
+          onChange={evt => setTrellisToken(evt.target.value)}
+        />
+      </div>
+      <div>
+        &nbsp;
+      </div>
+      </div>}
 
       <div className="dropzone-container">
         <div className="dropzone"
@@ -87,6 +145,7 @@ export default function App() {
           Drop file here to download a standard MODUS output format.
         </div>
       </div>
+
 
       <div className="footer">
         <hr/>

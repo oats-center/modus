@@ -1,13 +1,14 @@
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
-import { terser } from 'rollup-plugin-terser';
+//import { terser } from 'rollup-plugin-terser';
 import json from '@rollup/plugin-json';
 import { defineConfig } from 'rollup';
 
 const plugins = [ resolve({ 
   preferBuiltins: false,  // you need this one to avoid using node resolutions
   browser: true           // you need this to make sure node things in universal modules don't get included
-}), commonjs(), json(), terser() ];
+//}), commonjs(), json(), terser() ];
+}), commonjs(), json()]; //terser can cause the build process to hang
 
 const watch = {
   buildDelay: 200, // delay build until 200 ms after last change
