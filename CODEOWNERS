@@ -8,7 +8,7 @@
 LICENSE @awlayton
 .gitignore @awlayton
 .yarn @awlayton
-.yarnrc @awlayton
+.yarnrc.yml @awlayton
 .editorconfig @awlayton
 .prettier* @awlayton
 .vscode @awlayton
