@@ -23,9 +23,9 @@
   "author": "Aaron Ault <aultac@gmail.com>",
   "license": "Apache-2.0",
   "devDependencies": {
-    "concurrently": "^7.2.2",
+    "concurrently": "^7.4.0",
     "live-server": "^1.2.2",
-    "nodemon": "^2.0.16"
+    "nodemon": "^2.0.20"
   },
   "dependencies": {
     "typescript": "^4.7.4"

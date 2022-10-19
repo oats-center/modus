@@ -1,7 +1,7 @@
 import debug from 'debug';
 // Only import the type here: use the lib passed to you from node or browser in run()
 import type * as MainLib from '../../browser/index.js';
-import { green } from 'chalk';
+import chalk from 'chalk';
 
 import tomkat from '@modusjs/examples/dist/tomkat-historic/tomkat_source_data2015_RMN0-10cm_1_json.js';
 
@@ -11,7 +11,7 @@ const trace = debug('@modusjs/convert#test-browser/html:trace');
 const info = debug('@modusjs/convert#test-browser/html:info');
 const error = debug('@modusjs/convert#test-browser/html:error');
 
-const test = (msg: string) => info(green(msg));
+const test = (msg: string) => info(chalk.green(msg));
 
 export default async function run(lib: typeof MainLib) {
   test('toHtml tests disabled');

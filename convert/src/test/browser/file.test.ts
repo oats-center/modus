@@ -2,7 +2,7 @@ import debug from 'debug';
 import { Buffer } from 'buffer/';
 // Only import the type here: use the lib passed to you from node or browser in run()
 import type * as MainLib from '../../browser/index.js';
-import { red, green } from 'chalk'; // have to import it this way on browser
+import chalk from 'chalk'; // have to import it this way on browser
 
 import tomkat_json from '@modusjs/examples/dist/tomkat-historic/tomkat_source_data2015_RMN0-10cm_1_json.js';
 import ward_csv from '@modusjs/examples/dist/tomkat-historic/TOKA2021-22A_RMN_Ward_csv.js';
@@ -13,7 +13,7 @@ const trace = debug('@modusjs/convert#test-browser/file:trace');
 const info = debug('@modusjs/convert#test-browser/file:info');
 const error = debug('@modusjs/convert#test-browser/file:error');
 
-const test = (msg: string) => info(green(msg));
+const test = (msg: string) => info(chalk.green(msg));
 
 export default async function run(lib: typeof MainLib) {
   test('Checking file.fromFile for browser');

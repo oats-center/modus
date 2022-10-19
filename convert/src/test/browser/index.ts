@@ -1,11 +1,11 @@
 import type * as libs from '../../browser/index.js';
 import debug from 'debug';
-import { red } from 'chalk';
+import chalk from 'chalk';
 
 import xmlTests from '../xml.test.js';
 import csvTests from '../csv.test.js';
 import toCsvTests from '../toCsv.test.js';
-import toJsonTests from '../tojson.test';
+import toJsonTests from '../tojson.test.js';
 import htmlTests from './html.test.js';
 import fileTests from './file.test.js';
 
@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     info('testing browser file');
     await fileTests(libsundertest);
   } catch (e: any) {
-    info(red('FAILED: tests threw exception: '));
+    info(chalk.red('FAILED: tests threw exception: '));
     console.log(e);
     throw e; // rethrow so browser will show stack and do source mapping
   }

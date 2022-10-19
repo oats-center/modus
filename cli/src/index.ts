@@ -12,7 +12,7 @@ import {
   file as modusfile,
 } from '@modusjs/convert';
 import type ModusResult from '@oada/types/modus/v1/modus-result.js';
-import type { NodeInputFile } from '@modusjs/convert/dist/node/file';
+import type { NodeInputFile } from '@modusjs/convert/dist/node/file.js';
 
 const warn = debug('@modusjs/cli:warn');
 const info = debug('@modusjs/cli:info');
