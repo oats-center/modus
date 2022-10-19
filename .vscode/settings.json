@@ -25,5 +25,5 @@
   },
   "typescript.tsdk": ".yarn/sdks/typescript/lib",
   "typescript.enablePromptUseWorkspaceTsdk": true,
-  "cSpell.words": ["Ault"]
+  "cSpell.words": ["Ault", "esbuild", "Hackathon", "modusjs"]
 }

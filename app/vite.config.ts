@@ -1,14 +1,22 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
+const target = 'es2020';
+
 // https://vitejs.dev/config/
 export default defineConfig({
   base: '/modus/',
   plugins: [react()],
+  build: {
+    target,
+  },
   optimizeDeps: {
     esbuildOptions: {
-      target: 'es2020',
+      target,
     },
+  },
+  esbuild: {
+    target,
   },
   server: {
     open: true,

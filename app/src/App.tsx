@@ -5,8 +5,8 @@ import {
 import debug from 'debug';
 import './App.css';
 import { connect } from '@oada/client';
-//import { tree } from './trellisTree';
 import type { ModusResult } from '@modusjs/convert/dist-browser/browser/index.js';
+
 localStorage.debug = '*';
 
 type Output = 'json' | 'csv' | 'trellis';
@@ -15,8 +15,8 @@ const info = debug('@modusjs/app#App:info');
 
 export default function App() {
   const [ output, setOutput ] = useState<Output>('json');
-  const [ domain, setTrellisDomain] = useState<string>('');
-  const [ token, setTrellisToken] = useState<string>('');
+  const [ domain, setTrellisDomain] = useState<string>('https://localhost');
+  const [ token, setTrellisToken] = useState<string>('god');
   const [ inzone, setInzone ] = useState<boolean>(false);
   const [ isSupported, setIsSupported ] = useState<boolean>(false);
 
