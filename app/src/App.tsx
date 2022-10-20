@@ -1,3 +1,4 @@
+process.env.NODE_TLS_REJECT_UNAUTHORIZED='0';
 import { useState, DragEventHandler } from 'react';
 import {
   file as convertFile,
@@ -20,14 +21,14 @@ const warn = debug('@modusjs/app#App:warn');
 export default function App() {
   const [ output, setOutput ] = useState<Output>('json');
   const [ domain, setTrellisDomain] = useState<string>('https://localhost');
-  const [ token, setTrellisToken] = useState<string>('god');
+  const [ token, setTrellisToken] = useState<string>('');
   const [ inzone, setInzone ] = useState<boolean>(false);
   const [ isSupported, setIsSupported ] = useState<boolean>(false);
 
   async function toTrellis ({ domain, token, results } :
     { domain: string, token: string, results: ModusResult[] }): Promise<void> {
     try {
-      //const oada = await connect({ domain, token });
+      const oada = await connect({ domain, token });
       info('Successfully connected to trellis');
       for await (const {modus: data} of results) {
         let hash = md5(serializeJSON(data));
@@ -38,13 +39,11 @@ export default function App() {
         if (date && hash) {
           info(`Putting to path: ${path}`);
           console.log(`Putting to path: ${path}`);
-          /*
           await oada.put({
             path,
             data,
             tree,
           })
-          */
         }
       }
       info('Successfully wrote results to trellis');

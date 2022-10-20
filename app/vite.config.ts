@@ -23,5 +23,6 @@ export default defineConfig({
   },
   define: {
     __APP_VERSION__: JSON.stringify(process.env.npm_package_version),
+    'process.env': {} // to avoid "Uncaught ReferenceError: process is not defined"
   },
 });
