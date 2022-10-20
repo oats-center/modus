@@ -5,6 +5,7 @@ import {
 import debug from 'debug';
 import './App.css';
 import { connect } from '@oada/client';
+import { tree } from './trellisTree';
 import type { ModusResult } from '@modusjs/convert/dist-browser/browser/index.js';
 
 localStorage.debug = '*';
@@ -12,6 +13,7 @@ localStorage.debug = '*';
 type Output = 'json' | 'csv' | 'trellis';
 
 const info = debug('@modusjs/app#App:info');
+const error = debug('@modusjs/app#App:error');
 
 export default function App() {
   const [ output, setOutput ] = useState<Output>('json');
@@ -22,20 +24,24 @@ export default function App() {
 
   async function toTrellis ({ domain, token, results } :
     { domain: string, token: string, results: ModusResult[] }): Promise<void> {
-    console.log(domain, token, results);
     try {
       const oada = await connect({ domain, token });
-      /*
       info('Successfully connected to trellis');
-      await oada.put({
-        path: `/bookmarks/lab-results/soil`,
-        data: {},//results,
-        tree,
-        })
-     */
+      for await (const res of results) {
+        let key = res.modus.Events[0].LabMetaData.Reports[0].ReportID;
+        if (key) {
+          info(`Putting to path: /bookmarks/lab-results/soil/${key}`);
+          console.log(`Putting to path: /bookmarks/lab-results/soil/${key}`);
+          await oada.put({
+            path: `/bookmarks/lab-results/soil/${key}`,
+            data: res,
+            tree,
+          })
+        }
+      }
       info('Successfully wrote results to trellis');
     } catch(err) {
-
+      error(`toTrellis Errored: ${err}`);
     }
   }
 
