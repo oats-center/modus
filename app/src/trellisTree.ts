@@ -8,9 +8,17 @@ export const tree: Record<string, any> = {
       '*': {
         '_type': 'application/vnd.oada.trellisfw.1+json',
         '_rev': 0,
-        '*': {
-          '_type': 'application/vnd.oada.trellisfw.1+json',
-          '_rev': 0,
+        'event-date-index': {
+          '*': {
+            '_type': 'application/vnd.oada.trellisfw.1+json',
+            '_rev': 0,
+            'md5-index': {
+              '*': {
+                '_type': 'application/vnd.oada.trellisfw.1+json',
+                '_rev': 0,
+              },
+            },
+          },
         },
       },
     },

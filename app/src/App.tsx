@@ -3,8 +3,9 @@ import {
   file as convertFile,
 } from '@modusjs/convert/dist-browser/browser/index.js';
 import debug from 'debug';
+import md5 from 'md5';
 import './App.css';
-import { connect } from '@oada/client';
+import { JsonObject, connect } from '@oada/client';
 import { tree } from './trellisTree';
 import type { ModusResult } from '@modusjs/convert/dist-browser/browser/index.js';
 
@@ -14,6 +15,7 @@ type Output = 'json' | 'csv' | 'trellis';
 
 const info = debug('@modusjs/app#App:info');
 const error = debug('@modusjs/app#App:error');
+const warn = debug('@modusjs/app#App:warn');
 
 export default function App() {
   const [ output, setOutput ] = useState<Output>('json');
@@ -25,22 +27,29 @@ export default function App() {
   async function toTrellis ({ domain, token, results } :
     { domain: string, token: string, results: ModusResult[] }): Promise<void> {
     try {
-      const oada = await connect({ domain, token });
+      //const oada = await connect({ domain, token });
       info('Successfully connected to trellis');
-      for await (const res of results) {
-        let key = res.modus.Events[0].LabMetaData.Reports[0].ReportID;
-        if (key) {
-          info(`Putting to path: /bookmarks/lab-results/soil/${key}`);
-          console.log(`Putting to path: /bookmarks/lab-results/soil/${key}`);
+      for await (const {modus: data} of results) {
+        let hash = md5(serializeJSON(data));
+        //let key = data.Events[0].LabMetaData.Reports[0].ReportID;
+        let date = data.Events[0].EventMetaData.EventDate;
+        let path =
+          `/bookmarks/lab-results/soil/event-date-index/${date}/md5-index/${hash}`;
+        if (date && hash) {
+          info(`Putting to path: ${path}`);
+          console.log(`Putting to path: ${path}`);
+          /*
           await oada.put({
-            path: `/bookmarks/lab-results/soil/${key}`,
-            data: res,
+            path,
+            data,
             tree,
           })
+          */
         }
       }
       info('Successfully wrote results to trellis');
     } catch(err) {
+      console.error(`toTrellis Errored: ${err}`);
       error(`toTrellis Errored: ${err}`);
     }
   }
@@ -172,4 +181,35 @@ export default function App() {
       </div>
     </div>
   );
+}
+
+function serializeJSON(obj: any): string {
+
+  if (typeof obj === 'number') {
+    const str = obj.toString();
+    if (str.match(/\./)) {
+      warn('You cannot serialize a floating point number with a hashing function and expect it to work consistently across all systems.  Use a string.');
+    }
+    // Otherwise, it's an int and it should serialize just fine.
+    return str;
+  }
+  if (typeof obj === 'string') return '"'+obj+'"';
+  if (typeof obj === 'boolean') return (obj ? 'true' : 'false');
+  // Must be an array or object
+  var isarray = Array.isArray(obj);
+  var starttoken = isarray ? '[' : '{';
+  var endtoken = isarray ? ']' : '}';
+
+  if (!obj) return 'null';
+
+  const keys = Object.keys(obj).sort(); // you can't have two identical keys, so you don't have to worry about that.
+
+  return starttoken
+    + keys.reduce(function(acc,k,index) {
+      if (!isarray) acc += '"'+k+'":'; // if an object, put the key name here
+      acc += serializeJSON(obj[k]);
+      if (index < keys.length-1) acc += ',';
+      return acc;
+    },"")
+    + endtoken;
 }

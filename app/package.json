@@ -14,13 +14,16 @@
     "@modusjs/convert": "workspace:^",
     "@oada/client": "^4.4.1",
     "debug": "^4.3.4",
+    "md5": "^2.3.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@types/debug": "^4.1.7",
+    "@types/md5": "^2",
     "@types/react": "^18.0.21",
     "@types/react-dom": "^18.0.6",
+    "@types/sha.js": "^2",
     "@vitejs/plugin-react": "^2.1.0",
     "gh-pages": "^4.0.0",
     "typescript": "^4.8.3",
