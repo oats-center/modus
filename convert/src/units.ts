@@ -18,7 +18,9 @@ const needMolecularWeight = 'The molecular weight of the substance represented b
 // deciding which ones to support as standard (i.e., just BS%, not meq/100g)
 // 2) Allow users to merge in just a subset of unit changes into the standard units
 // or recognized units
-// 3)
+// 3) Need some way to convert back from UCUM units to those that we'd prefer to
+//    have in our MODUS outputs. E.g., [lb_av]/[acr_us] seems a bit ugly, so we
+//    could map it back to lb/ac if we'd like.
 export function convertUnits(
   from: NutrientResult[],
   to?: UnitsOverrides
