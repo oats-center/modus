@@ -3,6 +3,8 @@ import * as xlsx from 'xlsx';
 import oerror from '@overleaf/o-error';
 import { getJsDateFromExcel } from 'excel-date-to-js';
 import dayjs from 'dayjs';
+import md5 from 'md5';
+import { convertUnits } from './units.js';
 import ModusResult, {
   assert as assertModusResult,
 } from '@oada/types/modus/v1/modus-result.js';
@@ -15,6 +17,7 @@ const trace = debug('@modusjs/convert#csv:trace');
 export const supportedFormats = ['tomkat', 'generic'];
 export type SupportedFormats = 'tomkat' | 'generic';
 
+export const recognizedCsvs = new Map<string,RecognizedCsv>();
 //--------------------------------------------------------------------------------------
 // parse: wrapper function for particular parsing functions found down below.
 //
@@ -22,6 +25,11 @@ export type SupportedFormats = 'tomkat' | 'generic';
 // Either give an already-parsed workbook, an entire CSV as a string, or an arraybuffer, or a base64 string
 // Default CSV/XLSX format is tomkat
 
+// TODO: Consider changing input to be a single thing, then a secondary key to
+// specify the type as 'string' | 'array' | 'base64'. We can try each of those
+// and fail if none are recognized perhaps
+// Also, should we clean up things so that everything isn't called tomkat? Also,
+// we claim to support 'generic', but the switch statement doesn't handle it.
 export function parse({
   wb,
   str,
@@ -93,10 +101,10 @@ function parseTomKat({ wb }: { wb: xlsx.WorkBook }): ModusResult[] {
 
   for (const sheetname of datasheets) {
     const sheet = wb.Sheets[sheetname]!;
-    const allrows = xlsx.utils.sheet_to_json(sheet);
+    const allrows = xlsx.utils.sheet_to_json(sheet, {defval: ''}); // include empty column values! undefined doesn't seem to get empty cols to show up.
 
     // Grab the unit overrides and get rid of comment/units columns
-    const unit_overrides = extractUnitOverrides(allrows);
+    let unit_overrides = extractUnitOverrides(allrows);
     const rows = allrows.filter(isDataRow);
     trace('Have', rows.length, 'rows from sheetname: ', sheetname);
 
@@ -110,6 +118,18 @@ function parseTomKat({ wb }: { wb: xlsx.WorkBook }): ModusResult[] {
       }
     }
     const colnames = Object.keys(colnames_map);
+
+    let headerHash = md5(JSON.stringify(colnames.sort()));
+    if (!unit_overrides || Object.keys(unit_overrides).length === 0) {
+      if (recognizedCsvs.has(headerHash)) {
+        let recognized = recognizedCsvs.get(headerHash);
+        unit_overrides = recognized!.units;
+        info(`Recognized CSV as: ${recognized!.name}`)
+        trace(`Using the following unit overrides: ${recognized!.units}`);
+      } else {
+        warn(`Spreadsheet type was not recognized based on column headers (to automagically set units). See docs to manually specify unit overrides.`);
+      }
+    }
 
     // Determine a "date" column for this dataset
     // Let some "known" candidates for date column name take precedence over others:
@@ -195,7 +215,8 @@ function parseTomKat({ wb }: { wb: xlsx.WorkBook }): ModusResult[] {
         // Grab the "depth" for this sample:
         const depth = parseDepth(row, unit_overrides, sheetname); // SAM: need to write this to figure out a Depth object
         const DepthID = '' + ensureDepthInDepthRefs(depth, depthrefs); // mutates depthrefs if missing, returns depthid
-        const NutrientResults = parseNutrientResults(row, unit_overrides);
+        let NutrientResults = parseNutrientResults(row, unit_overrides);
+        NutrientResults = convertUnits(NutrientResults);
         const id = parseSampleID(row);
         const meta = pointmeta[id] || null; // where does the pointmeta go again (Latitude_DD, Longitude_DD, Field, Acreage, etc.)
 
@@ -267,7 +288,7 @@ function isPointMetadataSheetname(name: string) {
     .match('POINTMETA');
 }
 
-type UnitsOverrides = { [colname: string]: string };
+export type UnitsOverrides = { [colname: string]: string };
 function extractUnitOverrides(rows: any[]) {
   const overrides: UnitsOverrides = {};
   const unitrows = rows.filter(isUnitRow);
@@ -338,11 +359,12 @@ function ensureDepthInDepthRefs(depth: Depth, depthrefs: Depth[]): number {
   return match.DepthID!;
 }
 
-type NutrientResult = {
+export type NutrientResult = {
   Element: string;
-  Value: number;
+  Value: number | undefined;
   ValueUnit: string;
 };
+
 function parseSampleID(row: any): string {
   const copy = keysToUpperNoSpacesDashesOrUnderscores(row);
   return copy['POINTID'] || copy['FMISSAMPLEID'] || copy['SAMPLEID'] || '';
@@ -376,7 +398,228 @@ function parseWKTFromPointMetaOrRow(meta_or_row: any): string {
   return `POINT(${long} ${lat})`;
 }
 
-let nutrientColHeaders: Record<string, any> = {
+// units provides a means for coders to override
+function parseNutrientResults(
+  row: any,
+  units?: Record<string, string>
+): NutrientResult[] {
+  return Object.keys(row)
+    .map((key) => key.trim())
+    .filter((key) => key in nutrientColHeaders)
+    .filter((key) => !isNaN(row[key]))
+    .map((key) => key.replace(/\n/g, ' '))
+    .map((key) => key.replace(/ +/g, ' ').trim())
+    .map((key) => {
+      let unitMatches = key.match(/\[([^\]]+)\]/g);
+      let unitStr = '';
+      if (unitMatches && unitMatches.length > 0) {
+        unitStr = unitMatches[unitMatches.length - 1] || '';
+        unitStr.replace('[', '').replace(']', '');
+      }
+      return {
+        Element: nutrientColHeaders[key].Element,
+        // prioritize user-specified units (from "UNITS" row indicator) over
+        // matcher-based units, else "none".
+        ValueUnit:
+          unitStr || units![key] || nutrientColHeaders[key].ValueUnit || 'none',
+        Value: +row[key],
+      };
+    });
+}
+
+// sheetname is just for debugging
+function parseDepth(row: any, units?: any, sheetname?: string): Depth {
+  let obj: any = {
+    DepthUnit: 'cm', //default to cm
+  };
+
+  // Get columns with the word depth
+  const copy = keysToUpperNoSpacesDashesOrUnderscores(row);
+  const unitsCopy = keysToUpperNoSpacesDashesOrUnderscores(units);
+  let depthKey = Object.keys(copy).find((key) => key.match(/DEPTH/));
+  if (depthKey) {
+    let value = copy[depthKey].toString();
+    if (unitsCopy[depthKey]) obj.DepthUnit = unitsCopy[depthKey];
+
+    if (value.match(' to ')) {
+      obj.StartingDepth = +value.split(' to ')[0];
+      obj.EndingDepth = +value.split(' to ')[1];
+      obj.Name = value;
+    } else if (value.match(' - ')) {
+      obj.StartingDepth = +value.split(' - ')[0];
+      obj.EndingDepth = +value.split(' - ')[1];
+      obj.Name = value;
+    } else {
+      obj.StartingDepth = +value;
+      obj.Name = value;
+    }
+  }
+
+  if (row['B Depth']) obj.StartingDepth = +row['B Depth'];
+  if (row['B Depth']) obj.Name = '' + row['B Depth'];
+  if (units['B Depth']) obj.DepthUnit = units['B Depth']; // Assume same for both top and bottom
+  if (row['E Depth']) obj.EndingDepth = +row['E Depth'];
+
+  //Insufficient data found
+  if (typeof obj.StartingDepth === 'undefined') {
+    warn(
+      'No depth data was found in sheetname',
+      sheetname,
+      '. Falling back to default depth object.'
+    );
+    trace('Row without depth was: ', row);
+    return {
+      StartingDepth: 0,
+      EndingDepth: 8,
+      DepthUnit: 'in',
+      Name: 'Unknown Depth',
+      ColumnDepth: 8,
+    };
+  }
+
+  //Handle single depth value
+  obj.EndingDepth = obj.EndingDepth || obj.StartingDepth;
+
+  //Now compute column depth
+  obj.ColumnDepth = Math.abs(obj.EndingDepth - obj.StartingDepth);
+
+  return obj;
+}
+
+function parseReportID(row: any) {
+  if (row['REPORTNUM']) {
+    // A&L West Semios
+    return row['REPORTNUM'].toString().trim();
+  }
+  return '';
+}
+
+// SampleNumber is not the same as SampleID: SampleID is what the soil sampler called it,
+// SampleNumber is what the Lab calls that sample
+function parseSampleNumber(row: any) {
+  if (row['LABNUM']) {
+    // A&L West Semios
+    return row['LABNUM'].toString().trim();
+  }
+  return '';
+}
+
+export type ToCsvOpts = {
+  ssurgo?: boolean;
+};
+export function toCsv(input: ModusResult | ModusResult[], opts?: ToCsvOpts) {
+  if (opts?.ssurgo) {
+    warn('SSURGO option coming soon for CSV output');
+  }
+
+  let data = [];
+
+  if (Array.isArray(input)) {
+    data = input.map((mr: ModusResult) => toCsvObject(mr)).flat(1);
+  } else {
+    data = toCsvObject(input);
+  }
+  let sheet = xlsx.utils.json_to_sheet(data);
+
+  return {
+    wb: {
+      Sheets: { Sheet1: sheet },
+      SheetNames: ['Sheet1'],
+    } as xlsx.WorkBook,
+    str: xlsx.utils.sheet_to_csv(sheet),
+  };
+}
+
+function toCsvObject(input: ModusResult) {
+  return input
+    .Events!.map((event) => {
+      let eventMeta = {
+        EventDate: event.EventMetaData!.EventDate,
+        EventType: 'Soil', // Hard-coded for now. This is all soil data at the moment
+      };
+
+      let allReports = toReportsObj(event.LabMetaData!.Reports);
+
+      let allDepthRefs = toDepthRefsObj(event.EventSamples!.Soil!.DepthRefs);
+
+      return event.EventSamples!.Soil!.SoilSamples!.map((sample) => {
+        let sampleMeta = toSampleMetaObj(sample.SampleMetaData, allReports);
+
+        return sample.Depths!.map((depth) => {
+          let nutrients = toNutrientResultsObj(depth);
+
+          return {
+            ...eventMeta,
+            ...sampleMeta,
+            ...allDepthRefs[depth.DepthID!],
+            ...nutrients,
+          };
+        });
+      });
+    })
+    .flat(3);
+}
+
+function toSampleMetaObj(sampleMeta: any, allReports: any) {
+  const base = {
+    SampleNumber: sampleMeta.SampleNumber,
+    ...allReports[sampleMeta.ReportID],
+    FMISSampleID: sampleMeta.FMISSampleID,
+  };
+  let ll = sampleMeta?.Geometry?.wkt
+    ?.replace('POINT(', '')
+    .replace(')', '')
+    .trim()
+    .split(' ');
+  if (!ll) return base;
+  return {
+    ...base,
+    Latitude: +ll[0],
+    Longitude: +ll[1],
+  };
+}
+
+function toDepthRefsObj(depthRefs: any): any {
+  return Object.fromEntries(
+    depthRefs.map((dr: Depth) => [
+      dr.DepthID,
+      {
+        DepthID: '' + dr.DepthID,
+        [`StartingDepth [${dr.DepthUnit}]`]: dr.StartingDepth,
+        [`EndingDepth [${dr.DepthUnit}]`]: dr.EndingDepth,
+        [`ColumnDepth [${dr.DepthUnit}]`]: dr.ColumnDepth,
+      },
+    ])
+  );
+}
+
+function toReportsObj(reports: any): any {
+  return Object.fromEntries(
+    reports.map((r: any) => [
+      r.ReportID,
+      {
+        FileDescription: r.FileDescription,
+        ReportID: r.ReportID,
+      },
+    ])
+  );
+}
+
+function toNutrientResultsObj(sampleDepth: any) {
+  return Object.fromEntries(
+    sampleDepth.NutrientResults.map((nr: NutrientResult) => [
+      `${nr.Element} [${nr.ValueUnit}]`,
+      nr.Value,
+    ])
+  );
+}
+
+type ModusCsvRow = {
+  ReportID: string;
+};
+
+type ModusCsv = ModusCsvRow[];
+export let nutrientColHeaders: Record<string, any> = {
   '1:1 Soil pH': {
     Element: 'pH',
   },
@@ -400,15 +643,19 @@ let nutrientColHeaders: Record<string, any> = {
     ValueUnit: '%',
   },
   'Olsen P ppm P': {
-    Element: 'P',
+    Element: 'P (Olsen)',
+    ValueUnit: 'ppm',
+  },
+  'P (Olsen)': {
+    Element: 'P (Olsen)',
     ValueUnit: 'ppm',
   },
   'Bray P-1 ppm P': {
-    Element: 'P',
+    Element: 'P (Bray P1 1:10)',
     ValueUnit: 'ppm',
   },
   'Olsen P': {
-    Element: 'P',
+    Element: 'P (Olsen)',
     ValueUnit: 'ug/g',
   },
   'P phosphorus': {
@@ -416,6 +663,10 @@ let nutrientColHeaders: Record<string, any> = {
     ValueUnit: 'ppm',
   },
   'P': {
+    Element: 'P',
+    ValueUnit: 'ppm',
+  },
+  'P (Bray P1 1:10)': {
     Element: 'P',
     ValueUnit: 'ppm',
   },
@@ -485,9 +736,9 @@ let nutrientColHeaders: Record<string, any> = {
   },
   'Magnesium': {
     Element: 'Mg',
-    ValueUnit: 'cmol(+)/kg',
-  },
-  'Mg magnesium': {
+    ValueUnit: 'cmol(+)/kg', //elements such as this one that don't indicate base
+  },                         //saturation are problematic. Should probably be ppm
+  'Mg magnesium': {          //unless we know it to be cmol/kg
     Element: 'Mg',
     ValueUnit: 'ppm',
   },
@@ -512,44 +763,104 @@ let nutrientColHeaders: Record<string, any> = {
     ValueUnit: 'cmol(+)/kg',
   },
   '%Ca Sat': {
-    Element: 'BS-Ca',
+    Element: 'BS%-Ca',
+    ValueUnit: '%',
+  },
+  'BS%-Ca': {
+    Element: 'BS%-Ca',
     ValueUnit: '%',
   },
   'BS-Ca': {
     Element: 'BS-Ca',
+    ValueUnit: 'meq/100g',
+  },
+  'CA_SAT': {
+    Element: 'BS-Ca', // Base Saturation - Calcium
+    ValueUnit: 'meq/100g',
+  },
+  'CA_PCT': {
+    Element: 'BS%-Ca',
+    ValueUnit: '%',
+  },
+  'BS%-Mg': {
+    Element: 'BS%-Mg',
     ValueUnit: '%',
   },
   'BS-Mg': {
     Element: 'BS-Mg',
+    ValueUnit: 'meq/100g',
+  },
+  'MG_PCT': {
+    Element: 'BS%-Mg',
     ValueUnit: '%',
   },
-  '%Mg Sat': {
+  'MG_SAT': {
     Element: 'BS-Mg',
+    ValueUnit: 'meq/100g',
+  },
+  '%Mg Sat': {
+    Element: 'BS%-Mg',
+    ValueUnit: '%',
+  },
+  'BS%-K': {
+    Element: 'BS%-K',
     ValueUnit: '%',
   },
   'BS-K': {
     Element: 'BS-K',
+    ValueUnit: 'meq/100g',
+  },
+  'K_PCT': {
+    Element: 'BS%-K',
     ValueUnit: '%',
   },
-  '%K Sat': {
+  'K_SAT': {
     Element: 'BS-K',
+    ValueUnit: 'meq/100g',
+  },
+  '%K Sat': {
+    Element: 'BS%-K',
+    ValueUnit: '%',
+  },
+  'BS%-Na': {
+    Element: 'BS%-Na',
     ValueUnit: '%',
   },
   'BS-Na': {
     Element: 'BS-Na',
+    ValueUnit: 'meq/100g',
+  },
+  'NA_PCT': {
+    Element: 'BS%-Na',
     ValueUnit: '%',
   },
-  '%Na Sat': {
+  'NA_SAT': {
     Element: 'BS-Na',
+    ValueUnit: 'meq/100g',
+  },
+  '%Na Sat': {
+    Element: 'BS%-Na',
     ValueUnit: '%',
   },
   '%H Sat': {
-    Element: 'BS-H',
+    Element: 'BS%-H',
+    ValueUnit: '%',
+  },
+  'BS%-H': {
+    Element: 'BS%-H',
     ValueUnit: '%',
   },
   'BS-H': {
     Element: 'BS-H',
+    ValueUnit: 'meq/100g',
+  },
+  'H_PCT': {
+    Element: 'BS%-H',
     ValueUnit: '%',
+  },
+  'H_SAT': {
+    Element: 'BS-H',
+    ValueUnit: 'meq/100g',
   },
   'Sulfate-S ppm S': {
     Element: 'SO4-S',
@@ -814,23 +1125,38 @@ let nutrientColHeaders: Record<string, any> = {
   // - Need to verify units on EC: used dS/m from Modus, but there are 4 options
   // - I do not know what "SAT_PCT" means, need to add it here.
   // - What does "TYPE" mean?  It is the number 5 in at least one sheet
+
+  // Some answers after learning about things:
+  // 1) I think any time we see K_PCT and other _PCTs, it is Base Saturation as
+  // a percent of total CEC). When we see _SAT, it is in units of meq/100g rather
+  // than as a percent. These cannot be readily converted to mg/kg without
+  // knowing the molecular weight (and charge valence of the molecule).
+  // 2) Surely B_SAT should be added to the nomenclature.
+  // 3) Could SAT_PCT be related to soil moisture? Seems odd amongst all of the
+  // chemistry data, but maybe they find out while running the tests. See:
+  // https://anlab.ucdavis.edu/analysis/Soils/200
+  // 4) I think HCO3_P is the Olsen P test so I mapped it as such
   'ENR': {
     Element: 'ENR',
     ValueUnit: 'ppm',
   },
   'P1': {
-    Element: 'P (B1 1:10)',
+    Element: 'P (Bray P1 1:10)',
+    ValueUnit: 'ppm',
+  },
+  'P (Bray P2 1:10)': {
+    Element: 'P (Bray P2 1:10)',
     ValueUnit: 'ppm',
   },
   'P2': {
-    Element: 'P (B2 1:10)',
+    Element: 'P (Bray P2 1:10)',
     ValueUnit: 'ppm',
   },
   'HCO3_P': {
-    Element: 'HCO3 (SP)', // is "P" saturated paste or PPM or %?
+    Element: 'P (Olsen)',//'HCO3 (SP)', // is "P" saturated paste or PPM or %?
     ValueUnit: 'ppm',
   },
-  'HCO3': {
+  'HCO3': { //Bicarbonate is often tested in soils, but there is a small chance this is another way of saying HCO3_P/Olsen
     Element: 'HCO3',
     ValueUnit: 'ppm',
   },
@@ -839,43 +1165,27 @@ let nutrientColHeaders: Record<string, any> = {
   },
   'MG': {
     Element: 'Mg',
-    ValueUnit: 'mg/kg',
+    ValueUnit: 'ppm',
   },
   'CA': {
     Element: 'Ca',
-    ValueUnit: 'mg/kg',
+    ValueUnit: 'ppm',
   },
   'NA': {
     Element: 'Na',
-    ValueUnit: 'mg/kg',
+    ValueUnit: 'ppm',
+  },
+  'B-Ph': {
+    Element: 'B-Ph',
   },
   'BUFFER_PH': {
-    Element: 'B-Ph',
+    Element: 'B-pH',
   },
   'H': {
     Element: 'H',
     ValueUnit: 'ppm',
   },
-  'K_PCT': {
-    Element: 'K',
-    ValueUnit: 'mg/kg',
-  },
-  'MG_PCT': {
-    Element: 'Mg',
-    ValueUnit: 'mg/kg',
-  },
-  'CA_PCT': {
-    Element: 'Ca',
-    ValueUnit: 'mg/kg',
-  },
-  'H_PCT': {
-    Element: 'H',
-    ValueUnit: 'mg/kg',
-  },
-  'NA_PCT': {
-    Element: 'Na',
-    ValueUnit: 'mg/kg',
-  },
+
   'NO3_N': {
     Element: 'NO3-N',
     ValueUnit: 'ppm',
@@ -898,7 +1208,7 @@ let nutrientColHeaders: Record<string, any> = {
   },
   'S__SALTS': {
     Element: 'SS', // "Soluble Salts"
-    ValueUnit: 'ppm',
+    ValueUnit: 'mmho/cm', // was previously ppm; changed per A&L Labs West pdf
   },
   'CL': {
     Element: 'Cl',
@@ -912,20 +1222,25 @@ let nutrientColHeaders: Record<string, any> = {
     Element: 'Al', // Aluminum
     ValueUnit: 'ppm',
   },
-  'CA_SAT': {
-    Element: 'BS-Ca', // Base Saturation - Calcium
-    ValueUnit: '%',
+
+  'BS-B': {
+    Element: 'BS-B', // Added this. Modus does not have this element
+    ValueUnit: 'meq/100g',
   },
-  'MG_SAT': {
-    Element: 'BS-Mg',
-    ValueUnit: '%',
-  },
-  'NA_SAT': {
-    Element: 'BS-Na',
+  'BS%-B': {
+    Element: 'BS%-B', // Added this. Modus does not have this element
     ValueUnit: '%',
   },
   'B_SAT': {
     Element: 'BS-B', // Base Saturation - Boron?  Modus does not have this element.
+    ValueUnit: 'meq/100g',
+  },
+  'B_PCT': {
+    Element: 'BS%-B', // Base Saturation - Boron?  Modus does not have this element.
+    ValueUnit: '%',
+  },
+  '%B Sat': {
+    Element: 'BS%-B', // Added this. Modus does not have this element
     ValueUnit: '%',
   },
   'ESP': {
@@ -944,11 +1259,12 @@ let nutrientColHeaders: Record<string, any> = {
     Element: 'SAR', // Sodium Adsorption Ratio
   },
   'EC': {
-    Element: 'ECe',
-    ValueUnit: 'dS/m', // Just guessed that this is the one, need to verify
+    Element: 'EC',
+    ValueUnit: 'dS/m', // Just guessed that this is the one, need to verify. Sam: The pdf example didn't have EC
   },
   'SAT_PCT': {
     Element: 'SAT_PCT', // I have no idea what this is, passing it through verbatim
+    ValueUnit: '%',
   },
   'CO3': {
     Element: 'CO3',
@@ -960,17 +1276,13 @@ let nutrientColHeaders: Record<string, any> = {
     Element: "Ca",
     ValueUnit: "ppm"
   },
-  "LBC 1": {
-    Element: "Ca",
-    ValueUnit: "ppm"
-  },
   */
 };
 /* Didn't see these in the official modus element list
        Element: "Total Microbial Biomass": ,
   "Total Bacteria Biomass": [],
   "Actinomycetes Biomass": [],
-  "Gram (-) Biomass": [],
+  "Gram (-) Biomass": [],VFINX VINEX
   "Rhizobia Biomass": [],
   "Gram (+) Biomass": [],
   "Total Fungi Biomass": [],
@@ -983,223 +1295,87 @@ let nutrientColHeaders: Record<string, any> = {
   "Mono:Poly": []
   */
 
-function parseNutrientResults(
-  row: any,
-  units?: Record<string, string>
-): NutrientResult[] {
-  return Object.keys(row)
-    .map((key) => key.trim())
-    .filter((key) => key in nutrientColHeaders)
-    .filter((key) => !isNaN(row[key]))
-    .map((key) => key.replace(/\n/g, ' '))
-    .map((key) => key.replace(/ +/g, ' ').trim())
-    .map((key) => {
-      let unitMatches = key.match(/\[([^\]]+)\]/g);
-      let unitStr = '';
-      if (unitMatches && unitMatches.length > 0) {
-        unitStr = unitMatches[unitMatches.length - 1] || '';
-        unitStr.replace('[', '').replace(']', '');
-      }
-      return {
-        Element: nutrientColHeaders[key].Element,
-        // prioritize user-specified units (from "UNITS" row indicator) over
-        // matcher-based units, else "none".
-        ValueUnit:
-          unitStr || units![key] || nutrientColHeaders[key].ValueUnit || 'none',
-        Value: +row[key],
-      };
-    });
+interface RecognizedCsv {
+  name: string;
+  headerString: string;
+  units: UnitsOverrides;
 }
 
-// sheetname is just for debugging
-function parseDepth(row: any, units?: any, sheetname?: string): Depth {
-  let obj: any = {
-    DepthUnit: 'cm', //default to cm
-  };
-
-  // Get columns with the word depth
-  const copy = keysToUpperNoSpacesDashesOrUnderscores(row);
-  const unitsCopy = keysToUpperNoSpacesDashesOrUnderscores(units);
-  let depthKey = Object.keys(copy).find((key) => key.match(/DEPTH/));
-  if (depthKey) {
-    let value = copy[depthKey].toString();
-    if (unitsCopy[depthKey]) obj.DepthUnit = unitsCopy[depthKey];
-
-    if (value.match(' to ')) {
-      obj.StartingDepth = +value.split(' to ')[0];
-      obj.EndingDepth = +value.split(' to ')[1];
-      obj.Name = value;
-    } else if (value.match(' - ')) {
-      obj.StartingDepth = +value.split(' - ')[0];
-      obj.EndingDepth = +value.split(' - ')[1];
-      obj.Name = value;
-    } else {
-      obj.StartingDepth = +value;
-      obj.Name = value;
-    }
-  }
-
-  if (row['B Depth']) obj.StartingDepth = +row['B Depth'];
-  if (row['B Depth']) obj.Name = '' + row['B Depth'];
-  if (units['B Depth']) obj.DepthUnit = units['B Depth']; // Assume same for both top and bottom
-  if (row['E Depth']) obj.EndingDepth = +row['E Depth'];
-
-  //Insufficient data found
-  if (typeof obj.StartingDepth === 'undefined') {
-    warn(
-      'No depth data was found in sheetname',
-      sheetname,
-      '. Falling back to default depth object.'
-    );
-    trace('Row without depth was: ', row);
-    return {
-      StartingDepth: 0,
-      EndingDepth: 8,
-      DepthUnit: 'in',
-      Name: 'Unknown Depth',
-      ColumnDepth: 8,
-    };
-  }
-
-  //Handle single depth value
-  obj.EndingDepth = obj.EndingDepth || obj.StartingDepth;
-
-  //Now compute column depth
-  obj.ColumnDepth = Math.abs(obj.EndingDepth - obj.StartingDepth);
-
-  return obj;
+// Add a set of CSV headers to the recognized set. Include all headers as they
+// appear in the CSV to the 'units' object, even those without units so that it
+// is properly recognized.
+export function addRecognizedCsvs({
+  name,
+  units
+}: {
+  name: string,
+  units: UnitsOverrides
+}) {
+  let columnArray = Object.keys(units).sort();
+  let headerString = md5(JSON.stringify(columnArray));
+  recognizedCsvs.set(headerString, {
+    name,
+    units,
+    headerString,
+  });
 }
 
-function parseReportID(row: any) {
-  if (row['REPORTNUM']) {
-    // A&L West Semios
-    return row['REPORTNUM'].toString().trim();
-  }
-  return '';
-}
-
-// SampleNumber is not the same as SampleID: SampleID is what the soil sampler called it,
-// SampleNumber is what the Lab calls that sample
-function parseSampleNumber(row: any) {
-  if (row['LABNUM']) {
-    // A&L West Semios
-    return row['LABNUM'].toString().trim();
-  }
-  return '';
-}
-
-export type ToCsvOpts = {
-  ssurgo?: boolean;
-};
-export function toCsv(input: ModusResult | ModusResult[], opts?: ToCsvOpts) {
-  if (opts?.ssurgo) {
-    warn('SSURGO option coming soon for CSV output');
-  }
-
-  let data = [];
-
-  if (Array.isArray(input)) {
-    data = input.map((mr: ModusResult) => toCsvObject(mr)).flat(1);
-  } else {
-    data = toCsvObject(input);
-  }
-  let sheet = xlsx.utils.json_to_sheet(data);
-
-  return {
-    wb: {
-      Sheets: { Sheet1: sheet },
-      SheetNames: ['Sheet1'],
-    } as xlsx.WorkBook,
-    str: xlsx.utils.sheet_to_csv(sheet),
-  };
-}
-
-function toCsvObject(input: ModusResult) {
-  return input
-    .Events!.map((event) => {
-      let eventMeta = {
-        EventDate: event.EventMetaData!.EventDate,
-        EventType: 'Soil', // Hard-coded for now. This is all soil data at the moment
-      };
-
-      let allReports = toReportsObj(event.LabMetaData!.Reports);
-
-      let allDepthRefs = toDepthRefsObj(event.EventSamples!.Soil!.DepthRefs);
-
-      return event.EventSamples!.Soil!.SoilSamples!.map((sample) => {
-        let sampleMeta = toSampleMetaObj(sample.SampleMetaData, allReports);
-
-        return sample.Depths!.map((depth) => {
-          let nutrients = toNutrientResultsObj(depth);
-
-          return {
-            ...eventMeta,
-            ...sampleMeta,
-            ...allDepthRefs[depth.DepthID!],
-            ...nutrients,
-          };
-        });
-      });
-    })
-    .flat(3);
-}
-
-function toSampleMetaObj(sampleMeta: any, allReports: any) {
-  const base = {
-    SampleNumber: sampleMeta.SampleNumber,
-    ...allReports[sampleMeta.ReportID],
-    FMISSampleID: sampleMeta.FMISSampleID,
-  };
-  let ll = sampleMeta?.Geometry?.wkt
-    ?.replace('POINT(', '')
-    .replace(')', '')
-    .trim()
-    .split(' ');
-  if (!ll) return base;
-  return {
-    ...base,
-    Latitude: +ll[0],
-    Longitude: +ll[1],
-  };
-}
-
-function toDepthRefsObj(depthRefs: any): any {
-  return Object.fromEntries(
-    depthRefs.map((dr: Depth) => [
-      dr.DepthID,
-      {
-        DepthID: '' + dr.DepthID,
-        [`StartingDepth [${dr.DepthUnit}]`]: dr.StartingDepth,
-        [`EndingDepth [${dr.DepthUnit}]`]: dr.EndingDepth,
-        [`ColumnDepth [${dr.DepthUnit}]`]: dr.ColumnDepth,
-      },
-    ])
-  );
-}
-
-function toReportsObj(reports: any): any {
-  return Object.fromEntries(
-    reports.map((r: any) => [
-      r.ReportID,
-      {
-        FileDescription: r.FileDescription,
-        ReportID: r.ReportID,
-      },
-    ])
-  );
-}
-
-function toNutrientResultsObj(sampleDepth: any) {
-  return Object.fromEntries(
-    sampleDepth.NutrientResults.map((nr: NutrientResult) => [
-      `${nr.Element} [${nr.ValueUnit}]`,
-      nr.Value,
-    ])
-  );
-}
-
-type ModusCsvRow = {
-  ReportID: string;
-};
-
-type ModusCsv = ModusCsvRow[];
+recognizedCsvs.set('2b44b45044b9f9be12b25cb30472a47f', {
+  name: 'A & L Labs West',
+  headerString: '2b44b45044b9f9be12b25cb30472a47f',
+  units: {
+    'CLIENT': '',
+    'DATESUB': '',
+    'TIMESUB': '',
+    'GROWER': '',
+    'PERSON': '',
+    'SAMPLEID': '',
+    'CROP': '',
+    'DATESAMPL': '',
+    'REPORTNUM': '',
+    'LABNUM': '',
+    'TYPE': '',
+    'OM': '%',
+    'ENR': 'lb/ac',
+    'P1': 'ppm',
+    'P2': 'ppm',
+    'HCO3_P': 'ppm',
+    'PH': '',
+    'K': 'ppm',
+    'MG': 'ppm',
+    'CA': 'ppm',
+    'NA': 'ppm',
+    'BUFFER_PH': '',
+    'H': 'meq/100g',
+    'CEC': 'meq/100g',
+    'K_PCT': '%',
+    'MG_PCT': '%',
+    'CA_PCT': '%',
+    'H_PCT': '%',
+    'NA_PCT': '%',
+    'NO3_N': 'ppm',
+    'S': 'ppm',
+    'ZN': 'ppm',
+    'MN': 'ppm',
+    'FE': 'ppm',
+    'CU': 'ppm',
+    'B': 'ppm',
+    'EX__LIME': '',
+    'S__SALTS': 'mmho/cm',
+    'CL': 'ppm',
+    'MO': 'ppm',
+    'AL': 'ppm',
+    'CA_SAT': 'meq/100g',
+    'MG_SAT': 'meq/100g',
+    'NA_SAT': 'meq/100g',
+    'B_SAT': 'meq/100g',
+    'ESP': '%',
+    'NH4': 'ppm',
+    'SO4_S': 'ppm',
+    'SAR': 'ppm',
+    'EC': 'dS/m',
+    'SAT_PCT': '%',
+    'CO3': 'ppm',
+    'HCO3': 'ppm',
+  },
+});
