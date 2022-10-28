@@ -1222,7 +1222,6 @@ export let nutrientColHeaders: Record<string, any> = {
     Element: 'Al', // Aluminum
     ValueUnit: 'ppm',
   },
-
   'BS-B': {
     Element: 'BS-B', // Added this. Modus does not have this element
     ValueUnit: 'meq/100g',

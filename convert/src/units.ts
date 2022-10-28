@@ -21,9 +21,10 @@ const needMolecularWeight = 'The molecular weight of the substance represented b
 // 3) Need some way to convert back from UCUM units to those that we'd prefer to
 //    have in our MODUS outputs. E.g., [lb_av]/[acr_us] seems a bit ugly, so we
 //    could map it back to lb/ac if we'd like.
+//    TODO: make this take a NR or NR[] and check first.
 export function convertUnits(
   from: NutrientResult[],
-  to?: UnitsOverrides
+  to?: UnitsOverrides  //make this thing called a Unit and export that type
 ): NutrientResult[] {
   to = to || standardUnits;
 
@@ -87,7 +88,7 @@ export const standardUnits : UnitsOverrides = {
   'B-pH': '',
   'H': 'meq/100g',
   'CEC': 'meq/100g',
-  'BS%-K': '%',
+  'BS%-K': '%', //Get rid of these (%). Just stick with one set of units
   'BS%-Mg': '%',
   'BS%-Ca': '%',
   'BS%-H': '%',
@@ -119,6 +120,8 @@ export const standardUnits : UnitsOverrides = {
   'HCO3': '[ppm]',
 }
 
+// TODO: export this as to and from UCUM. Just make the from UCUM take the first
+// result and order them as such.
 // Some unit 'conversions' are in name only; Their values are equivalent.
 // Also prepare the units for use in UCUM
 const aliases : Record<string, string> = {

@@ -10,6 +10,7 @@ import toCsvTests from '../toCsv.test.js';
 import toJsonTests from '../tojson.test.js';
 import htmlTests from './html.test.js';
 import fileTest from './file.test.js';
+import unitsTest from '../units.test.js';
 
 const info = debug('@modusjs/xml#test-node:info');
 const { red } = chalk;
@@ -44,6 +45,9 @@ const { red } = chalk;
 
     info('testing node file');
     await fileTest(mainlib);
+
+    info('testing units');
+    await unitsTest(mainlib);
 
     info('All tests passed!');
   } catch (e: any) {

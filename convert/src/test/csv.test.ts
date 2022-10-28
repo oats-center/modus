@@ -1,12 +1,11 @@
 import debug from 'debug';
-import fs from 'fs';
 import chalk from 'chalk';
 // Only import the type here: use the lib passed to you from node or browser in run()
 import type * as MainLib from '../index.js';
 import * as mainLib from '../index.js';
 
 import xlsx_sample1 from '@modusjs/examples/dist/tomkat-historic/tomkat_source_data_xlsx.js';
-//import csv_sample2 from '@modusjs/examples/dist/a_l_west/sample2.js';
+import csv_sample2 from '@modusjs/examples/dist/a_l_west/sample2_csv.js';
 
 const trace = debug('@modusjs/convert#test-csv:trace');
 const info = debug('@modusjs/convert#test-csv:info');
@@ -31,7 +30,6 @@ export default async function run(lib: typeof MainLib) {
 
   test('Should recognize CSV by headers and apply units.');
   //TODO: should I be able to pull this from @modusjs examples?
-  let file = fs.readFileSync('./examples/examples/a_l_west/sample2.csv', {encoding: 'utf8'})
   mainLib.csv.addRecognizedCsvs({
     name:'Test Units',
     units: {
@@ -90,7 +88,7 @@ export default async function run(lib: typeof MainLib) {
       'HCO3': 'ppm',
     }
   });
-  let result = lib.csv.parse({str: file, format: 'tomkat'});
+  let result = lib.csv.parse({base64: csv_sample2, format: 'tomkat'});
   let samples = result[0]!.Events?.[0]?.EventSamples?.Soil?.SoilSamples?.[0]?.Depths?.[0]?.NutrientResults;
   let om = (samples || []).filter(nr => nr.Element === 'OM');
   if (om?.[0]?.ValueUnit !== 'TEST UNITS') {

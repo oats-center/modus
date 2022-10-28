@@ -37,5 +37,3 @@ export default async function run(lib: typeof MainLib) {
     throw new Error(`The following units were unrecognized: ${badUnits}`);
   }
 }
-
-//await run(mainlib);
