@@ -24,12 +24,6 @@ export const recognizedCsvs = new Map<string,RecognizedCsv>();
 // Ppssible input parameters for xlsx/csv parsing:
 // Either give an already-parsed workbook, an entire CSV as a string, or an arraybuffer, or a base64 string
 // Default CSV/XLSX format is tomkat
-
-// TODO: Consider changing input to be a single thing, then a secondary key to
-// specify the type as 'string' | 'array' | 'base64'. We can try each of those
-// and fail if none are recognized perhaps
-// Also, should we clean up things so that everything isn't called tomkat? Also,
-// we claim to support 'generic', but the switch statement doesn't handle it.
 export function parse({
   wb,
   str,
@@ -288,9 +282,9 @@ function isPointMetadataSheetname(name: string) {
     .match('POINTMETA');
 }
 
-export type UnitsOverrides = { [colname: string]: string };
+export type Units = { [colname: string]: string };
 function extractUnitOverrides(rows: any[]) {
-  const overrides: UnitsOverrides = {};
+  const overrides: Units = {};
   const unitrows = rows.filter(isUnitRow);
   // There really should only be one units row
   for (const r of unitrows) {
@@ -1297,7 +1291,7 @@ export let nutrientColHeaders: Record<string, any> = {
 interface RecognizedCsv {
   name: string;
   headerString: string;
-  units: UnitsOverrides;
+  units: Units;
 }
 
 // Add a set of CSV headers to the recognized set. Include all headers as they
@@ -1308,7 +1302,7 @@ export function addRecognizedCsvs({
   units
 }: {
   name: string,
-  units: UnitsOverrides
+  units: Units
 }) {
   let columnArray = Object.keys(units).sort();
   let headerString = md5(JSON.stringify(columnArray));

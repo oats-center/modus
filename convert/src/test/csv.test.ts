@@ -95,8 +95,5 @@ export default async function run(lib: typeof MainLib) {
     throw new Error(`Units were not recognized from the csv headers. OM Element should have units == 'TEST UNITS'`);
   }
 
-
   test('All parse tests passed');
 }
-
-await run(mainLib)
