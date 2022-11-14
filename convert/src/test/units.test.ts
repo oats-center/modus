@@ -36,4 +36,33 @@ export default async function run(lib: typeof MainLib) {
   if (badUnits.length > 0) {
     throw new Error(`The following units were unrecognized: ${badUnits}`);
   }
+
+  let allUnits = [
+    'mg/kg',
+    'ppm',
+    'meq/100g',
+    'cmol/kg',
+    'lb/ac/day',
+    'kg/ac/day',
+    '%',
+    'mg/L',
+    'ug/kg',
+    'kg/ha',
+    'lb/ac/day',
+    'million lb/ac',
+    'million lb/ac depth',
+    'mmhos/cm',
+    'dS/m',
+    'g/kg',
+    'in/depth',
+    'in/ft',
+    'tons/ac',
+    'kPa',
+    'MPa',
+    '% BS',
+    '% CEC',
+    'none',
+    'standard unit',
+    's.u.',
+  ]
 }
