@@ -2,7 +2,7 @@
 // with suggested output filenames.  Just give each input file a filename whose extension
 // reflects its type, and
 import debug from 'debug';
-import type { NutrientResult, nutrientColHeaders, UnitsOverrides } from './csv.js';
+import type { NutrientResult, nutrientColHeaders, Units } from './csv.js';
 // @ts-ignore
 import ucum from '@lhncbc/ucum-lhc';
 
@@ -23,19 +23,19 @@ const needMolecularWeight = 'The molecular weight of the substance represented b
 //    could map it back to lb/ac if we'd like.
 //    TODO: make this take a NR or NR[] and check first.
 export function convertUnits(
-  from: NutrientResult[],
-  to?: UnitsOverrides  //make this thing called a Unit and export that type
+  from: NutrientResult | NutrientResult[],
+  to?: Units
 ): NutrientResult[] {
   to = to || standardUnits;
-
+  from = Array.isArray(from) ? from : [from];
   from = validateUnits(from);
   let toNr = validateUnits(Object.entries(to).map(([Element, ValueUnit]) => ({Element, ValueUnit, Value: undefined})));
   to = Object.fromEntries(toNr.map((nr) => ([nr.Element, nr.ValueUnit])));
 
-  return from.map((nr) => {
+  from = from.map((nr) => {
     let toUnit = to?.[nr.Element];
     if (!toUnit) return nr
-    trace(`Attempting to convert units for Element ${nr.Element} from ${nr.ValueUnit} to ${toUnit}; Value: ${nr.Value}`);
+      trace(`Attempting to convert units for Element ${nr.Element} from ${nr.ValueUnit} to ${toUnit}; Value: ${nr.Value}`);
     let result = ucum.UcumLhcUtils.getInstance().convertUnitTo(nr.ValueUnit, nr.Value, toUnit, false);
     if (result.status !== 'succeeded') {
       if (result.msg.some((str: string) => str.includes(needMolecularWeight))) {
@@ -55,6 +55,8 @@ export function convertUnits(
       Value: result.toVal,
     }
   });
+
+  return from;
 }
 
 type UnitSpec = {
@@ -74,7 +76,7 @@ export type UnitsSpec = {
 // A & L Labs csvs have headers for K, K_PCT and K_SAT, having units of ppm, %,
 // and meq/100g, respectively. We can't just map both K_PCT and K_SAT to the
 // element BS-K with units of %.
-export const standardUnits : UnitsOverrides = {
+export const standardUnits : Units = {
   'OM': '%',
   'ENR': 'lb/ac',
   'P (Bray P1 1:10)': '[ppm]',
