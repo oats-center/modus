@@ -10,7 +10,7 @@ import htmlTests from './html.test.js';
 import fileTests from './file.test.js';
 import unitsTests from '../units.test.js';
 
-const info = debug('@modusjs/convert-browser:info');
+const info = debug('@modusjs/convert#test-browser:info');
 
 // Set your browser debugging level in localStorage.debug
 localStorage.debug = '*';

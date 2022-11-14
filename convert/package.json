@@ -53,8 +53,10 @@
     "live-server": "^1.2.2",
     "nodemon": "^2.0.20",
     "rollup": "^3.2.3",
+    "rollup-plugin-dts-bundle": "^1.0.0",
     "rollup-plugin-pnp-resolve": "^2.0.0",
     "rollup-plugin-terser": "^7.0.2",
+    "rollup-plugin-typescript2": "^0.34.1",
     "typescript": "^4.7.4"
   },
   "dependencies": {

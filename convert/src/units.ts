@@ -3,8 +3,10 @@
 // reflects its type, and
 import debug from 'debug';
 import type { NutrientResult, nutrientColHeaders, Units } from './csv.js';
-// @ts-ignore
+
 import ucum from '@lhncbc/ucum-lhc';
+
+export { Units };
 
 const error = debug('@modusjs/convert#tojson:error');
 const warn = debug('@modusjs/convert#tojson:error');
@@ -28,7 +30,7 @@ export function convertUnits(
 ): NutrientResult[] {
   to = to || standardUnits;
   from = Array.isArray(from) ? from : [from];
-  from = validateUnits(from);
+  from = validateUnits(from).filter(f => !!f);
   let toNr = validateUnits(Object.entries(to).map(([Element, ValueUnit]) => ({Element, ValueUnit, Value: undefined})));
   to = Object.fromEntries(toNr.map((nr) => ([nr.Element, nr.ValueUnit])));
 
@@ -36,11 +38,11 @@ export function convertUnits(
     let toUnit = to?.[nr.Element];
     if (!toUnit) return nr
       trace(`Attempting to convert units for Element ${nr.Element} from ${nr.ValueUnit} to ${toUnit}; Value: ${nr.Value}`);
-    let result = ucum.UcumLhcUtils.getInstance().convertUnitTo(nr.ValueUnit, nr.Value, toUnit, false);
+    let result = ucum.UcumLhcUtils.getInstance().convertUnitTo(nr.ValueUnit, nr.Value || 0, toUnit, false);
     if (result.status !== 'succeeded') {
       if (result.msg.some((str: string) => str.includes(needMolecularWeight))) {
         trace(`Molecular weight was needed for Element ${nr.Element}. Using value: ${molecularWeights[nr.Element].adjusted}`);
-        result = ucum.UcumLhcUtils.getInstance().convertUnitTo(nr.ValueUnit, nr.Value, toUnit, false, molecularWeights[nr.Element].adjusted);
+        result = ucum.UcumLhcUtils.getInstance().convertUnitTo(nr.ValueUnit, nr.Value || 0, toUnit, false, molecularWeights[nr.Element].adjusted);
       } else {
         warn(`Unit conversion for element ${nr.Element} failed with error: ${result.msg}`);
         warn(`Failed unit conversion for element [${nr.Element}]: input units: [${nr.ValueUnit}]; output units: [${toUnit}]. Falling back to input value and units.`);
@@ -52,7 +54,7 @@ export function convertUnits(
     return {
       Element: nr.Element,
       ValueUnit: toUnit,
-      Value: result.toVal,
+      Value: result.toVal || 0,
     }
   });
 
@@ -136,7 +138,7 @@ const aliases : Record<string, string> = {
   'meq/100g': 'meq/(100.g)',
 }
 
-function validateUnits(nrs: NutrientResult[]): NutrientResult[] {
+export function validateUnits(nrs: NutrientResult[]): NutrientResult[] {
   // Take the ValueUnit and adjust it to be compatible with UCUM
   return nrs?.filter((nr) => !(nr.ValueUnit === '' || nr.ValueUnit === undefined || nr.ValueUnit === 'none'))
   .map((nr) => {

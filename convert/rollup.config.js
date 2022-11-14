@@ -1,8 +1,10 @@
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
-//import { terser } from 'rollup-plugin-terser';
+import { terser } from 'rollup-plugin-terser';
 import json from '@rollup/plugin-json';
 import { defineConfig } from 'rollup';
+import dtsBundle from 'rollup-plugin-dts-bundle';
+import typescript from 'rollup-plugin-typescript2';
 
 const plugins = [
   resolve({
@@ -11,7 +13,7 @@ const plugins = [
   }),
   commonjs(),
   json(),
-//  terser(),
+  terser(),
 ];
 
 const watch = {
@@ -27,7 +29,17 @@ const watch = {
 export default defineConfig([
   {
     input: 'dist-browser/browser/index.js',
-    plugins,
+    plugins: [
+      ...plugins,
+      //typescript(),
+      dtsBundle({
+        bundle: { 
+          name: '@modusjs/convert',
+          main: 'dist-browser/index.d.ts',
+          out: 'bundle.d.ts',
+        },
+      }),
+    ],
     watch,
     output: {
       file: 'dist-browser/bundle.mjs',

@@ -1,34 +1,44 @@
-process.env.NODE_TLS_REJECT_UNAUTHORIZED='0';
+//process.env.NODE_TLS_REJECT_UNAUTHORIZED='0';
 import { useState, DragEventHandler } from 'react';
-import {
-  file as convertFile,
-} from '@modusjs/convert/dist-browser/browser/index.js';
 import debug from 'debug';
 import md5 from 'md5';
 import './App.css';
-import { JsonObject, connect } from '@oada/client';
+import { connect } from '@oada/client';
 import { tree } from './trellisTree';
-import type { ModusResult } from '@modusjs/convert/dist-browser/browser/index.js';
+// @ts-ignore
+import { file as convertFile, units, ModusResult } from '@modusjs/convert/dist-browser/bundle.mjs';
+import Messages, { Message } from './Messages.js';
 
 localStorage.debug = '*';
 
 type Output = 'json' | 'csv' | 'trellis';
 
+const trace = debug('@modusjs/app#App:trace');
 const info = debug('@modusjs/app#App:info');
 const error = debug('@modusjs/app#App:error');
 const warn = debug('@modusjs/app#App:warn');
 
+const all_messages: Message[] = [];
+
 export default function App() {
+  const [ messages, setMessages ] = useState<Message[]>([]);
   const [ output, setOutput ] = useState<Output>('json');
   const [ domain, setTrellisDomain] = useState<string>('https://localhost');
   const [ token, setTrellisToken] = useState<string>('');
   const [ inzone, setInzone ] = useState<boolean>(false);
-  const [ isSupported, setIsSupported ] = useState<boolean>(false);
+
+  async function message(m: Message | string) {
+    if (typeof m === 'string') m = { type: 'good', msg: m };
+    trace('Adding message', m, 'to messages', messages);
+    all_messages.push(m);
+    setMessages(all_messages);
+  }
 
   async function toTrellis ({ domain, token, results } :
     { domain: string, token: string, results: ModusResult[] }): Promise<void> {
     try {
       const oada = await connect({ domain, token });
+      message(`Connected to your Trellis at ${domain}`);
       info('Successfully connected to trellis');
       for await (const {modus: data} of results) {
         let hash = md5(serializeJSON(data));
@@ -46,6 +56,7 @@ export default function App() {
           })
         }
       }
+      message(`Successfully saved ${results.length} result${results.length === 1 ? '' : 's'} to your Trellis.`);
       info('Successfully wrote results to trellis');
     } catch(err) {
       console.error(`toTrellis Errored: ${err}`);
@@ -67,6 +78,7 @@ export default function App() {
 
       case 'drop':
         info('file dropped, evt = ', evt);
+        message('Reading file...');
         const files = [ ...evt.dataTransfer.files ]; // It is dumb that I have to do this
         const all_file_results = await Promise.all(files.map(async f => {
           try {
@@ -76,7 +88,10 @@ export default function App() {
             return [];
           }
         }));
+        message('Converting...');
         const modus_results = all_file_results.reduce((acc, arr) => [ ...acc, ...arr], []);
+        message(`Successfully converted ${modus_results.length} result${modus_results.length === 1 ? '' : 's'} to Modus`);
+
         info('results: ', modus_results);
         info('Saving',output,' type from results');
         if (output === 'trellis') {
@@ -88,6 +103,7 @@ export default function App() {
         } else {
           await convertFile.save({ modus: modus_results, outputtype: output });
           info('File successfully saved');
+          message('Conversion result saved.');
         }
       break;
       }
@@ -148,6 +164,8 @@ export default function App() {
         &nbsp;
       </div>
       </div>}
+      
+      <Messages messages={messages} />
 
       <div className="dropzone-container">
         <div
@@ -164,7 +182,8 @@ export default function App() {
 
       <div className="footer">
         <hr />
-        Please note that no data leaves your browser. Your original and
+        Please note that no data leaves your browser unless you choose to send the
+        output to your own Trellis. Your original and
         converted data never leave your computer.
         <hr />
         Thanks to the &nbsp;

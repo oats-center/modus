@@ -130,12 +130,13 @@ function parseTomKat({ wb }: { wb: xlsx.WorkBook }): ModusResult[] {
     let datecol = colnames
       .sort()
       .find((name) => name.toUpperCase().match(/DATE/));
-    if (colnames.find((c) => c === 'DATESUB')) {
+    if (colnames.find((c) => c.match(/DATESUB/))) {
+      info(`Found DATESUB column, using that for date in sheet ${sheetname}. wb = `, wb);
       datecol = 'DATESUB'; // A&L West Semios
     }
     //trace('datecol = ', datecol, ', colnames uppercase = ', colnames.map(c => c.toUpperCase()));
     if (!datecol) {
-      error('No date column in sheet', sheetname);
+      error('No date column in sheet', sheetname, ', columns are:', colnames);
       throw new Error(
         `Could not find a column containing 'date' in the name to use as the date in sheet ${sheetname}.  A date is required.`
       );
@@ -638,15 +639,15 @@ export let nutrientColHeaders: Record<string, any> = {
   },
   'Olsen P ppm P': {
     Element: 'P (Olsen)',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'P (Olsen)': {
     Element: 'P (Olsen)',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'Bray P-1 ppm P': {
     Element: 'P (Bray P1 1:10)',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'Olsen P': {
     Element: 'P (Olsen)',
@@ -654,107 +655,107 @@ export let nutrientColHeaders: Record<string, any> = {
   },
   'P phosphorus': {
     Element: 'P',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'P': {
     Element: 'P',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'P (Bray P1 1:10)': {
     Element: 'P',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'Pb lead': {
     Element: 'Pb',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'Pb': {
     Element: 'Pb',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'Potassium ppm K': {
     Element: 'K',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'K': {
     Element: 'K',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'Potassium': {
     Element: 'K',
-    ValueUnit: 'cmol(+)/kg',
+    ValueUnit: 'cmol/kg',
   },
   'K potassium': {
     Element: 'K',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'Ca': {
     Element: 'Ca',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'Calcium ppm Ca': {
     Element: 'Ca',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'Calcium': {
     Element: 'Ca',
-    ValueUnit: 'cmol(+)/kg',
+    ValueUnit: 'cmol/kg',
   },
   'Ca calcium': {
     Element: 'Ca',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'Cd cadmium': {
     Element: 'Cd',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'Cd': {
     Element: 'Cd',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'Cr chromium': {
     Element: 'Cr',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'Cr': {
     Element: 'Cr',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'Magnesium ppm Mg': {
     Element: 'Mg',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'Mg': {
     Element: 'Mg',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'Magnesium': {
     Element: 'Mg',
-    ValueUnit: 'cmol(+)/kg', //elements such as this one that don't indicate base
+    ValueUnit: 'cmol/kg', //elements such as this one that don't indicate base
   },                         //saturation are problematic. Should probably be ppm
   'Mg magnesium': {          //unless we know it to be cmol/kg
     Element: 'Mg',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'Mo': {
     Element: 'Mo',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'Mo molybdenum': {
     Element: 'Mo',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'CEC/Sum of Cations me/100g': {
     Element: 'CEC',
-    ValueUnit: 'Sum of Cations me/100g',
+    ValueUnit: 'meq/(100.g)',
   },
   'CEC': {
     Element: 'CEC',
-    ValueUnit: 'cmol(+)/kg',
+    ValueUnit: 'cmol/kg',
   },
   'CEC (Estimated)': {
     Element: 'CEC',
-    ValueUnit: 'cmol(+)/kg',
+    ValueUnit: 'cmol/kg',
   },
   '%Ca Sat': {
     Element: 'BS%-Ca',
@@ -766,11 +767,11 @@ export let nutrientColHeaders: Record<string, any> = {
   },
   'BS-Ca': {
     Element: 'BS-Ca',
-    ValueUnit: 'meq/100g',
+    ValueUnit: 'meq/(100.g)',
   },
   'CA_SAT': {
     Element: 'BS-Ca', // Base Saturation - Calcium
-    ValueUnit: 'meq/100g',
+    ValueUnit: 'meq/(100.g)',
   },
   'CA_PCT': {
     Element: 'BS%-Ca',
@@ -782,7 +783,7 @@ export let nutrientColHeaders: Record<string, any> = {
   },
   'BS-Mg': {
     Element: 'BS-Mg',
-    ValueUnit: 'meq/100g',
+    ValueUnit: 'meq/(100.g)',
   },
   'MG_PCT': {
     Element: 'BS%-Mg',
@@ -790,7 +791,7 @@ export let nutrientColHeaders: Record<string, any> = {
   },
   'MG_SAT': {
     Element: 'BS-Mg',
-    ValueUnit: 'meq/100g',
+    ValueUnit: 'meq/(100.g)',
   },
   '%Mg Sat': {
     Element: 'BS%-Mg',
@@ -802,7 +803,7 @@ export let nutrientColHeaders: Record<string, any> = {
   },
   'BS-K': {
     Element: 'BS-K',
-    ValueUnit: 'meq/100g',
+    ValueUnit: 'meq/(100.g)',
   },
   'K_PCT': {
     Element: 'BS%-K',
@@ -810,7 +811,7 @@ export let nutrientColHeaders: Record<string, any> = {
   },
   'K_SAT': {
     Element: 'BS-K',
-    ValueUnit: 'meq/100g',
+    ValueUnit: 'meq/(100.g)',
   },
   '%K Sat': {
     Element: 'BS%-K',
@@ -822,7 +823,7 @@ export let nutrientColHeaders: Record<string, any> = {
   },
   'BS-Na': {
     Element: 'BS-Na',
-    ValueUnit: 'meq/100g',
+    ValueUnit: 'meq/(100.g)',
   },
   'NA_PCT': {
     Element: 'BS%-Na',
@@ -830,7 +831,7 @@ export let nutrientColHeaders: Record<string, any> = {
   },
   'NA_SAT': {
     Element: 'BS-Na',
-    ValueUnit: 'meq/100g',
+    ValueUnit: 'meq/(100.g)',
   },
   '%Na Sat': {
     Element: 'BS%-Na',
@@ -846,7 +847,7 @@ export let nutrientColHeaders: Record<string, any> = {
   },
   'BS-H': {
     Element: 'BS-H',
-    ValueUnit: 'meq/100g',
+    ValueUnit: 'meq/(100.g)',
   },
   'H_PCT': {
     Element: 'BS%-H',
@@ -854,87 +855,87 @@ export let nutrientColHeaders: Record<string, any> = {
   },
   'H_SAT': {
     Element: 'BS-H',
-    ValueUnit: 'meq/100g',
+    ValueUnit: 'meq/(100.g)',
   },
   'Sulfate-S ppm S': {
     Element: 'SO4-S',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'SO4-S': {
     Element: 'SO4-S',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'S sulfur': {
     Element: 'S',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'S': {
     Element: 'S',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'Zinc ppm Zn': {
     Element: 'Zn',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'Zn': {
     Element: 'Zn',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'Zn zinc': {
     Element: 'Zn',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'Manganese ppm Mn': {
     Element: 'Mn',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'Mn': {
     Element: 'Mn',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'Mn manganese': {
     Element: 'Mn',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'Boron ppm B': {
     Element: 'B',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'B': {
     Element: 'B',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'B boron': {
     Element: 'B',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'Iron ppm Fe': {
     Element: 'Fe',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'Iron': {
     Element: 'Fe',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'Fe Iron': {
     Element: 'Fe',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'Fe': {
     Element: 'Fe',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'Cu copper': {
     Element: 'Cu',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'Cu': {
     Element: 'Cu',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'Copper ppm': {
     Element: 'Cu',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'Excess Lime': {
     Element: 'Lime Rec',
@@ -958,79 +959,79 @@ export let nutrientColHeaders: Record<string, any> = {
   },
   'Nitrate-N ppm N': {
     Element: 'NO3-N',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'Nitrate': {
     Element: 'NO3-N',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'NO3-N': {
     Element: 'NO3-N',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'Ni nickel': {
     Element: 'Ni',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'Ni': {
     Element: 'Ni',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'Sodium ppm Na': {
     Element: 'Na',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'Na sodium': {
     Element: 'Na',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'Na': {
     Element: 'Na',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'Sodium': {
     Element: 'Na',
-    ValueUnit: 'cmol(+)/kg',
+    ValueUnit: 'cmol/kg',
   },
   'Aluminium ppm Al': {
     Element: 'Al',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'Al': {
     Element: 'Al',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'Al aluminium': {
     Element: 'Al',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'Aluminium': {
     Element: 'Al',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'As arsenic': {
     Element: 'As',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'As': {
     Element: 'As',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'Chloride ppm Cl': {
     Element: 'Cl',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'Cl': {
     Element: 'Cl',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'Total N ppm': {
     Element: 'TN',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'TN': {
     Element: 'TN',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'Total Nitrogen^': {
     Element: 'TN',
@@ -1038,7 +1039,7 @@ export let nutrientColHeaders: Record<string, any> = {
   },
   'Total P ppm': {
     Element: 'TP',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   '% Sand': {
     Element: 'Sand',
@@ -1084,19 +1085,19 @@ export let nutrientColHeaders: Record<string, any> = {
   },
   'TN (W)': {
     Element: 'TN (W)',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'Water Extractable Total N': {
     Element: 'TN (W)',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'TC (W)': {
     Element: 'TC (W)',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'Water Extractable Total C': {
     Element: 'TC (W)',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'Moisture (Grav)': {
     Element: 'Moisture (Grav)',
@@ -1104,7 +1105,7 @@ export let nutrientColHeaders: Record<string, any> = {
   },
   'TC': {
     Element: 'TC',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
 
   // A&L West CSV (Semios)
@@ -1132,42 +1133,42 @@ export let nutrientColHeaders: Record<string, any> = {
   // 4) I think HCO3_P is the Olsen P test so I mapped it as such
   'ENR': {
     Element: 'ENR',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'P1': {
     Element: 'P (Bray P1 1:10)',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'P (Bray P2 1:10)': {
     Element: 'P (Bray P2 1:10)',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'P2': {
     Element: 'P (Bray P2 1:10)',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'HCO3_P': {
     Element: 'P (Olsen)',//'HCO3 (SP)', // is "P" saturated paste or PPM or %?
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'HCO3': { //Bicarbonate is often tested in soils, but there is a small chance this is another way of saying HCO3_P/Olsen
     Element: 'HCO3',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'PH': {
     Element: 'pH',
   },
   'MG': {
     Element: 'Mg',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'CA': {
     Element: 'Ca',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'NA': {
     Element: 'Na',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'B-Ph': {
     Element: 'B-Ph',
@@ -1177,28 +1178,28 @@ export let nutrientColHeaders: Record<string, any> = {
   },
   'H': {
     Element: 'H',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
 
   'NO3_N': {
     Element: 'NO3-N',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'ZN': {
     Element: 'Zn',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'MN': {
     Element: 'Mn',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'FE': {
     Element: 'Fe',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'CU': {
     Element: 'Cu',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'S__SALTS': {
     Element: 'SS', // "Soluble Salts"
@@ -1206,19 +1207,19 @@ export let nutrientColHeaders: Record<string, any> = {
   },
   'CL': {
     Element: 'Cl',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'MO': {
     Element: 'Mo', // Molybdenum.
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'AL': {
     Element: 'Al', // Aluminum
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'BS-B': {
     Element: 'BS-B', // Added this. Modus does not have this element
-    ValueUnit: 'meq/100g',
+    ValueUnit: 'meq/(100.g)',
   },
   'BS%-B': {
     Element: 'BS%-B', // Added this. Modus does not have this element
@@ -1226,7 +1227,7 @@ export let nutrientColHeaders: Record<string, any> = {
   },
   'B_SAT': {
     Element: 'BS-B', // Base Saturation - Boron?  Modus does not have this element.
-    ValueUnit: 'meq/100g',
+    ValueUnit: 'meq/(100.g)',
   },
   'B_PCT': {
     Element: 'BS%-B', // Base Saturation - Boron?  Modus does not have this element.
@@ -1242,11 +1243,11 @@ export let nutrientColHeaders: Record<string, any> = {
   },
   'NH4': {
     Element: 'NH4-N',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'SO4_S': {
     Element: 'SO4-S',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
   'SAR': {
     Element: 'SAR', // Sodium Adsorption Ratio
@@ -1261,7 +1262,7 @@ export let nutrientColHeaders: Record<string, any> = {
   },
   'CO3': {
     Element: 'CO3',
-    ValueUnit: 'ppm',
+    ValueUnit: '[ppm]',
   },
 
   /* Didn't see these in the official modus element list
