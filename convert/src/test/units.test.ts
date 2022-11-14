@@ -54,6 +54,7 @@ export default async function run(lib: typeof MainLib) {
     throw new Error('ERROR: result of conversion from 1.0 cmol/kg K to ppm is not 391.');
   }
 
+<<<<<<< HEAD
   const pElement = { Element: 'P', Value: 1.0, ValueUnit: 'cmol/kg' };
   test('Testing convertUnits with no "to" but an element name not in standardUnits (P is not standard b/c it needs Bray part)');
   result = lib.units.convertUnits(pElement);
@@ -69,7 +70,36 @@ export default async function run(lib: typeof MainLib) {
   */
   
 
+  let allUnits = [
+    'mg/kg',
+    'ppm',
+    'meq/100g',
+    'cmol/kg',
+    'lb/ac/day',
+    'kg/ac/day',
+    '%',
+    'mg/L',
+    'ug/kg',
+    'kg/ha',
+    'lb/ac/day',
+    'million lb/ac',
+    'million lb/ac depth',
+    'mmhos/cm',
+    'dS/m',
+    'g/kg',
+    'in/depth',
+    'in/ft',
+    'tons/ac',
+    'kPa',
+    'MPa',
+    '% BS',
+    '% CEC',
+    'none',
+    'standard unit',
+    's.u.',
+  ];
 
 
   test('All units tests passed');
+
 }

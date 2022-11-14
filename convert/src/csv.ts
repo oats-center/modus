@@ -1180,7 +1180,6 @@ export let nutrientColHeaders: Record<string, any> = {
     Element: 'H',
     ValueUnit: '[ppm]',
   },
-
   'NO3_N': {
     Element: 'NO3-N',
     ValueUnit: '[ppm]',
