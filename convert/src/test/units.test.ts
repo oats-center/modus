@@ -54,7 +54,6 @@ export default async function run(lib: typeof MainLib) {
     throw new Error('ERROR: result of conversion from 1.0 cmol/kg K to ppm is not 391.');
   }
 
-<<<<<<< HEAD
   const pElement = { Element: 'P', Value: 1.0, ValueUnit: 'cmol/kg' };
   test('Testing convertUnits with no "to" but an element name not in standardUnits (P is not standard b/c it needs Bray part)');
   result = lib.units.convertUnits(pElement);

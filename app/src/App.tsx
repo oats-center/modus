@@ -1,15 +1,17 @@
 //process.env.NODE_TLS_REJECT_UNAUTHORIZED='0';
-import { useState, DragEventHandler } from 'react';
+import { useContext, DragEventHandler } from 'react';
 import debug from 'debug';
 import md5 from 'md5';
 import './App.css';
 import { connect } from '@oada/client';
 import { tree } from './trellisTree';
+import { observer } from 'mobx-react-lite';
+import { context } from './state';
 // @ts-ignore
 import { file as convertFile, units, ModusResult } from '@modusjs/convert/dist-browser/bundle.mjs';
-import Messages, { Message } from './Messages.js';
+import Messages from './Messages';
 
-localStorage.debug = '*';
+//localStorage.debug = '*';
 
 type Output = 'json' | 'csv' | 'trellis';
 
@@ -18,27 +20,14 @@ const info = debug('@modusjs/app#App:info');
 const error = debug('@modusjs/app#App:error');
 const warn = debug('@modusjs/app#App:warn');
 
-const all_messages: Message[] = [];
-
-export default function App() {
-  const [ messages, setMessages ] = useState<Message[]>([]);
-  const [ output, setOutput ] = useState<Output>('json');
-  const [ domain, setTrellisDomain] = useState<string>('https://localhost');
-  const [ token, setTrellisToken] = useState<string>('');
-  const [ inzone, setInzone ] = useState<boolean>(false);
-
-  async function message(m: Message | string) {
-    if (typeof m === 'string') m = { type: 'good', msg: m };
-    trace('Adding message', m, 'to messages', messages);
-    all_messages.push(m);
-    setMessages(all_messages);
-  }
+export default observer(function App() {
+  const { state, actions } = useContext(context); 
 
   async function toTrellis ({ domain, token, results } :
     { domain: string, token: string, results: ModusResult[] }): Promise<void> {
     try {
       const oada = await connect({ domain, token });
-      message(`Connected to your Trellis at ${domain}`);
+      actions.message(`Connected to your Trellis at ${domain}`);
       info('Successfully connected to trellis');
       for await (const {modus: data} of results) {
         let hash = md5(serializeJSON(data));
@@ -56,7 +45,7 @@ export default function App() {
           })
         }
       }
-      message(`Successfully saved ${results.length} result${results.length === 1 ? '' : 's'} to your Trellis.`);
+      actions.message(`Successfully saved ${results.length} result${results.length === 1 ? '' : 's'} to your Trellis.`);
       info('Successfully wrote results to trellis');
     } catch(err) {
       console.error(`toTrellis Errored: ${err}`);
@@ -70,15 +59,15 @@ export default function App() {
     switch(type) {
 
       case 'drag':
-        if (inzone !== inout) {
-          setInzone(inout || false);
+        if (state.inzone !== inout) {
+          actions.inzone(inout || false);
           if (inout) evt.dataTransfer.dropEffect = "copy"; // makes a green plus on mac
         }
       break;
 
       case 'drop':
         info('file dropped, evt = ', evt);
-        message('Reading file...');
+        actions.message('Reading file...');
         const files = [ ...evt.dataTransfer.files ]; // It is dumb that I have to do this
         const all_file_results = await Promise.all(files.map(async f => {
           try {
@@ -88,22 +77,22 @@ export default function App() {
             return [];
           }
         }));
-        message('Converting...');
+        actions.message('Converting...');
         const modus_results = all_file_results.reduce((acc, arr) => [ ...acc, ...arr], []);
-        message(`Successfully converted ${modus_results.length} result${modus_results.length === 1 ? '' : 's'} to Modus`);
+        actions.message(`Successfully converted ${modus_results.length} result${modus_results.length === 1 ? '' : 's'} to Modus`);
 
         info('results: ', modus_results);
-        info('Saving',output,' type from results');
-        if (output === 'trellis') {
+        info('Saving',state.output,' type from results');
+        if (state.output === 'trellis') {
           await toTrellis({
-            domain,
-            token,
+            domain: state.trellis.domain,
+            token: state.trellis.token,
             results: modus_results
           })
         } else {
-          await convertFile.save({ modus: modus_results, outputtype: output });
+          await convertFile.save({ modus: modus_results, outputtype: state.output });
           info('File successfully saved');
-          message('Conversion result saved.');
+          actions.message('Conversion result saved.');
         }
       break;
       }
@@ -131,8 +120,8 @@ export default function App() {
       <div className="output">
         Output Format: &nbsp;&nbsp;
         <select
-          value={output}
-          onChange={(evt) => setOutput(evt.target.value as Output)}
+          value={state.output}
+          onChange={(evt) => actions.output(evt.target.value as Output)}
         >
           <option value="json">Modus JSON</option>
           <option value="csv">CSV</option>
@@ -140,7 +129,7 @@ export default function App() {
         </select>
       </div>
 
-      {output==='trellis' && <div className="oada-connect-container">
+      {state.output==='trellis' && <div className="oada-connect-container">
         <h4>
         Trellis Connection
         </h4>
@@ -148,16 +137,16 @@ export default function App() {
         Domain: &nbsp;&nbsp;
         <input
           type="text"
-          value={domain}
-          onChange={evt => setTrellisDomain(evt.target.value)}
+          value={state.trellis.domain}
+          onChange={evt => actions.trellis({ domain: evt.target.value })}
         />
       </div>
       <div>
         Token: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <input
           type="text"
-          value={token}
-          onChange={evt => setTrellisToken(evt.target.value)}
+          value={state.trellis.token}
+          onChange={evt => actions.trellis({ token: evt.target.value })}
         />
       </div>
       <div>
@@ -165,7 +154,7 @@ export default function App() {
       </div>
       </div>}
       
-      <Messages messages={messages} />
+      <Messages />
 
       <div className="dropzone-container">
         <div
@@ -199,7 +188,7 @@ export default function App() {
       </div>
     </div>
   );
-}
+});
 
 function serializeJSON(obj: any): string {
 

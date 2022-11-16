@@ -37,7 +37,7 @@ export function convertUnits(
   from = from.map((nr) => {
     let toUnit = to?.[nr.Element];
     if (!toUnit) return nr
-      trace(`Attempting to convert units for Element ${nr.Element} from ${nr.ValueUnit} to ${toUnit}; Value: ${nr.Value}`);
+    //trace(`Attempting to convert units for Element ${nr.Element} from ${nr.ValueUnit} to ${toUnit}; Value: ${nr.Value}`);
     let result = ucum.UcumLhcUtils.getInstance().convertUnitTo(nr.ValueUnit, nr.Value || 0, toUnit, false);
     if (result.status !== 'succeeded') {
       if (result.msg.some((str: string) => str.includes(needMolecularWeight))) {
@@ -122,6 +122,7 @@ export const standardUnits : Units = {
   'SAT_PCT': '%',
   'CO3': '[ppm]',
   'HCO3': '[ppm]',
+  'TOC': '%', // Total Organic Carbon
 }
 
 // TODO: export this as to and from UCUM. Just make the from UCUM take the first
@@ -144,7 +145,7 @@ export function validateUnits(nrs: NutrientResult[]): NutrientResult[] {
   .map((nr) => {
     //1. Check for aliases
     if (aliases[nr.ValueUnit]) {
-      info(`Using alias units [${aliases[nr.ValueUnit]}] instead of [${nr.ValueUnit}] for element [${nr.Element}] in order to satisfy the conversion library.`)
+      //trace(`Using alias units [${aliases[nr.ValueUnit]}] instead of [${nr.ValueUnit}] for element [${nr.Element}] in order to satisfy the conversion library.`)
       return {
         Element: nr.Element,
         ValueUnit: aliases[nr.ValueUnit],

@@ -131,7 +131,7 @@ function parseTomKat({ wb }: { wb: xlsx.WorkBook }): ModusResult[] {
       .sort()
       .find((name) => name.toUpperCase().match(/DATE/));
     if (colnames.find((c) => c.match(/DATESUB/))) {
-      info(`Found DATESUB column, using that for date in sheet ${sheetname}. wb = `, wb);
+      trace(`Found DATESUB column, using that for date in sheet ${sheetname}.`);
       datecol = 'DATESUB'; // A&L West Semios
     }
     //trace('datecol = ', datecol, ', colnames uppercase = ', colnames.map(c => c.toUpperCase()));
@@ -210,6 +210,7 @@ function parseTomKat({ wb }: { wb: xlsx.WorkBook }): ModusResult[] {
         // Grab the "depth" for this sample:
         const depth = parseDepth(row, unit_overrides, sheetname); // SAM: need to write this to figure out a Depth object
         const DepthID = '' + ensureDepthInDepthRefs(depth, depthrefs); // mutates depthrefs if missing, returns depthid
+        
         let NutrientResults = parseNutrientResults(row, unit_overrides);
         NutrientResults = convertUnits(NutrientResults);
         const id = parseSampleID(row);
@@ -392,6 +393,43 @@ function parseWKTFromPointMetaOrRow(meta_or_row: any): string {
 
   return `POINT(${long} ${lat})`;
 }
+
+  // There are complex regular expressions to grab nested brackets and parens                                    
+  // such as \[(?>[^][]+|(?<c>)\[|(?<-c>)])+] at https://stackoverflow.com/questions/71769611/regex-to-match-everything-inside-brackets-ignore-nested
+  // but I don't think we need that level of complexity.  We can just search string for first                    
+  // and last occurences of (), and [] chars from start and from end, then just use whatever is in the middle.   
+  // for "stuff (other) [[ppm]]", between "[" and "]" returns "[ppm]" and "()" returns "other"                   
+  function extractBetween(str: string, startChar: string, endChar: string): string {                             
+    const start = str.indexOf(startChar);                                                                        
+    const end = str.lastIndexOf(endChar);                                                                        
+    if (start < 0) return str; // start char not found                                                           
+    if (start > str.length-1) return ''; // start char at end of string                                          
+    if (end < 0) return str.slice(start+1); // end not found, return start through end of string                 
+    return str.slice(start+1,end); // start+1 to avoid including the start/end chars in output                   
+  }                                                                                                              
+  function extractBefore(str: string, startChar: string): string {                                               
+    const start = str.indexOf(startChar);                                                                        
+    if (start < 0) return str; // start char not found                                                           
+    return str.slice(0,start);                                                                                   
+  }                                                                                                              
+  type ColumnHeader = {
+    original: string,
+    element: string,
+    modifier: string,
+    units: string,
+  };
+  function parseColumnHeaderName(original: string): ColumnHeader {
+    original = original
+      .trim()
+      .replace(/\n/g, ' ')
+      .replace(/ +/g, ' ');
+    const element = extractBefore(original, '(') || original;
+    const modifier = extractBetween(original, '(', ')');                                                         
+    const units = extractBetween(original, '[', ']');                                                            
+    return { original, element, modifier, units };
+  }                                                                                                              
+  
+
 
 // units provides a means for coders to override
 function parseNutrientResults(
@@ -1074,6 +1112,10 @@ export let nutrientColHeaders: Record<string, any> = {
   'Bulk Density': {
     Element: 'Bulk Density',
     ValueUnit: 'g/cm3',
+  },
+  'Organic Carbon %': { // Ward, from TomKat data
+    Element: 'TOC',
+    ValueUnit: '%',
   },
   'Total Org Carbon': {
     Element: 'TOC',
