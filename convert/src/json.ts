@@ -48,27 +48,13 @@ export async function toJson(
     const format = file.format || 'tomkat';
     let original_type = typeFromFilename(file.filename);
     if (!original_type) {
-      warn(
-        'WARNING: unable to determine file type from filename',
-        file.filename,
-        '.  Supported types are:',
-        supportedFileTypes,
-        '.  Skipping file.'
-      );
+      warn('WARNING: unable to determine file type from filename',file.filename,'.  Supported types are:',supportedFileTypes,'.  Skipping file.');
       continue;
     }
 
     if (original_type === 'csv' || original_type === 'xlsx') {
       if (!supportedFormats.find((f) => f === format)) {
-        warn(
-          'ERROR: format',
-          format,
-          'is not supported for file',
-          file.filename,
-          '.  Supported formats are: ',
-          supportedFormats,
-          '.  Skipping file.'
-        );
+        warn('ERROR: format', format, 'is not supported for file',file.filename,'.  Supported formats are: ',supportedFormats,'.  Skipping file.');
         continue;
       }
     }
@@ -76,13 +62,7 @@ export async function toJson(
       case 'xlsx':
       case 'zip':
         if (!file.arrbuf && !file.base64) {
-          warn(
-            'Type of',
-            file.filename,
-            'was',
-            original_type,
-            'but that must be an ArrayBuffer or Base64 encoded string.  Skipping.'
-          );
+          warn('Type of',file.filename,'was',original_type,'but that must be an ArrayBuffer or Base64 encoded string.  Skipping.');
           continue;
         }
         break;
@@ -90,11 +70,7 @@ export async function toJson(
       case 'xml':
       case 'json':
         if (!file.str) {
-          warn(
-            'CSV, XML, and JSON input files must be strings, but file',
-            file.filename,
-            'is not.'
-          );
+          warn('CSV, XML, and JSON input files must be strings, but file',file.filename,'is not.');
           continue;
         }
     }

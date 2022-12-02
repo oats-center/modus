@@ -1,23 +1,25 @@
 import './Messages.css';
 import React from 'react';
+import { observer } from 'mobx-react-lite';
 
-export type Message = {
-  type: 'good' | 'bad',
-  msg: string,
-};
+import { context } from './state';
 
-export default function Messages({ messages }: { messages: Message[] }) {
-  if (messages.length < 1) return <React.Fragment/>;
+export default observer(function Messages() {
+  const { state } = React.useContext(context);
+
+  if (state.messages.length < 1) {
+    return <React.Fragment/>;
+  }
   return (
     <div className="messages-container">
-      { messages.map(({type,msg},i) => 
+      { state.messages.slice(0,4).map(({type,msg},i) => 
         <div className={`message message-${type}`} key={`message${i}`}>
           {msg}
         </div> 
       ) }
     </div>
   );
-}
+});
 
 
 
