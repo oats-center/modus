@@ -1,7 +1,6 @@
 export * as xml from './xml.js';
 export * as csv from './csv.js';
 export * as json from './json.js';
-export * as units from './units.js';
 // Promote type to top-level export
 export { ModusResult } from './json.js';
 

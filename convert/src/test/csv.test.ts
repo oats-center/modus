@@ -5,11 +5,10 @@ import type * as MainLib from '../index.js';
 import * as mainLib from '../index.js';
 
 import xlsx_sample1 from '@modusjs/examples/dist/tomkat-historic/tomkat_source_data_xlsx.js';
-import csv_sample2 from '@modusjs/examples/dist/a_l_west/sample2_csv.js';
 
-const trace = debug('@modusjs/convert#test-csv:trace');
+//const trace = debug('@modusjs/convert#test-csv:trace');
 const info = debug('@modusjs/convert#test-csv:info');
-const error = debug('@modusjs/convert#test-csv:error');
+//const error = debug('@modusjs/convert#test-csv:error');
 
 const { green } = chalk;
 const test = (msg: string) => info(green(msg));

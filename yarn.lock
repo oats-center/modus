@@ -450,6 +450,7 @@ __metadata:
   dependencies:
     "@modusjs/convert": "workspace:^"
     "@modusjs/examples": "workspace:^"
+    "@modusjs/units": "workspace:^"
     "@oada/types": ^3.3.0
     "@rollup/plugin-commonjs": ^23.0.0
     "@rollup/plugin-json": ^5.0.0
@@ -491,6 +492,7 @@ __metadata:
   dependencies:
     "@lhncbc/ucum-lhc": ^4.1.6
     "@modusjs/examples": "workspace:^"
+    "@modusjs/units": "workspace:^"
     "@oada/formats": ^3.3.0
     "@oada/types": ^3.3.0
     "@overleaf/o-error": ^3.4.0
@@ -540,6 +542,53 @@ __metadata:
     concurrently: ^7.4.0
     live-server: ^1.2.2
     nodemon: ^2.0.20
+    typescript: ^4.7.4
+  languageName: unknown
+  linkType: soft
+
+"@modusjs/units@workspace:^, @modusjs/units@workspace:units":
+  version: 0.0.0-use.local
+  resolution: "@modusjs/units@workspace:units"
+  dependencies:
+    "@lhncbc/ucum-lhc": ^4.1.6
+    "@modusjs/examples": "workspace:^"
+    "@oada/formats": ^3.3.0
+    "@oada/types": ^3.3.0
+    "@overleaf/o-error": ^3.4.0
+    "@rollup/plugin-commonjs": ^23.0.0
+    "@rollup/plugin-json": ^5.0.0
+    "@rollup/plugin-node-resolve": ^15.0.0
+    "@tsconfig/node16": ^1.0.3
+    "@types/debug": ^4.1.7
+    "@types/isomorphic-form-data": ^2.0.1
+    "@types/md5": ^2
+    "@types/node": ^18.11.2
+    "@types/prompts": ^2.4.1
+    buffer: ^6.0.3
+    chalk: ^4.0.0
+    cheerio: ^1.0.0-rc.12
+    concurrently: ^7.4.0
+    dayjs: ^1.11.5
+    debug: ^4.3.4
+    domhandler: ^5.0.3
+    excel-date-to-js: ^1.1.5
+    form-data-encoder: ^2.1.3
+    formdata-node: ^5.0.0
+    htmlparser2: ^8.0.1
+    isomorphic-form-data: ^2.0.0
+    jszip: ^3.10.1
+    live-server: ^1.2.2
+    md5: ^2.3.0
+    node-fetch: ^3.2.10
+    nodemon: ^2.0.20
+    prompts: ^2.4.2
+    rollup: ^3.2.3
+    rollup-plugin-dts-bundle: ^1.0.0
+    rollup-plugin-pnp-resolve: ^2.0.0
+    rollup-plugin-terser: ^7.0.2
+    rollup-plugin-typescript2: ^0.34.1
+    save-file: ^2.3.1
+    tslib: ^2.4.0
     typescript: ^4.7.4
   languageName: unknown
   linkType: soft

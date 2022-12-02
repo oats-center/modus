@@ -8,7 +8,6 @@ import toCsvTests from '../toCsv.test.js';
 import toJsonTests from '../tojson.test.js';
 import htmlTests from './html.test.js';
 import fileTests from './file.test.js';
-import unitsTests from '../units.test.js';
 
 const info = debug('@modusjs/convert#test-browser:info');
 
@@ -46,8 +45,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     info('testing browser file');
     await fileTests(libsundertest);
 
-    info('testing browser units');
-    await unitsTests(libsundertest);
   } catch (e: any) {
     info(chalk.red('FAILED: tests threw exception: '));
     console.log(e);

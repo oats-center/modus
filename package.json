@@ -11,7 +11,8 @@
     "convert",
     "cli",
     "examples",
-    "app"
+    "app",
+    "units"
   ],
   "devDependencies": {
     "@types/node": "16.11.68",

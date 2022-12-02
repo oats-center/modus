@@ -4,7 +4,8 @@ import oerror from '@overleaf/o-error';
 import { getJsDateFromExcel } from 'excel-date-to-js';
 import dayjs from 'dayjs';
 import md5 from 'md5';
-import { convertUnits } from './units.js';
+//import { convertUnits } from './units.js';
+import { convertUnits } from '@modusjs/units';
 import ModusResult, {
   assert as assertModusResult,
 } from '@oada/types/modus/v1/modus-result.js';
