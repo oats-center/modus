@@ -3,15 +3,19 @@ import chalk from 'chalk';
 // Only import the type here: use the lib passed to you from node or browser in run()
 import type * as MainLib from '../index.js';
 import * as mainLib from '../index.js';
+import * as units from '@modusjs/units';
+//@ts-ignore
+import ucum from '@lhncbc/ucum-lhc';
 
 import xlsx_sample1 from '@modusjs/examples/dist/tomkat-historic/tomkat_source_data_xlsx.js';
 
-//const trace = debug('@modusjs/convert#test-csv:trace');
+const trace = debug('@modusjs/convert#test-csv:trace');
 const info = debug('@modusjs/convert#test-csv:info');
-//const error = debug('@modusjs/convert#test-csv:error');
+const error = debug('@modusjs/convert#test-csv:error');
 
 const { green } = chalk;
 const test = (msg: string) => info(green(msg));
+let utils = ucum.UcumLhcUtils.getInstance();
 
 export default async function run(lib: typeof MainLib) {
   test('Parsing tomkat historic xlsx sheet with parse()...');
@@ -94,7 +98,29 @@ export default async function run(lib: typeof MainLib) {
   let om = (samples || []).filter(nr => nr.Element === 'OM');
   if (om?.[0]?.ValueUnit !== 'TEST UNITS') {
     throw new Error(`Units were not recognized from the csv headers. OM Element should have units == 'TEST UNITS'`);
-  }*/
+    }*/
+
+  test('Testing whether all the nutrient column ValueUnits are parseable by UCUM library');
+  let allUnits = Object.values(lib.csv.nutrientColHeaders)
+    .map(v => v.ValueUnit)
+    .filter(v => v !== undefined)
+    .filter((v, i, s) => s.indexOf(v) === i);
+  trace('units from nutrientColHeaders:', {units});
+
+  let badUnits = allUnits.filter((unit) => {
+    trace(`Trying ${unit}`)
+    let res = utils.validateUnitString(unit, true);
+    if (res.status !== 'valid') {
+      error(`Unit: [${unit}] errored: ${res.error}`);
+      return true
+    }
+    return false
+  })
+
+  if (badUnits.length > 0) {
+    error('Some of the units from nutrientColHeaders were not recognized.  They are: ', badUnits);
+    throw new Error(`The following units were unrecognized: ${JSON.stringify(badUnits)}`);
+  }
 
   test('All parse tests passed');
 }

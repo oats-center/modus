@@ -4,8 +4,8 @@ import oerror from '@overleaf/o-error';
 import { getJsDateFromExcel } from 'excel-date-to-js';
 import dayjs from 'dayjs';
 import md5 from 'md5';
-//import { convertUnits } from './units.js';
-import { convertUnits } from '@modusjs/units';
+import type { NutrientResult, Units } from '@modusjs/units';
+import * as units from '@modusjs/units';
 import ModusResult, {
   assert as assertModusResult,
 } from '@oada/types/modus/v1/modus-result.js';
@@ -211,9 +211,9 @@ function parseTomKat({ wb }: { wb: xlsx.WorkBook }): ModusResult[] {
         // Grab the "depth" for this sample:
         const depth = parseDepth(row, unit_overrides, sheetname); // SAM: need to write this to figure out a Depth object
         const DepthID = '' + ensureDepthInDepthRefs(depth, depthrefs); // mutates depthrefs if missing, returns depthid
-        
+
         let NutrientResults = parseNutrientResults(row, unit_overrides);
-        NutrientResults = convertUnits(NutrientResults);
+        NutrientResults = units.convertUnits(NutrientResults);
         const id = parseSampleID(row);
         const meta = pointmeta[id] || null; // where does the pointmeta go again (Latitude_DD, Longitude_DD, Field, Acreage, etc.)
 
@@ -285,7 +285,6 @@ function isPointMetadataSheetname(name: string) {
     .match('POINTMETA');
 }
 
-export type Units = { [colname: string]: string };
 function extractUnitOverrides(rows: any[]) {
   const overrides: Units = {};
   const unitrows = rows.filter(isUnitRow);
@@ -355,12 +354,13 @@ function ensureDepthInDepthRefs(depth: Depth, depthrefs: Depth[]): number {
   }
   return match.DepthID!;
 }
-
+/*
 export type NutrientResult = {
   Element: string;
   Value: number | undefined;
   ValueUnit: string;
-};
+  };
+*/
 
 function parseSampleID(row: any): string {
   const copy = keysToUpperNoSpacesDashesOrUnderscores(row);
@@ -395,24 +395,24 @@ function parseWKTFromPointMetaOrRow(meta_or_row: any): string {
   return `POINT(${long} ${lat})`;
 }
 
-  // There are complex regular expressions to grab nested brackets and parens                                    
+  // There are complex regular expressions to grab nested brackets and parens
   // such as \[(?>[^][]+|(?<c>)\[|(?<-c>)])+] at https://stackoverflow.com/questions/71769611/regex-to-match-everything-inside-brackets-ignore-nested
-  // but I don't think we need that level of complexity.  We can just search string for first                    
-  // and last occurences of (), and [] chars from start and from end, then just use whatever is in the middle.   
-  // for "stuff (other) [[ppm]]", between "[" and "]" returns "[ppm]" and "()" returns "other"                   
-  function extractBetween(str: string, startChar: string, endChar: string): string {                             
-    const start = str.indexOf(startChar);                                                                        
-    const end = str.lastIndexOf(endChar);                                                                        
-    if (start < 0) return str; // start char not found                                                           
-    if (start > str.length-1) return ''; // start char at end of string                                          
-    if (end < 0) return str.slice(start+1); // end not found, return start through end of string                 
-    return str.slice(start+1,end); // start+1 to avoid including the start/end chars in output                   
-  }                                                                                                              
-  function extractBefore(str: string, startChar: string): string {                                               
-    const start = str.indexOf(startChar);                                                                        
-    if (start < 0) return str; // start char not found                                                           
-    return str.slice(0,start);                                                                                   
-  }                                                                                                              
+  // but I don't think we need that level of complexity.  We can just search string for first
+  // and last occurences of (), and [] chars from start and from end, then just use whatever is in the middle.
+  // for "stuff (other) [[ppm]]", between "[" and "]" returns "[ppm]" and "()" returns "other"
+  function extractBetween(str: string, startChar: string, endChar: string): string {
+    const start = str.indexOf(startChar);
+    const end = str.lastIndexOf(endChar);
+    if (start < 0) return str; // start char not found
+    if (start > str.length-1) return ''; // start char at end of string
+    if (end < 0) return str.slice(start+1); // end not found, return start through end of string
+    return str.slice(start+1,end); // start+1 to avoid including the start/end chars in output
+  }
+  function extractBefore(str: string, startChar: string): string {
+    const start = str.indexOf(startChar);
+    if (start < 0) return str; // start char not found
+    return str.slice(0,start);
+  }
   type ColumnHeader = {
     original: string,
     element: string,
@@ -425,11 +425,11 @@ function parseWKTFromPointMetaOrRow(meta_or_row: any): string {
       .replace(/\n/g, ' ')
       .replace(/ +/g, ' ');
     const element = extractBefore(original, '(') || original;
-    const modifier = extractBetween(original, '(', ')');                                                         
-    const units = extractBetween(original, '[', ']');                                                            
+    const modifier = extractBetween(original, '(', ')');
+    const units = extractBetween(original, '[', ']');
     return { original, element, modifier, units };
-  }                                                                                                              
-  
+  }
+
 
 
 // units provides a means for coders to override
