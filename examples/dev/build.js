@@ -44,10 +44,10 @@ import fs from 'fs/promises';
         .replace(/\.ts$/, '')
         .replaceAll('-', '_');
 
-      const isxml = f.match(/\.xml/);
-      const iscsv = f.match(/\.csv/);
-      const isjson = f.match(/\.json/);
-      const isxlsx = f.match(/\.xlsx/);
+      const isxml = !!f.match(/\.xml/);
+      const iscsv = !!f.match(/\.csv/);
+      const isjson = !!f.match(/\.json/);
+      const isxlsx = !!f.match(/\.xlsx/);
       let finalcontents = '';
       // XML, CSV, JSON files become regular strings:
       if (isxml || iscsv || isjson) {
@@ -73,7 +73,18 @@ import fs from 'fs/promises';
 
       const output_js_filename = output_filename.replace(/\.ts$/, '.js');
       local_index += `export { default as ${output_varname} } from './${output_js_filename}';\n`;
-      local_all.push(output_js_filename);
+      const cleanpath = input_filepath.replace('./examples/','');
+      local_all.push({ 
+        js: output_js_filename,
+        importpath: `${dir}/${output_js_filename}`,
+        path: dir,
+        filename: f,
+        isxml,
+        iscsv,
+        isjson,
+        isxlsx
+      });
+
     }
     local_index += `export const all = ${JSON.stringify(local_all)};\n`;
     global_all[dir] = local_all;
