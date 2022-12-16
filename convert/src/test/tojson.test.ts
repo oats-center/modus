@@ -8,6 +8,17 @@ import type * as MainLib from '../index.js';
 import xlsx_sample1 from '@modusjs/examples/dist/tomkat-historic/tomkat_source_data_xlsx.js';
 import xml_sample1 from '@modusjs/examples/dist/enyart-east50-a_l_labs/hand-modus_xml.js';
 import json_sample1 from '@modusjs/examples/dist/enyart-east50-a_l_labs/hand-modus_json.js';
+import { all as examples } from '@modusjs/examples/dist';
+
+let labExamples = Object.fromEntries(
+  Object.entries(examples).map(([lab, list]) => ([
+    lab,
+    list.map(obj => ({
+      ...obj,
+      data: await import(obj.importpath)
+    }))
+  ]))
+)
 
 const trace = debug('@modusjs/convert#test-tojson:trace');
 const info = debug('@modusjs/convert#test-tojson:info');
@@ -23,6 +34,25 @@ export default async function run(lib: typeof MainLib) {
     format: 'tomkat',
     filename: 'tomkat_source_data.xlsx',
   });
+
+  console.log( {examps, examples} );
+  for (const [lab, list] of Object.entries(examples)) {
+    for (const example of list) {
+      console.log({example})
+      let fname = example.split('.')[0];
+      if (!fname) throw new Error(`example is undefined in lab ${lab}`);
+
+      let exampleType: 'str' | 'arrbuf' | 'base64' | undefined;
+      if (/_csv$/.test(fname) || /_json$/.test(fname)) exampleType = 'str';
+      if (/_xlsx$/.test(fname)) exampleType = 'base64';
+      if (!exampleType) throw new Error(`example type could not be determined in lab ${lab}`);
+      await lib.json.toJson({
+        [exampleType]: example,
+        format: 'tomkat',
+        filename: fname.replace(/_json$/, '.json').replace(/_csv$/, '.csv').replace(/_xlsx$/, '.xlsx'),
+     })
+    }
+  }
 
   test('Have greater than zero results from parsing tomkat historic data');
   if (results.length < 0) {

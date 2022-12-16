@@ -13,7 +13,7 @@ const plugins = [
   }),
   commonjs(),
   json(),
-  terser(),
+  //terser(),
 ];
 
 const watch = {
@@ -33,7 +33,7 @@ export default defineConfig([
       ...plugins,
       //typescript(),
       dtsBundle({
-        bundle: { 
+        bundle: {
           name: '@modusjs/convert',
           main: 'dist-browser/index.d.ts',
           out: 'bundle.d.ts',
