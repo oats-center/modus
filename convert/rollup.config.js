@@ -1,5 +1,6 @@
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
+import dynamicImportVars from '@rollup/plugin-dynamic-import-vars';
 import { terser } from 'rollup-plugin-terser';
 import json from '@rollup/plugin-json';
 import { defineConfig } from 'rollup';
@@ -14,6 +15,7 @@ const plugins = [
   commonjs(),
   json(),
   //terser(),
+  dynamicImportVars(),
 ];
 
 const watch = {
@@ -45,6 +47,7 @@ export default defineConfig([
       file: 'dist-browser/bundle.mjs',
       format: 'esm',
       sourcemap: true,
+      inlineDynamicImports: true,
     },
   },
   {
@@ -55,6 +58,7 @@ export default defineConfig([
       file: 'dist-browser/test/browser/bundle.mjs',
       format: 'esm',
       sourcemap: true,
+      inlineDynamicImports: true,
     },
   },
 

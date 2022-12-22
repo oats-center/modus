@@ -3,40 +3,45 @@ import * as xlsx from 'xlsx';
 import oerror from '@overleaf/o-error';
 import { getJsDateFromExcel } from 'excel-date-to-js';
 import dayjs from 'dayjs';
-import md5 from 'md5';
 import type { NutrientResult, Units } from '@modusjs/units';
 import * as units from '@modusjs/units';
 import ModusResult, {
   assert as assertModusResult,
 } from '@oada/types/modus/v1/modus-result.js';
-
+import type { LabConfig } from './labs/index.js';
+import * as labConfs from './labs/index.js';
 const error = debug('@modusjs/convert#csv:error');
 const warn = debug('@modusjs/convert#csv:error');
 const info = debug('@modusjs/convert#csv:info');
 const trace = debug('@modusjs/convert#csv:trace');
 
-export const supportedFormats = ['tomkat', 'generic'];
-export type SupportedFormats = 'tomkat' | 'generic';
+export const supportedFormats = ['generic'];
+export type SupportedFormats = 'generic';
 
-export const recognizedCsvs = new Map<string,RecognizedCsv>();
+//export const recognizedCsvs = new Map<string,RecognizedCsv>();
+export const labConfigs = new Map<string, LabConfig>(
+  Object.values(labConfs).map(obj => ([obj.name, obj as LabConfig]))
+)
 //--------------------------------------------------------------------------------------
 // parse: wrapper function for particular parsing functions found down below.
 //
-// Ppssible input parameters for xlsx/csv parsing:
+// Possible input parameters for xlsx/csv parsing:
 // Either give an already-parsed workbook, an entire CSV as a string, or an arraybuffer, or a base64 string
-// Default CSV/XLSX format is tomkat
+// Default CSV/XLSX format is generic
 export function parse({
   wb,
   str,
   arrbuf,
   base64,
   format,
+  lab,
 }: {
   wb?: xlsx.WorkBook;
   str?: string;
   arrbuf?: ArrayBuffer;
   base64?: string; // base64 string
-  format?: 'tomkat' | 'generic'; // add others here as more become known
+  format?: 'generic'; // add others here as more become known
+  lab?: LabConfig | keyof typeof labConfs
 }): ModusResult[] {
   // Make sure we have an actual workbook to work with:
   if (!wb) {
@@ -52,11 +57,11 @@ export function parse({
     throw new Error('No readable input data found.');
   }
 
-  if (!format) format = 'tomkat';
+  if (!format) format = 'generic';
 
   switch (format) {
-    case 'tomkat':
-      return parseTomKat({ wb });
+    case 'generic':
+      return parseTomKat({ wb, lab });
     default:
       throw new Error(`format type ${format} not currently supported`);
   }
@@ -65,7 +70,15 @@ export function parse({
 //-------------------------------------------------------------------------------------------
 // Parse the specific spreadsheet with data from TomKat ranch provided at the
 // 2022 Fixing the Soil Health Tech Stack Hackathon.
-function parseTomKat({ wb }: { wb: xlsx.WorkBook }): ModusResult[] {
+function parseTomKat({
+  wb,
+  lab,
+  allowOverrides=true,
+}: {
+  wb: xlsx.WorkBook,
+  lab?: LabConfig | keyof typeof labConfs,
+  allowOverrides?: boolean
+}): ModusResult[] {
   // Grab the point meta data out of any master sheet:
   // Any sheet whose name contains "point meta" regardless of spacing, case, or punctuation will be considered
   // point metadata.  i.e. 'Point Meta-Data'  would match as well as 'pointmetadata'
@@ -99,32 +112,31 @@ function parseTomKat({ wb }: { wb: xlsx.WorkBook }): ModusResult[] {
     const allrows = xlsx.utils.sheet_to_json(sheet, {defval: ''}); // include empty column values! undefined doesn't seem to get empty cols to show up.
 
     // Grab the unit overrides and get rid of comment/units columns
-    let unit_overrides = extractUnitOverrides(allrows);
+    let unitOverrides = allowOverrides ? extractUnitOverrides(allrows) : undefined;
     const rows = allrows.filter(isDataRow);
     trace('Have', rows.length, 'rows from sheetname: ', sheetname);
 
-    // Get a list of all the header names for future reference as needed.  Since objects that have no
-    // value in a column might not have that column, we have to look through all the rows and accumulate
-    // the unique set of names.
-    const colnames_map: { [name: string]: true } = {};
-    for (const r of rows) {
-      for (const key of Object.keys(r as object)) {
-        colnames_map[key] = true;
-      }
-    }
-    const colnames = Object.keys(colnames_map);
+    // Get a list of all the header names for future reference as needed. Since
+    // keys are omitted for rows where a column has no value, we must look
+    // through all the rows and accumulate the unique set of column headers.
+    const colnames = [...new Set(rows.map((obj: any) => Object.keys(obj))
+      .reduce((prev, cur) => prev.concat(cur), [])
+    )];
 
-    let headerHash = md5(JSON.stringify(colnames.sort()));
-    if (!unit_overrides || Object.keys(unit_overrides).length === 0) {
-      if (recognizedCsvs.has(headerHash)) {
-        let recognized = recognizedCsvs.get(headerHash);
-        unit_overrides = recognized!.units;
-        info(`Recognized CSV as: ${recognized!.name}`)
-        trace(`Using the following unit overrides: ${recognized!.units}`);
-      } else {
-        warn(`Spreadsheet type was not recognized based on column headers (to automagically set units). See docs to manually specify unit overrides.`);
-      }
-    }
+    let headers = Object.fromEntries(
+      colnames.map(n => ([n, parseColumnHeaderName(n)]))
+    );
+
+    // Attempt to get the lab config. This isn't required.
+    let labConfig: LabConfig | undefined = lab ?
+      (typeof lab === 'string' ?
+        labConfigs.get(lab)
+        : lab
+      )
+      : autoDetectLabConfig(colnames);
+
+    if (!labConfig) info(`LabConfig was either not supplied or not auto-detected.`);
+
 
     // Determine a "date" column for this dataset
     // Let some "known" candidates for date column name take precedence over others:
@@ -208,14 +220,28 @@ function parseTomKat({ wb }: { wb: xlsx.WorkBook }): ModusResult[] {
           event.LabMetaData.Reports[0]!.ReportID = reportid; // last row will win this if they disagree
         }
 
-        // Grab the "depth" for this sample:
-        const depth = parseDepth(row, unit_overrides, sheetname); // SAM: need to write this to figure out a Depth object
-        const DepthID = '' + ensureDepthInDepthRefs(depth, depthrefs); // mutates depthrefs if missing, returns depthid
+        let nutrientResults = parseNutrientResults({
+          row,
+          headers,
+        });
 
-        let NutrientResults = parseNutrientResults(row, unit_overrides);
-        NutrientResults = units.convertUnits(NutrientResults);
+        // Units can come from several places
+        nutrientResults = setNutrientResultUnits({
+          nutrientResults,
+          unitOverrides,
+          labConfig,
+          headers,
+        })
+        nutrientResults = units.convertUnits(nutrientResults);
+
         const id = parseSampleID(row);
         const meta = pointmeta[id] || null; // where does the pointmeta go again (Latitude_DD, Longitude_DD, Field, Acreage, etc.)
+
+
+        // Grab the "depth" for this sample:
+        // // SAM: need to write this to figure out a Depth object
+        const depth = parseDepth(row, unitOverrides, sheetname);
+        const DepthID = '' + ensureDepthInDepthRefs(depth, depthrefs); // mutates depthrefs if missing, returns depthid
 
         const sample: any = {
           SampleMetaData: {
@@ -223,7 +249,10 @@ function parseTomKat({ wb }: { wb: xlsx.WorkBook }): ModusResult[] {
             ReportID: '1',
             FMISSampleID: '' + id,
           },
-          Depths: [{ DepthID, NutrientResults }],
+          Depths: [{
+            DepthID,
+            NutrientResults: nutrientResults
+          }],
         };
 
         // Parse locations: either in the sample itself or in the meta.  Sample takes precedence over meta.
@@ -283,6 +312,32 @@ function isPointMetadataSheetname(name: string) {
     .replace(/([ _,]|-)*/g, '')
     .toUpperCase()
     .match('POINTMETA');
+}
+
+//Preference here is overrides > sheet > labConfig
+function setNutrientResultUnits({
+  nutrientResults,
+  unitOverrides,
+  labConfig,
+  headers,
+} : {
+  nutrientResults: NutrientResult[],
+  unitOverrides: Units | undefined,
+  labConfig: LabConfig | undefined,
+  headers: Record<string, ColumnHeader>,
+}) : NutrientResult[] {
+  return nutrientResults.map(nr => {
+    let header = Object.values(headers).find(h => h.nutrientResult?.Element === nr.Element);
+    let override = unitOverrides?.[header!.original];
+    let headerUnit = header?.units;
+    let labConfigUnit = labConfig?.units[nr.Element];
+
+    trace(`Ordered unit prioritization of ${nr.Element}: Override:[${override}] > Header:[${headerUnit}] > Lab Config:[${labConfigUnit}] > default:[${nr.ValueUnit}]`)
+    return {
+      ...nr,
+      ValueUnit: override || headerUnit || labConfigUnit || nr.ValueUnit,
+    }
+  });
 }
 
 function extractUnitOverrides(rows: any[]) {
@@ -354,13 +409,6 @@ function ensureDepthInDepthRefs(depth: Depth, depthrefs: Depth[]): number {
   }
   return match.DepthID!;
 }
-/*
-export type NutrientResult = {
-  Element: string;
-  Value: number | undefined;
-  ValueUnit: string;
-  };
-*/
 
 function parseSampleID(row: any): string {
   const copy = keysToUpperNoSpacesDashesOrUnderscores(row);
@@ -395,70 +443,61 @@ function parseWKTFromPointMetaOrRow(meta_or_row: any): string {
   return `POINT(${long} ${lat})`;
 }
 
-  // There are complex regular expressions to grab nested brackets and parens
-  // such as \[(?>[^][]+|(?<c>)\[|(?<-c>)])+] at https://stackoverflow.com/questions/71769611/regex-to-match-everything-inside-brackets-ignore-nested
-  // but I don't think we need that level of complexity.  We can just search string for first
-  // and last occurences of (), and [] chars from start and from end, then just use whatever is in the middle.
-  // for "stuff (other) [[ppm]]", between "[" and "]" returns "[ppm]" and "()" returns "other"
-  function extractBetween(str: string, startChar: string, endChar: string): string {
-    const start = str.indexOf(startChar);
-    const end = str.lastIndexOf(endChar);
-    if (start < 0) return str; // start char not found
-    if (start > str.length-1) return ''; // start char at end of string
-    if (end < 0) return str.slice(start+1); // end not found, return start through end of string
-    return str.slice(start+1,end); // start+1 to avoid including the start/end chars in output
-  }
-  function extractBefore(str: string, startChar: string): string {
-    const start = str.indexOf(startChar);
-    if (start < 0) return str; // start char not found
-    return str.slice(0,start);
-  }
-  type ColumnHeader = {
-    original: string,
-    element: string,
-    modifier: string,
-    units: string,
-  };
-  function parseColumnHeaderName(original: string): ColumnHeader {
-    original = original
-      .trim()
-      .replace(/\n/g, ' ')
-      .replace(/ +/g, ' ');
-    const element = extractBefore(original, '(') || original;
-    const modifier = extractBetween(original, '(', ')');
-    const units = extractBetween(original, '[', ']');
-    return { original, element, modifier, units };
-  }
+// There are complex regular expressions to grab nested brackets and parens
+// such as \[(?>[^][]+|(?<c>)\[|(?<-c>)])+] at https://stackoverflow.com/questions/71769611/regex-to-match-everything-inside-brackets-ignore-nested
+// but I don't think we need that level of complexity.  We can just search string for first
+// and last occurences of (), and [] chars from start and from end, then just use whatever is in the middle.
+// for "stuff (other) [[ppm]]", between "[" and "]" returns "[ppm]" and "()" returns "other"
+function extractBetween(str: string, startChar: string, endChar: string): string {
+  const start = str.indexOf(startChar);
+  const end = str.lastIndexOf(endChar);
+  if (start < 0) return str; // start char not found
+  if (start > str.length-1) return ''; // start char at end of string
+  if (end < 0) return str.slice(start+1); // end not found, return start through end of string
+  return str.slice(start+1,end); // start+1 to avoid including the start/end chars in output
+}
+function extractBefore(str: string, startChar: string): string {
+  const start = str.indexOf(startChar);
+  if (start < 0) return str; // start char not found
+  return str.slice(0,start);
+}
+type ColumnHeader = {
+  original: string,
+  element: string,
+  modifier: string,
+  units: string,
+  nutrientResult: NutrientColHeader | undefined,
+};
 
+function parseColumnHeaderName(original: string): ColumnHeader {
+  original = original
+    .trim()
+    .replace(/\n/g, ' ')
+    .replace(/ +/g, ' ');
+  const element = extractBefore(original, '(') || original;
+  const modifier = extractBetween(original, '(', ')');
+  const units = extractBetween(original, '[', ']');
+  const nutrientResult = nutrientColHeaders[element];
+  return { original, element, modifier, units, nutrientResult };
+}
 
-
-// units provides a means for coders to override
-function parseNutrientResults(
-  row: any,
-  units?: Record<string, string>
-): NutrientResult[] {
+// units can be overriden
+function parseNutrientResults({
+  row,
+  headers,
+} : {
+  row: Record<keyof typeof headers, any>,
+  headers: Record<string, ColumnHeader>,
+}): NutrientResult[] {
   return Object.keys(row)
-    .map((key) => key.trim())
-    .filter((key) => key in nutrientColHeaders)
-    .filter((key) => !isNaN(row[key]))
-    .map((key) => key.replace(/\n/g, ' '))
-    .map((key) => key.replace(/ +/g, ' ').trim())
-    .map((key) => {
-      let unitMatches = key.match(/\[([^\]]+)\]/g);
-      let unitStr = '';
-      if (unitMatches && unitMatches.length > 0) {
-        unitStr = unitMatches[unitMatches.length - 1] || '';
-        unitStr.replace('[', '').replace(']', '');
-      }
-      return {
-        Element: nutrientColHeaders[key].Element,
-        // prioritize user-specified units (from "UNITS" row indicator) over
-        // matcher-based units, else "none".
-        ValueUnit:
-          unitStr || units![key] || nutrientColHeaders[key].ValueUnit || 'none',
-        Value: +row[key],
-      };
-    });
+    .filter(key => headers[key]?.nutrientResult)
+    .filter(key => !isNaN(row[key]))
+    .map(key => ({
+      ...headers[key]?.nutrientResult,
+      Element: headers[key]!.nutrientResult!.Element,
+      Value: +row[key],
+      ValueUnit: headers[key]!.nutrientResult?.ValueUnit || 'none',
+    }));
 }
 
 // sheetname is just for debugging
@@ -652,8 +691,14 @@ type ModusCsvRow = {
   ReportID: string;
 };
 
+type NutrientColHeader = {
+  Element: string,
+  ValueUnit?: string
+}
+
 type ModusCsv = ModusCsvRow[];
-export let nutrientColHeaders: Record<string, any> = {
+//TODO: all of these need to be split out and moved into the lab configs found in src/labs/*.js
+export let nutrientColHeaders: Record<string, NutrientColHeader> = {
   '1:1 Soil pH': {
     Element: 'pH',
   },
@@ -1306,16 +1351,10 @@ export let nutrientColHeaders: Record<string, any> = {
     Element: 'CO3',
     ValueUnit: '[ppm]',
   },
-
-  /* Didn't see these in the official modus element list
-  "LBC 1": {
-    Element: "Ca",
-    ValueUnit: "ppm"
-  },
-  */
 };
 /* Didn't see these in the official modus element list
-       Element: "Total Microbial Biomass": ,
+  "LBC 1": [],
+  "Total Microbial Biomass": [],
   "Total Bacteria Biomass": [],
   "Actinomycetes Biomass": [],
   "Gram (-) Biomass": [],VFINX VINEX
@@ -1329,89 +1368,30 @@ export let nutrientColHeaders: Record<string, any> = {
   "Gram(+):Gram(-)": [],
   "Sat:Unsat": [],
   "Mono:Poly": []
-  */
+ */
 
-interface RecognizedCsv {
-  name: string;
-  headerString: string;
-  units: Units;
+function labMatches({
+  lab,
+  headers,
+} : {
+  lab: LabConfig
+  headers: string[],
+}) : boolean {
+  return lab.headers.every((header: string) => headers.indexOf(header) > -1)
 }
 
-// Add a set of CSV headers to the recognized set. Include all headers as they
-// appear in the CSV to the 'units' object, even those without units so that it
-// is properly recognized.
-export function addRecognizedCsvs({
-  name,
-  units
-}: {
-  name: string,
-  units: Units
-}) {
-  let columnArray = Object.keys(units).sort();
-  let headerString = md5(JSON.stringify(columnArray));
-  recognizedCsvs.set(headerString, {
-    name,
-    units,
-    headerString,
-  });
+export function autoDetectLabConfig(headers: string[]) : LabConfig | undefined {
+  let match = Object.values(labConfigs).find(lab => labMatches({lab, headers}));
+  if (match) {
+    info(`Recognized sheet as lab: ${match!.name}`);
+  } else {
+    warn(`Problem autodetecting lab. No matches found while autodetecting based on column headers (to automatically set units). See docs to manually specify unit overrides.`);
+  }
+  return match
 }
 
-recognizedCsvs.set('2b44b45044b9f9be12b25cb30472a47f', {
-  name: 'A & L Labs West',
-  headerString: '2b44b45044b9f9be12b25cb30472a47f',
-  units: {
-    'CLIENT': '',
-    'DATESUB': '',
-    'TIMESUB': '',
-    'GROWER': '',
-    'PERSON': '',
-    'SAMPLEID': '',
-    'CROP': '',
-    'DATESAMPL': '',
-    'REPORTNUM': '',
-    'LABNUM': '',
-    'TYPE': '',
-    'OM': '%',
-    'ENR': 'lb/ac',
-    'P1': 'ppm',
-    'P2': 'ppm',
-    'HCO3_P': 'ppm',
-    'PH': '',
-    'K': 'ppm',
-    'MG': 'ppm',
-    'CA': 'ppm',
-    'NA': 'ppm',
-    'BUFFER_PH': '',
-    'H': 'meq/100g',
-    'CEC': 'meq/100g',
-    'K_PCT': '%',
-    'MG_PCT': '%',
-    'CA_PCT': '%',
-    'H_PCT': '%',
-    'NA_PCT': '%',
-    'NO3_N': 'ppm',
-    'S': 'ppm',
-    'ZN': 'ppm',
-    'MN': 'ppm',
-    'FE': 'ppm',
-    'CU': 'ppm',
-    'B': 'ppm',
-    'EX__LIME': '',
-    'S__SALTS': 'mmho/cm',
-    'CL': 'ppm',
-    'MO': 'ppm',
-    'AL': 'ppm',
-    'CA_SAT': 'meq/100g',
-    'MG_SAT': 'meq/100g',
-    'NA_SAT': 'meq/100g',
-    'B_SAT': 'meq/100g',
-    'ESP': '%',
-    'NH4': 'ppm',
-    'SO4_S': 'ppm',
-    'SAR': 'ppm',
-    'EC': 'dS/m',
-    'SAT_PCT': '%',
-    'CO3': 'ppm',
-    'HCO3': 'ppm',
-  },
-});
+// This takes an mappings in the lab configs and sets modus values
+// If multiple columns map to the same modus, take the last defined one.
+function handleModusMappers() {
+  //1. Split on [*] and iterate over the parent?
+}

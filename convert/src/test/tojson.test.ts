@@ -10,15 +10,6 @@ import xml_sample1 from '@modusjs/examples/dist/enyart-east50-a_l_labs/hand-modu
 import json_sample1 from '@modusjs/examples/dist/enyart-east50-a_l_labs/hand-modus_json.js';
 import { all as examples } from '@modusjs/examples/dist';
 
-let labExamples = Object.fromEntries(
-  Object.entries(examples).map(([lab, list]) => ([
-    lab,
-    list.map(obj => ({
-      ...obj,
-      data: await import(obj.importpath)
-    }))
-  ]))
-)
 
 const trace = debug('@modusjs/convert#test-tojson:trace');
 const info = debug('@modusjs/convert#test-tojson:info');
@@ -31,25 +22,20 @@ export default async function run(lib: typeof MainLib) {
   test('Parsing tomkat historic xlsx sheet with toJson()...');
   let results = await lib.json.toJson({
     base64: xlsx_sample1,
-    format: 'tomkat',
+    format: 'generic',
     filename: 'tomkat_source_data.xlsx',
   });
 
-  console.log( {examps, examples} );
-  for (const [lab, list] of Object.entries(examples)) {
-    for (const example of list) {
-      console.log({example})
-      let fname = example.split('.')[0];
-      if (!fname) throw new Error(`example is undefined in lab ${lab}`);
-
-      let exampleType: 'str' | 'arrbuf' | 'base64' | undefined;
-      if (/_csv$/.test(fname) || /_json$/.test(fname)) exampleType = 'str';
-      if (/_xlsx$/.test(fname)) exampleType = 'base64';
-      if (!exampleType) throw new Error(`example type could not be determined in lab ${lab}`);
+  test('Parsing all the examples with toJson()...');
+  for await (const [lab, list] of Object.entries(examples)) {
+    for await (const example of list) {
+      //let thing = await import(`../../../examples/dist/${example.importpath}.js`)
+      let data = (await import(`../../../examples/dist/${example.path}/${example.js.split('.')[0]}.js`)).default;
+      let exampleType = example.iscsv || example.isjson ? 'str' : 'base64';
       await lib.json.toJson({
-        [exampleType]: example,
-        format: 'tomkat',
-        filename: fname.replace(/_json$/, '.json').replace(/_csv$/, '.csv').replace(/_xlsx$/, '.xlsx'),
+        [exampleType]: data,
+        format: 'generic',
+        filename: example.filename,
      })
     }
   }

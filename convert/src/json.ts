@@ -28,7 +28,7 @@ export type ModusJSONConversionResult = {
 
 export type InputFile = {
   filename: string; // can include the path on the front
-  format?: 'tomkat' | 'generic'; // only for CSV/XLSX files, default tomkat (same as generic for now)
+  format?: 'generic'; // only for CSV/XLSX files, default generic (same as generic for now)
   str?: string;
   // zip or xlsx can either be ArrayBuffer or base64 string of original file.
   // Do not use for other types, they should all just be strings.
@@ -45,7 +45,7 @@ export async function toJson(
   }
   let results: ModusJSONConversionResult[] = [];
   for (const file of files) {
-    const format = file.format || 'tomkat';
+    const format = file.format || 'generic';
     let original_type = typeFromFilename(file.filename);
     if (!original_type) {
       warn('WARNING: unable to determine file type from filename',file.filename,'.  Supported types are:',supportedFileTypes,'.  Skipping file.');
@@ -86,7 +86,7 @@ export async function toJson(
           results = [...results, ...zip_modus];
           break;
         case 'json':
-          modus = JSON.parse(file.str!);
+          modus = typeof file.str! === 'string' ? JSON.parse(file.str!) : file.str!;
           assertModusResult(modus); // catch below will inform if parsing or assertion failed.
           output_filename = jsonFilenameFromOriginalFilename({
             modus,
@@ -246,4 +246,3 @@ export async function zipParse(file: ZipFile) {
   }
   return toJson(all_convert_inputs);
 }
-

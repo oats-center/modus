@@ -19,7 +19,7 @@ let utils = ucum.UcumLhcUtils.getInstance();
 
 export default async function run(lib: typeof MainLib) {
   test('Parsing tomkat historic xlsx sheet with parse()...');
-  const results = lib.csv.parse({ base64: xlsx_sample1, format: 'tomkat' });
+  const results = lib.csv.parse({ base64: xlsx_sample1, format: 'generic' });
 
   test('Have greater than zero results from parsing tomkat historic data');
   if (results.length < 0) {
@@ -31,22 +31,13 @@ export default async function run(lib: typeof MainLib) {
     throw new Error('First result did not have a report with FileDescription');
   }
 
+  /*
   test('Should recognize CSV by headers and apply units.');
   //TODO: should I be able to pull this from @modusjs examples?
-  mainLib.csv.addRecognizedCsvs({
+  //mainLib.csv.addRecognizedCsvs({
+  let labConf = new LabConf({
     name:'Test Units',
     units: {
-      'CLIENT': '',
-      'DATESUB': '',
-      'TIMESUB': '',
-      'GROWER': '',
-      'PERSON': '',
-      'SAMPLEID': '',
-      'CROP': '',
-      'DATESAMPL': '',
-      'REPORTNUM': '',
-      'LABNUM': '',
-      'TYPE': '',
       'OM': 'TEST UNITS',
       'ENR': 'lb/ac',
       'P1': 'ppm',
@@ -89,16 +80,28 @@ export default async function run(lib: typeof MainLib) {
       'SAT_PCT': '%',
       'CO3': 'ppm',
       'HCO3': 'ppm',
+    },
+    mappings: {
+      'CLIENT': '',
+      'DATESUB': '',
+      'TIMESUB': '',
+      'GROWER': '',
+      'PERSON': '',
+      'SAMPLEID': '',
+      'CROP': '',
+      'DATESAMPL': '',
+      'REPORTNUM': '',
+      'LABNUM': '',
+      'TYPE': '',
     }
   });
-  info('Commented auto-recognition test until csv_sample2 fixed');
-  /*
   let result = lib.csv.parse({base64: csv_sample2, format: 'tomkat'});
   let samples = result[0]!.Events?.[0]?.EventSamples?.Soil?.SoilSamples?.[0]?.Depths?.[0]?.NutrientResults;
   let om = (samples || []).filter(nr => nr.Element === 'OM');
   if (om?.[0]?.ValueUnit !== 'TEST UNITS') {
     throw new Error(`Units were not recognized from the csv headers. OM Element should have units == 'TEST UNITS'`);
-    }*/
+  }
+  */
 
   test('Testing whether all the nutrient column ValueUnits are parseable by UCUM library');
   let allUnits = Object.values(lib.csv.nutrientColHeaders)
