@@ -9,7 +9,7 @@ import ModusResult, {
   assert as assertModusResult,
 } from '@oada/types/modus/v1/modus-result.js';
 import type { LabConfig } from './labs/index.js';
-import * as labConfs from './labs/index.js';
+import { autoDetectLabConfig, labConfigs, modusKeyToValue, modusKeyToHeader } from './labs/index.js';
 const error = debug('@modusjs/convert#csv:error');
 const warn = debug('@modusjs/convert#csv:error');
 const info = debug('@modusjs/convert#csv:info');
@@ -19,8 +19,8 @@ export const supportedFormats = ['generic'];
 export type SupportedFormats = 'generic';
 
 //export const recognizedCsvs = new Map<string,RecognizedCsv>();
-export const labConfigs = new Map<string, LabConfig>(
-  Object.values(labConfs).map(obj => ([obj.name, obj as LabConfig]))
+const labConfigMap = new Map<string, LabConfig>(
+  Object.values(labConfigs).map(obj => ([obj.name, obj as LabConfig]))
 )
 //--------------------------------------------------------------------------------------
 // parse: wrapper function for particular parsing functions found down below.
@@ -41,7 +41,7 @@ export function parse({
   arrbuf?: ArrayBuffer;
   base64?: string; // base64 string
   format?: 'generic'; // add others here as more become known
-  lab?: LabConfig | keyof typeof labConfs
+  lab?: LabConfig | keyof typeof labConfigs
 }): ModusResult[] {
   // Make sure we have an actual workbook to work with:
   if (!wb) {
@@ -76,7 +76,7 @@ function parseTomKat({
   allowOverrides=true,
 }: {
   wb: xlsx.WorkBook,
-  lab?: LabConfig | keyof typeof labConfs,
+  lab?: LabConfig | keyof typeof labConfigs,
   allowOverrides?: boolean
 }): ModusResult[] {
   // Grab the point meta data out of any master sheet:
@@ -123,31 +123,23 @@ function parseTomKat({
       .reduce((prev, cur) => prev.concat(cur), [])
     )];
 
+    // TODO: Should this be done on a per-sheet basis here or composed over all
+    // sheets first, then used?
+    let labConfig: LabConfig | undefined = (lab && typeof lab === 'string') ?
+      labConfigMap.get(lab) : lab;
+
+    if (!labConfig) labConfig = autoDetectLabConfig(colnames);
+    if (!labConfig) info(`LabConfig was either not supplied or not auto-detected. Defaulting to standard config.`);
+    if (!labConfig) throw new Error('Unable to detect or generate lab configuration.')
+
+    // Parse structured header format for reverse conversion
     let headers = Object.fromEntries(
-      colnames.map(n => ([n, parseColumnHeaderName(n)]))
+      colnames.map(n => ([n, parseColumnHeaderName(n, labConfig)]))
     );
-
-    // Attempt to get the lab config. This isn't required.
-    let labConfig: LabConfig | undefined = lab ?
-      (typeof lab === 'string' ?
-        labConfigs.get(lab)
-        : lab
-      )
-      : autoDetectLabConfig(colnames);
-
-    if (!labConfig) info(`LabConfig was either not supplied or not auto-detected.`);
-
 
     // Determine a "date" column for this dataset
     // Let some "known" candidates for date column name take precedence over others:
-    let datecol = colnames
-      .sort()
-      .find((name) => name.toUpperCase().match(/DATE/));
-    if (colnames.find((c) => c.match(/DATESUB/))) {
-      trace(`Found DATESUB column, using that for date in sheet ${sheetname}.`);
-      datecol = 'DATESUB'; // A&L West Semios
-    }
-    //trace('datecol = ', datecol, ', colnames uppercase = ', colnames.map(c => c.toUpperCase()));
+    let datecol = modusKeyToHeader('EventDate', labConfig);
     if (!datecol) {
       error('No date column in sheet', sheetname, ', columns are:', colnames);
       throw new Error(
@@ -198,6 +190,7 @@ function parseTomKat({
               ],
             },
             EventMetaData: {
+              //TODO: LabConfig can override this EventaDate
               EventDate: date, // TODO: process this into the actual date format we are allowed to have in schema.
               EventType: { Soil: true },
             },
@@ -215,7 +208,7 @@ function parseTomKat({
       const samples = event.EventSamples!.Soil!.SoilSamples!;
 
       for (const [index, row] of g_rows.entries()) {
-        const reportid = parseReportID(row);
+        const reportid = modusKeyToValue(row, 'ReportID', labConfig);
         if (reportid) {
           event.LabMetaData.Reports[0]!.ReportID = reportid; // last row will win this if they disagree
         }
@@ -234,20 +227,22 @@ function parseTomKat({
         })
         nutrientResults = units.convertUnits(nutrientResults);
 
-        const id = parseSampleID(row);
-        const meta = pointmeta[id] || null; // where does the pointmeta go again (Latitude_DD, Longitude_DD, Field, Acreage, etc.)
-
+        const id = modusKeyToValue(row, 'SampleNumber', labConfig);
+        // where does the pointmeta go again (Latitude_DD, Longitude_DD, Field,
+        // Acreage, etc.)?
+        const meta = pointmeta[id] || null;
 
         // Grab the "depth" for this sample:
-        // // SAM: need to write this to figure out a Depth object
+        //TODO: integrate into labconfig
         const depth = parseDepth(row, unitOverrides, sheetname);
-        const DepthID = '' + ensureDepthInDepthRefs(depth, depthrefs); // mutates depthrefs if missing, returns depthid
+        // mutates depthrefs if missing, returns depthid
+        const DepthID = '' + ensureDepthInDepthRefs(depth, depthrefs);
 
         const sample: any = {
           SampleMetaData: {
-            SampleNumber: parseSampleNumber(row) || '' + index,
-            ReportID: '1',
-            FMISSampleID: '' + id,
+            SampleNumber: modusKeyToValue(row, 'SampleNumber', labConfig) || '' + index,
+            ReportID: modusKeyToValue(row, 'ReportID', labConfig) || '1',
+            FMISSampleID: modusKeyToValue(row, 'FMISSampleID', labConfig) || ''+id,
           },
           Depths: [{
             DepthID,
@@ -317,22 +312,25 @@ function isPointMetadataSheetname(name: string) {
 //Preference here is overrides > sheet > labConfig
 function setNutrientResultUnits({
   nutrientResults,
+  headers,
   unitOverrides,
   labConfig,
-  headers,
 } : {
   nutrientResults: NutrientResult[],
-  unitOverrides: Units | undefined,
-  labConfig: LabConfig | undefined,
   headers: Record<string, ColumnHeader>,
+  unitOverrides?: Units,
+  labConfig?: LabConfig,
 }) : NutrientResult[] {
   return nutrientResults.map(nr => {
-    let header = Object.values(headers).find(h => h.nutrientResult?.Element === nr.Element);
+    let header = Object.values(headers)
+      .find(h => h.nutrientResult?.Element === nr.Element);
     let override = unitOverrides?.[header!.original];
     let headerUnit = header?.units;
     let labConfigUnit = labConfig?.units[nr.Element];
 
-    trace(`Ordered unit prioritization of ${nr.Element}: Override:[${override}] > Header:[${headerUnit}] > Lab Config:[${labConfigUnit}] > default:[${nr.ValueUnit}]`)
+    trace(`Ordered unit prioritization of ${nr.Element}: Override:[${override}] `
+          + `> Header:[${headerUnit}] > LabConfig:[${labConfigUnit}] > default:`
+          + `[${nr.ValueUnit}]`);
     return {
       ...nr,
       ValueUnit: override || headerUnit || labConfigUnit || nr.ValueUnit,
@@ -410,11 +408,6 @@ function ensureDepthInDepthRefs(depth: Depth, depthrefs: Depth[]): number {
   return match.DepthID!;
 }
 
-function parseSampleID(row: any): string {
-  const copy = keysToUpperNoSpacesDashesOrUnderscores(row);
-  return copy['POINTID'] || copy['FMISSAMPLEID'] || copy['SAMPLEID'] || '';
-}
-
 // Make a WKT from point meta's Latitude_DD and Longitude_DD.  Do a "tolerant" parse so anything
 // with latitude or longitude (can insensitive) or "lat" and "lon" or "long" would still get a WKT
 function parseWKTFromPointMetaOrRow(meta_or_row: any): string {
@@ -461,15 +454,19 @@ function extractBefore(str: string, startChar: string): string {
   if (start < 0) return str; // start char not found
   return str.slice(0,start);
 }
+
+// This is the implementation allowing for association of column headers to
+// a NutrientResult. It'll also be key in getting back to the original input
+// headers if that is necessary.
 type ColumnHeader = {
   original: string,
   element: string,
   modifier: string,
   units: string,
-  nutrientResult: NutrientColHeader | undefined,
+  nutrientResult: NutrientResult,
 };
 
-function parseColumnHeaderName(original: string): ColumnHeader {
+function parseColumnHeaderName(original: string, labConfig?: LabConfig): ColumnHeader {
   original = original
     .trim()
     .replace(/\n/g, ' ')
@@ -477,27 +474,93 @@ function parseColumnHeaderName(original: string): ColumnHeader {
   const element = extractBefore(original, '(') || original;
   const modifier = extractBetween(original, '(', ')');
   const units = extractBetween(original, '[', ']');
-  const nutrientResult = nutrientColHeaders[element];
+  const nutrientResult = labConfig?.analytes[element] || { Element: element };
+  //TODO: Could also be a mapping item
   return { original, element, modifier, units, nutrientResult };
 }
 
-// units can be overriden
+// If we aren't careful and we allow extra things through, we could end up with
+// nutrient results for e.g., "Date", "Location", and other non-NRs.
+// TODO: 'strict' means exclude all elements unknown to modus
 function parseNutrientResults({
   row,
   headers,
+  //strict,
 } : {
   row: Record<keyof typeof headers, any>,
   headers: Record<string, ColumnHeader>,
+  //strict?: boolean
 }): NutrientResult[] {
   return Object.keys(row)
-    .filter(key => headers[key]?.nutrientResult)
+    //TODO: What about undefined, '', etc? Has that already been done by something?
     .filter(key => !isNaN(row[key]))
+    //TODO: enable some implementation of strict.
+    //.filter(key => (!(strict && !allElements[headers[key]!.nutrientResult)))
     .map(key => ({
-      ...headers[key]?.nutrientResult,
-      Element: headers[key]!.nutrientResult!.Element,
+      ...headers[key]!.nutrientResult,
       Value: +row[key],
-      ValueUnit: headers[key]!.nutrientResult?.ValueUnit || 'none',
-    }));
+      ValueUnit: headers[key]!.nutrientResult?.ValueUnit //|| 'none',
+    }))
+}
+
+//1. grab first key containing 'DEPTH'
+//2.
+function parseDepth2(row: any, units?: any, sheetname?: string): Depth {
+  let obj: any = {
+    DepthUnit: 'cm', //default to cm
+  };
+
+  // Get columns with the word depth
+  const copy = keysToUpperNoSpacesDashesOrUnderscores(row);
+  const unitsCopy = keysToUpperNoSpacesDashesOrUnderscores(units);
+  let depthKey = Object.keys(copy).find((key) => key.match(/DEPTH/));
+  if (depthKey) {
+    let value = copy[depthKey].toString();
+    if (unitsCopy[depthKey]) obj.DepthUnit = unitsCopy[depthKey];
+
+    if (value.match(' to ')) {
+      obj.StartingDepth = +value.split(' to ')[0];
+      obj.EndingDepth = +value.split(' to ')[1];
+      obj.Name = value;
+    } else if (value.match(' - ')) {
+      obj.StartingDepth = +value.split(' - ')[0];
+      obj.EndingDepth = +value.split(' - ')[1];
+      obj.Name = value;
+    } else {
+      obj.StartingDepth = +value;
+      obj.Name = value;
+    }
+  }
+
+  if (row['B Depth']) obj.StartingDepth = +row['B Depth'];
+  if (row['B Depth']) obj.Name = '' + row['B Depth'];
+  if (units['B Depth']) obj.DepthUnit = units['B Depth']; // Assume same for both top and bottom
+  if (row['E Depth']) obj.EndingDepth = +row['E Depth'];
+
+  //Insufficient data found
+  if (typeof obj.StartingDepth === 'undefined') {
+    warn(
+      'No depth data was found in sheetname',
+      sheetname,
+      '. Falling back to default depth object.'
+    );
+    trace('Row without depth was: ', row);
+    return {
+      StartingDepth: 0,
+      EndingDepth: 8,
+      DepthUnit: 'in',
+      Name: 'Unknown Depth',
+      ColumnDepth: 8,
+    };
+  }
+
+  //Handle single depth value
+  obj.EndingDepth = obj.EndingDepth || obj.StartingDepth;
+
+  //Now compute column depth
+  obj.ColumnDepth = Math.abs(obj.EndingDepth - obj.StartingDepth);
+
+  return obj;
 }
 
 // sheetname is just for debugging
@@ -559,27 +622,10 @@ function parseDepth(row: any, units?: any, sheetname?: string): Depth {
   return obj;
 }
 
-function parseReportID(row: any) {
-  if (row['REPORTNUM']) {
-    // A&L West Semios
-    return row['REPORTNUM'].toString().trim();
-  }
-  return '';
-}
-
-// SampleNumber is not the same as SampleID: SampleID is what the soil sampler called it,
-// SampleNumber is what the Lab calls that sample
-function parseSampleNumber(row: any) {
-  if (row['LABNUM']) {
-    // A&L West Semios
-    return row['LABNUM'].toString().trim();
-  }
-  return '';
-}
-
 export type ToCsvOpts = {
   ssurgo?: boolean;
 };
+
 export function toCsv(input: ModusResult | ModusResult[], opts?: ToCsvOpts) {
   if (opts?.ssurgo) {
     warn('SSURGO option coming soon for CSV output');
@@ -697,7 +743,7 @@ type NutrientColHeader = {
 }
 
 type ModusCsv = ModusCsvRow[];
-//TODO: all of these need to be split out and moved into the lab configs found in src/labs/*.js
+/*
 export let nutrientColHeaders: Record<string, NutrientColHeader> = {
   '1:1 Soil pH': {
     Element: 'pH',
@@ -1021,11 +1067,14 @@ export let nutrientColHeaders: Record<string, NutrientColHeader> = {
     Element: 'Cu',
     ValueUnit: '[ppm]',
   },
+  'Excess-Lime': {
+    Element: 'Excess-Lime',
+  },
   'Excess Lime': {
-    Element: 'Lime Rec',
+    Element: 'Excess-Lime',
   },
   'Lime Rec': {
-    Element: 'Lime Rec',
+    Element: 'Lime-Rec',
   },
   'WRDF Buffer pH': {
     Element: 'B-pH (W)',
@@ -1156,11 +1205,11 @@ export let nutrientColHeaders: Record<string, NutrientColHeader> = {
     Element: 'Texture',
   },
   'Bulk Density': {
-    Element: 'Bulk Density',
+    Element: 'Bulk-Density',
     ValueUnit: 'g/cm3',
   },
   'Organic Carbon %': { // Ward, from TomKat data
-    Element: 'TOC',
+    Element: 'OC',
     ValueUnit: '%',
   },
   'Total Org Carbon': {
@@ -1199,7 +1248,6 @@ export let nutrientColHeaders: Record<string, NutrientColHeader> = {
   // A&L West CSV (Semios)
   // Open Questions:
   // - verify units
-  // - is the "P" in "HCO3_P" an HCO3 Saturated Paste or PPM or %?
   // - is "K_PCT" (and other _PCT's) just K in mg/kg or in %?
   // - Add support for EX__LIME-style things that are the lab's assessment of the lime level (VH, H, L, VL).
   //   Modus supports those kind of assessments, but need to lookup how they were represented
@@ -1259,7 +1307,7 @@ export let nutrientColHeaders: Record<string, NutrientColHeader> = {
     ValueUnit: '[ppm]',
   },
   'B-Ph': {
-    Element: 'B-Ph',
+    Element: 'B-ph',
   },
   'BUFFER_PH': {
     Element: 'B-pH',
@@ -1344,7 +1392,7 @@ export let nutrientColHeaders: Record<string, NutrientColHeader> = {
     ValueUnit: 'dS/m', // Just guessed that this is the one, need to verify. Sam: The pdf example didn't have EC
   },
   'SAT_PCT': {
-    Element: 'SAT_PCT', // I have no idea what this is, passing it through verbatim
+    Element: 'SAT_PCT',
     ValueUnit: '%',
   },
   'CO3': {
@@ -1352,6 +1400,7 @@ export let nutrientColHeaders: Record<string, NutrientColHeader> = {
     ValueUnit: '[ppm]',
   },
 };
+*/
 /* Didn't see these in the official modus element list
   "LBC 1": [],
   "Total Microbial Biomass": [],
@@ -1370,28 +1419,12 @@ export let nutrientColHeaders: Record<string, NutrientColHeader> = {
   "Mono:Poly": []
  */
 
-function labMatches({
-  lab,
-  headers,
-} : {
-  lab: LabConfig
-  headers: string[],
-}) : boolean {
-  return lab.headers.every((header: string) => headers.indexOf(header) > -1)
-}
-
-export function autoDetectLabConfig(headers: string[]) : LabConfig | undefined {
-  let match = Object.values(labConfigs).find(lab => labMatches({lab, headers}));
-  if (match) {
-    info(`Recognized sheet as lab: ${match!.name}`);
-  } else {
-    warn(`Problem autodetecting lab. No matches found while autodetecting based on column headers (to automatically set units). See docs to manually specify unit overrides.`);
-  }
-  return match
-}
-
 // This takes an mappings in the lab configs and sets modus values
 // If multiple columns map to the same modus, take the last defined one.
-function handleModusMappers() {
+/*
+function handleModusMappers(modus: ModusResult, mm: ModusMappings) {
   //1. Split on [*] and iterate over the parent?
+
+
 }
+*/

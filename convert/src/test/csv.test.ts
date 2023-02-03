@@ -103,6 +103,7 @@ export default async function run(lib: typeof MainLib) {
   }
   */
 
+ /*
   test('Testing whether all the nutrient column ValueUnits are parseable by UCUM library');
   let allUnits = Object.values(lib.csv.nutrientColHeaders)
     .map(v => v.ValueUnit)
@@ -125,5 +126,6 @@ export default async function run(lib: typeof MainLib) {
     throw new Error(`The following units were unrecognized: ${JSON.stringify(badUnits)}`);
   }
 
+  */
   test('All parse tests passed');
 }

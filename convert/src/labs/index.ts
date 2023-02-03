@@ -1,81 +1,61 @@
-import type { Units } from '@modusjs/units';
+import debug from 'debug';
+import type { Units, NutrientResult } from '@modusjs/units';
+import { default as a_l_west } from './a_l_west.js';
+import { default as tomkat} from './tomkat.js';
 
-export { default as a_l_west } from './a_l_west.js';
+export * from './automated.js';
+export const labConfigs = {
+  a_l_west,
+  tomkat
+}
 
 export type LabConfig = {
   units: Units;
   name: string;
   headers: string[];
-  analytes: Analytes;
-  mappings: ModusMappings | undefined;
+  analytes: Record<string, NutrientResult>;
+  //Mappings can point to undefined so the config lists all known headers
+  mappings: Record<string, keyof typeof toModusJsonPath | undefined>;
 }
 
-export type Analyte = {
-  name: string,
-  units: string,
-  modusTestId?: string,
-}
-
-type Analytes = Record<string, Analyte>;
-type ModusMappings = Record<string, string | undefined>;
-
-export class LabConf implements LabConfig {
-  units: Units;
-  name: string;
-  headers: string[];
-  analytes: Analytes;
-  mappings: ModusMappings | undefined;
-
-  constructor({
-    units,
-    name,
-    analytes,
-    mappings
-  }: {
-    units?: Units,
-    name: string,
-    analytes?: Analytes,
-    mappings?: ModusMappings,
-  }) {
-    if (!(units || analytes)) throw new Error(`'units' or 'analytes' required in constructor`)
-    this.name = name;
-    this.mappings = mappings;
-
-    this.units = units || Object.fromEntries(
-      Object.entries(!analytes).map(([key, val]) => ([key, val.units]))
-    );
-
-    this.analytes = analytes || Object.fromEntries(
-      Object.entries(!units).map(([key, val]) => (
-        [key, {
-          name: key,
-          units: val,
-        }]
-      ))
-    );
-
-    this.headers = [...Object.keys(this.units), ...Object.keys(this.mappings || {})];
-  }
-}
-
-let toModusJsonPath = {
+const toModusJsonPath = {
+  // A counter of samples: 1, 2, 3, ...
   'SampleNumber': 'Events[*].EventSamples.Soil.SoilSamples[*].SampleNumber',
-  //TODO: Should ReportID in these two places be the same value?
+  'SampleID': 'Events[*].EventSamples.Soil.SoilSamples[*].FMISSampleID',
+  // A more unique ID for each sample
   'ReportID': 'Events[*].EventSamples.Soil.SoilSamples[*].ReportID',
+  //TODO: Should ReportID in these two places be the same value?
   //  'ReportID': 'Events[0].LabMetaData.Reports[*].ReportID'
   'LabEventID': 'Events[*].LabMetaData.LabEventID',
+  'LabID': 'Events[*].LabMetaData.LabID',
   'LabReportID': 'Events[*].LabMetaData.Reports[*].LabReportID',
   'EventDate': 'Events[*].EventMetaData.EventDate',
   'Grower': 'Events[*].FMISMetaData.FMISProfile.Grower',
+  'Field': 'Events[*].FMISMetaData.FMISProfile.Field',
   'Name': 'Events[*].LabMetaData.ClientAccount.Name',
   'AccountNumber': 'Events[*].LabMetaData.ClientAccount.AccountNumber',
+  'Address1': `Events[*].LabMetaData.ClientAccount['Address 1']`,
+  'Address2': `Events[*].LabMetaData.ClientAccount['Address 2']`,
+  'Zip': 'Events[*].LabMetaData.ClientAccount.Zip',
+  'State': 'Events[*].LabMetaData.ClientAccount.State',
+  'City': 'Events[*].LabMetaData.ClientAccount.City',
+  'Company': 'Events[*].LabMetaData.ClientAccount.Company',
+  'ProcessedDate': 'Events[*].LabMetaData.ProcessedDate',
+  'StartingDepth': 'Events[*].EventSamples.Soil.DepthRefs[*].StartingDepth',
+  'EndingDepth': 'Events[*].EventSamples.Soil.DepthRefs[*].EndingDepth',
 }
 
-function mapToModusPaths(mm: Record<string, keyof typeof toModusJsonPath>): Record<string, string> {
-  return Object.fromEntries(
-    Object.entries(mm).map(([key, val]) => ([
-      key,
-      toModusJsonPath[val]
+const modusPaths = Object.fromEntries(
+  Object.entries(toModusJsonPath).map(([k, v]) => ([v, k]))
+);
+
+export function mapToModusPaths(mm: LabConfig['mappings']): Record<string, keyof typeof modusPaths> | undefined {
+  if (mm === undefined) return undefined;
+  return Object.fromEntries(Object.entries(mm)
+    .filter(([_, modusKey]) => modusKey !== undefined)
+    .map(([header, modusKey]) => ([
+      header,
+      toModusJsonPath[modusKey!]
     ]))
   )
 }
