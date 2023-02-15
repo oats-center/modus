@@ -1,0 +1,42 @@
+﻿lab_method_name,csv_header,lab_Soil_Item,Modus_Soil_Item,lab_Extraction_Method,Modus_Extraction_Method,lab_Measurement_Method,Modus_Measurement_Method,lab_Unit_of_Measurement_Default,Modus_Unit_of_Measurement_Default,lab_Unit_of_Measurement_Default_Alt,Modus_Unit_of_Measurement_Alt,Lab,lab_name,Modus_Soil_Test
+Lime Presence,EX__LIME,Lime Recommendation,Lime Recommendation,,SMP,,Calculated,,tons/ac,,"tons/ac,kg/ha","""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA",S-LR-SMP
+NH4-N,NH4,Ammonium-Nitrogen,,,,,,,,,,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA",
+Ca,CA,Calcium,Calcium,,Ammonium Acetate,,"""ICP, AAS""",,mg/kg,,"mg/kg,ppm,meq/100 g,cmol/kg,lb/ac,kg/ha","""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA",S-CA-NH4AC.05
+% Soil Moisture,,Moisture,,,,,,,,,,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA",
+SAR,SAR,Sodium Adsorption Ratio,,,,,,,,,,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA",
+PO4-P (Bray-P1),P1,Phosphorus,Phosphorus,,Bray P1 (1:10),,Spectrophotometric,,mg/kg,,"mg/kg,ppm,lb/ac,kg/ha","""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA",S-P-B1-1:10.01.03
+PO4-P (Bray-P2),P2,Phosphorus,,,,,,,,,,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA",
+PO4-P (Olsen),HCO3_P,Phosphorus,,,,,,,,,,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA",
+K-AA,K,Potassium,,,,,,,,,,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA",
+Particle Size Analysis - PSA - Sand,,Sand,,,,,,,,,,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA",
+Silt Clay - Soil Texture,,Silt+Clay,,,,,,,,,,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA",
+Available Water Capacity,,Moisture,,,,,,,,,,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA",
+Total N,TN,"""Nitrogen, Total""",,,,,,,,,,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA",
+Organic Matter (OM),OM,Organic Matter,Organic Matter,,Loss-on-Ignition ,,Gravimetric,,%,,"%,g/kg","""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA",S-SOM-LOI.15
+Organic Carbon (OC),,Organic Carbon,,,,,,,,,,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA",
+%CaCO3,,Calcium Carbonate,,,,,,,,,,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA",
+C:N ratio,,C:N Ratio,,,,,,,,,,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA",
+B,B,Boron,Boron,,DTPA-Sorbitol,,"""ICP, AAS""",,mg/kg,,"mg/kg,ppm,lb/ac,kg/ha","""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA",S-B-DTPA-SORB.05
+Zn,ZN,Zinc,Zinc,,DTPA-Sorbitol,,"""ICP, AAS""",,mg/kg,,"mg/kg,ppm,lb/ac,kg/ha","""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA",S-ZN-DTPA-SORB.05
+Mn,MN,Manganese,Manganese,,DTPA-Sorbitol,,"""ICP, AAS""",,mg/kg,,"mg/kg,ppm,lb/ac,kg/ha","""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA",S-MN-DTPA-SORB.05
+Molybdenum,MO,Molybdenum,,,,,,,,,,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA",
+Chlorine,CL,Chloride,Chloride,,Saturated Paste,,Spectrophotometric,,mg/L,,"mg/L,meq/L,ppm,lb/ac,kg/ha","""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA",S-CL-SP.01
+Fe,FE,Iron,Iron,,DTPA-Sorbitol,,"""ICP, AAS""",,mg/kg,,"mg/kg,ppm,lb/ac,kg/ha","""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA",S-FE-DTPA-SORB.05
+Cu,CU,Copper,Copper,,DTPA-Sorbitol,,"""ICP, AAS""",,mg/kg,,"mg/kg,ppm,lb/ac,kg/ha","""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA",S-CU-DTPA-SORB.05
+CEC,CEC,Cation Exchange Capacity,,,,,,,,,,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA",
+Extractable Ca,CA,Calcium,Calcium,,Ammonium Acetate,,"""ICP, AAS""",,mg/kg,,"mg/kg,ppm,meq/100 g,cmol/kg,lb/ac,kg/ha","""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA",S-CA-NH4AC.05
+OM (LOI),OM,Organic Matter,Organic Matter,,Loss-on-Ignition ,,Gravimetric,,%,,"%,g/kg","""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA",S-SOM-LOI.15
+EC,EC,Electrical Conductivity,,,,,,,,,,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA",
+Soil pH,PH,pH,pH,,Saturated Paste,,H+ ISE,,standard units,,"standard units,s.u.,none","""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA",S-PH-SP.02
+K,K,Potassium,Potassium,,Ammonium Acetate,,"""ICP, AAS""",,mg/kg,,"mg/kg,ppm,meq/100 g,cmol/kg,lb/ac,kg/ha","""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA",S-K-NH4AC.05
+Mg,MG,Magnesium,Magnesium,,Ammonium Acetate,,"""ICP, AAS""",,mg/kg,,"mg/kg,ppm,meq/100 g,cmol/kg,lb/ac,kg/ha","""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA",S-MG-NH4AC.05
+Na,NA,Sodium,Sodium,,Ammonium Acetate,,"""ICP, AAS""",,mg/kg,,"mg/kg,ppm,meq/100 g,cmol/kg,lb/ac,kg/ha","""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA",S-NA-NH4AC.05
+NO3-N,NO3-N,Nitrate-Nitrogen,Nitrate-Nitrogen,,1:5 2.0 N KCl ,,Cd Red/Spectrophotometric,,mg/kg,,"mg/kg,ppm,lb/ac,kg/ha","""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA",S-NO3-1:5.01.01
+SO4-S,SO4-S,Sulfate-Sulfur,Sulfur,,Ammonium Acetate,,ICP,,mg/kg,,"mg/kg,ppm,lb/ac,kg/ha","""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA",S-S-NH4AC.05
+Buffer pH,BUFFER_PH,Buffer pH,Buffer pH,,Sikora 1 buffer,,H+ ISE,,none,,none,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA",S-BPH-SIK1.02
+H,H,Hydrogen,,,,,,,,,,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA",
+PERCENT CATION SATURATION (COMPUTED),SAT_PCT,Saturation Paste %,Saturation Paste %,,Balance,,Calculated,,%,,%,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA",S-SP%.19
+ENR,ENR,Estimated Nitrogen Release,Estimated Nitrogen Release,,Saturated Paste,,Calculated,,ppm,,"ppm,lb,lb/ac,kg/ha","""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA",S-ENR.19
+Exchangeable Sodium Percentage,ESP,Exchangeable Sodium Percentage,Exchangeable Sodium Percentage,,1.0 M KCl,,Calculated,,%,,%,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA",S-ESP.19
+CO3,CO3,Carbonate,Carbonate,,Saturated Paste,,Titration,,meq/L,,"meq/L,mg/L,ppm","""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA",S-CO3-SP.12
+Aluminum,AL,Aluminum,,,,,,,,,,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA",

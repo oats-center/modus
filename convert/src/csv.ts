@@ -9,7 +9,7 @@ import ModusResult, {
   assert as assertModusResult,
 } from '@oada/types/modus/v1/modus-result.js';
 import type { LabConfig } from './labs/index.js';
-import { autoDetectLabConfig, labConfigs, modusKeyToValue, modusKeyToHeader } from './labs/index.js';
+import { autoDetectLabConfig, cobbleLabConfig, labConfigsMap, modusKeyToValue, modusKeyToHeader } from './labs/index.js';
 const error = debug('@modusjs/convert#csv:error');
 const warn = debug('@modusjs/convert#csv:error');
 const info = debug('@modusjs/convert#csv:info');
@@ -18,11 +18,33 @@ const trace = debug('@modusjs/convert#csv:trace');
 export const supportedFormats = ['generic'];
 export type SupportedFormats = 'generic';
 
-//export const recognizedCsvs = new Map<string,RecognizedCsv>();
-const labConfigMap = new Map<string, LabConfig>(
-  Object.values(labConfigs).map(obj => ([obj.name, obj as LabConfig]))
-)
-//--------------------------------------------------------------------------------------
+export function getWorkbookFromData({
+  wb,
+  str,
+  arrbuf,
+  base64,
+}: {
+  wb?: xlsx.WorkBook;
+  str?: string;
+  arrbuf?: ArrayBuffer;
+  base64?: string; // base64 string
+}): xlsx.WorkBook {
+  // Make sure we have an actual workbook to work with:
+  if (!wb) {
+    try {
+      if (str) wb = xlsx.read(str, { type: 'string' });
+      if (arrbuf) wb = xlsx.read(arrbuf, { type: 'array' });
+      if (base64) wb = xlsx.read(base64, { type: 'base64' });
+    } catch (e: any) {
+      throw oerror.tag(e, 'Failed to parse input data with xlsx/csv reader');
+    }
+  }
+  if (!wb) {
+    throw new Error('No readable input data found.');
+  }
+  return wb;
+}
+
 // parse: wrapper function for particular parsing functions found down below.
 //
 // Possible input parameters for xlsx/csv parsing:
@@ -41,96 +63,118 @@ export function parse({
   arrbuf?: ArrayBuffer;
   base64?: string; // base64 string
   format?: 'generic'; // add others here as more become known
-  lab?: LabConfig | keyof typeof labConfigs
+  lab?: LabConfig | keyof typeof labConfigsMap.keys
 }): ModusResult[] {
   // Make sure we have an actual workbook to work with:
-  if (!wb) {
-    try {
-      if (str) wb = xlsx.read(str, { type: 'string' });
-      if (arrbuf) wb = xlsx.read(arrbuf, { type: 'array' });
-      if (base64) wb = xlsx.read(base64, { type: 'base64' });
-    } catch (e: any) {
-      throw oerror.tag(e, 'Failed to parse input data with xlsx/csv reader');
-    }
-  }
-  if (!wb) {
-    throw new Error('No readable input data found.');
-  }
+  wb = getWorkbookFromData({ wb, str, arrbuf, base64 })
 
   if (!format) format = 'generic';
 
   switch (format) {
     case 'generic':
-      return parseTomKat({ wb, lab });
+      return parseCsv({ wb, lab });
     default:
       throw new Error(`format type ${format} not currently supported`);
   }
 }
 
-//-------------------------------------------------------------------------------------------
-// Parse the specific spreadsheet with data from TomKat ranch provided at the
-// 2022 Fixing the Soil Health Tech Stack Hackathon.
-function parseTomKat({
-  wb,
-  lab,
-  allowOverrides=true,
-}: {
-  wb: xlsx.WorkBook,
-  lab?: LabConfig | keyof typeof labConfigs,
-  allowOverrides?: boolean
-}): ModusResult[] {
+export function partitionSheets(wb: xlsx.WorkBook, header?: string) : {
+  pointmeta: Record<string, any>,
+  datasheets: DataSheet[],
+  metadatasheets: any[],
+} {
   // Grab the point meta data out of any master sheet:
   // Any sheet whose name contains "point meta" regardless of spacing, case, or punctuation will be considered
   // point metadata.  i.e. 'Point Meta-Data'  would match as well as 'pointmetadata'
   const pointmeta: { [pointid: string]: any } = {}; // just build this as we go to keep code simpler
   // Split the sheet names into the metadata sheets and the data sheets
-  const metadatasheets = wb.SheetNames.filter(isPointMetadataSheetname);
-  trace('metadatasheets:', metadatasheets);
-  if (metadatasheets) {
-    for (const sheetname of metadatasheets) {
-      // If you don't put { raw: false } for sheet_to_json, it will parse dates as ints instead of the formatted strings
+  const metadatasheets = wb.SheetNames.filter(isPointMetadataSheetname)
+    .map(sheetname => {
       const rows = xlsx.utils
         .sheet_to_json(wb.Sheets[sheetname]!, { raw: false })
         .map(keysToUpperNoSpacesDashesOrUnderscores);
+      return { rows, sheetname }
+    })
+  trace('metadatasheets:', metadatasheets.map(sh => sh.sheetname));
+  if (metadatasheets) {
+    for (const { rows } of metadatasheets) {
+      // If you don't put { raw: false } for sheet_to_json, it will parse dates as ints instead of the formatted strings
+      //TODO: Move into Lab Config, methinks
       for (const r of rows) {
-        const id = r['POINTID'] || r['FMISSAMPLEID'] || r['SAMPLEID'];
+        const id = header ? r[header] : r['POINTID'] || r['FMISSAMPLEID'] || r['SAMPLEID'];
         if (!id) continue;
         pointmeta[id] = r;
       }
     }
   }
 
-  // Start walking through all the sheets to grab the main data:
-  const datasheets = wb.SheetNames.filter(
-    (sn) => !isPointMetadataSheetname(sn)
-  );
-  trace('datasheets:', datasheets);
-  const ret: ModusResult[] = [];
+  const datasheets = wb.SheetNames
+  .filter(sh => !isPointMetadataSheetname(sh))
+  .map(sheetname => {
 
-  for (const sheetname of datasheets) {
     const sheet = wb.Sheets[sheetname]!;
     const allrows = xlsx.utils.sheet_to_json(sheet, {defval: ''}); // include empty column values! undefined doesn't seem to get empty cols to show up.
-
-    // Grab the unit overrides and get rid of comment/units columns
-    let unitOverrides = allowOverrides ? extractUnitOverrides(allrows) : undefined;
     const rows = allrows.filter(isDataRow);
-    trace('Have', rows.length, 'rows from sheetname: ', sheetname);
-
     // Get a list of all the header names for future reference as needed. Since
     // keys are omitted for rows where a column has no value, we must look
     // through all the rows and accumulate the unique set of column headers.
     const colnames = [...new Set(rows.map((obj: any) => Object.keys(obj))
       .reduce((prev, cur) => prev.concat(cur), [])
     )];
+    return {
+      sheetname,
+      allrows,
+      rows,
+      colnames
+    }
+  });
 
-    // TODO: Should this be done on a per-sheet basis here or composed over all
-    // sheets first, then used?
-    let labConfig: LabConfig | undefined = (lab && typeof lab === 'string') ?
-      labConfigMap.get(lab) : lab;
+  return { pointmeta, metadatasheets, datasheets };
+}
 
-    if (!labConfig) labConfig = autoDetectLabConfig(colnames);
-    if (!labConfig) info(`LabConfig was either not supplied or not auto-detected. Defaulting to standard config.`);
-    if (!labConfig) throw new Error('Unable to detect or generate lab configuration.')
+type DataSheet = {
+  colnames: string[];
+  allrows: any[];
+  rows: any[];
+  sheetname: string;
+};
+
+export function findAndAutodetectLab(datasheets: DataSheet[], allowImprovise?: boolean) : LabConfig | undefined {
+  const labConfig = datasheets.map(({sheetname, colnames}) => autoDetectLabConfig(colnames, sheetname))
+    .find(sh => sh)
+  if (labConfig) info(`Using LabConfig: ${labConfig.name}`);
+  if (!allowImprovise) return labConfig;
+  return labConfig || datasheets.map(({colnames}) => cobbleLabConfig(colnames))
+    .find(sh => sh)
+}
+//-------------------------------------------------------------------------------------------
+// Parse the specific spreadsheet with data from TomKat ranch provided at the
+// 2022 Fixing the Soil Health Tech Stack Hackathon.
+function parseCsv({
+  wb,
+  lab,
+  allowOverrides=true,
+}: {
+  wb: xlsx.WorkBook,
+  lab?: LabConfig | keyof typeof labConfigsMap.keys,
+  allowOverrides?: boolean
+}): ModusResult[] {
+  const { pointmeta, datasheets } = partitionSheets(wb);
+
+  const labConfig: LabConfig | undefined = (lab && typeof lab === 'string') ?
+    labConfigsMap.get(lab) : findAndAutodetectLab(datasheets);
+  if (!labConfig) info(`LabConfig was either not supplied or not auto-detected. Defaulting to standard config.`);
+  if (!labConfig) throw new Error('Unable to detect or generate lab configuration.')
+
+
+  trace('datasheets:', datasheets);
+  const ret: ModusResult[] = [];
+
+  for (const {sheetname, allrows, rows, colnames } of datasheets) {
+    // Grab the unit overrides and get rid of comment/units columns
+    let unitOverrides = allowOverrides ? extractUnitOverrides(allrows) : undefined;
+    trace('Have', rows.length, 'rows from sheetname: ', sheetname);
+
 
     // Parse structured header format for reverse conversion
     let headers = Object.fromEntries(
@@ -190,7 +234,7 @@ function parseTomKat({
               ],
             },
             EventMetaData: {
-              //TODO: LabConfig can override this EventaDate
+              //TODO: LabConfig can override this EventDate
               EventDate: date, // TODO: process this into the actual date format we are allowed to have in schema.
               EventType: { Soil: true },
             },
@@ -733,674 +777,6 @@ function toNutrientResultsObj(sampleDepth: any) {
   );
 }
 
-type ModusCsvRow = {
-  ReportID: string;
-};
-
-type NutrientColHeader = {
-  Element: string,
-  ValueUnit?: string
-}
-
-type ModusCsv = ModusCsvRow[];
-/*
-export let nutrientColHeaders: Record<string, NutrientColHeader> = {
-  '1:1 Soil pH': {
-    Element: 'pH',
-  },
-  'pH': {
-    Element: 'pH',
-  },
-  'OM': {
-    Element: 'OM',
-    ValueUnit: '%',
-  },
-  'Organic Matter LOI %': {
-    Element: 'OM (LOI)',
-    ValueUnit: '%',
-  },
-  'Organic Matter': {
-    Element: 'OM',
-    ValueUnit: '%',
-  },
-  'OM (LOI)': {
-    Element: 'OM (LOI)',
-    ValueUnit: '%',
-  },
-  'Olsen P ppm P': {
-    Element: 'P (Olsen)',
-    ValueUnit: '[ppm]',
-  },
-  'P (Olsen)': {
-    Element: 'P (Olsen)',
-    ValueUnit: '[ppm]',
-  },
-  'Bray P-1 ppm P': {
-    Element: 'P (Bray P1 1:10)',
-    ValueUnit: '[ppm]',
-  },
-  'Olsen P': {
-    Element: 'P (Olsen)',
-    ValueUnit: 'ug/g',
-  },
-  'P phosphorus': {
-    Element: 'P',
-    ValueUnit: '[ppm]',
-  },
-  'P': {
-    Element: 'P',
-    ValueUnit: '[ppm]',
-  },
-  'P (Bray P1 1:10)': {
-    Element: 'P',
-    ValueUnit: '[ppm]',
-  },
-  'Pb lead': {
-    Element: 'Pb',
-    ValueUnit: '[ppm]',
-  },
-  'Pb': {
-    Element: 'Pb',
-    ValueUnit: '[ppm]',
-  },
-  'Potassium ppm K': {
-    Element: 'K',
-    ValueUnit: '[ppm]',
-  },
-  'K': {
-    Element: 'K',
-    ValueUnit: '[ppm]',
-  },
-  'Potassium': {
-    Element: 'K',
-    ValueUnit: 'cmol/kg',
-  },
-  'K potassium': {
-    Element: 'K',
-    ValueUnit: '[ppm]',
-  },
-  'Ca': {
-    Element: 'Ca',
-    ValueUnit: '[ppm]',
-  },
-  'Calcium ppm Ca': {
-    Element: 'Ca',
-    ValueUnit: '[ppm]',
-  },
-  'Calcium': {
-    Element: 'Ca',
-    ValueUnit: 'cmol/kg',
-  },
-  'Ca calcium': {
-    Element: 'Ca',
-    ValueUnit: '[ppm]',
-  },
-  'Cd cadmium': {
-    Element: 'Cd',
-    ValueUnit: '[ppm]',
-  },
-  'Cd': {
-    Element: 'Cd',
-    ValueUnit: '[ppm]',
-  },
-  'Cr chromium': {
-    Element: 'Cr',
-    ValueUnit: '[ppm]',
-  },
-  'Cr': {
-    Element: 'Cr',
-    ValueUnit: '[ppm]',
-  },
-  'Magnesium ppm Mg': {
-    Element: 'Mg',
-    ValueUnit: '[ppm]',
-  },
-  'Mg': {
-    Element: 'Mg',
-    ValueUnit: '[ppm]',
-  },
-  'Magnesium': {
-    Element: 'Mg',
-    ValueUnit: 'cmol/kg', //elements such as this one that don't indicate base
-  },                         //saturation are problematic. Should probably be ppm
-  'Mg magnesium': {          //unless we know it to be cmol/kg
-    Element: 'Mg',
-    ValueUnit: '[ppm]',
-  },
-  'Mo': {
-    Element: 'Mo',
-    ValueUnit: '[ppm]',
-  },
-  'Mo molybdenum': {
-    Element: 'Mo',
-    ValueUnit: '[ppm]',
-  },
-  'CEC/Sum of Cations me/100g': {
-    Element: 'CEC',
-    ValueUnit: 'meq/(100.g)',
-  },
-  'CEC': {
-    Element: 'CEC',
-    ValueUnit: 'cmol/kg',
-  },
-  'CEC (Estimated)': {
-    Element: 'CEC',
-    ValueUnit: 'cmol/kg',
-  },
-  '%Ca Sat': {
-    Element: 'BS%-Ca',
-    ValueUnit: '%',
-  },
-  'BS%-Ca': {
-    Element: 'BS%-Ca',
-    ValueUnit: '%',
-  },
-  'BS-Ca': {
-    Element: 'BS-Ca',
-    ValueUnit: 'meq/(100.g)',
-  },
-  'CA_SAT': {
-    Element: 'BS-Ca', // Base Saturation - Calcium
-    ValueUnit: 'meq/(100.g)',
-  },
-  'CA_PCT': {
-    Element: 'BS%-Ca',
-    ValueUnit: '%',
-  },
-  'BS%-Mg': {
-    Element: 'BS%-Mg',
-    ValueUnit: '%',
-  },
-  'BS-Mg': {
-    Element: 'BS-Mg',
-    ValueUnit: 'meq/(100.g)',
-  },
-  'MG_PCT': {
-    Element: 'BS%-Mg',
-    ValueUnit: '%',
-  },
-  'MG_SAT': {
-    Element: 'BS-Mg',
-    ValueUnit: 'meq/(100.g)',
-  },
-  '%Mg Sat': {
-    Element: 'BS%-Mg',
-    ValueUnit: '%',
-  },
-  'BS%-K': {
-    Element: 'BS%-K',
-    ValueUnit: '%',
-  },
-  'BS-K': {
-    Element: 'BS-K',
-    ValueUnit: 'meq/(100.g)',
-  },
-  'K_PCT': {
-    Element: 'BS%-K',
-    ValueUnit: '%',
-  },
-  'K_SAT': {
-    Element: 'BS-K',
-    ValueUnit: 'meq/(100.g)',
-  },
-  '%K Sat': {
-    Element: 'BS%-K',
-    ValueUnit: '%',
-  },
-  'BS%-Na': {
-    Element: 'BS%-Na',
-    ValueUnit: '%',
-  },
-  'BS-Na': {
-    Element: 'BS-Na',
-    ValueUnit: 'meq/(100.g)',
-  },
-  'NA_PCT': {
-    Element: 'BS%-Na',
-    ValueUnit: '%',
-  },
-  'NA_SAT': {
-    Element: 'BS-Na',
-    ValueUnit: 'meq/(100.g)',
-  },
-  '%Na Sat': {
-    Element: 'BS%-Na',
-    ValueUnit: '%',
-  },
-  '%H Sat': {
-    Element: 'BS%-H',
-    ValueUnit: '%',
-  },
-  'BS%-H': {
-    Element: 'BS%-H',
-    ValueUnit: '%',
-  },
-  'BS-H': {
-    Element: 'BS-H',
-    ValueUnit: 'meq/(100.g)',
-  },
-  'H_PCT': {
-    Element: 'BS%-H',
-    ValueUnit: '%',
-  },
-  'H_SAT': {
-    Element: 'BS-H',
-    ValueUnit: 'meq/(100.g)',
-  },
-  'Sulfate-S ppm S': {
-    Element: 'SO4-S',
-    ValueUnit: '[ppm]',
-  },
-  'SO4-S': {
-    Element: 'SO4-S',
-    ValueUnit: '[ppm]',
-  },
-  'S sulfur': {
-    Element: 'S',
-    ValueUnit: '[ppm]',
-  },
-  'S': {
-    Element: 'S',
-    ValueUnit: '[ppm]',
-  },
-  'Zinc ppm Zn': {
-    Element: 'Zn',
-    ValueUnit: '[ppm]',
-  },
-  'Zn': {
-    Element: 'Zn',
-    ValueUnit: '[ppm]',
-  },
-  'Zn zinc': {
-    Element: 'Zn',
-    ValueUnit: '[ppm]',
-  },
-  'Manganese ppm Mn': {
-    Element: 'Mn',
-    ValueUnit: '[ppm]',
-  },
-  'Mn': {
-    Element: 'Mn',
-    ValueUnit: '[ppm]',
-  },
-  'Mn manganese': {
-    Element: 'Mn',
-    ValueUnit: '[ppm]',
-  },
-  'Boron ppm B': {
-    Element: 'B',
-    ValueUnit: '[ppm]',
-  },
-  'B': {
-    Element: 'B',
-    ValueUnit: '[ppm]',
-  },
-  'B boron': {
-    Element: 'B',
-    ValueUnit: '[ppm]',
-  },
-  'Iron ppm Fe': {
-    Element: 'Fe',
-    ValueUnit: '[ppm]',
-  },
-  'Iron': {
-    Element: 'Fe',
-    ValueUnit: '[ppm]',
-  },
-  'Fe Iron': {
-    Element: 'Fe',
-    ValueUnit: '[ppm]',
-  },
-  'Fe': {
-    Element: 'Fe',
-    ValueUnit: '[ppm]',
-  },
-  'Cu copper': {
-    Element: 'Cu',
-    ValueUnit: '[ppm]',
-  },
-  'Cu': {
-    Element: 'Cu',
-    ValueUnit: '[ppm]',
-  },
-  'Copper ppm': {
-    Element: 'Cu',
-    ValueUnit: '[ppm]',
-  },
-  'Excess-Lime': {
-    Element: 'Excess-Lime',
-  },
-  'Excess Lime': {
-    Element: 'Excess-Lime',
-  },
-  'Lime Rec': {
-    Element: 'Lime-Rec',
-  },
-  'WRDF Buffer pH': {
-    Element: 'B-pH (W)',
-  },
-  'BpH (W)': {
-    Element: 'BpH (W)',
-  },
-  '1:1 S Salts mmho/cm': {
-    ValueUnit: 'mmho/cm',
-    Element: 'SS',
-  },
-  'SS': {
-    ValueUnit: 'mmho/cm',
-    Element: 'SS',
-  },
-  'Nitrate-N ppm N': {
-    Element: 'NO3-N',
-    ValueUnit: '[ppm]',
-  },
-  'Nitrate': {
-    Element: 'NO3-N',
-    ValueUnit: '[ppm]',
-  },
-  'NO3-N': {
-    Element: 'NO3-N',
-    ValueUnit: '[ppm]',
-  },
-  'Ni nickel': {
-    Element: 'Ni',
-    ValueUnit: '[ppm]',
-  },
-  'Ni': {
-    Element: 'Ni',
-    ValueUnit: '[ppm]',
-  },
-  'Sodium ppm Na': {
-    Element: 'Na',
-    ValueUnit: '[ppm]',
-  },
-  'Na sodium': {
-    Element: 'Na',
-    ValueUnit: '[ppm]',
-  },
-  'Na': {
-    Element: 'Na',
-    ValueUnit: '[ppm]',
-  },
-  'Sodium': {
-    Element: 'Na',
-    ValueUnit: 'cmol/kg',
-  },
-  'Aluminium ppm Al': {
-    Element: 'Al',
-    ValueUnit: '[ppm]',
-  },
-  'Al': {
-    Element: 'Al',
-    ValueUnit: '[ppm]',
-  },
-  'Al aluminium': {
-    Element: 'Al',
-    ValueUnit: '[ppm]',
-  },
-  'Aluminium': {
-    Element: 'Al',
-    ValueUnit: '[ppm]',
-  },
-  'As arsenic': {
-    Element: 'As',
-    ValueUnit: '[ppm]',
-  },
-  'As': {
-    Element: 'As',
-    ValueUnit: '[ppm]',
-  },
-  'Chloride ppm Cl': {
-    Element: 'Cl',
-    ValueUnit: '[ppm]',
-  },
-  'Cl': {
-    Element: 'Cl',
-    ValueUnit: '[ppm]',
-  },
-  'Total N ppm': {
-    Element: 'TN',
-    ValueUnit: '[ppm]',
-  },
-  'TN': {
-    Element: 'TN',
-    ValueUnit: '[ppm]',
-  },
-  'Total Nitrogen^': {
-    Element: 'TN',
-    ValueUnit: '%',
-  },
-  'Total P ppm': {
-    Element: 'TP',
-    ValueUnit: '[ppm]',
-  },
-  '% Sand': {
-    Element: 'Sand',
-    ValueUnit: '%',
-  },
-  'Sand': {
-    Element: 'Sand',
-    ValueUnit: '%',
-  },
-  '% Silt': {
-    Element: 'Silt',
-    ValueUnit: '%',
-  },
-  'Silt': {
-    Element: 'Silt',
-    ValueUnit: '%',
-  },
-  '% Clay': {
-    Element: 'Clay',
-    ValueUnit: '%',
-  },
-  'Clay': {
-    Element: 'Clay',
-    ValueUnit: '%',
-  },
-  'Texture': {
-    Element: 'Texture',
-  },
-  'Texture*': {
-    Element: 'Texture',
-  },
-  'Bulk Density': {
-    Element: 'Bulk-Density',
-    ValueUnit: 'g/cm3',
-  },
-  'Organic Carbon %': { // Ward, from TomKat data
-    Element: 'OC',
-    ValueUnit: '%',
-  },
-  'Total Org Carbon': {
-    Element: 'TOC',
-    ValueUnit: '%',
-  },
-  'TOC': {
-    Element: 'TOC',
-    ValueUnit: '%',
-  },
-  'TN (W)': {
-    Element: 'TN (W)',
-    ValueUnit: '[ppm]',
-  },
-  'Water Extractable Total N': {
-    Element: 'TN (W)',
-    ValueUnit: '[ppm]',
-  },
-  'TC (W)': {
-    Element: 'TC (W)',
-    ValueUnit: '[ppm]',
-  },
-  'Water Extractable Total C': {
-    Element: 'TC (W)',
-    ValueUnit: '[ppm]',
-  },
-  'Moisture (Grav)': {
-    Element: 'Moisture (Grav)',
-    ValueUnit: '%',
-  },
-  'TC': {
-    Element: 'TC',
-    ValueUnit: '[ppm]',
-  },
-
-  // A&L West CSV (Semios)
-  // Open Questions:
-  // - verify units
-  // - is "K_PCT" (and other _PCT's) just K in mg/kg or in %?
-  // - Add support for EX__LIME-style things that are the lab's assessment of the lime level (VH, H, L, VL).
-  //   Modus supports those kind of assessments, but need to lookup how they were represented
-  // - Molybdenum, Aluminum, SO4-S, SAR, CO3 in Modus requires extraction method, don't know it here.
-  // - Assuming B_SAT is Base Saturation - Boron, but Modus does not have BS-B
-  // - Need to verify units on EC: used dS/m from Modus, but there are 4 options
-  // - I do not know what "SAT_PCT" means, need to add it here.
-  // - What does "TYPE" mean?  It is the number 5 in at least one sheet
-
-  // Some answers after learning about things:
-  // 1) I think any time we see K_PCT and other _PCTs, it is Base Saturation as
-  // a percent of total CEC). When we see _SAT, it is in units of meq/100g rather
-  // than as a percent. These cannot be readily converted to mg/kg without
-  // knowing the molecular weight (and charge valence of the molecule).
-  // 2) Surely B_SAT should be added to the nomenclature.
-  // 3) Could SAT_PCT be related to soil moisture? Seems odd amongst all of the
-  // chemistry data, but maybe they find out while running the tests. See:
-  // https://anlab.ucdavis.edu/analysis/Soils/200
-  // 4) I think HCO3_P is the Olsen P test so I mapped it as such
-  'ENR': {
-    Element: 'ENR',
-    ValueUnit: '[ppm]',
-  },
-  'P1': {
-    Element: 'P (Bray P1 1:10)',
-    ValueUnit: '[ppm]',
-  },
-  'P (Bray P2 1:10)': {
-    Element: 'P (Bray P2 1:10)',
-    ValueUnit: '[ppm]',
-  },
-  'P2': {
-    Element: 'P (Bray P2 1:10)',
-    ValueUnit: '[ppm]',
-  },
-  'HCO3_P': {
-    Element: 'P (Olsen)',//'HCO3 (SP)', // is "P" saturated paste or PPM or %?
-    ValueUnit: '[ppm]',
-  },
-  'HCO3': { //Bicarbonate is often tested in soils, but there is a small chance this is another way of saying HCO3_P/Olsen
-    Element: 'HCO3',
-    ValueUnit: '[ppm]',
-  },
-  'PH': {
-    Element: 'pH',
-  },
-  'MG': {
-    Element: 'Mg',
-    ValueUnit: '[ppm]',
-  },
-  'CA': {
-    Element: 'Ca',
-    ValueUnit: '[ppm]',
-  },
-  'NA': {
-    Element: 'Na',
-    ValueUnit: '[ppm]',
-  },
-  'B-Ph': {
-    Element: 'B-ph',
-  },
-  'BUFFER_PH': {
-    Element: 'B-pH',
-  },
-  'H': {
-    Element: 'H',
-    ValueUnit: '[ppm]',
-  },
-  'NO3_N': {
-    Element: 'NO3-N',
-    ValueUnit: '[ppm]',
-  },
-  'ZN': {
-    Element: 'Zn',
-    ValueUnit: '[ppm]',
-  },
-  'MN': {
-    Element: 'Mn',
-    ValueUnit: '[ppm]',
-  },
-  'FE': {
-    Element: 'Fe',
-    ValueUnit: '[ppm]',
-  },
-  'CU': {
-    Element: 'Cu',
-    ValueUnit: '[ppm]',
-  },
-  'S__SALTS': {
-    Element: 'SS', // "Soluble Salts"
-    ValueUnit: 'mmho/cm', // was previously ppm; changed per A&L Labs West pdf
-  },
-  'CL': {
-    Element: 'Cl',
-    ValueUnit: '[ppm]',
-  },
-  'MO': {
-    Element: 'Mo', // Molybdenum.
-    ValueUnit: '[ppm]',
-  },
-  'AL': {
-    Element: 'Al', // Aluminum
-    ValueUnit: '[ppm]',
-  },
-  'BS-B': {
-    Element: 'BS-B', // Added this. Modus does not have this element
-    ValueUnit: 'meq/(100.g)',
-  },
-  'BS%-B': {
-    Element: 'BS%-B', // Added this. Modus does not have this element
-    ValueUnit: '%',
-  },
-  'B_SAT': {
-    Element: 'BS-B', // Base Saturation - Boron?  Modus does not have this element.
-    ValueUnit: 'meq/(100.g)',
-  },
-  'B_PCT': {
-    Element: 'BS%-B', // Base Saturation - Boron?  Modus does not have this element.
-    ValueUnit: '%',
-  },
-  '%B Sat': {
-    Element: 'BS%-B', // Added this. Modus does not have this element
-    ValueUnit: '%',
-  },
-  'ESP': {
-    Element: 'ESP', // Exchangeable Sodium Percentage
-    ValueUnit: '%',
-  },
-  'NH4': {
-    Element: 'NH4-N',
-    ValueUnit: '[ppm]',
-  },
-  'SO4_S': {
-    Element: 'SO4-S',
-    ValueUnit: '[ppm]',
-  },
-  'SAR': {
-    Element: 'SAR', // Sodium Adsorption Ratio
-  },
-  'EC': {
-    Element: 'EC',
-    ValueUnit: 'dS/m', // Just guessed that this is the one, need to verify. Sam: The pdf example didn't have EC
-  },
-  'SAT_PCT': {
-    Element: 'SAT_PCT',
-    ValueUnit: '%',
-  },
-  'CO3': {
-    Element: 'CO3',
-    ValueUnit: '[ppm]',
-  },
-};
-*/
 /* Didn't see these in the official modus element list
   "LBC 1": [],
   "Total Microbial Biomass": [],

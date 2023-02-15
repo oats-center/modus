@@ -47,7 +47,7 @@ const analytes : LabConfig["analytes"] = {
     ModusTestId: 'S-P-BIC.04',
   },
   'PH': {
-    ValueUnit: '',
+    ValueUnit: 'none',
     Element: 'pH',
     ModusTestId: 'S-PH-SP.02',
   },
@@ -72,7 +72,7 @@ const analytes : LabConfig["analytes"] = {
     ModusTestId: 'S-NA-NH4AC.05',
   },
   'BUFFER_PH': {
-    ValueUnit: '',
+    ValueUnit: 'none',
     Element: 'B-pH',
     ModusTestId: 'S-BPH-SIK1.02', // Unsure whether sikora 1 or 2; can also be
     //calculated, i.e., S-BPH.19
@@ -110,7 +110,7 @@ const analytes : LabConfig["analytes"] = {
   'MO': {
     ValueUnit: 'ppm',
     Element: 'Mo',
-    ModusTestId: 'S-MO-DTPA-SORB.05',
+//    ModusTestId: 'S-MO-DTPA-SORB.05',
   },
   'B': {
     ValueUnit: 'ppm',
@@ -183,12 +183,10 @@ const analytes : LabConfig["analytes"] = {
     ValueUnit: 'ppm',
     Element: 'Al',
   },
-
   //TODO: Analyte doesn't appear to exist in modus
   'EX__LIME': {
     Element: 'Excess-Lime',
   },
-
   'K_PCT': {
     ValueUnit: '%',
     Element: 'BS-K',
@@ -232,6 +230,24 @@ const analytes : LabConfig["analytes"] = {
     ValueUnit: 'meq/100g',
     Element: 'BS-B',
   },
+
+  // TODO: Analytes present only in tissue samples...I think this is still fine?
+  'N': {
+    ValueUnit: 'meq/100g',
+    Element: 'Nitrogen',
+  },
+  'P': {
+    ValueUnit: 'meq/100g',
+    Element: 'Phosphorus',
+  },
+  'PO4_P': {
+    ValueUnit: 'meq/100g',
+    Element: 'Phosphate',
+  },
+  'K_EXT': {
+    ValueUnit: 'meq/100g',
+    Element: 'Potassium Extracted',
+  },
 }
 
 const units = Object.fromEntries(
@@ -244,6 +260,7 @@ const config : LabConfig = {
   mappings,
   analytes,
   headers: [...Object.keys(units), ...Object.keys(mappings)],
+  examplesKey: 'a_l_west'
 };
 
 export default config;

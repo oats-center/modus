@@ -15,6 +15,7 @@ const error = debug('@modusjs/convert#labs-automated:error');
 //   element, we shouldn't assume units or ModusTestIds
 //
 export function cobbleLabConfig(headers: string[]) {
+  warn(`Attempting to identify header matches individually.`);
   //1. Find modus mappings (non-analytes)
   let lcMappings = Object.values(labConfigs)
     .map(lc => Object.fromEntries(Object.entries(lc.analytes).map(([k, v]) => (
@@ -88,17 +89,15 @@ export function getDateColumn(headers: string[]): string {
 
 
 
-// Autodetect via headers being a perfect subset of a known lab, else cobble one
-// together.
-export function autoDetectLabConfig(headers: string[]) : LabConfig | undefined {
+// Autodetect via headers being a perfect subset of a known lab.
+export function autoDetectLabConfig(headers: string[], sheetname?: string) : LabConfig | undefined {
   let match = Object.values(labConfigs).find(lab => labMatches({lab, headers}));
   if (match) {
-    info(`Recognized sheet as lab: ${match!.name}`);
+    info(`Recognized sheet ${sheetname !== undefined ? `[${sheetname}] ` : '' }as lab: ${match!.name}`);
     return match;
   } else {
-    warn(`Problem autodetecting lab. Attempting to identify header matches ` +
-      ` individually.`);
-    return cobbleLabConfig(headers);
+    warn(`No matches found while attempting to autodetect LabConfig.`);
+    return undefined;
   }
 }
 
@@ -109,7 +108,11 @@ function labMatches({
   lab: LabConfig
   headers: string[],
 }) : boolean {
-  return lab.headers.every((header: string) => headers.indexOf(header) > -1)
+  return headers.every((header: string) => {
+    if (lab.headers.indexOf(header) <= -1)
+      trace(`Header string "${header}" not in ${lab.name} LabConfig`);
+    return lab.headers.indexOf(header) > -1
+  })
 }
 
 function keysToUpperNoSpacesDashesOrUnderscores(obj: any) {

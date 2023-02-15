@@ -71,11 +71,12 @@ import fs from 'fs/promises';
         `Converted example at ${input_filepath} to default export at ${output_filepath}`
       );
 
-      const output_js_filename = output_filename.replace(/\.ts$/, '.js');
+      const output_js_filename = output_filename
+        .replace(/\.ts$/, '.js')
       local_index += `export { default as ${output_varname} } from './${output_js_filename}';\n`;
       const cleanpath = input_filepath.replace('./examples/','');
       local_all.push({
-        js: output_js_filename,
+        js: output_js_filename.replaceAll('-', '_'),
         // dynamic imports must have a file extension in the static parts of the import, so get rid of it here
         importpath: `${dir}/${output_js_filename.replace(/\.js$/, '')}`,
         path: dir,

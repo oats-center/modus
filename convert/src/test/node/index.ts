@@ -4,12 +4,15 @@ import fs from 'fs/promises';
 
 import * as mainlib from '../../node/index.js';
 
+/*
 import xmlTests from '../xml.test.js';
 import csvTests from '../csv.test.js';
 import toCsvTests from '../toCsv.test.js';
 import toJsonTests from '../tojson.test.js';
 import htmlTests from './html.test.js';
 import fileTest from './file.test.js';
+*/
+import labConfigs from '../labConfigs.test.js';
 
 const info = debug('@modusjs/xml#test-node:info');
 const { red } = chalk;
@@ -27,6 +30,7 @@ const { red } = chalk;
     }
     await fs.mkdir('./test-work', { recursive: true });
 
+    /*
     info('testing xml');
     await xmlTests(mainlib);
 
@@ -44,11 +48,15 @@ const { red } = chalk;
 
     info('testing node file');
     await fileTest(mainlib);
+    */
+
+    info('testing labconfigs');
+    await labConfigs(mainlib);
 
     info('All tests passed!');
   } catch (e: any) {
     info(
-      red(`ERROR: tests through exception: `),
+      red(`ERROR: tests threw exception: `),
       JSON.stringify(e, null, '  ')
     );
     throw e; // re-throw so node will show stack

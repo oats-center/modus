@@ -1,13 +1,17 @@
-import debug from 'debug';
 import type { Units, NutrientResult } from '@modusjs/units';
 import { default as a_l_west } from './a_l_west.js';
 import { default as tomkat} from './tomkat.js';
+// @ts-ignore
+//import * as examples from '@modusjs/examples';
 
 export * from './automated.js';
 export const labConfigs = {
   a_l_west,
   tomkat
 }
+export const labConfigsMap = new Map<string, LabConfig>(
+  Object.values(labConfigs).map(obj => ([obj.name, obj as LabConfig]))
+)
 
 export type LabConfig = {
   units: Units;
@@ -16,6 +20,8 @@ export type LabConfig = {
   analytes: Record<string, NutrientResult>;
   //Mappings can point to undefined so the config lists all known headers
   mappings: Record<string, keyof typeof toModusJsonPath | undefined>;
+  //examplesKey?: keyof typeof examples;
+  examplesKey?: string;
 }
 
 const toModusJsonPath = {

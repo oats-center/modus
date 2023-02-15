@@ -26,14 +26,19 @@ const analytes : LabConfig["analytes"] = {
   '1:1 Soil pH': {
     Element: 'pH',
     ModusTestId: 'S-PH-1:1.02.07',
-    ValueUnit: '',
+    ValueUnit: 'none',
   },
   'WDRF Buffer pH': {
     Element: 'B-pH',
-    ValueUnit: '',
+    ValueUnit: 'none',
     ModusTestId: 'S-BPH-WB.02', // assume this is not the modified woodruff
   },
   '1:1 S Salts': {
+    ValueUnit: 'mmho/cm',
+    ModusTestId: 'S-SS.19',
+    Element: 'SS',
+  },
+  '1:1 S Salts mmho/cm': {
     ValueUnit: 'mmho/cm',
     ModusTestId: 'S-SS.19',
     Element: 'SS',
@@ -43,7 +48,7 @@ const analytes : LabConfig["analytes"] = {
   },
   'Texture No':{
     Element: 'Texture',
-    ValueUnit: '',
+    ValueUnit: '%',
   },
   'Organic Matter LOI %': {
     ValueUnit: '%',
@@ -146,12 +151,12 @@ const analytes : LabConfig["analytes"] = {
   },
   'Salt pH': {
     Element: 'pH',
-    ValueUnit: '',
+    ValueUnit: 'none',
     //multiple salt pH, could be 1:1, 1:2 or 1:5 salt
   },
   'Salt Buffer pH': {
     Element: 'pH',
-    ValueUnit: '',
+    ValueUnit: 'none',
   },
   'WB OM %': {
     ValueUnit: '%',
@@ -193,7 +198,7 @@ const analytes : LabConfig["analytes"] = {
     Element: 'Clay',
   },
   'Texture': {
-    ValueUnit: '',
+    ValueUnit: 'none',
     Element: 'Texture',
   },
   'Paste % Sat': {
@@ -203,7 +208,7 @@ const analytes : LabConfig["analytes"] = {
   },
   'Paste pH': {
     Element: 'pH',
-    ValueUnit: '',
+    ValueUnit: 'none',
     ModusTestId: 'S-PH-SP.02', //only paste method
   },
   'Paste EC mmho/cm': {
@@ -244,30 +249,40 @@ const analytes : LabConfig["analytes"] = {
 
   // Recommendations
   'Crop 1': {
-    ValueUnit: '',
+    ValueUnit: 'none',
     Element: 'Crop 1',
   },
   'YG 1': { // Yield Goal
-    ValueUnit: '',
+    ValueUnit: 'bu/ac',
     Element: 'YG 1',
   },
   'Crop 2': {
-    ValueUnit: '',
+    ValueUnit: 'none',
     Element: 'Crop 2',
   },
   'YG 2': {
-    ValueUnit: '',
+    ValueUnit: 'bu/ac',
     Element: 'YG 2',
   },
   'Crop 3': {
-    ValueUnit: '',
+    ValueUnit: 'none',
     Element: 'Crop 3',
   },
   'YG 3': {
-    ValueUnit: '',
+    ValueUnit: 'bu/ac',
     Element: 'YG 3',
   },
   'Nitrogen Rec': {
+    ValueUnit: 'lb/ac',
+    Element: 'N-Rec',
+  },
+  //TODO: Fix this after addressing duplicate header bug in examples.
+  // Without these Rec_1, Rec_2, etc, autorecognition cannot occur
+  'Nitrogen Rec_1': {
+    ValueUnit: 'lb/ac',
+    Element: 'N-Rec',
+  },
+  'Nitrogen Rec_2': {
     ValueUnit: 'lb/ac',
     Element: 'N-Rec',
   },
@@ -275,7 +290,23 @@ const analytes : LabConfig["analytes"] = {
     ValueUnit: 'lb/ac',
     Element: 'P2O5-Rec',
   },
+  'P2O5 Rec_1': {
+    ValueUnit: 'lb/ac',
+    Element: 'P2O5-Rec',
+  },
+  'P2O5 Rec_2': {
+    ValueUnit: 'lb/ac',
+    Element: 'P2O5-Rec',
+  },
   'K2O Rec': {
+    ValueUnit: 'lb/ac',
+    Element: 'K2O-Rec',
+  },
+  'K2O Rec_1': {
+    ValueUnit: 'lb/ac',
+    Element: 'K2O-Rec',
+  },
+  'K2O Rec_2': {
     ValueUnit: 'lb/ac',
     Element: 'K2O-Rec',
   },
@@ -283,7 +314,23 @@ const analytes : LabConfig["analytes"] = {
     ValueUnit: 'lb/ac',
     Element: 'S-Rec',
   },
+  'Sulfur Rec_1': {
+    ValueUnit: 'lb/ac',
+    Element: 'S-Rec',
+  },
+  'Sulfur Rec_2': {
+    ValueUnit: 'lb/ac',
+    Element: 'S-Rec',
+  },
   'Zinc Rec': {
+    ValueUnit: 'lb/ac',
+    Element: 'Zn-Rec',
+  },
+  'Zinc Rec_1': {
+    ValueUnit: 'lb/ac',
+    Element: 'Zn-Rec',
+  },
+  'Zinc Rec_2': {
     ValueUnit: 'lb/ac',
     Element: 'Zn-Rec',
   },
@@ -291,7 +338,23 @@ const analytes : LabConfig["analytes"] = {
     ValueUnit: 'lb/ac',
     Element: 'Mg-Rec',
   },
+  'Magnesium Rec_1': {
+    ValueUnit: 'lb/ac',
+    Element: 'Mg-Rec',
+  },
+  'Magnesium Rec_2': {
+    ValueUnit: 'lb/ac',
+    Element: 'Mg-Rec',
+  },
   'Iron Rec': {
+    ValueUnit: 'lb/ac',
+    Element: 'Fe-Rec',
+  },
+  'Iron Rec_1': {
+    ValueUnit: 'lb/ac',
+    Element: 'Fe-Rec',
+  },
+  'Iron Rec_2': {
     ValueUnit: 'lb/ac',
     Element: 'Fe-Rec',
   },
@@ -299,7 +362,23 @@ const analytes : LabConfig["analytes"] = {
     ValueUnit: 'lb/ac',
     Element: 'Mn-Rec',
   },
+  'Manganese Rec_1': {
+    ValueUnit: 'lb/ac',
+    Element: 'Mn-Rec',
+  },
+  'Manganese Rec_2': {
+    ValueUnit: 'lb/ac',
+    Element: 'Mn-Rec',
+  },
   'Copper Rec': {
+    ValueUnit: 'lb/ac',
+    Element: 'Cu-Rec',
+  },
+  'Copper Rec_1': {
+    ValueUnit: 'lb/ac',
+    Element: 'Cu-Rec',
+  },
+  'Copper Rec_2': {
     ValueUnit: 'lb/ac',
     Element: 'Cu-Rec',
   },
@@ -307,7 +386,23 @@ const analytes : LabConfig["analytes"] = {
     ValueUnit: 'lb/ac',
     Element: 'B-Rec',
   },
+  'Boron Rec_1': {
+    ValueUnit: 'lb/ac',
+    Element: 'B-Rec',
+  },
+  'Boron Rec_2': {
+    ValueUnit: 'lb/ac',
+    Element: 'B-Rec',
+  },
   'Lime Rec': {
+    ValueUnit: 'lb/ac',
+    Element: 'Lime-Rec',
+  },
+  'Lime Rec_1': {
+    ValueUnit: 'lb/ac',
+    Element: 'Lime-Rec',
+  },
+  'Lime Rec_2': {
     ValueUnit: 'lb/ac',
     Element: 'Lime-Rec',
   },
@@ -443,7 +538,7 @@ const analytes : LabConfig["analytes"] = {
     ModusTestId: 'S-ON.19', //only option
   },
   'Organic C:N H2O': {
-    ValueUnit: '',
+    ValueUnit: 'none',
     Element: 'OCNR',
   },
   'PSNT ppm N': {
@@ -452,11 +547,11 @@ const analytes : LabConfig["analytes"] = {
   },
   'Sikora pH': {
     Element: 'pH',
-    ValueUnit: '',
+    ValueUnit: 'none',
     // modus lists no sikora ph methods
   },
   'Sikora Buffer': {
-    ValueUnit: '',
+    ValueUnit: 'none',
     Element: 'B-pH',
     // modus lists two sikora buffer ph methods
   },
@@ -465,7 +560,7 @@ const analytes : LabConfig["analytes"] = {
   },
   '2:1 Soil pH': {
     Element: 'pH',
-    ValueUnit: '',
+    ValueUnit: 'none',
     //2:1 water or CaCl method?
   },
   '2:1 Soluble Salts': {
@@ -530,7 +625,7 @@ const analytes : LabConfig["analytes"] = {
     Element: 'N',
   },
   'Total C:N lbs/Acre Ratio': {
-    ValueUnit: '',
+    ValueUnit: 'none',
     Element: 'TCNR',
     ModusTestId: 'S-TC:TN.19', //only option
   },
@@ -676,8 +771,8 @@ const analytes : LabConfig["analytes"] = {
     ModusTestId: 'S-NH4N-W1:1.01', //only water method
   },
   'Sample Density g/cc': {
-    ValueUnit: 'g/cc',
     Element: 'Bulk-Density', //I think this is right?
+    ValueUnit: 'g/cc',
   },
   'Molybdenum Hot Water ppm Mo': {
     ValueUnit: 'ppm',
@@ -689,7 +784,7 @@ const analytes : LabConfig["analytes"] = {
     Element: 'P',
   },
   'Texture By Feel': {
-    ValueUnit: '',
+    ValueUnit: 'none',
     Element: 'Texture',
     //ModusTestId: 'S-TEXTURE.19'
   },
@@ -740,6 +835,11 @@ const analytes : LabConfig["analytes"] = {
     Element: 'BS-K',
     ModusTestId: 'S-BS-K.19',
   },
+  '%K Sat_1': {
+    ValueUnit: '%',
+    Element: 'BS-K',
+    ModusTestId: 'S-BS-K.19',
+  },
   '%Ca Sat': {
     Element: 'BS-Ca',
     ValueUnit: '%',
@@ -762,11 +862,12 @@ const units : LabConfig["units"] = Object.fromEntries(
 );
 
 const config : LabConfig = {
-  name: 'A & L Labs West',
+  name: 'TomKat Ranch Labs',
   units,
   mappings,
   analytes,
   headers: [...Object.keys(units), ...Object.keys(mappings)],
+  examplesKey: 'tomkat_historic',
 };
 
 export default config;
