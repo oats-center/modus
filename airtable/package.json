@@ -1,0 +1,36 @@
+{
+  "name": "@modusjs/airtable",
+  "packageManager": "yarn@3.2.1",
+  "version": "0.1.0",
+  "description": "Utilize airtable export as a database behind this tool.",
+  "type": "module",
+  "publishConfig": {
+    "access": "public"
+  },
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "node dist/build.js && tsc -b",
+    "dev:node": "tsc -b -w",
+    "test:node": "nodemon --enable-source-maps --config nodemon.config.json test/node.js",
+    "clean": "rm -rf dist && rm src/index.ts"
+  },
+  "author": "Sam Noel <noel.samuel.a@gmail.com>",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@types/debug": "^4.1.7",
+    "@types/node": "^18.13.0",
+    "concurrently": "^7.4.0",
+    "live-server": "^1.2.2",
+    "nodemon": "^2.0.20"
+  },
+  "dependencies": {
+    "debug": "^4.3.4",
+    "fs": "^0.0.1-security",
+    "typescript": "^4.7.4",
+    "xlsx": "^0.18.5"
+  }
+}
