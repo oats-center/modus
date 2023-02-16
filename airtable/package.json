@@ -8,15 +8,15 @@
     "access": "public"
   },
   "main": "dist/index.js",
-  "typings": "dist/index.d.ts",
+  "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "node dist/build.js && tsc -b",
+    "build": "node src/build.js && tsc -b",
     "dev:node": "tsc -b -w",
     "test:node": "nodemon --enable-source-maps --config nodemon.config.json test/node.js",
-    "clean": "rm -rf dist && rm src/index.ts"
+    "clean": "rm -rf dist gen"
   },
   "author": "Sam Noel <noel.samuel.a@gmail.com>",
   "license": "Apache-2.0",

@@ -12,7 +12,8 @@
     "cli",
     "examples",
     "app",
-    "units"
+    "units",
+    "airtable"
   ],
   "devDependencies": {
     "@types/node": "16.11.68",

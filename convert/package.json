@@ -37,6 +37,7 @@
   "author": "Aaron Ault <aultac@gmail.com>",
   "license": "Apache-2.0",
   "devDependencies": {
+    "@modusjs/airtable": "workspace:^",
     "@modusjs/examples": "workspace:^",
     "@modusjs/units": "workspace:^",
     "@oada/formats": "^3.3.0",

@@ -11,7 +11,7 @@ const plugins = [
   }),
   commonjs(),
   json(),
-  terser(),
+//  terser(),
 ];
 
 const watch = {
@@ -43,6 +43,6 @@ export default defineConfig([
       format: "umd",
     },
     watch: false,
-  }   
+  }
 */
 ]);

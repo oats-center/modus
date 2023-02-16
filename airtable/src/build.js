@@ -7,25 +7,25 @@ const warn = debug('@modusjs/airtable:warn');
 const info = debug('@modusjs/airtable:info');
 const trace = debug('@modusjs/airtable:trace');
 
-const LABCONFIG = './src/labConfigs.ts';
-const UNITS = './src/standardUnits.ts';
+const LABCONFIG = './gen/labConfigs.js';
+const UNITS = './gen/standardUnits.js';
 
-export type StandardUnits = Record<string, string>;
-export type Configs = Record<string, any>;
+/*export type StandardUnits = Record<string, string>;
+export type Configs = Record<string, any>;*/
 
 function main(
-  rows: any[]
-): {
+  //rows: any[]
+)/*: {
   standardUnits: StandardUnits,
   configs: Record<string, any>,
-} {
+}*/ {
 
   //1. Read in the csv (or should we just use json??)
   //2. Get the rows
   //3. Iterate over rows, and index the data by lab into analytes in one shot
   //4. Construct the analytes portion of the labconfig based on the data
 
-  const configs : Record<string, any> = {};
+  const configs/* : Record<string, any> */= {};
   /*
   rows = rows.map(row => ({
     ...row,
@@ -56,7 +56,7 @@ function main(
     const name = lab_csv_header || Element;
     if (name) configs[lab_name].analytes[name] = {
       Element,
-      ValueUnits,
+      ValueUnit: ValueUnits,
       ExtractionMethod,
       MeasurementMethod,
       UCUM_ValueUnits,
@@ -80,7 +80,7 @@ async function parseExport() {
   return xlsx.utils.sheet_to_json(wb.Sheets['Sheet1'], {raw: false});
 }
 
-function clean(labConfigs: any): any {
+function clean(labConfigs) {
   //Several scenarios of missing data may occur and may need cleaned:
   //-Lab says they run a test, but we don't have an example to know the csv header
   //-lab says they run a test, but we don't know the modus method
@@ -89,19 +89,20 @@ function clean(labConfigs: any): any {
 
 
   //If a lab has no analytes, prune it.
-  return Object.fromEntries(Object.entries(labConfigs).filter(([_, obj]:any) =>
+  return Object.fromEntries(Object.entries(labConfigs).filter(([_, obj]) =>
     Object.keys(obj.analytes).length > 0
   ))
 }
 
-async function createOutputs(labConfigs: any, units: StandardUnits) {
-  const outputs : string[] = [];
+//async function createOutputs(labConfigs: any, units: StandardUnits) {
+async function createOutputs(labConfigs, units) {
+  const outputs /*: string[] */ = [];
 
   await fs.writeFile(LABCONFIG, `export default ${JSON.stringify(labConfigs, null, 2)}`);
   await fs.writeFile(UNITS, `export default ${JSON.stringify(units, null, 2)}`);
-  outputs.push(`export * as labConfigs from '../dist/labConfigs.js'`);
-  outputs.push(`export * as standardUnits from '../dist/standardUnits.js'`);
-  fs.writeFile('./src/index.ts', outputs.join(`\n`) )
+  outputs.push(`export * as labConfigs from './labConfigs.js'`);
+  outputs.push(`export * as standardUnits from './standardUnits.js'`);
+  fs.writeFile('./gen/index.ts', outputs.join(`\n`) )
 }
 
 const rows = await parseExport();

@@ -23,114 +23,114 @@ const analytes : LabConfig["analytes"] = {
   'OM': {
     ValueUnit: '%',
     Element: 'OM',
-    ModusTestId: 'S-SOM-LOI.15',
+    ModusTestID: 'S-SOM-LOI.15',
   },
   'ENR': {
     ValueUnit: 'lb/ac',
     Element: 'ENR',
-    ModusTestId: 'S-ENR.19'
+    ModusTestID: 'S-ENR.19'
   },
   'P1': {
     ValueUnit: 'ppm',
     Element: 'P (Bray P1 1:10)',
-    ModusTestId: 'S-P-B1-1:10.01.03',
+    ModusTestID: 'S-P-B1-1:10.01.03',
   },
   'P2': {
     ValueUnit: 'ppm',
     Element: 'P (Bray P2 1:10)',
-    ModusTestId: 'S-P-B2-1:10.01.03',
+    ModusTestID: 'S-P-B2-1:10.01.03',
   },
   //TODO: I believe this is referencing Olsen P which uses HCO3
   'HCO3_P': {
     ValueUnit: 'ppm',
     Element: 'P (Olsen)',
-    ModusTestId: 'S-P-BIC.04',
+    ModusTestID: 'S-P-BIC.04',
   },
   'PH': {
     ValueUnit: 'none',
     Element: 'pH',
-    ModusTestId: 'S-PH-SP.02',
+    ModusTestID: 'S-PH-SP.02',
   },
   'K': {
     ValueUnit: 'ppm',
     Element: 'K',
-    ModusTestId: 'S-K-NH4AC.05',
+    ModusTestID: 'S-K-NH4AC.05',
   },
   'MG': {
     ValueUnit: 'ppm',
     Element: 'Mg',
-    ModusTestId: 'S-MG-NH4AC.05',
+    ModusTestID: 'S-MG-NH4AC.05',
   },
   'CA': {
     ValueUnit: 'ppm',
     Element: 'Ca',
-    ModusTestId: 'S-CA-NH4AC.05',
+    ModusTestID: 'S-CA-NH4AC.05',
   },
   'NA': {
     ValueUnit: 'ppm',
     Element: 'Na',
-    ModusTestId: 'S-NA-NH4AC.05',
+    ModusTestID: 'S-NA-NH4AC.05',
   },
   'BUFFER_PH': {
     ValueUnit: 'none',
     Element: 'B-pH',
-    ModusTestId: 'S-BPH-SIK1.02', // Unsure whether sikora 1 or 2; can also be
+    ModusTestID: 'S-BPH-SIK1.02', // Unsure whether sikora 1 or 2; can also be
     //calculated, i.e., S-BPH.19
   },
   'CEC': {
     ValueUnit: 'meq/100g',
     Element: 'CEC',
-    ModusTestId: 'S-CEC.19', //OR S-CEC-NH4N.05 OR S-CEC-AA.23
+    ModusTestID: 'S-CEC.19', //OR S-CEC-NH4N.05 OR S-CEC-AA.23
   },
   'NO3_N': {
     ValueUnit: 'ppm',
     Element: 'NO3-N',
-    ModusTestId: 'S-NO3-1:5.01.01',
+    ModusTestID: 'S-NO3-1:5.01.01',
   },
   'ZN': {
     ValueUnit: 'ppm',
     Element: 'Zn',
-    ModusTestId: 'S-ZN-DTPA-SORB.05',
+    ModusTestID: 'S-ZN-DTPA-SORB.05',
   },
   'MN': {
     ValueUnit: 'ppm',
     Element: 'Mn',
-    ModusTestId: 'S-MN-DTPA-SORB.05',
+    ModusTestID: 'S-MN-DTPA-SORB.05',
   },
   'FE': {
     ValueUnit: 'ppm',
     Element: 'Fe',
-    ModusTestId: 'S-FE-DTPA-SORB.05',
+    ModusTestID: 'S-FE-DTPA-SORB.05',
   },
   'CU': {
     ValueUnit: 'ppm',
     Element: 'Cu',
-    ModusTestId: 'S-CU-DTPA-SORB.05',
+    ModusTestID: 'S-CU-DTPA-SORB.05',
   },
   'MO': {
     ValueUnit: 'ppm',
     Element: 'Mo',
-//    ModusTestId: 'S-MO-DTPA-SORB.05',
+//    ModusTestID: 'S-MO-DTPA-SORB.05',
   },
   'B': {
     ValueUnit: 'ppm',
     Element: 'B',
-    ModusTestId: 'S-B-DTPA-SORB.05',
+    ModusTestID: 'S-B-DTPA-SORB.05',
   },
   'CL': {
     ValueUnit: 'ppm',
     Element: 'Cl',
-    ModusTestId: 'S-CL-SP.01', //unclear which saturated paste method
+    ModusTestID: 'S-CL-SP.01', //unclear which saturated paste method
   },
   'SO4_S': {
     ValueUnit: 'ppm',
     Element: 'SO4-S',
-    ModusTestId: 'S-S-NH4AC.05',
+    ModusTestID: 'S-S-NH4AC.05',
   },
   'SAT_PCT': {
     ValueUnit: '%',
     Element: 'Sat-Pct',
-    ModusTestId: 'S-SP%.19',
+    ModusTestID: 'S-SP%.19',
   },
   'S__SALTS': {
     ValueUnit: 'mmho/cm',
@@ -140,7 +140,7 @@ const analytes : LabConfig["analytes"] = {
   'ESP': {
     ValueUnit: '%',
     Element: 'ESP',
-    ModusTestId: 'S-ESP.19',
+    ModusTestID: 'S-ESP.19',
   },
   'SAR': {
     ValueUnit: 'ppm',
@@ -159,12 +159,12 @@ const analytes : LabConfig["analytes"] = {
   'CO3': {
     ValueUnit: 'ppm',
     Element: 'CO3',
-    ModusTestId: 'S-CO3-SP.12',
+    ModusTestID: 'S-CO3-SP.12',
   },
   'HCO3': {
     ValueUnit: 'ppm',
     Element: 'HCO3',
-    ModusTestId: 'S-HCO3-SP.12',
+    ModusTestID: 'S-HCO3-SP.12',
   },
 
 
@@ -190,27 +190,27 @@ const analytes : LabConfig["analytes"] = {
   'K_PCT': {
     ValueUnit: '%',
     Element: 'BS-K',
-    ModusTestId: 'S-BS-K.19',
+    ModusTestID: 'S-BS-K.19',
   },
   'MG_PCT': {
     ValueUnit: '%',
     Element: 'BS-Mg',
-    ModusTestId: 'S-BS-MG.19',
+    ModusTestID: 'S-BS-MG.19',
   },
   'CA_PCT': {
     ValueUnit: '%',
     Element: 'BS-Ca',
-    ModusTestId: 'S-BS-CA.19',
+    ModusTestID: 'S-BS-CA.19',
   },
   'H_PCT': {
     ValueUnit: '%',
     Element: 'BS-H',
-    ModusTestId: 'S-BS-H.19',
+    ModusTestID: 'S-BS-H.19',
   },
   'NA_PCT': {
     ValueUnit: '%',
     Element: 'BS-Na',
-    ModusTestId: 'S-BS-NA.19',
+    ModusTestID: 'S-BS-NA.19',
   },
 
   // Alternative units to existing analytes

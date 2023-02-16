@@ -72,7 +72,7 @@ export function parse({
 
   switch (format) {
     case 'generic':
-      return parseCsv({ wb, lab });
+      return parseWorkbook({ wb, lab });
     default:
       throw new Error(`format type ${format} not currently supported`);
   }
@@ -150,7 +150,7 @@ export function findAndAutodetectLab(datasheets: DataSheet[], allowImprovise?: b
 //-------------------------------------------------------------------------------------------
 // Parse the specific spreadsheet with data from TomKat ranch provided at the
 // 2022 Fixing the Soil Health Tech Stack Hackathon.
-function parseCsv({
+function parseWorkbook({
   wb,
   lab,
   allowOverrides=true,

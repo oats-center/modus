@@ -3,7 +3,7 @@ export default {
     "analytes": {
       "Sand": {
         "Element": "Sand",
-        "ValueUnits": "%",
+        "ValueUnit": "%",
         "ExtractionMethod": "Sedimentation",
         "MeasurementMethod": "Hydrometer Method",
         "UCUM_ValueUnits": "%",
@@ -11,7 +11,7 @@ export default {
       },
       "Silt": {
         "Element": "Silt",
-        "ValueUnits": "%",
+        "ValueUnit": "%",
         "ExtractionMethod": "Sedimentation",
         "MeasurementMethod": "Hydrometer Method",
         "UCUM_ValueUnits": "%",
@@ -19,7 +19,7 @@ export default {
       },
       "Clay": {
         "Element": "Clay",
-        "ValueUnits": "%",
+        "ValueUnit": "%",
         "ExtractionMethod": "Sedimentation",
         "MeasurementMethod": "Hydrometer Method",
         "UCUM_ValueUnits": "%",
@@ -27,7 +27,7 @@ export default {
       },
       "Organic Matter": {
         "Element": "Organic Matter",
-        "ValueUnits": "%",
+        "ValueUnit": "%",
         "ExtractionMethod": "Dumas",
         "MeasurementMethod": "Combustion Analyzer",
         "UCUM_ValueUnits": "%",
@@ -35,7 +35,7 @@ export default {
       },
       "Phosphorus": {
         "Element": "Phosphorus",
-        "ValueUnits": "mg/kg",
+        "ValueUnit": "mg/kg",
         "ExtractionMethod": "Bicarbonate (Olsen)",
         "MeasurementMethod": "Spectrophotometric",
         "UCUM_ValueUnits": "mg/kg",
@@ -43,7 +43,7 @@ export default {
       },
       "Exchangeable Potassium Percentage": {
         "Element": "Exchangeable Potassium Percentage",
-        "ValueUnits": "%",
+        "ValueUnit": "%",
         "ExtractionMethod": "1.0 M KCl",
         "MeasurementMethod": "Calculated",
         "UCUM_ValueUnits": "%",
@@ -51,7 +51,7 @@ export default {
       },
       "Magnesium": {
         "Element": "Magnesium",
-        "ValueUnits": "meq/L",
+        "ValueUnit": "meq/L",
         "ExtractionMethod": "Saturated Paste",
         "MeasurementMethod": "ICP",
         "UCUM_ValueUnits": "meq/L",
@@ -59,14 +59,14 @@ export default {
       },
       "Buffer pH": {
         "Element": "Buffer pH",
-        "ValueUnits": "none",
+        "ValueUnit": "none",
         "ExtractionMethod": "SMP",
         "MeasurementMethod": "H+ ISE",
         "ModusTestID": "S-BPH-SMPB.02"
       },
       "Cation Exchange Capacity": {
         "Element": "Cation Exchange Capacity",
-        "ValueUnits": "cmol/kg",
+        "ValueUnit": "cmol/kg",
         "ExtractionMethod": "Displacement - Potassium",
         "MeasurementMethod": "\"ICP-AES, AAS\"",
         "UCUM_ValueUnits": "cmol/kg",
@@ -74,7 +74,7 @@ export default {
       },
       "pH": {
         "Element": "pH",
-        "ValueUnits": "standard units",
+        "ValueUnit": "standard units",
         "ExtractionMethod": "1:1 soil:water ",
         "MeasurementMethod": "H+ ISE",
         "ModusTestID": "S-PH-1:1.02.07"
@@ -85,7 +85,7 @@ export default {
     "analytes": {
       "EX__LIME": {
         "Element": "Lime Recommendation",
-        "ValueUnits": "none",
+        "ValueUnit": "none",
         "ExtractionMethod": "SMP",
         "MeasurementMethod": "Calculated",
         "UCUM_ValueUnits": "[ston_av]/[acr_us]",
@@ -94,13 +94,13 @@ export default {
       },
       "NH4": {
         "Element": "Ammonium-Nitrogen",
-        "ValueUnits": "ppm",
+        "ValueUnit": "ppm",
         "UCUM_ValueUnits": "[ppm]",
         "CsvHeader": "NH4"
       },
       "CA": {
         "Element": "Calcium",
-        "ValueUnits": "mg/kg",
+        "ValueUnit": "mg/kg",
         "ExtractionMethod": "Ammonium Acetate",
         "MeasurementMethod": "\"ICP, AAS\"",
         "UCUM_ValueUnits": "mg/kg",
@@ -109,17 +109,17 @@ export default {
       },
       "Moisture": {
         "Element": "Moisture",
-        "ValueUnits": "%",
+        "ValueUnit": "%",
         "UCUM_ValueUnits": "%"
       },
       "SAR": {
         "Element": "Sodium Adsorption Ratio",
-        "ValueUnits": "none",
+        "ValueUnit": "none",
         "CsvHeader": "SAR"
       },
       "P1": {
         "Element": "Phosphorus",
-        "ValueUnits": "ppm",
+        "ValueUnit": "ppm",
         "ExtractionMethod": "Bray P1 (1:10)",
         "MeasurementMethod": "Spectrophotometric",
         "UCUM_ValueUnits": "[ppm]",
@@ -128,19 +128,19 @@ export default {
       },
       "P2": {
         "Element": "Phosphorus",
-        "ValueUnits": "ppm",
+        "ValueUnit": "ppm",
         "UCUM_ValueUnits": "[ppm]",
         "CsvHeader": "P2"
       },
       "HCO3_P": {
         "Element": "Phosphorus",
-        "ValueUnits": "ppm",
+        "ValueUnit": "ppm",
         "UCUM_ValueUnits": "[ppm]",
         "CsvHeader": "HCO3_P"
       },
       "K": {
         "Element": "Potassium",
-        "ValueUnits": "ppm",
+        "ValueUnit": "ppm",
         "ExtractionMethod": "Ammonium Acetate",
         "MeasurementMethod": "\"ICP, AAS\"",
         "UCUM_ValueUnits": "[ppm]",
@@ -149,12 +149,12 @@ export default {
       },
       "Sand": {
         "Element": "Sand",
-        "ValueUnits": "%",
+        "ValueUnit": "%",
         "UCUM_ValueUnits": "%"
       },
       "Silt+Clay": {
         "Element": "Silt+Clay",
-        "ValueUnits": "%",
+        "ValueUnit": "%",
         "UCUM_ValueUnits": "%"
       },
       "TN": {
@@ -163,7 +163,7 @@ export default {
       },
       "OM": {
         "Element": "Organic Matter",
-        "ValueUnits": "%",
+        "ValueUnit": "%",
         "ExtractionMethod": "Loss-on-Ignition ",
         "MeasurementMethod": "Gravimetric",
         "UCUM_ValueUnits": "%",
@@ -178,11 +178,11 @@ export default {
       },
       "C:N Ratio": {
         "Element": "C:N Ratio",
-        "ValueUnits": "none"
+        "ValueUnit": "none"
       },
       "B": {
         "Element": "Boron",
-        "ValueUnits": "ppm",
+        "ValueUnit": "ppm",
         "ExtractionMethod": "DTPA-Sorbitol",
         "MeasurementMethod": "\"ICP, AAS\"",
         "UCUM_ValueUnits": "[ppm]",
@@ -191,7 +191,7 @@ export default {
       },
       "ZN": {
         "Element": "Zinc",
-        "ValueUnits": "ppm",
+        "ValueUnit": "ppm",
         "ExtractionMethod": "DTPA-Sorbitol",
         "MeasurementMethod": "\"ICP, AAS\"",
         "UCUM_ValueUnits": "[ppm]",
@@ -200,7 +200,7 @@ export default {
       },
       "MN": {
         "Element": "Manganese",
-        "ValueUnits": "ppm",
+        "ValueUnit": "ppm",
         "ExtractionMethod": "DTPA-Sorbitol",
         "MeasurementMethod": "\"ICP, AAS\"",
         "UCUM_ValueUnits": "[ppm]",
@@ -213,7 +213,7 @@ export default {
       },
       "CL": {
         "Element": "Chloride",
-        "ValueUnits": "ppm",
+        "ValueUnit": "ppm",
         "ExtractionMethod": "Saturated Paste",
         "MeasurementMethod": "Spectrophotometric",
         "UCUM_ValueUnits": "[ppm]",
@@ -222,7 +222,7 @@ export default {
       },
       "FE": {
         "Element": "Iron",
-        "ValueUnits": "ppm",
+        "ValueUnit": "ppm",
         "ExtractionMethod": "DTPA-Sorbitol",
         "MeasurementMethod": "\"ICP, AAS\"",
         "UCUM_ValueUnits": "[ppm]",
@@ -231,7 +231,7 @@ export default {
       },
       "CU": {
         "Element": "Copper",
-        "ValueUnits": "ppm",
+        "ValueUnit": "ppm",
         "ExtractionMethod": "DTPA-Sorbitol",
         "MeasurementMethod": "\"ICP, AAS\"",
         "UCUM_ValueUnits": "[ppm]",
@@ -240,7 +240,7 @@ export default {
       },
       "CEC": {
         "Element": "Cation Exchange Capacity",
-        "ValueUnits": "%",
+        "ValueUnit": "%",
         "UCUM_ValueUnits": "%",
         "CsvHeader": "CEC"
       },
@@ -250,7 +250,7 @@ export default {
       },
       "PH": {
         "Element": "pH",
-        "ValueUnits": "none",
+        "ValueUnit": "none",
         "ExtractionMethod": "Saturated Paste",
         "MeasurementMethod": "H+ ISE",
         "ModusTestID": "S-PH-SP.02",
@@ -258,7 +258,7 @@ export default {
       },
       "MG": {
         "Element": "Magnesium",
-        "ValueUnits": "ppm",
+        "ValueUnit": "ppm",
         "ExtractionMethod": "Ammonium Acetate",
         "MeasurementMethod": "\"ICP, AAS\"",
         "UCUM_ValueUnits": "[ppm]",
@@ -267,7 +267,7 @@ export default {
       },
       "NA": {
         "Element": "Sodium",
-        "ValueUnits": "ppm",
+        "ValueUnit": "ppm",
         "ExtractionMethod": "Ammonium Acetate",
         "MeasurementMethod": "\"ICP, AAS\"",
         "UCUM_ValueUnits": "[ppm]",
@@ -276,7 +276,7 @@ export default {
       },
       "NO3-N": {
         "Element": "Nitrate-Nitrogen",
-        "ValueUnits": "ppm",
+        "ValueUnit": "ppm",
         "ExtractionMethod": "1:5 2.0 N KCl ",
         "MeasurementMethod": "Cd Red/Spectrophotometric",
         "UCUM_ValueUnits": "[ppm]",
@@ -285,7 +285,7 @@ export default {
       },
       "SO4-S": {
         "Element": "Sulfur",
-        "ValueUnits": "ppm",
+        "ValueUnit": "ppm",
         "ExtractionMethod": "Ammonium Acetate",
         "MeasurementMethod": "ICP",
         "UCUM_ValueUnits": "[ppm]",
@@ -294,7 +294,7 @@ export default {
       },
       "BUFFER_PH": {
         "Element": "Buffer pH",
-        "ValueUnits": "none",
+        "ValueUnit": "none",
         "ExtractionMethod": "Sikora 1 buffer",
         "MeasurementMethod": "H+ ISE",
         "ModusTestID": "S-BPH-SIK1.02",
@@ -302,13 +302,13 @@ export default {
       },
       "H": {
         "Element": "Hydrogen",
-        "ValueUnits": "meq/100 g",
+        "ValueUnit": "meq/100 g",
         "UCUM_ValueUnits": "meq/(100.g)",
         "CsvHeader": "H"
       },
       "SAT_PCT": {
         "Element": "Saturation Paste %",
-        "ValueUnits": "%",
+        "ValueUnit": "%",
         "ExtractionMethod": "Balance",
         "MeasurementMethod": "Calculated",
         "UCUM_ValueUnits": "%",
@@ -317,7 +317,7 @@ export default {
       },
       "ENR": {
         "Element": "Estimated Nitrogen Release",
-        "ValueUnits": "lb/ac",
+        "ValueUnit": "lb/ac",
         "ExtractionMethod": "Saturated Paste",
         "MeasurementMethod": "Calculated",
         "UCUM_ValueUnits": "[lb_av]/[acr_us]",
@@ -326,7 +326,7 @@ export default {
       },
       "ESP": {
         "Element": "Exchangeable Sodium Percentage",
-        "ValueUnits": "%",
+        "ValueUnit": "%",
         "ExtractionMethod": "1.0 M KCl",
         "MeasurementMethod": "Calculated",
         "UCUM_ValueUnits": "%",
@@ -335,7 +335,7 @@ export default {
       },
       "CO3": {
         "Element": "Carbonate",
-        "ValueUnits": "meq/L",
+        "ValueUnit": "meq/L",
         "ExtractionMethod": "Saturated Paste",
         "MeasurementMethod": "Titration",
         "UCUM_ValueUnits": "meq/L",
@@ -344,7 +344,7 @@ export default {
       },
       "AL": {
         "Element": "Aluminum",
-        "ValueUnits": "ppm",
+        "ValueUnit": "ppm",
         "UCUM_ValueUnits": "[ppm]",
         "CsvHeader": "AL"
       }
@@ -354,7 +354,7 @@ export default {
     "analytes": {
       "Iron": {
         "Element": "Iron",
-        "ValueUnits": "mg/kg",
+        "ValueUnit": "mg/kg",
         "ExtractionMethod": "DTPA",
         "MeasurementMethod": "\"ICP, AAS\"",
         "UCUM_ValueUnits": "mg/kg",
@@ -362,14 +362,14 @@ export default {
       },
       "pH": {
         "Element": "pH",
-        "ValueUnits": "standard units",
+        "ValueUnit": "standard units",
         "ExtractionMethod": "1:1 soil:water ",
         "MeasurementMethod": "H+ ISE",
         "ModusTestID": "S-PH-1:1.02.07"
       },
       "Organic Matter": {
         "Element": "Organic Matter",
-        "ValueUnits": "%",
+        "ValueUnit": "%",
         "ExtractionMethod": "Loss-on-Ignition ",
         "MeasurementMethod": "Gravimetric",
         "UCUM_ValueUnits": "%",
@@ -381,7 +381,7 @@ export default {
     "analytes": {
       "Iron": {
         "Element": "Iron",
-        "ValueUnits": "mg/kg",
+        "ValueUnit": "mg/kg",
         "ExtractionMethod": "DTPA",
         "MeasurementMethod": "\"ICP, AAS\"",
         "UCUM_ValueUnits": "mg/kg",
@@ -389,7 +389,7 @@ export default {
       },
       "Manganese": {
         "Element": "Manganese",
-        "ValueUnits": "mg/kg",
+        "ValueUnit": "mg/kg",
         "ExtractionMethod": "DTPA",
         "MeasurementMethod": "\"ICP, AAS\"",
         "UCUM_ValueUnits": "mg/kg",
@@ -397,7 +397,7 @@ export default {
       },
       "Zinc": {
         "Element": "Zinc",
-        "ValueUnits": "mg/kg",
+        "ValueUnit": "mg/kg",
         "ExtractionMethod": "DTPA",
         "MeasurementMethod": "\"ICP, AAS\"",
         "UCUM_ValueUnits": "mg/kg",
@@ -405,7 +405,7 @@ export default {
       },
       "Copper": {
         "Element": "Copper",
-        "ValueUnits": "mg/kg",
+        "ValueUnit": "mg/kg",
         "ExtractionMethod": "DTPA",
         "MeasurementMethod": "\"ICP, AAS\"",
         "UCUM_ValueUnits": "mg/kg",
@@ -413,14 +413,14 @@ export default {
       },
       "pH": {
         "Element": "pH",
-        "ValueUnits": "standard units",
+        "ValueUnit": "standard units",
         "ExtractionMethod": "1:2.5 (Soil:Water)",
         "MeasurementMethod": "H+ ISE",
         "ModusTestID": "S-PH-1:2.5.02.07"
       },
       "Electrical Conductivity": {
         "Element": "Electrical Conductivity",
-        "ValueUnits": "dS/m",
+        "ValueUnit": "dS/m",
         "ExtractionMethod": "EC 1:5 Ratio",
         "MeasurementMethod": "Conductivity",
         "UCUM_ValueUnits": "dS/m",
@@ -432,7 +432,7 @@ export default {
     "analytes": {
       "pH": {
         "Element": "pH",
-        "ValueUnits": "standard units",
+        "ValueUnit": "standard units",
         "ExtractionMethod": "1:1 soil:water ",
         "MeasurementMethod": "H+ ISE",
         "ModusTestID": "S-PH-1:1.02.07"
@@ -447,14 +447,14 @@ export default {
     "analytes": {
       "pH": {
         "Element": "pH",
-        "ValueUnits": "standard units",
+        "ValueUnit": "standard units",
         "ExtractionMethod": "1:2 soil:water ",
         "MeasurementMethod": "H+ ISE",
         "ModusTestID": "S-PH-1:2.02.07"
       },
       "Organic Matter": {
         "Element": "Organic Matter",
-        "ValueUnits": "%",
+        "ValueUnit": "%",
         "ExtractionMethod": "Loss-on-Ignition ",
         "MeasurementMethod": "Gravimetric",
         "UCUM_ValueUnits": "%",
@@ -462,7 +462,7 @@ export default {
       },
       "CO2 Respiration": {
         "Element": "CO2 Respiration",
-        "ValueUnits": "%",
+        "ValueUnit": "%",
         "ExtractionMethod": "CO2 Respiration",
         "MeasurementMethod": "Solvita 24 Respiration",
         "UCUM_ValueUnits": "%",
@@ -474,7 +474,7 @@ export default {
     "analytes": {
       "Electrical Conductivity": {
         "Element": "Electrical Conductivity",
-        "ValueUnits": "dS/m",
+        "ValueUnit": "dS/m",
         "ExtractionMethod": "EC 1:2 Ratio",
         "MeasurementMethod": "Conductivity",
         "UCUM_ValueUnits": "dS/m",
@@ -488,7 +488,7 @@ export default {
       },
       "Soil Respiration": {
         "Element": "CO2 Respiration",
-        "ValueUnits": "%",
+        "ValueUnit": "%",
         "ExtractionMethod": "CO2 Respiration",
         "MeasurementMethod": "Solvita 24 Respiration",
         "UCUM_ValueUnits": "%",
@@ -500,7 +500,7 @@ export default {
       },
       "Soil pH": {
         "Element": "pH",
-        "ValueUnits": "standard units",
+        "ValueUnit": "standard units",
         "ExtractionMethod": "1:2 soil:water ",
         "MeasurementMethod": "H+ ISE",
         "ModusTestID": "S-PH-1:2.02.07",
@@ -508,7 +508,7 @@ export default {
       },
       "Organic Matter": {
         "Element": "Organic Matter",
-        "ValueUnits": "%",
+        "ValueUnit": "%",
         "ExtractionMethod": "Loss-on-Ignition ",
         "MeasurementMethod": "Gravimetric",
         "UCUM_ValueUnits": "%",
@@ -517,7 +517,7 @@ export default {
       },
       "Extractable Phosphorus": {
         "Element": "P (Mod Morgan)",
-        "ValueUnits": "mg/kg",
+        "ValueUnit": "mg/kg",
         "ExtractionMethod": "Modified Morgan",
         "MeasurementMethod": "ICP",
         "UCUM_ValueUnits": "mg/kg",
@@ -526,7 +526,7 @@ export default {
       },
       "Extractable Potassium": {
         "Element": "Potassium",
-        "ValueUnits": "mg/kg",
+        "ValueUnit": "mg/kg",
         "ExtractionMethod": "Modified Morgan",
         "MeasurementMethod": "\"ICP, AAS\"",
         "UCUM_ValueUnits": "mg/kg",
@@ -538,7 +538,7 @@ export default {
       },
       "Aggregate Stability": {
         "Element": "Aggregate Stability",
-        "ValueUnits": "cm/min",
+        "ValueUnit": "cm/min",
         "ExtractionMethod": "Infiltration",
         "MeasurementMethod": "Single Ring Infiltration",
         "ModusTestID": "S-AS-SI-OT",
@@ -546,7 +546,7 @@ export default {
       },
       "Active Carbon": {
         "Element": "\"Carbon, Active\"",
-        "ValueUnits": "mg/kg",
+        "ValueUnit": "mg/kg",
         "ExtractionMethod": "KMnO4",
         "MeasurementMethod": "Spectrophotometric",
         "UCUM_ValueUnits": "mg/kg",
@@ -555,7 +555,7 @@ export default {
       },
       "Total Carbon": {
         "Element": "Total Carbon",
-        "ValueUnits": "%",
+        "ValueUnit": "%",
         "ExtractionMethod": "Dry Combustion",
         "MeasurementMethod": "Gravimetric",
         "UCUM_ValueUnits": "%",
@@ -563,7 +563,7 @@ export default {
       },
       "\"Nitrogen, Total\"": {
         "Element": "\"Nitrogen, Total\"",
-        "ValueUnits": "%",
+        "ValueUnit": "%",
         "ExtractionMethod": "Combustion Analyzer",
         "MeasurementMethod": "Combustion Analyzer",
         "UCUM_ValueUnits": "%",
@@ -571,7 +571,7 @@ export default {
       },
       "Total Carbon:Total Nitrogen": {
         "Element": "Total Carbon:Total Nitrogen",
-        "ValueUnits": "none",
+        "ValueUnit": "none",
         "ExtractionMethod": "Dry Combustion",
         "MeasurementMethod": "Calculated",
         "ModusTestID": "S-TC:TN.19"
@@ -584,7 +584,7 @@ export default {
       },
       "Sand": {
         "Element": "Sand",
-        "ValueUnits": "%",
+        "ValueUnit": "%",
         "ExtractionMethod": "Sieve",
         "MeasurementMethod": "Calculated",
         "UCUM_ValueUnits": "%",
@@ -592,7 +592,7 @@ export default {
       },
       "Silt": {
         "Element": "Silt",
-        "ValueUnits": "%",
+        "ValueUnit": "%",
         "ExtractionMethod": "Sedimentation",
         "MeasurementMethod": "Gravimeteric",
         "UCUM_ValueUnits": "%",
@@ -600,7 +600,7 @@ export default {
       },
       "CO2 Respiration": {
         "Element": "CO2 Respiration",
-        "ValueUnits": "mg/g",
+        "ValueUnit": "mg/g",
         "ExtractionMethod": "CO2 Respiration",
         "MeasurementMethod": "conductivty",
         "UCUM_ValueUnits": "mg/g",
@@ -608,7 +608,7 @@ export default {
       },
       "Cu (Mod Morgan)": {
         "Element": "Cu (Mod Morgan)",
-        "ValueUnits": "mg/kg",
+        "ValueUnit": "mg/kg",
         "ExtractionMethod": "Modified Morgan",
         "MeasurementMethod": "ICP",
         "UCUM_ValueUnits": "mg/kg",
@@ -616,7 +616,7 @@ export default {
       },
       "Fe (Mod Morgan)": {
         "Element": "Fe (Mod Morgan)",
-        "ValueUnits": "mg/kg",
+        "ValueUnit": "mg/kg",
         "ExtractionMethod": "Modified Morgan",
         "MeasurementMethod": "ICP",
         "UCUM_ValueUnits": "mg/kg",
@@ -624,7 +624,7 @@ export default {
       },
       "Magnesium": {
         "Element": "Magnesium",
-        "ValueUnits": "mg/kg",
+        "ValueUnit": "mg/kg",
         "ExtractionMethod": "Modified Morgan",
         "MeasurementMethod": "\"ICP, AAS\"",
         "UCUM_ValueUnits": "mg/kg",
@@ -632,7 +632,7 @@ export default {
       },
       "Moisture": {
         "Element": "Moisture",
-        "ValueUnits": "%",
+        "ValueUnit": "%",
         "ExtractionMethod": "15 Bar Moisture Tension",
         "MeasurementMethod": "Pressure Plate",
         "UCUM_ValueUnits": "%",
@@ -644,7 +644,7 @@ export default {
     "analytes": {
       "Cation Exchange Capacity": {
         "Element": "Cation Exchange Capacity",
-        "ValueUnits": "cmol/kg",
+        "ValueUnit": "cmol/kg",
         "ExtractionMethod": "Displacement - Ammonium Acetate",
         "MeasurementMethod": "ICP-OES",
         "UCUM_ValueUnits": "cmol/kg",
@@ -652,7 +652,7 @@ export default {
       },
       "Base Saturation - Ca": {
         "Element": "Base Saturation - Ca",
-        "ValueUnits": "%",
+        "ValueUnit": "%",
         "ExtractionMethod": "EPA 3050 Digestion Acid Recoverable",
         "MeasurementMethod": "Calculated",
         "UCUM_ValueUnits": "%",
@@ -660,7 +660,7 @@ export default {
       },
       "Base Saturation - Mg": {
         "Element": "Base Saturation - Mg",
-        "ValueUnits": "%",
+        "ValueUnit": "%",
         "ExtractionMethod": "EPA 3050 Digestion Acid Recoverable",
         "MeasurementMethod": "Calculated",
         "UCUM_ValueUnits": "%",
@@ -668,7 +668,7 @@ export default {
       },
       "Base Saturation - K": {
         "Element": "Base Saturation - K",
-        "ValueUnits": "%",
+        "ValueUnit": "%",
         "ExtractionMethod": "EPA 3050 Digestion Acid Recoverable",
         "MeasurementMethod": "Calculated",
         "UCUM_ValueUnits": "%",
@@ -676,7 +676,7 @@ export default {
       },
       "Base Saturation - Na": {
         "Element": "Base Saturation - Na",
-        "ValueUnits": "%",
+        "ValueUnit": "%",
         "ExtractionMethod": "EPA 3050 Digestion Acid Recoverable",
         "MeasurementMethod": "Calculated",
         "UCUM_ValueUnits": "%",
@@ -684,7 +684,7 @@ export default {
       },
       "Soluble Salts": {
         "Element": "Soluble Salts",
-        "ValueUnits": "ppm",
+        "ValueUnit": "ppm",
         "ExtractionMethod": "5:1 Water Extraction",
         "MeasurementMethod": "Calculated",
         "UCUM_ValueUnits": "[ppm]",
@@ -692,7 +692,7 @@ export default {
       },
       "Electrical Conductivity": {
         "Element": "Electrical Conductivity",
-        "ValueUnits": "dS/m",
+        "ValueUnit": "dS/m",
         "ExtractionMethod": "EC 1:2 Ratio",
         "MeasurementMethod": "Conductivity",
         "UCUM_ValueUnits": "dS/m",
@@ -700,7 +700,7 @@ export default {
       },
       "Carbonate": {
         "Element": "Carbonate",
-        "ValueUnits": "meq/L",
+        "ValueUnit": "meq/L",
         "ExtractionMethod": "Saturated Paste",
         "MeasurementMethod": "Titration",
         "UCUM_ValueUnits": "meq/L",
@@ -708,7 +708,7 @@ export default {
       },
       "Aluminum": {
         "Element": "Aluminum",
-        "ValueUnits": "mg/kg",
+        "ValueUnit": "mg/kg",
         "ExtractionMethod": "Mehlich 3 ICP",
         "MeasurementMethod": "ICP",
         "UCUM_ValueUnits": "mg/kg",
@@ -716,14 +716,14 @@ export default {
       },
       "Sodium Adsorption Ratio": {
         "Element": "Sodium Adsorption Ratio",
-        "ValueUnits": "none",
+        "ValueUnit": "none",
         "ExtractionMethod": "Saturated Paste",
         "MeasurementMethod": "Calculated",
         "ModusTestID": "S-SAR-SP.00"
       },
       "Chloride": {
         "Element": "Chloride",
-        "ValueUnits": "meq/L",
+        "ValueUnit": "meq/L",
         "ExtractionMethod": "Saturated Paste",
         "MeasurementMethod": "ion selective electrode",
         "UCUM_ValueUnits": "meq/L",
@@ -731,7 +731,7 @@ export default {
       },
       "Bicarbonate": {
         "Element": "Bicarbonate",
-        "ValueUnits": "meq/L",
+        "ValueUnit": "meq/L",
         "ExtractionMethod": "Saturated Paste",
         "MeasurementMethod": "Titration",
         "UCUM_ValueUnits": "meq/L",
@@ -739,7 +739,7 @@ export default {
       },
       "Sand": {
         "Element": "Sand",
-        "ValueUnits": "%",
+        "ValueUnit": "%",
         "ExtractionMethod": "Sedimentation",
         "MeasurementMethod": "Hydrometer Method",
         "UCUM_ValueUnits": "%",
@@ -747,7 +747,7 @@ export default {
       },
       "Clay": {
         "Element": "Clay",
-        "ValueUnits": "%",
+        "ValueUnit": "%",
         "ExtractionMethod": "Sedimentation",
         "MeasurementMethod": "Hydrometer Method",
         "UCUM_ValueUnits": "%",
@@ -755,7 +755,7 @@ export default {
       },
       "Silt": {
         "Element": "Silt",
-        "ValueUnits": "%",
+        "ValueUnit": "%",
         "ExtractionMethod": "Sedimentation",
         "MeasurementMethod": "Hydrometer Method",
         "UCUM_ValueUnits": "%",
@@ -763,14 +763,14 @@ export default {
       },
       "pH": {
         "Element": "pH",
-        "ValueUnits": "standard units",
+        "ValueUnit": "standard units",
         "ExtractionMethod": "1:1 soil:water ",
         "MeasurementMethod": "H+ ISE",
         "ModusTestID": "S-PH-1:1.02.07"
       },
       "Organic Matter": {
         "Element": "Organic Matter",
-        "ValueUnits": "%",
+        "ValueUnit": "%",
         "ExtractionMethod": "Loss-on-Ignition ",
         "MeasurementMethod": "Gravimetric",
         "UCUM_ValueUnits": "%",
@@ -778,7 +778,7 @@ export default {
       },
       "Phosphorus": {
         "Element": "Phosphorus",
-        "ValueUnits": "mg/kg",
+        "ValueUnit": "mg/kg",
         "ExtractionMethod": "Mehlich 3 ICP",
         "MeasurementMethod": "ICP",
         "UCUM_ValueUnits": "mg/kg",
@@ -786,7 +786,7 @@ export default {
       },
       "Manganese": {
         "Element": "Manganese",
-        "ValueUnits": "mg/kg",
+        "ValueUnit": "mg/kg",
         "ExtractionMethod": "Mehlich 3 ICP",
         "MeasurementMethod": "\"ICP, AAS\"",
         "UCUM_ValueUnits": "mg/kg",
@@ -794,7 +794,7 @@ export default {
       },
       "Copper": {
         "Element": "Copper",
-        "ValueUnits": "mg/kg",
+        "ValueUnit": "mg/kg",
         "ExtractionMethod": "Mehlich 3 ICP",
         "MeasurementMethod": "\"ICP, AAS\"",
         "UCUM_ValueUnits": "mg/kg",
@@ -802,7 +802,7 @@ export default {
       },
       "Zinc": {
         "Element": "Zinc",
-        "ValueUnits": "mg/kg",
+        "ValueUnit": "mg/kg",
         "ExtractionMethod": "Mehlich 3 ICP",
         "MeasurementMethod": "\"ICP, AAS\"",
         "UCUM_ValueUnits": "mg/kg",
@@ -810,7 +810,7 @@ export default {
       },
       "Sulfur": {
         "Element": "Sulfur",
-        "ValueUnits": "mg/kg",
+        "ValueUnit": "mg/kg",
         "ExtractionMethod": "Mehlich 3 ICP",
         "MeasurementMethod": "ICP",
         "UCUM_ValueUnits": "mg/kg",
@@ -818,7 +818,7 @@ export default {
       },
       "Calcium": {
         "Element": "Calcium",
-        "ValueUnits": "mg/kg",
+        "ValueUnit": "mg/kg",
         "ExtractionMethod": "Mehlich 3 ICP",
         "MeasurementMethod": "\"ICP, AAS\"",
         "UCUM_ValueUnits": "mg/kg",
@@ -826,7 +826,7 @@ export default {
       },
       "Magnesium": {
         "Element": "Magnesium",
-        "ValueUnits": "mg/kg",
+        "ValueUnit": "mg/kg",
         "ExtractionMethod": "Mehlich 3 ICP",
         "MeasurementMethod": "\"ICP, AAS\"",
         "UCUM_ValueUnits": "mg/kg",
@@ -834,7 +834,7 @@ export default {
       },
       "Potassium": {
         "Element": "Potassium",
-        "ValueUnits": "mg/kg",
+        "ValueUnit": "mg/kg",
         "ExtractionMethod": "Mehlich 3 ICP",
         "MeasurementMethod": "\"ICP, AAS\"",
         "UCUM_ValueUnits": "mg/kg",
@@ -842,7 +842,7 @@ export default {
       },
       "Sodium": {
         "Element": "Sodium",
-        "ValueUnits": "mg/kg",
+        "ValueUnit": "mg/kg",
         "ExtractionMethod": "Mehlich 3 ICP",
         "MeasurementMethod": "\"ICP, AAS\"",
         "UCUM_ValueUnits": "mg/kg",
@@ -850,7 +850,7 @@ export default {
       },
       "Boron": {
         "Element": "Boron",
-        "ValueUnits": "mg/kg",
+        "ValueUnit": "mg/kg",
         "ExtractionMethod": "Mehlich 3 ICP",
         "MeasurementMethod": "ICP",
         "UCUM_ValueUnits": "mg/kg",
@@ -858,7 +858,7 @@ export default {
       },
       "Iron": {
         "Element": "Iron",
-        "ValueUnits": "mg/kg",
+        "ValueUnit": "mg/kg",
         "ExtractionMethod": "Mehlich 3 ICP",
         "MeasurementMethod": "\"ICP, AAS\"",
         "UCUM_ValueUnits": "mg/kg",
@@ -870,7 +870,7 @@ export default {
     "analytes": {
       "Potential Mineralizable Nitrogen": {
         "Element": "Potential Mineralizable Nitrogen",
-        "ValueUnits": "mg/kg",
+        "ValueUnit": "mg/kg",
         "ExtractionMethod": "permanganate mineralizable nitrogen ",
         "MeasurementMethod": "Spectrophotometric",
         "UCUM_ValueUnits": "mg/kg",
@@ -878,7 +878,7 @@ export default {
       },
       "Potential Oxidizable Carbon": {
         "Element": "Potential Oxidizable Carbon",
-        "ValueUnits": "mg/kg",
+        "ValueUnit": "mg/kg",
         "ExtractionMethod": "permanganate oxidizable carbon ",
         "MeasurementMethod": "Spectrophotometric",
         "UCUM_ValueUnits": "mg/kg",
@@ -886,7 +886,7 @@ export default {
       },
       "Ammonium-Nitrogen": {
         "Element": "Ammonium-Nitrogen",
-        "ValueUnits": "mg/kg",
+        "ValueUnit": "mg/kg",
         "ExtractionMethod": "2 M KCl",
         "MeasurementMethod": "Spectrophotometric",
         "UCUM_ValueUnits": "mg/kg",
@@ -894,14 +894,14 @@ export default {
       },
       "pH": {
         "Element": "pH",
-        "ValueUnits": "standard units",
+        "ValueUnit": "standard units",
         "ExtractionMethod": "1:1 soil:water ",
         "MeasurementMethod": "H+ ISE",
         "ModusTestID": "S-PH-1:1.02.07"
       },
       "Phosphorus": {
         "Element": "Phosphorus",
-        "ValueUnits": "mg/kg",
+        "ValueUnit": "mg/kg",
         "ExtractionMethod": "Bray P1 (1:10)",
         "MeasurementMethod": "Spectrophotometric",
         "UCUM_ValueUnits": "mg/kg",
@@ -909,7 +909,7 @@ export default {
       },
       "Potassium": {
         "Element": "Potassium",
-        "ValueUnits": "mg/kg",
+        "ValueUnit": "mg/kg",
         "ExtractionMethod": "Mehlich 3 ICP",
         "MeasurementMethod": "\"ICP, AAS\"",
         "UCUM_ValueUnits": "mg/kg",
@@ -917,7 +917,7 @@ export default {
       },
       "Magnesium": {
         "Element": "Magnesium",
-        "ValueUnits": "mg/kg",
+        "ValueUnit": "mg/kg",
         "ExtractionMethod": "Mehlich 3 ICP",
         "MeasurementMethod": "\"ICP, AAS\"",
         "UCUM_ValueUnits": "mg/kg",
@@ -925,7 +925,7 @@ export default {
       },
       "Calcium": {
         "Element": "Calcium",
-        "ValueUnits": "mg/kg",
+        "ValueUnit": "mg/kg",
         "ExtractionMethod": "Mehlich 3 ICP",
         "MeasurementMethod": "\"ICP, AAS\"",
         "UCUM_ValueUnits": "mg/kg",
@@ -933,7 +933,7 @@ export default {
       },
       "Cation Exchange Capacity": {
         "Element": "Cation Exchange Capacity",
-        "ValueUnits": "cmol/kg",
+        "ValueUnit": "cmol/kg",
         "ExtractionMethod": "Alcohol Prewash/Ammonium Acetate",
         "MeasurementMethod": "Calculated",
         "UCUM_ValueUnits": "cmol/kg",
@@ -941,7 +941,7 @@ export default {
       },
       "\"Nitrogen, Total\"": {
         "Element": "\"Nitrogen, Total\"",
-        "ValueUnits": "%",
+        "ValueUnit": "%",
         "ExtractionMethod": "Combustion Analyzer",
         "MeasurementMethod": "Combustion Analyzer",
         "UCUM_ValueUnits": "%",
@@ -949,7 +949,7 @@ export default {
       },
       "Organic Matter": {
         "Element": "Organic Matter",
-        "ValueUnits": "%",
+        "ValueUnit": "%",
         "ExtractionMethod": "Walkley-Black ",
         "MeasurementMethod": "Spectrophotometric",
         "UCUM_ValueUnits": "%",
@@ -957,7 +957,7 @@ export default {
       },
       "Bulk Density": {
         "Element": "Bulk Density",
-        "ValueUnits": "g/cm3",
+        "ValueUnit": "g/cm3",
         "ExtractionMethod": "Core",
         "MeasurementMethod": "Weight",
         "UCUM_ValueUnits": "g/cm3",
@@ -965,7 +965,7 @@ export default {
       },
       "Sand": {
         "Element": "Sand",
-        "ValueUnits": "%",
+        "ValueUnit": "%",
         "ExtractionMethod": "Sedimentation",
         "MeasurementMethod": "Pipette Method",
         "UCUM_ValueUnits": "%",
@@ -973,7 +973,7 @@ export default {
       },
       "Silt": {
         "Element": "Silt",
-        "ValueUnits": "%",
+        "ValueUnit": "%",
         "ExtractionMethod": "Sedimentation",
         "MeasurementMethod": "Pipette Method",
         "UCUM_ValueUnits": "%",
@@ -981,7 +981,7 @@ export default {
       },
       "Clay": {
         "Element": "Clay",
-        "ValueUnits": "%",
+        "ValueUnit": "%",
         "ExtractionMethod": "Sedimentation",
         "MeasurementMethod": "Pipette Method",
         "UCUM_ValueUnits": "%",
@@ -989,7 +989,7 @@ export default {
       },
       "Nitrate-Nitrogen": {
         "Element": "Nitrate-Nitrogen",
-        "ValueUnits": "mg/kg",
+        "ValueUnit": "mg/kg",
         "ExtractionMethod": "2 M KCl",
         "MeasurementMethod": "Spectrophotometric",
         "UCUM_ValueUnits": "mg/kg",
@@ -1001,7 +1001,7 @@ export default {
     "analytes": {
       "Base Saturation": {
         "Element": "Base Saturation",
-        "ValueUnits": "%",
+        "ValueUnit": "%",
         "ExtractionMethod": "EPA 3050 Digestion Acid Recoverable",
         "MeasurementMethod": "Calculated",
         "UCUM_ValueUnits": "%",
@@ -1009,7 +1009,7 @@ export default {
       },
       "Phosphorus": {
         "Element": "Phosphorus",
-        "ValueUnits": "mg/kg",
+        "ValueUnit": "mg/kg",
         "ExtractionMethod": "H3A-1 Extractant",
         "MeasurementMethod": "ICP",
         "UCUM_ValueUnits": "mg/kg",
@@ -1017,7 +1017,7 @@ export default {
       },
       "Sodium": {
         "Element": "Sodium",
-        "ValueUnits": "mg/kg",
+        "ValueUnit": "mg/kg",
         "ExtractionMethod": "H3A-1 Extractant",
         "MeasurementMethod": "ICP",
         "UCUM_ValueUnits": "mg/kg",
@@ -1025,7 +1025,7 @@ export default {
       },
       "Ammonium-Nitrogen": {
         "Element": "Ammonium-Nitrogen",
-        "ValueUnits": "mg/kg",
+        "ValueUnit": "mg/kg",
         "ExtractionMethod": "1:1 Water Extraction",
         "MeasurementMethod": "Spectrophotometric",
         "UCUM_ValueUnits": "mg/kg",
@@ -1033,7 +1033,7 @@ export default {
       },
       "\"Nitrogen, Total\"": {
         "Element": "\"Nitrogen, Total\"",
-        "ValueUnits": "ppm",
+        "ValueUnit": "ppm",
         "ExtractionMethod": "Water Extraction",
         "MeasurementMethod": "Spectrophotometric",
         "UCUM_ValueUnits": "[ppm]",
@@ -1041,7 +1041,7 @@ export default {
       },
       "CO2 Respiration": {
         "Element": "CO2 Respiration",
-        "ValueUnits": "%",
+        "ValueUnit": "%",
         "ExtractionMethod": "CO2 Respiration",
         "MeasurementMethod": "Solvita 24 Respiration",
         "UCUM_ValueUnits": "%",
@@ -1049,7 +1049,7 @@ export default {
       },
       "Nitrate-Nitrogen": {
         "Element": "Nitrate-Nitrogen",
-        "ValueUnits": "mg/kg",
+        "ValueUnit": "mg/kg",
         "ExtractionMethod": "H3A-1 Extractant",
         "MeasurementMethod": "Spectrophotometric",
         "UCUM_ValueUnits": "mg/kg",
@@ -1057,7 +1057,7 @@ export default {
       },
       "\"Organic Carbon, Total\"": {
         "Element": "\"Organic Carbon, Total\"",
-        "ValueUnits": "%",
+        "ValueUnit": "%",
         "ExtractionMethod": "Combustion Analyzer",
         "MeasurementMethod": "Combustion Analyzer",
         "UCUM_ValueUnits": "%",
@@ -1065,14 +1065,14 @@ export default {
       },
       "pH": {
         "Element": "pH",
-        "ValueUnits": "standard units",
+        "ValueUnit": "standard units",
         "ExtractionMethod": "1:1 soil:water ",
         "MeasurementMethod": "H+ ISE",
         "ModusTestID": "S-PH-1:1.02.07"
       },
       "Soluble Salts": {
         "Element": "Soluble Salts",
-        "ValueUnits": "ppm",
+        "ValueUnit": "ppm",
         "ExtractionMethod": "5:1 Water Extraction",
         "MeasurementMethod": "Calculated",
         "UCUM_ValueUnits": "[ppm]",
@@ -1080,7 +1080,7 @@ export default {
       },
       "Organic Matter": {
         "Element": "Organic Matter",
-        "ValueUnits": "%",
+        "ValueUnit": "%",
         "ExtractionMethod": "Loss-on-Ignition ",
         "MeasurementMethod": "Gravimetric",
         "UCUM_ValueUnits": "%",
@@ -1088,7 +1088,7 @@ export default {
       },
       "Potassium": {
         "Element": "Potassium",
-        "ValueUnits": "mg/kg",
+        "ValueUnit": "mg/kg",
         "ExtractionMethod": "H3A-1 Extractant",
         "MeasurementMethod": "ICP",
         "UCUM_ValueUnits": "mg/kg",
@@ -1096,7 +1096,7 @@ export default {
       },
       "Calcium": {
         "Element": "Calcium",
-        "ValueUnits": "mg/kg",
+        "ValueUnit": "mg/kg",
         "ExtractionMethod": "Mehlich 3 ICP",
         "MeasurementMethod": "\"ICP, AAS\"",
         "UCUM_ValueUnits": "mg/kg",
@@ -1104,7 +1104,7 @@ export default {
       },
       "Magnesium": {
         "Element": "Magnesium",
-        "ValueUnits": "mg/kg",
+        "ValueUnit": "mg/kg",
         "ExtractionMethod": "H3A-1 Extractant",
         "MeasurementMethod": "ICP",
         "UCUM_ValueUnits": "mg/kg",
@@ -1112,7 +1112,7 @@ export default {
       },
       "Sulfur": {
         "Element": "Sulfur",
-        "ValueUnits": "ppm",
+        "ValueUnit": "ppm",
         "ExtractionMethod": "H3A-1 Extractant",
         "MeasurementMethod": "ICP",
         "UCUM_ValueUnits": "[ppm]",
@@ -1120,7 +1120,7 @@ export default {
       },
       "Zinc": {
         "Element": "Zinc",
-        "ValueUnits": "mg/kg",
+        "ValueUnit": "mg/kg",
         "ExtractionMethod": "H3A-1 Extractant",
         "MeasurementMethod": "ICP",
         "UCUM_ValueUnits": "mg/kg",
@@ -1128,7 +1128,7 @@ export default {
       },
       "Iron": {
         "Element": "Iron",
-        "ValueUnits": "ppm",
+        "ValueUnit": "ppm",
         "ExtractionMethod": "H3A-1 Extractant",
         "MeasurementMethod": "ICP",
         "UCUM_ValueUnits": "[ppm]",
@@ -1136,7 +1136,7 @@ export default {
       },
       "Manganese": {
         "Element": "Manganese",
-        "ValueUnits": "mg/kg",
+        "ValueUnit": "mg/kg",
         "ExtractionMethod": "Mehlich 3 ICP",
         "MeasurementMethod": "\"ICP, AAS\"",
         "UCUM_ValueUnits": "mg/kg",
@@ -1144,7 +1144,7 @@ export default {
       },
       "Copper": {
         "Element": "Copper",
-        "ValueUnits": "mg/kg",
+        "ValueUnit": "mg/kg",
         "ExtractionMethod": "H3A-1 Extractant",
         "MeasurementMethod": "ICP",
         "UCUM_ValueUnits": "mg/kg",

@@ -1,6 +1,6 @@
 import debug from 'debug';
-import type { LabConfig } from './index.js';
-import { labConfigs } from './index.js';
+import type { LabConfig } from './labConfigs.js';
+import { labConfigs } from './labConfigs.js';
 
 const info = debug('@modusjs/convert#labs-automated:info');
 const trace = debug('@modusjs/convert#labs-automated:trace');

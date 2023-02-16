@@ -25,22 +25,22 @@ const mappings : LabConfig["mappings"] = {
 const analytes : LabConfig["analytes"] = {
   '1:1 Soil pH': {
     Element: 'pH',
-    ModusTestId: 'S-PH-1:1.02.07',
+    ModusTestID: 'S-PH-1:1.02.07',
     ValueUnit: 'none',
   },
   'WDRF Buffer pH': {
     Element: 'B-pH',
     ValueUnit: 'none',
-    ModusTestId: 'S-BPH-WB.02', // assume this is not the modified woodruff
+    ModusTestID: 'S-BPH-WB.02', // assume this is not the modified woodruff
   },
   '1:1 S Salts': {
     ValueUnit: 'mmho/cm',
-    ModusTestId: 'S-SS.19',
+    ModusTestID: 'S-SS.19',
     Element: 'SS',
   },
   '1:1 S Salts mmho/cm': {
     ValueUnit: 'mmho/cm',
-    ModusTestId: 'S-SS.19',
+    ModusTestID: 'S-SS.19',
     Element: 'SS',
   },
   'Excess Lime': {
@@ -53,7 +53,7 @@ const analytes : LabConfig["analytes"] = {
   'Organic Matter LOI %': {
     ValueUnit: '%',
     Element: 'OM',
-    ModusTestId: 'S-SOM-LOI.15',
+    ModusTestID: 'S-SOM-LOI.15',
   },
   'Nitrate-N ppm N': {
     ValueUnit: 'ppm',
@@ -66,12 +66,12 @@ const analytes : LabConfig["analytes"] = {
   'Bray P-1 ppm P': {
     ValueUnit: 'ppm',
     Element: 'P (Bray P1 1:10)',
-    ModusTestId: 'S-P-B1-1:10.01.03',
+    ModusTestID: 'S-P-B1-1:10.01.03',
   },
   'Olsen P ppm P': {
     ValueUnit: 'ppm',
     Element: 'P (Olsen)',
-    ModusTestId: 'S-P-BIC.04',
+    ModusTestID: 'S-P-BIC.04',
   },
   'Potassium ppm K': {
     ValueUnit: 'ppm',
@@ -120,7 +120,7 @@ const analytes : LabConfig["analytes"] = {
   '2N KCl NO3-N ppm N': {
     ValueUnit: 'ppm',
     Element: 'NO3-N',
-    ModusTestId: 'S-NO3-1:5.01.01',
+    ModusTestID: 'S-NO3-1:5.01.01',
   },
   'KCl NH4-N ppm': {
     ValueUnit: 'ppm',
@@ -137,17 +137,17 @@ const analytes : LabConfig["analytes"] = {
   'Bray P-2 ppm P': {
     ValueUnit: 'ppm',
     Element: 'P (Bray P2 1:10)',
-    ModusTestId: 'S-P-B2-1:10.01.03',
+    ModusTestID: 'S-P-B2-1:10.01.03',
   },
   'Mehlich P-II ppm P': {
     ValueUnit: 'ppm',
     Element: 'P',
-    ModusTestId: 'S-P-M2.04',
+    ModusTestID: 'S-P-M2.04',
   },
   'Mehlich P-III ppm P': {
     Element: 'P',
     ValueUnit: 'ppm',
-    ModusTestId: 'S-P-M3.04',
+    ModusTestID: 'S-P-M3.04',
   },
   'Salt pH': {
     Element: 'pH',
@@ -170,7 +170,7 @@ const analytes : LabConfig["analytes"] = {
   'Soil Moisture %': {
     ValueUnit: '%',
     Element: 'Soil-Moisture',
-    ModusTestId: 'S-MOIST-GRAV.00', // Could also be S-MOIST-GRAVAR.15 (as received), but I think this was taken in the field
+    ModusTestID: 'S-MOIST-GRAV.00', // Could also be S-MOIST-GRAVAR.15 (as received), but I think this was taken in the field
   },
   'Total P ppm': {
     ValueUnit: 'ppm',
@@ -183,7 +183,7 @@ const analytes : LabConfig["analytes"] = {
   'Nitrite-N ppm': {
     ValueUnit: 'ppm',
     Element: 'NO2-N',
-    ModusTestId: 'S-NO2-KCL.01', // only method for nitrite
+    ModusTestID: 'S-NO2-KCL.01', // only method for nitrite
   },
   '% Sand': {
     ValueUnit: '%',
@@ -204,17 +204,17 @@ const analytes : LabConfig["analytes"] = {
   'Paste % Sat': {
     ValueUnit: '%',
     Element: 'Sat-Pct',
-    ModusTestId: 'S-SP%.19',
+    ModusTestID: 'S-SP%.19',
   },
   'Paste pH': {
     Element: 'pH',
     ValueUnit: 'none',
-    ModusTestId: 'S-PH-SP.02', //only paste method
+    ModusTestID: 'S-PH-SP.02', //only paste method
   },
   'Paste EC mmho/cm': {
     ValueUnit: 'mmho/cm',
     Element: 'EC',
-    ModusTestId: 'S-EC-SP.03', // only paste method
+    ModusTestID: 'S-EC-SP.03', // only paste method
   },
   'Paste HCO3 ppm': {
     ValueUnit: 'ppm',
@@ -235,7 +235,7 @@ const analytes : LabConfig["analytes"] = {
   'Paste Na ppm': {
     ValueUnit: 'ppm',
     Element: 'Na',
-    ModusTestId: 'S-NA-SP.05', //only paste method
+    ModusTestID: 'S-NA-SP.05', //only paste method
   },
   'Paste S ppm': {
     ValueUnit: 'ppm',
@@ -244,7 +244,7 @@ const analytes : LabConfig["analytes"] = {
   'Paste SAR': {
     ValueUnit: 'ppm',
     Element: 'SAR',
-    ModusTestId: 'S-SAR-SP.00', //only paste method
+    ModusTestID: 'S-SAR-SP.00', //only paste method
   },
 
   // Recommendations
@@ -416,12 +416,12 @@ const analytes : LabConfig["analytes"] = {
   'Total Carbon %': {
     ValueUnit: '%',
     Element: 'TC',
-    ModusTestId: 'S-TC-COMB.15', //only one method exists
+    ModusTestID: 'S-TC-COMB.15', //only one method exists
   },
   'H2O NO3-N': {
     ValueUnit: 'ppm',
     Element: 'NO3-N',
-    ModusTestId: 'S-NO3-W1:1.01.01', //only water extraction method
+    ModusTestID: 'S-NO3-W1:1.01.01', //only water extraction method
   },
   'Total Dry Weight': {
     Element: 'Dry-Weight',
@@ -429,7 +429,7 @@ const analytes : LabConfig["analytes"] = {
   'Total S': {
     ValueUnit: 'ppm',
     Element: 'TS',
-    ModusTestId: 'S-S-EPA6010B.00', //only TS method
+    ModusTestID: 'S-S-EPA6010B.00', //only TS method
   },
   'PSNT N/A': {//Pre-Sidedress Nitrate Test - Nitrate/Acre; It sounds as though
     // this is a sampling procedure rather than necessarily a lab procedure
@@ -448,72 +448,72 @@ const analytes : LabConfig["analytes"] = {
   'Phosphorus M3 ICAP ppm P': {
     ValueUnit: 'ppm',
     Element: 'P',
-    ModusTestId: 'S-P-M3.04', // I think... ICAP == ICP?
+    ModusTestID: 'S-P-M3.04', // I think... ICAP == ICP?
   },
   'Potassium M3 ICAP ppm K': {
     ValueUnit: 'ppm',
     Element: 'K',
-    ModusTestId: 'S-K-M3.05', // I think... ICAP == ICP?
+    ModusTestID: 'S-K-M3.05', // I think... ICAP == ICP?
   },
   'Sulfur M3 ICAP ppm S': {
     ValueUnit: 'ppm',
     Element: 'S',
-    ModusTestId: 'S-S-M3.05', // I think... ICAP == ICP?
+    ModusTestID: 'S-S-M3.05', // I think... ICAP == ICP?
   },
   'Zinc M3 ICAP ppm Zn': {
     ValueUnit: 'ppm',
     Element: 'Zn',
-    ModusTestId: 'S-ZN-M3.05', // I think... ICAP == ICP?
+    ModusTestID: 'S-ZN-M3.05', // I think... ICAP == ICP?
   },
   'Iron M3 ICAP ppm Fe': {
     ValueUnit: 'ppm',
     Element: 'Fe',
-    ModusTestId: 'S-FE-M3.05', // I think... ICAP == ICP?
+    ModusTestID: 'S-FE-M3.05', // I think... ICAP == ICP?
   },
   'Manganese M3 ICAP ppm Mn': {
     ValueUnit: 'ppm',
     Element: 'Mn',
-    ModusTestId: 'S-MN-M3.05', // I think... ICAP == ICP?
+    ModusTestID: 'S-MN-M3.05', // I think... ICAP == ICP?
   },
   'Copper M3 ICAP ppm Cu': {
     ValueUnit: 'ppm',
     Element: 'Cu',
-    ModusTestId: 'S-CU-M3.05', // I think... ICAP == ICP?
+    ModusTestID: 'S-CU-M3.05', // I think... ICAP == ICP?
   },
   'Calcium M3 ICAP ppm Ca': {
     ValueUnit: 'ppm',
     Element: 'Ca',
-    ModusTestId: 'S-CA-M3.05', // I think... ICAP == ICP?
+    ModusTestID: 'S-CA-M3.05', // I think... ICAP == ICP?
   },
   'Magnesium M3 ICAP ppm Mg': {
     ValueUnit: 'ppm',
     Element: 'Mg',
-    ModusTestId: 'S-MG-M3.05', // I think... ICAP == ICP?
+    ModusTestID: 'S-MG-M3.05', // I think... ICAP == ICP?
   },
   'Sodium M3 ICAP ppm Na': {
     ValueUnit: 'ppm',
     Element: 'Na',
-    ModusTestId: 'S-NA-M3.05', // I think... ICAP == ICP?
+    ModusTestID: 'S-NA-M3.05', // I think... ICAP == ICP?
   },
   'Boron M3 ICAP ppm B': {
     ValueUnit: 'ppm',
     Element: 'B',
-    ModusTestId: 'S-B-M3.05', // I think... ICAP == ICP?
+    ModusTestID: 'S-B-M3.05', // I think... ICAP == ICP?
   },
   '1N KCl NO3-N ppm N': {
     ValueUnit: 'ppm',
     Element: 'NO3-N',
-    ModusTestId: 'S-NO3-KCL.01.01',
+    ModusTestID: 'S-NO3-KCL.01.01',
   },
   'KCl NH4-N ppm (Old)': {
     ValueUnit: 'ppm',
     Element: 'NH4-N',
-    ModusTestId: 'S-NH4-KCL.01.05',
+    ModusTestID: 'S-NH4-KCL.01.05',
   },
   '2N KCl NO3-N ppm N (Old)': {
     ValueUnit: 'ppm',
     Element: 'NO3-N',
-    ModusTestId: 'S-NO3-1:5.01.01',
+    ModusTestID: 'S-NO3-1:5.01.01',
   },
   '2N KCL NO3 Lbs-Acre': {
     ValueUnit: 'lb/ac',
@@ -526,7 +526,7 @@ const analytes : LabConfig["analytes"] = {
   'Aluminium M3 ICAP ppm Al': {
     ValueUnit: 'ppm',
     Element: 'Al',
-    ModusTestId: 'S-AL-M3.05',
+    ModusTestID: 'S-AL-M3.05',
   },
   'Organic C H2O ppm': {
     ValueUnit: 'ppm',
@@ -535,7 +535,7 @@ const analytes : LabConfig["analytes"] = {
   'Organic N H2O ppm': {
     ValueUnit: 'ppm',
     Element: 'ON',
-    ModusTestId: 'S-ON.19', //only option
+    ModusTestID: 'S-ON.19', //only option
   },
   'Organic C:N H2O': {
     ValueUnit: 'none',
@@ -571,7 +571,7 @@ const analytes : LabConfig["analytes"] = {
   'POX-C ppm C': {
     ValueUnit: 'ppm',
     Element: 'Active-Carbon',
-    ModusTestId: 'S-AC-KMNO4.01',
+    ModusTestID: 'S-AC-KMNO4.01',
   },
 
   // These are more of soil texture/moisture analysis results; stability is not
@@ -627,7 +627,7 @@ const analytes : LabConfig["analytes"] = {
   'Total C:N lbs/Acre Ratio': {
     ValueUnit: 'none',
     Element: 'TCNR',
-    ModusTestId: 'S-TC:TN.19', //only option
+    ModusTestID: 'S-TC:TN.19', //only option
   },
   'Total P Concentration %': {
     ValueUnit: '%',
@@ -768,7 +768,7 @@ const analytes : LabConfig["analytes"] = {
   'H2O NH4-N': {
     ValueUnit: 'ppm',
     Element: 'NH4-N',
-    ModusTestId: 'S-NH4N-W1:1.01', //only water method
+    ModusTestID: 'S-NH4N-W1:1.01', //only water method
   },
   'Sample Density g/cc': {
     Element: 'Bulk-Density', //I think this is right?
@@ -777,7 +777,7 @@ const analytes : LabConfig["analytes"] = {
   'Molybdenum Hot Water ppm Mo': {
     ValueUnit: 'ppm',
     Element: 'Mo',
-    ModusTestId: 'S-MO-HOTH2O.04',
+    ModusTestID: 'S-MO-HOTH2O.04',
   },
   'H2O P': {
     ValueUnit: 'ppm',
@@ -786,7 +786,7 @@ const analytes : LabConfig["analytes"] = {
   'Texture By Feel': {
     ValueUnit: 'none',
     Element: 'Texture',
-    //ModusTestId: 'S-TEXTURE.19'
+    //ModusTestID: 'S-TEXTURE.19'
   },
   'Comprehensive Bulk Density': {
     Element: 'Bulk-Density',
@@ -794,11 +794,11 @@ const analytes : LabConfig["analytes"] = {
   'H3A K': {
     ValueUnit: 'ppm',
     Element: 'K',
-    ModusTestId: 'S-K-H3A1.01.04',
+    ModusTestID: 'S-K-H3A1.01.04',
   },
   'CO2 Soil Respiration': {
     Element: 'CO2 Respiration',
-    ModusTestId: 'S-CO2-RESP.01',
+    ModusTestID: 'S-CO2-RESP.01',
   },
 
 
@@ -828,32 +828,32 @@ const analytes : LabConfig["analytes"] = {
   '%H Sat': {
     ValueUnit: '%',
     Element: 'BS-H',
-    ModusTestId: 'S-BS-H.19',
+    ModusTestID: 'S-BS-H.19',
   },
   '%K Sat': {
     ValueUnit: '%',
     Element: 'BS-K',
-    ModusTestId: 'S-BS-K.19',
+    ModusTestID: 'S-BS-K.19',
   },
   '%K Sat_1': {
     ValueUnit: '%',
     Element: 'BS-K',
-    ModusTestId: 'S-BS-K.19',
+    ModusTestID: 'S-BS-K.19',
   },
   '%Ca Sat': {
     Element: 'BS-Ca',
     ValueUnit: '%',
-    ModusTestId: 'S-BS-CA.19',
+    ModusTestID: 'S-BS-CA.19',
   },
   '%Mg Sat': {
     Element: 'BS-Mg',
     ValueUnit: '%',
-    ModusTestId: 'S-BS-MG.19',
+    ModusTestID: 'S-BS-MG.19',
   },
   '%Na Sat': {
     Element: 'BS-Na',
     ValueUnit: '%',
-    ModusTestId: 'S-BS-NA.19',
+    ModusTestID: 'S-BS-NA.19',
   },
 }
 
