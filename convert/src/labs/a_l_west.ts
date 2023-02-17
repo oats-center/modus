@@ -3,7 +3,7 @@ import type { LabConfig } from './index.js';
 const mappings : LabConfig["mappings"] = {
   // ID numbers
   'SAMPLEID': 'SampleNumber',
-  'LABNUM': 'ReportID',
+  'LABNUM': 'SampleContainerID',
   'REPORTNUM': 'LabEventID',
 
   //Other metadata

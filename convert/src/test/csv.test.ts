@@ -2,12 +2,10 @@ import debug from 'debug';
 import chalk from 'chalk';
 // Only import the type here: use the lib passed to you from node or browser in run()
 import type * as MainLib from '../index.js';
-import * as mainLib from '../index.js';
-import * as units from '@modusjs/units';
-//@ts-ignore
-import ucum from '@lhncbc/ucum-lhc';
+import type ModusResult from '@oada/types/modus/v1/modus-result.js'
 
-import xlsx_sample1 from '@modusjs/examples/dist/tomkat-historic/tomkat_source_data_xlsx.js';
+import csv_sample1 from '@modusjs/examples/dist/a_l_west/sample1_csv.js';
+//import xlsx_sample1 from '@modusjs/examples/dist/tomkat-historic/tomkat_source_data_xlsx.js';
 
 const trace = debug('@modusjs/convert#test-csv:trace');
 const info = debug('@modusjs/convert#test-csv:info');
@@ -15,9 +13,16 @@ const error = debug('@modusjs/convert#test-csv:error');
 
 const { green } = chalk;
 const test = (msg: string) => info(green(msg));
-let utils = ucum.UcumLhcUtils.getInstance();
 
 export default async function run(lib: typeof MainLib) {
+  test('Parsing a_l_west csv sheet with parse()...');
+  const results = lib.csv.parse({ str: csv_sample1, format: 'generic' });
+
+  test('Have greater than zero results from parsing a_l_west data');
+  if (results.length < 0) {
+    throw new Error(`No results from parse`);
+  }
+  /*
   test('Parsing tomkat historic xlsx sheet with parse()...');
   const results = lib.csv.parse({ base64: xlsx_sample1, format: 'generic' });
 
@@ -25,11 +30,33 @@ export default async function run(lib: typeof MainLib) {
   if (results.length < 0) {
     throw new Error(`No results from parse`);
   }
+  */
 
   test('First result has LabMetaData.Reports[0].FileDescription');
+  console.log(JSON.stringify(results[0], null, 2))
   if (!results[0]!.Events?.[0]?.LabMetaData?.Reports?.[0]?.FileDescription) {
     throw new Error('First result did not have a report with FileDescription');
   }
+
+  test('Various mapped values should be in the correct place');
+  const res = results[0] as ModusResult;
+  // @ts-expect-error FMISMetaData should exist on Events...
+  if (res.Events![0]!.FMISMetaData.FMISProfile!.Grower !== 'The Grower LLC')
+    throw new Error(`GROWER mapped improperly`);
+  // @ts-expect-error FMISMetaData should exist on Events...
+  if (res.Events![0]!.FMISMetaData!.ClientAccount!.Company !== 'The Grower LLC')
+    throw new Error(`GROWER mapped improperly`);
+  // @ts-expect-error FMISMetaData should exist on Events...
+  if (res.Events![0]!.FMISMetaData!.ClientAccount!.AccountNumber !== '11111')
+    throw new Error(`CLIENT mapped improperly`);
+  // @ts-expect-error FMISMetaData should exist on Events...
+  if (res.Events![0]!.FMISMetaData!.ClientAccount!.Name !== 'Bob Person')
+    throw new Error(`PERSON mapped improperly`);
+  if (res.Events![0]!.EventMetaData!.EventDate !== 'test')
+    throw new Error(`DATESAMPL mapped improperly`);
+  // @ts-expect-error FMISMetaData should exist on Events...
+  if (res.Events![0]!.LabMetaData.LabEventID !== '21-267-003')
+    throw new Error(`REPORTNUM mapped improperly`);
 
   /*
   test('Should recognize CSV by headers and apply units.');

@@ -9,7 +9,7 @@ import ModusResult, {
   assert as assertModusResult,
 } from '@oada/types/modus/v1/modus-result.js';
 import type { LabConfig } from './labs/index.js';
-import { autoDetectLabConfig, cobbleLabConfig, labConfigsMap, modusKeyToValue, modusKeyToHeader } from './labs/index.js';
+import { autoDetectLabConfig, cobbleLabConfig, labConfigsMap, modusKeyToValue, modusKeyToHeader, setMappings } from './labs/index.js';
 const error = debug('@modusjs/convert#csv:error');
 const warn = debug('@modusjs/convert#csv:error');
 const info = debug('@modusjs/convert#csv:info');
@@ -147,6 +147,36 @@ export function findAndAutodetectLab(datasheets: DataSheet[], allowImprovise?: b
   return labConfig || datasheets.map(({colnames}) => cobbleLabConfig(colnames))
     .find(sh => sh)
 }
+
+type DateGroupedRows = Record<string, any[]>;
+
+function groupRows(rows: any[], datecol: string) {
+  return rows.reduce((groups: DateGroupedRows, r: any) => {
+    let date = r[datecol!]?.toString();
+    if (date.match(/[0-9]{8}/)) {
+      // YYYYMMDD
+      date = dayjs(date, 'YYYYMMDD').format('YYYY-MM-DD');
+    } else if (+date < 100000 && +date > 100) {
+      // this is an excel date (# days since 1/1/1900), parse it out
+      date = dayjs(getJsDateFromExcel(date)).format('YYYY-MM-DD');
+    }
+    trace('Determined row date from column', datecol, 'as', date);
+
+    if (!date) {
+      warn(
+        'WARNING: row does not have the column we chose for the date (',
+        datecol,
+        '), the row is: ',
+        r
+      );
+      return groups;
+    }
+    if (!groups[date]) groups[date] = [];
+    groups[date]!.push(r);
+    return groups;
+  }, {} as DateGroupedRows);
+}
+
 //-------------------------------------------------------------------------------------------
 // Parse the specific spreadsheet with data from TomKat ranch provided at the
 // 2022 Fixing the Soil Health Tech Stack Hackathon.
@@ -191,34 +221,11 @@ function parseWorkbook({
       );
     }
 
-    // Loop through all the rows and group them by that date.  This group will become a single ModusResult file.
-    type DateGroupedRows = { [date: string]: any[] };
-    const grouped_rows = rows.reduce((groups: DateGroupedRows, r: any) => {
-      let date = r[datecol!]?.toString();
-      if (date.match(/[0-9]{8}/)) {
-        // YYYYMMDD
-        date = dayjs(date, 'YYYYMMDD').format('YYYY-MM-DD');
-      } else if (+date < 100000 && +date > 100) {
-        // this is an excel date (# days since 1/1/1900), parse it out
-        date = dayjs(getJsDateFromExcel(date)).format('YYYY-MM-DD');
-      }
-      trace('Determined row date from column', datecol, 'as', date);
-
-      if (!date) {
-        warn(
-          'WARNING: row does not have the column we chose for the date (',
-          datecol,
-          '), the row is: ',
-          r
-        );
-        return groups;
-      }
-      if (!groups[date]) groups[date] = [];
-      groups[date]!.push(r);
-      return groups;
-    }, {} as DateGroupedRows);
-
-    // Now we can loop through all the groups and actually make the darn Modus file:
+    // Loop through all the rows and group them by that date.  This group will
+    // become a single ModusResult file.
+    const grouped_rows = groupRows(rows, datecol);
+    // Now we can loop through all the groups and actually make the darn Modus
+    // file:
     let groupcount = 1;
     for (const [date, g_rows] of Object.entries(grouped_rows)) {
       // Start to build the modus output, this is one "Event"
@@ -228,7 +235,7 @@ function parseWorkbook({
             LabMetaData: {
               Reports: [
                 {
-                  ReportID: '1',
+                  ReportID: 1,
                   FileDescription: `${sheetname}_${groupcount++}`,
                 },
               ],
@@ -247,11 +254,12 @@ function parseWorkbook({
           },
         ],
       };
-      const event = output.Events![0]!;
+      let event = output.Events![0]!;
       const depthrefs = event.EventSamples!.Soil!.DepthRefs!;
       const samples = event.EventSamples!.Soil!.SoilSamples!;
 
       for (const [index, row] of g_rows.entries()) {
+        event = setMappings(event, labConfig, 'event', row);
         const reportid = modusKeyToValue(row, 'ReportID', labConfig);
         if (reportid) {
           event.LabMetaData.Reports[0]!.ReportID = reportid; // last row will win this if they disagree
@@ -259,7 +267,7 @@ function parseWorkbook({
 
         let nutrientResults = parseNutrientResults({
           row,
-          headers,
+          labConfig
         });
 
         // Units can come from several places
@@ -282,17 +290,23 @@ function parseWorkbook({
         // mutates depthrefs if missing, returns depthid
         const DepthID = '' + ensureDepthInDepthRefs(depth, depthrefs);
 
-        const sample: any = {
+
+        // Get the ReportID integer from the LabReportID string after ensuring
+        // a Reports entry exists for it.
+        const labReportId = modusKeyToValue(row, 'LabReportID', labConfig);
+        const ReportID = ensureLabReportId(event.LabMetaData.Reports, labReportId);
+
+        let sample: any = {
           SampleMetaData: {
-            SampleNumber: modusKeyToValue(row, 'SampleNumber', labConfig) || '' + index,
-            ReportID: modusKeyToValue(row, 'ReportID', labConfig) || '1',
-            FMISSampleID: modusKeyToValue(row, 'FMISSampleID', labConfig) || ''+id,
+            ReportID: ReportID || 1,
           },
           Depths: [{
             DepthID,
             NutrientResults: nutrientResults
           }],
         };
+
+        sample = setMappings(sample, labConfig, 'sample', row);
 
         // Parse locations: either in the sample itself or in the meta.  Sample takes precedence over meta.
         let wkt = parseWKTFromPointMetaOrRow(row);
@@ -307,6 +321,10 @@ function parseWorkbook({
           sample.SampleMetaData.Geometry = { wkt };
         }
         samples.push(sample);
+
+        //Write/override any additional labConfig Mappings into the modus output
+
+
       } // end rows for this group
       try {
         assertModusResult(output);
@@ -322,6 +340,7 @@ function parseWorkbook({
           `Could not construct a valid ModusResult from sheet ${sheetname}, group date ${date}`
         );
       }
+
       ret.push(output);
     } // end looping over all groups
   } // end looping over all the sheets
@@ -528,22 +547,20 @@ function parseColumnHeaderName(original: string, labConfig?: LabConfig): ColumnH
 // TODO: 'strict' means exclude all elements unknown to modus
 function parseNutrientResults({
   row,
-  headers,
+  labConfig
   //strict,
 } : {
-  row: Record<keyof typeof headers, any>,
-  headers: Record<string, ColumnHeader>,
+  row: Record<string, any>,
+  labConfig: LabConfig,
   //strict?: boolean
 }): NutrientResult[] {
+  // @ts-ignore
   return Object.keys(row)
-    //TODO: What about undefined, '', etc? Has that already been done by something?
+    .filter(key => Object.keys(labConfig.analytes).includes(key))
     .filter(key => !isNaN(row[key]))
-    //TODO: enable some implementation of strict.
-    //.filter(key => (!(strict && !allElements[headers[key]!.nutrientResult)))
     .map(key => ({
-      ...headers[key]!.nutrientResult,
+      ...labConfig.analytes[key],
       Value: +row[key],
-      ValueUnit: headers[key]!.nutrientResult?.ValueUnit //|| 'none',
     }))
 }
 
@@ -775,6 +792,24 @@ function toNutrientResultsObj(sampleDepth: any) {
       nr.Value,
     ])
   );
+}
+
+function ensureLabReportId(reports: any[], labReportId: string) {
+  let rep = reports.find((r: any) => r.LabReportID === labReportId)
+  // First and only report is missing LabReportID. Use it.
+  if (!rep) {
+    if (reports.length === 1 && !reports[0]) {
+      reports[0].LabReportID = labReportId;
+      return reports[0].ReportID;
+    } else {
+      rep = {
+        LabReportID: labReportId,
+        ReportID: reports.length,
+      };
+      reports.push(rep);
+      return rep.ReportID;
+    }
+  } else return rep.ReportID;
 }
 
 /* Didn't see these in the official modus element list

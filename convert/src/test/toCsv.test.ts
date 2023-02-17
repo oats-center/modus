@@ -16,7 +16,7 @@ const { green } = chalk;
 const test = (msg: string) => info(green(msg));
 
 export default async function run(lib: typeof MainLib) {
-  let { wb, str } = lib.csv.toCsv(tomkat as ModusResult);
+  let { wb } = lib.csv.toCsv(tomkat as ModusResult);
 
   let data = xlsx.utils.sheet_to_json(
     wb.Sheets[wb.SheetNames[0]!] as xlsx.WorkSheet

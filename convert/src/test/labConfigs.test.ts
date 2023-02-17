@@ -3,12 +3,13 @@ import chalk from 'chalk';
 // Only import the type here: use the lib passed to you from node or browser in run()
 import type * as MainLib from '../index.js';
 
+import tomkat from '@modusjs/examples/dist/tomkat-historic/tomkat_source_data2015_RMN0-10cm_1_json.js';
 import { labConfigsMap } from '../labs/index.js';
 import { validateUnits } from '@modusjs/units';
 import type { NutrientResult } from '@modusjs/units';
 import * as examples from '@modusjs/examples';
 
-const trace = debug('@modusjs/convert#test-labConfigs:trace');
+//const trace = debug('@modusjs/convert#test-labConfigs:trace');
 const info = debug('@modusjs/convert#test-labConfigs:info');
 const error = debug('@modusjs/convert#test-labConfigs:error');
 
@@ -18,10 +19,6 @@ export default async function run(lib: typeof MainLib) {
   test('Testing LabConfigs');
 
   test(`LabConfig 'mappings' should allow columns to be associated to arbitrary json paths of the modus output.`)
-  //1. make a lab config
-  //2. parse a thing
-  //3. check the json pointer in the modus result for the value in that column
-
 
 
   for (const labConf of labConfigsMap.values()) {
@@ -51,7 +48,9 @@ export default async function run(lib: typeof MainLib) {
         throw new Error(`Example ${ex} did not auto-recognize lab config as ${labConf.name}.`);
       }
 
-      //test(`All examples for LabConfig [${labConf.name}] should parse.`)
+      test(`All examples for LabConfig [${labConf.name}] should parse.`)
+      const res = lib.csv.parse({wb});
+      console.log(JSON.stringify(res, null, 2));
     }
   }
   test('All parse tests passed');

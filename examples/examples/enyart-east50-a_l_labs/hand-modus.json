@@ -28,7 +28,7 @@
         },
         "Reports": [
           {
-            "ReportID": "1",
+            "ReportID": 1,
             "LabReportID": "F21271-0035"
           }
         ]
@@ -57,8 +57,9 @@
           "SoilSamples": [
             {
               "SampleMetaData": {
+                "ReportID": 1,
                 "SampleNumber": "1",
-                "ReportID": "28051"
+                "SampleContainerID": "28051"
               },
               "Depths": [
                 {
@@ -85,8 +86,9 @@
 
             {
               "SampleMetaData": {
+                "ReportID": 1,
                 "SampleNumber": "2",
-                "ReportID": "28052"
+                "SampleContainerID": "28052"
               },
               "Depths": [
                 {
@@ -113,8 +115,9 @@
 
             {
               "SampleMetaData": {
+                "ReportID": 1,
                 "SampleNumber": "3",
-                "ReportID": "28053"
+                "SampleContainerID": "28053"
               },
               "Depths": [
                 {
@@ -145,8 +148,9 @@
 
             {
               "SampleMetaData": {
+                "ReportID": 1,
                 "SampleNumber": "4",
-                "ReportID": "28054"
+                "SampleContainerID": "28054"
               },
               "Depths": [
                 {
@@ -175,8 +179,9 @@
 
             {
               "SampleMetaData": {
+                "ReportID": 1,
                 "SampleNumber": "5",
-                "ReportID": "28055"
+                "SampleContainerID": "28055"
               },
               "Depths": [
                 {
@@ -207,8 +212,9 @@
 
             {
               "SampleMetaData": {
+                "ReportID": 1,
                 "SampleNumber": "6",
-                "ReportID": "28056"
+                "SampleContainerID": "28056"
               },
               "Depths": [
                 {
@@ -231,8 +237,9 @@
 
             {
               "SampleMetaData": {
+                "ReportID": 1,
                 "SampleNumber": "7",
-                "ReportID": "28057"
+                "SampleContainerID": "28057"
               },
               "Depths": [
                 {
@@ -260,8 +267,9 @@
 
             {
               "SampleMetaData": {
+                "ReportID": 1,
                 "SampleNumber": "8",
-                "ReportID": "28058"
+                "SampleContainerID": "28058"
               },
               "Depths": [
                 {
@@ -284,8 +292,9 @@
 
             {
               "SampleMetaData": {
+                "ReportID": 1,
                 "SampleNumber": "9",
-                "ReportID": "28059"
+                "SampleContainerID": "28059"
               },
               "Depths": [
                 {
@@ -312,8 +321,9 @@
 
             {
               "SampleMetaData": {
+                "ReportID": 1,
                 "SampleNumber": "10",
-                "ReportID": "28060"
+                "SampleContainerID": "28060"
               },
               "Depths": [
                 {
@@ -340,8 +350,9 @@
 
             {
               "SampleMetaData": {
+                "ReportID": 1,
                 "SampleNumber": "11",
-                "ReportID": "28061"
+                "SampleContainerID": "28061"
               },
               "Depths": [
                 {
@@ -372,8 +383,9 @@
 
             {
               "SampleMetaData": {
+                "ReportID": 1,
                 "SampleNumber": "12",
-                "ReportID": "28062"
+                "SampleContainerID": "28062"
               },
               "Depths": [
                 {
@@ -396,8 +408,9 @@
 
             {
               "SampleMetaData": {
+                "ReportID": 1,
                 "SampleNumber": "13",
-                "ReportID": "28063"
+                "SampleContainerID": "28063"
               },
               "Depths": [
                 {
@@ -426,8 +439,9 @@
 
             {
               "SampleMetaData": {
+                "ReportID": 1,
                 "SampleNumber": "14",
-                "ReportID": "28066"
+                "SampleContainerID": "28066"
               },
               "Depths": [
                 {
@@ -451,8 +465,9 @@
 
             {
               "SampleMetaData": {
+                "ReportID": 1,
                 "SampleNumber": "15",
-                "ReportID": "28067"
+                "SampleContainerID": "28067"
               },
               "Depths": [
                 {
@@ -485,8 +500,9 @@
 
             {
               "SampleMetaData": {
+                "ReportID": 1,
                 "SampleNumber": "16",
-                "ReportID": "28068"
+                "SampleContainerID": "28068"
               },
               "Depths": [
                 {
@@ -511,8 +527,9 @@
 
             {
               "SampleMetaData": {
+                "ReportID": 1,
                 "SampleNumber": "17",
-                "ReportID": "28069"
+                "SampleContainerID": "28069"
               },
               "Depths": [
                 {
@@ -540,8 +557,9 @@
 
             {
               "SampleMetaData": {
+                "ReportID": 1,
                 "SampleNumber": "18",
-                "ReportID": "28070"
+                "SampleContainerID": "28070"
               },
               "Depths": [
                 {
@@ -566,8 +584,9 @@
 
             {
               "SampleMetaData": {
+                "ReportID": 1,
                 "SampleNumber": "19",
-                "ReportID": "28071"
+                "SampleContainerID": "28071"
               },
               "Depths": [
                 {
@@ -600,8 +619,9 @@
 
             {
               "SampleMetaData": {
+                "ReportID": 1,
                 "SampleNumber": "20",
-                "ReportID": "28072"
+                "SampleContainerID": "28072"
               },
               "Depths": [
                 {

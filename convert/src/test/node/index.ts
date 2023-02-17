@@ -6,12 +6,12 @@ import * as mainlib from '../../node/index.js';
 
 /*
 import xmlTests from '../xml.test.js';
-import csvTests from '../csv.test.js';
-import toCsvTests from '../toCsv.test.js';
 import toJsonTests from '../tojson.test.js';
 import htmlTests from './html.test.js';
 import fileTest from './file.test.js';
+import toCsvTests from '../toCsv.test.js';
 */
+import csvTests from '../csv.test.js';
 import labConfigs from '../labConfigs.test.js';
 
 const info = debug('@modusjs/xml#test-node:info');
@@ -34,6 +34,8 @@ const { red } = chalk;
     info('testing xml');
     await xmlTests(mainlib);
 
+    */
+    /*
     info('testing csv');
     await csvTests(mainlib);
 

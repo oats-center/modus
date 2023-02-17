@@ -36,6 +36,16 @@ export function cobbleLabConfig(headers: string[]) {
     remaining = remaining.filter(h => h !== datecol)
   }
 
+  //2b. Look for lab number
+  /*
+  if (!Object.values(mappings).find(v => v === 'EventDate')) {
+    let datecol = getLabNumberColumn(headers);
+    mappings[datecol] = "EventDate";
+    remaining = remaining.filter(h => h !== datecol)
+  }
+  */
+
+
   //3. Look for depth data columns
 
   //remaining = remaining.filter(h => h !== )
@@ -132,8 +142,7 @@ export function modusKeyToHeader(item: string, labConfig: LabConfig) : string | 
   return match?.[0];
 }
 
-// SampleID is what the soil sampler called it. SampleNumber is what the Lab
-// calls that sample.
+// Get a header from the labconfig
 export function modusKeyToValue(row: any, item: string, labConfig: LabConfig) {
   let match = modusKeyToHeader(item, labConfig);
   if (match) return row[match].toString().trim();
