@@ -10,6 +10,7 @@ export const message = action('message', (msg: Message | string) => {
     msg = { type: 'good', msg };
   }
   state.messages = [...state.messages, msg];
+  if (state.messages.length > 4) popMessage();
 
   // set a timer to pop the message back off of state
   setTimeout(popMessage, 8000);

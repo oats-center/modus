@@ -157,7 +157,7 @@ export default observer(function App() {
       <div>
         Token: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <input
-          type="text"
+          type="password"
           value={state.trellis.token}
           onChange={evt => actions.trellis({ token: evt.target.value })}
         />
