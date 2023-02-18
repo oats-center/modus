@@ -35,7 +35,7 @@ div.header {
   display: flex;
   flex-direction: row;
   color: white;
-  background: url('header.jpg');
+  background: url('/header.jpg');
   background-size: cover;
 }
 h1.header-title {
