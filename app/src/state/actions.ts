@@ -10,6 +10,14 @@ export const message = action('message', (msg: Message | string) => {
     msg = { type: 'good', msg };
   }
   state.messages = [...state.messages, msg];
+
+  // set a timer to pop the message back off of state
+  setTimeout(popMessage, 8000);
+});
+
+export const popMessage = action('popMessage', () => {
+  info('popping message..');
+  state.messages = state.messages.slice(1);
 });
 
 export const output = action('output', (output: State['output']) => {
