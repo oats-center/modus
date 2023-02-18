@@ -1,4 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300&display=swap');
+
 
 :root {
   --background: #f4f0e9;
@@ -27,11 +29,14 @@ div.output {
 }
 
 div.header {
+  font-family: Quicksand, Roboto, sans-serif;
   margin: 5px;
   padding: 5px;
   display: flex;
   flex-direction: row;
-  color: var(--secondary);
+  color: white;
+  background: url('header.jpg');
+  background-size: cover;
 }
 h1.header-title {
   display: flex;
@@ -69,4 +74,13 @@ div.footer {
   font-size: 0.9em;
   padding: 5px;
   margin: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+div.partnerlogo {
+  padding-right: 15px;
+  padding-left: 15px;
 }

@@ -114,10 +114,6 @@ export default observer(function App() {
             <img className="header-logo" src="fixingsoil-logo.png" />
             <div>Modus Lab Results Converter</div>
           </h1>
-          <span className="tagline">
-            Drop your soil, nutrient, water or nematode sample lab results here
-            and get back a standard set of Modus JSON files or a standard CSV.
-          </span>
         </div>
         <div style={{ flexGrow: 1 }}></div>
         <div>{/* Icons here  */}</div>
@@ -126,16 +122,24 @@ export default observer(function App() {
       <hr />
 
       <div className="output">
-        Output Format: &nbsp;&nbsp;
-        <select
-          value={state.output}
-          onChange={(evt) => actions.output(evt.target.value as Output)}
-        >
-          <option value="json">Modus JSON</option>
-          <option value="csv">CSV</option>
-          <option value="trellis">Sync to Trellis</option>
-          <option value="modusjson2">Modus JSON v2</option>
-        </select>
+        <div className="tagline">
+          Drop your soil, nutrient, water or nematode sample lab results here
+          and get back a standard set of Modus JSON files or a standard CSV.
+          <br/><br/>
+        </div>
+
+        <div>
+          Output Format: &nbsp;&nbsp;
+          <select
+            value={state.output}
+            onChange={(evt) => actions.output(evt.target.value as Output)}
+          >
+            <option value="json">Modus JSON</option>
+            <option value="csv">CSV</option>
+            <option value="trellis">Sync to Trellis</option>
+            <option value="modusjson2">Modus JSON v2</option>
+          </select>
+        </div>
       </div>
 
       {state.output==='trellis' && <div className="oada-connect-container">
@@ -177,23 +181,32 @@ export default observer(function App() {
         </div>
       </div>
 
-
-      <div className="footer">
+      <div style={{padding: '10px' }}>
         <hr />
         Please note that no data leaves your browser unless you choose to send the
         output to your own Trellis. Your original and
         converted data never leave your computer.
-        <hr />
-        Thanks to the &nbsp;
-        <a href="https://oatscenter.org">OATS Center</a>,&nbsp;
-        <a href="https://farmfoundation.org">Farm Foundation</a>, &nbsp;
-        <a href="https://mixingbowlhub.com/">Mixing Bowl Hub</a>,&nbsp;
-        <a href="https://aggateway.org">Ag Gateway</a>,&nbsp; and all
-        participants in the{' '}
-        <a href="https://farmfoundation.swoogo.com/soilhealthtech">
-          2022 "Fixing the Soil Health Tech Stack" Hackathon
-        </a>
-        .
+      </div>
+
+
+      <hr />
+      <div className="footer">
+        <div style={{paddingBottom: '10px'}}>
+          <b>Thanks to all our partners who made this work possible:</b>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'row', padding: '10px', backgroundColor: 'white', borderRadius: '5px'}}>
+          <div className="partnerlogo"><a href="https://oatscenter.org"><img style={{maxHeight: '50px' }} src="logo-oats.png" /></a></div>
+          <div className="partnerlogo"><a href="https://farmfoundation.org"><img style={{maxHeight: '50px' }} src="logo-farmfoundation.png" /></a></div>
+          <div className="partnerlogo"><a href="https://mixingbowlhub.com/"><img style={{maxHeight: '50px' }} src="logo-mixingbowlhub.png" /></a></div>
+          <div className="partnerlogo"><a href="https://aggateway.org"><img style={{maxHeight: '50px' }} src="logo-aggateway.jpg" /></a></div>
+          <div className="partnerlogo"><a href="https://semios.com"><img style={{maxHeight: '50px' }} src="logo-semios.png" /></a></div>
+        </div>
+        <div style={{paddingTop: '10px'}}>
+          and all participants in the
+            <a href="https://farmfoundation.swoogo.com/soilhealthtech">
+              2022 "Fixing the Soil Health Tech Stack" Hackathon.
+            </a>
+        </div>
       </div>
     </div>
   );
