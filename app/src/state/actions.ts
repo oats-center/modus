@@ -24,3 +24,7 @@ export const trellis = action('trellis', (cfg: { domain?: string, token?: string
 export const inzone = action('inzone', (inzone: State['inzone']) => {
   state.inzone = inzone;
 });
+
+export const headless = action('headless', (headless: State['headless']) => {
+  state.headless = headless;
+});

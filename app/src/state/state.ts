@@ -12,13 +12,14 @@ export type Message = {
   msg: string,
 };
 
-export type Output = 'json' | 'csv' | 'trellis';
+export type Output = 'modusjson2' | 'json' | 'csv' | 'trellis';
 
 export type State = {
   messages: Message[],
   output: Output,
   trellis: { domain: string, token: string },
   inzone: boolean,
+  headless: boolean,
 };
 
 // Figure out the config: load from localStorage, but have default
@@ -27,6 +28,7 @@ export const state = observable<State>({
   output: 'json',
   trellis: { domain: '', token: '' },
   inzone: false,
+  headless: false,
 });
 
 

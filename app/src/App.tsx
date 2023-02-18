@@ -7,13 +7,15 @@ import { connect } from '@oada/client';
 import { tree } from './trellisTree';
 import { observer } from 'mobx-react-lite';
 import { context } from './state';
+import { toModus2QuickHack } from './toModus2'
 // @ts-ignore
 import { file as convertFile, units, ModusResult } from '@modusjs/convert/dist-browser/bundle.mjs';
+import type { json } from '@modusjs/convert';
 import Messages from './Messages';
 
 //localStorage.debug = '*';
 
-type Output = 'json' | 'csv' | 'trellis';
+type Output = 'modusjson2' | 'json' | 'csv' | 'trellis';
 
 const trace = debug('@modusjs/app#App:trace');
 const info = debug('@modusjs/app#App:info');
@@ -83,6 +85,12 @@ export default observer(function App() {
 
         info('results: ', modus_results);
         info('Saving',state.output,' type from results');
+        const outputtype = state.output === 'modusjson2' ? 'json' : state.output;
+        if (state.output === 'modusjson2') {
+          for (const mr of (modus_results as json.ModusJSONConversionResult[])) {
+            mr.modus = toModus2QuickHack(mr.modus);
+          }
+        }
         if (state.output === 'trellis') {
           await toTrellis({
             domain: state.trellis.domain,
@@ -90,7 +98,7 @@ export default observer(function App() {
             results: modus_results
           })
         } else {
-          await convertFile.save({ modus: modus_results, outputtype: state.output });
+          await convertFile.save({ modus: modus_results, outputtype });
           info('File successfully saved');
           actions.message('Conversion result saved.');
         }
@@ -126,6 +134,7 @@ export default observer(function App() {
           <option value="json">Modus JSON</option>
           <option value="csv">CSV</option>
           <option value="trellis">Sync to Trellis</option>
+          <option value="modusjson2">Modus JSON v2</option>
         </select>
       </div>
 
