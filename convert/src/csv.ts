@@ -208,7 +208,7 @@ function parseWorkbook({
 
     // Parse structured header format for reverse conversion
     let headers = Object.fromEntries(
-      colnames.map(n => ([n, parseColumnHeaderName(n, labConfig)]))
+      colnames.map(n => ([n, parseColumnHeaderName(n, labConfig, unitOverrides)]))
     );
 
     // Determine a "date" column for this dataset
@@ -258,12 +258,8 @@ function parseWorkbook({
       const depthrefs = event.EventSamples!.Soil!.DepthRefs!;
       const samples = event.EventSamples!.Soil!.SoilSamples!;
 
-      for (const [index, row] of g_rows.entries()) {
+      for (const [_, row] of g_rows.entries()) {
         event = setMappings(event, labConfig, 'event', row);
-        const reportid = modusKeyToValue(row, 'ReportID', labConfig);
-        if (reportid) {
-          event.LabMetaData.Reports[0]!.ReportID = reportid; // last row will win this if they disagree
-        }
 
         let nutrientResults = parseNutrientResults({
           row,
@@ -284,9 +280,7 @@ function parseWorkbook({
         // Acreage, etc.)?
         const meta = pointmeta[id] || null;
 
-        // Grab the "depth" for this sample:
-        //TODO: integrate into labconfig
-        const depth = parseDepth(row, unitOverrides, sheetname);
+        const depth = parseDepth(row, labConfig, headers);
         // mutates depthrefs if missing, returns depthid
         const DepthID = '' + ensureDepthInDepthRefs(depth, depthrefs);
 
@@ -522,14 +516,15 @@ function extractBefore(str: string, startChar: string): string {
 // a NutrientResult. It'll also be key in getting back to the original input
 // headers if that is necessary.
 type ColumnHeader = {
-  original: string,
-  element: string,
-  modifier: string,
-  units: string,
-  nutrientResult: NutrientResult,
+  original: string;
+  element: string;
+  modifier: string;
+  units: string;
+  nutrientResult: NutrientResult;
+  unitsOverride?: string;
 };
 
-function parseColumnHeaderName(original: string, labConfig?: LabConfig): ColumnHeader {
+function parseColumnHeaderName(original: string, labConfig?: LabConfig, unitOverrides?: Units): ColumnHeader {
   original = original
     .trim()
     .replace(/\n/g, ' ')
@@ -538,8 +533,14 @@ function parseColumnHeaderName(original: string, labConfig?: LabConfig): ColumnH
   const modifier = extractBetween(original, '(', ')');
   const units = extractBetween(original, '[', ']');
   const nutrientResult = labConfig?.analytes[element] || { Element: element };
-  //TODO: Could also be a mapping item
-  return { original, element, modifier, units, nutrientResult };
+  return {
+    original,
+    element,
+    modifier,
+    units,
+    nutrientResult,
+    unitsOverride: unitOverrides?.[original],
+  };
 }
 
 // If we aren't careful and we allow extra things through, we could end up with
@@ -564,123 +565,48 @@ function parseNutrientResults({
     }))
 }
 
-//1. grab first key containing 'DEPTH'
-//2.
-function parseDepth2(row: any, units?: any, sheetname?: string): Depth {
-  let obj: any = {
-    DepthUnit: 'cm', //default to cm
-  };
+function parseDepth(row: any, labConfig: LabConfig, headers: Record<string, ColumnHeader>): Depth {
+  let depthInfo: any = typeof labConfig?.depthInfo !== 'function' ?
+    // @ts-ignore
+    labConfig.depthInfo : labConfig?.depthInfo(row);
 
-  // Get columns with the word depth
-  const copy = keysToUpperNoSpacesDashesOrUnderscores(row);
-  const unitsCopy = keysToUpperNoSpacesDashesOrUnderscores(units);
-  let depthKey = Object.keys(copy).find((key) => key.match(/DEPTH/));
-  if (depthKey) {
-    let value = copy[depthKey].toString();
-    if (unitsCopy[depthKey]) obj.DepthUnit = unitsCopy[depthKey];
+  // Depth info can come from:
+  // 1) Within the spreadsheet, as columns for each property
+  // 2) Within the spreadsheet with units parsed from headers and overrides
+  // 3) Data that lives outside of the spreadsheet, e.g., based on some standard
+  //    protocol (depthInfo as an object)
+  // 4) Some combination of the row data with custom logic applied (depthInfo as
+  //    a function)
+  // 5) Unknown (some defaults)
+  const depth: any = {};
+  depth.StartingDepth = modusKeyToValue(row, 'StartingDepth', labConfig) ||
+    depthInfo?.StartingDepth || 0;
+  depth.EndingDepth = modusKeyToValue(row, 'EndingDepth', labConfig) ||
+    depthInfo?.EndingDepth || depth.StartingDepth;
+  depth.ColumnDepth = modusKeyToValue(row, 'ColumnDepth', labConfig) ||
+    depthInfo?.ColumnDepth || Math.abs(depth.EndingDepth - depth.StartingDepth)
+    || 0; // 0 is allowed in our json schema, but technically not allowed per xsd
+  depth.Name = modusKeyToValue(row, 'DepthName', labConfig) || depthInfo?.Name ||
+    'Unnamed Depth';
 
-    if (value.match(' to ')) {
-      obj.StartingDepth = +value.split(' to ')[0];
-      obj.EndingDepth = +value.split(' to ')[1];
-      obj.Name = value;
-    } else if (value.match(' - ')) {
-      obj.StartingDepth = +value.split(' - ')[0];
-      obj.EndingDepth = +value.split(' - ')[1];
-      obj.Name = value;
-    } else {
-      obj.StartingDepth = +value;
-      obj.Name = value;
-    }
-  }
+  depth.DepthUnit = (() => { // Overrides take precedence out of the options
+      let start = modusKeyToHeader('StartingDepth', labConfig);
+      let startVal = start ? headers[start]?.unitsOverride : undefined;
+      let end = modusKeyToHeader('EndingDepth', labConfig);
+      let endVal = end ? headers[end]?.unitsOverride : undefined;
+      let dep = modusKeyToHeader('ColumnDepth', labConfig);
+      let depVal = dep ? headers[dep]?.unitsOverride : undefined;
+      //overrides on any column takes precedence
+      if (startVal || endVal || depVal) return startVal || endVal || depVal;
 
-  if (row['B Depth']) obj.StartingDepth = +row['B Depth'];
-  if (row['B Depth']) obj.Name = '' + row['B Depth'];
-  if (units['B Depth']) obj.DepthUnit = units['B Depth']; // Assume same for both top and bottom
-  if (row['E Depth']) obj.EndingDepth = +row['E Depth'];
+      startVal = start ? headers[start]?.unitsOverride : undefined;
+      endVal = end ? headers[end]?.unitsOverride : undefined;
+      depVal = dep ? headers[dep]?.unitsOverride : undefined;
+      return startVal || endVal || depVal;
+    })() || modusKeyToValue(row, 'DepthUnit', labConfig) || depthInfo?.DepthUnit
+    || "cm";
 
-  //Insufficient data found
-  if (typeof obj.StartingDepth === 'undefined') {
-    warn(
-      'No depth data was found in sheetname',
-      sheetname,
-      '. Falling back to default depth object.'
-    );
-    trace('Row without depth was: ', row);
-    return {
-      StartingDepth: 0,
-      EndingDepth: 8,
-      DepthUnit: 'in',
-      Name: 'Unknown Depth',
-      ColumnDepth: 8,
-    };
-  }
-
-  //Handle single depth value
-  obj.EndingDepth = obj.EndingDepth || obj.StartingDepth;
-
-  //Now compute column depth
-  obj.ColumnDepth = Math.abs(obj.EndingDepth - obj.StartingDepth);
-
-  return obj;
-}
-
-// sheetname is just for debugging
-function parseDepth(row: any, units?: any, sheetname?: string): Depth {
-  let obj: any = {
-    DepthUnit: 'cm', //default to cm
-  };
-
-  // Get columns with the word depth
-  const copy = keysToUpperNoSpacesDashesOrUnderscores(row);
-  const unitsCopy = keysToUpperNoSpacesDashesOrUnderscores(units);
-  let depthKey = Object.keys(copy).find((key) => key.match(/DEPTH/));
-  if (depthKey) {
-    let value = copy[depthKey].toString();
-    if (unitsCopy[depthKey]) obj.DepthUnit = unitsCopy[depthKey];
-
-    if (value.match(' to ')) {
-      obj.StartingDepth = +value.split(' to ')[0];
-      obj.EndingDepth = +value.split(' to ')[1];
-      obj.Name = value;
-    } else if (value.match(' - ')) {
-      obj.StartingDepth = +value.split(' - ')[0];
-      obj.EndingDepth = +value.split(' - ')[1];
-      obj.Name = value;
-    } else {
-      obj.StartingDepth = +value;
-      obj.Name = value;
-    }
-  }
-
-  if (row['B Depth']) obj.StartingDepth = +row['B Depth'];
-  if (row['B Depth']) obj.Name = '' + row['B Depth'];
-  if (units['B Depth']) obj.DepthUnit = units['B Depth']; // Assume same for both top and bottom
-  if (row['E Depth']) obj.EndingDepth = +row['E Depth'];
-
-  //Insufficient data found
-  if (typeof obj.StartingDepth === 'undefined') {
-    warn(
-      'No depth data was found in sheetname',
-      sheetname,
-      '. Falling back to default depth object.'
-    );
-    trace('Row without depth was: ', row);
-    return {
-      StartingDepth: 0,
-      EndingDepth: 8,
-      DepthUnit: 'in',
-      Name: 'Unknown Depth',
-      ColumnDepth: 8,
-    };
-  }
-
-  //Handle single depth value
-  obj.EndingDepth = obj.EndingDepth || obj.StartingDepth;
-
-  //Now compute column depth
-  obj.ColumnDepth = Math.abs(obj.EndingDepth - obj.StartingDepth);
-
-  return obj;
+  return depth;
 }
 
 export type ToCsvOpts = {

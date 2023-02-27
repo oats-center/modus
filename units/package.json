@@ -1,7 +1,7 @@
 {
-  "name": "@modusjs/convert",
+  "name": "@modusjs/units",
   "packageManager": "yarn@3.2.1",
-  "version": "0.1.2",
+  "version": "0.0.1",
   "description": "Universal library for interacting with Modus XML files",
   "type": "module",
   "comment1": "dist/node/index.js is normal output of tsc, used for node",
@@ -17,7 +17,6 @@
   ],
   "scripts": {
     "build:node": "tsc -b",
-    "build:node-watch": "tsc -b --watch",
     "build:browser": "tsc -p tsconfig.browser.json",
     "build:rollup": "rollup --config=rollup.config.js",
     "build": "yarn run build:node && yarn run build:browser && yarn run build:rollup",
@@ -39,16 +38,13 @@
   "devDependencies": {
     "@modusjs/airtable": "workspace:^",
     "@modusjs/examples": "workspace:^",
-    "@modusjs/units": "workspace:^",
-    "@oada/formats": "^3.4.1",
+    "@oada/formats": "^3.3.0",
     "@rollup/plugin-commonjs": "^23.0.0",
-    "@rollup/plugin-dynamic-import-vars": "^2.0.1",
     "@rollup/plugin-json": "^5.0.0",
     "@rollup/plugin-node-resolve": "^15.0.0",
     "@tsconfig/node16": "^1.0.3",
     "@types/debug": "^4.1.7",
     "@types/isomorphic-form-data": "^2.0.1",
-    "@types/jsonpath": "^0.2.0",
     "@types/md5": "^2",
     "@types/node": "^18.11.2",
     "@types/prompts": "^2.4.1",
@@ -61,11 +57,12 @@
     "rollup-plugin-pnp-resolve": "^2.0.0",
     "rollup-plugin-terser": "^7.0.2",
     "rollup-plugin-typescript2": "^0.34.1",
+    "type-fest": "^3.3.0",
     "typescript": "^4.7.4"
   },
   "dependencies": {
     "@lhncbc/ucum-lhc": "^4.1.6",
-    "@oada/types": "^3.4.2",
+    "@oada/types": "^3.3.0",
     "@overleaf/o-error": "^3.4.0",
     "chalk": "^4.0.0",
     "cheerio": "^1.0.0-rc.12",
@@ -77,13 +74,11 @@
     "formdata-node": "^5.0.0",
     "htmlparser2": "^8.0.1",
     "isomorphic-form-data": "^2.0.0",
-    "jsonpath": "^1.1.1",
     "jszip": "^3.10.1",
     "md5": "^2.3.0",
     "node-fetch": "^3.2.10",
     "prompts": "^2.4.2",
     "save-file": "^2.3.1",
-    "tslib": "^2.4.0",
-    "xlsx": "^0.18.5"
+    "tslib": "^2.4.0"
   }
 }

@@ -366,7 +366,7 @@ export function parse(xmlstring: string): any {
       },
       parseAsNumbers: {
         SampleGroupID: true,
-        //ReportID: true,
+        ReportID: true,
         epsg: true,
         SubSampleNumber: true,
         StartingDepth: true,

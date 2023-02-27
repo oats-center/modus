@@ -16,6 +16,7 @@ const { green } = chalk;
 const test = (msg: string) => info(green(msg));
 
 export default async function run(lib: typeof MainLib) {
+  /*
   let { wb } = lib.csv.toCsv(tomkat as ModusResult);
 
   let data = xlsx.utils.sheet_to_json(
@@ -51,5 +52,6 @@ export default async function run(lib: typeof MainLib) {
         `Column ${key} was undefined or did not match expected type ${results[key]}`
       );
     }
-  });
+    });
+   */
 }

@@ -76,11 +76,3 @@ To rollup `dist/index.mjs` bundle for browser: `yarn build:rollup`
 To compile/bundle everything live as you code: `yarn dev`
 
 To run all tests live as you code (you should run `yarn dev` at the same time): `yarn test`.
-
-
-
-## CSV Parsing
-
----
-
-#### Airtable Integration

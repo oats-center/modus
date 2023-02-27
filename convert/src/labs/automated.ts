@@ -1,6 +1,6 @@
 import debug from 'debug';
 import type { LabConfig } from './labConfigs.js';
-import { labConfigs } from './labConfigs.js';
+import { labConfigs, parseMappingValue, toModusJsonPath } from './labConfigs.js';
 
 const info = debug('@modusjs/convert#labs-automated:info');
 const trace = debug('@modusjs/convert#labs-automated:trace');
@@ -18,13 +18,14 @@ export function cobbleLabConfig(headers: string[]) {
   warn(`Attempting to identify header matches individually.`);
   //1. Find modus mappings (non-analytes)
   let lcMappings = Object.values(labConfigs)
-    .map(lc => Object.fromEntries(Object.entries(lc.analytes).map(([k, v]) => (
+    .map(lc => Object.fromEntries(Object.entries(lc.mappings).map(([k, v]) => (
       [keysToUpperNoSpacesDashesOrUnderscores(k), v]
     ))))
   let mappings: LabConfig['mappings'] = {};
   headers.forEach((h) => {
     //Find potential matches
-    let lcMatch = lcMappings.find(lc => lc?.[h])
+    const copy = keysToUpperNoSpacesDashesOrUnderscores(h);
+    let lcMatch = lcMappings.find(lc => lc?.[copy])
     if (lcMatch !== undefined) mappings![h] = lcMatch[h]!;
   })
   let remaining = headers.filter(h => !mappings[h]);
@@ -145,6 +146,63 @@ export function modusKeyToHeader(item: string, labConfig: LabConfig) : string | 
 // Get a header from the labconfig
 export function modusKeyToValue(row: any, item: string, labConfig: LabConfig) {
   let match = modusKeyToHeader(item, labConfig);
-  if (match) return row[match].toString().trim();
+  if (match) {
+    let mapping = toModusJsonPath[item as keyof typeof toModusJsonPath];
+    return parseMappingValue(row[match], mapping);
+  }
   return '';
+}
+
+function parseDepth(row: any, labConfig: LabConfig, units?: any): any {
+  let obj: any = {
+    DepthUnit: 'cm', //default to cm
+  };
+
+  // Get columns with the word depth
+  const copy = keysToUpperNoSpacesDashesOrUnderscores(row);
+  const unitsCopy = keysToUpperNoSpacesDashesOrUnderscores(units);
+  let depthKey = Object.keys(copy).find((key) => key.match(/DEPTH/));
+  if (depthKey) {
+    let value = copy[depthKey].toString();
+    if (unitsCopy[depthKey]) obj.DepthUnit = unitsCopy[depthKey];
+
+    if (value.match(' to ')) {
+      obj.StartingDepth = +value.split(' to ')[0];
+      obj.EndingDepth = +value.split(' to ')[1];
+      obj.Name = value;
+    } else if (value.match(' - ')) {
+      obj.StartingDepth = +value.split(' - ')[0];
+      obj.EndingDepth = +value.split(' - ')[1];
+      obj.Name = value;
+    } else {
+      obj.StartingDepth = +value;
+      obj.Name = value;
+    }
+  }
+
+  if (row['B Depth']) obj.StartingDepth = +row['B Depth'];
+  if (row['B Depth']) obj.Name = '' + row['B Depth'];
+  if (units['B Depth']) obj.DepthUnit = units['B Depth']; // Assume same for both top and bottom
+  if (row['E Depth']) obj.EndingDepth = +row['E Depth'];
+
+  //Insufficient data found
+  if (typeof obj.StartingDepth === 'undefined') {
+    warn('No depth data was found. Falling back to default depth object.');
+    trace('Row without depth was: ', row);
+    return {
+      StartingDepth: 0,
+      EndingDepth: 8,
+      DepthUnit: 'in',
+      Name: 'Unknown Depth',
+      ColumnDepth: 8,
+    };
+  }
+
+  //Handle single depth value
+  obj.EndingDepth = obj.EndingDepth || obj.StartingDepth;
+
+  //Now compute column depth
+  obj.ColumnDepth = Math.abs(obj.EndingDepth - obj.StartingDepth);
+
+  return obj;
 }

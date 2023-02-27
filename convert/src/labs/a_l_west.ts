@@ -7,7 +7,9 @@ const mappings : LabConfig["mappings"] = {
   'REPORTNUM': 'LabEventID',
 
   //Other metadata
-  'DATESAMPL': 'EventDate',
+  // DATESAMPL might map to something, but its all empty strings in our samples
+  // so it won't convert to a valid date...
+  'DATESAMPL': undefined,
   'DATESUB': 'EventDate',
   'CLIENT': 'AccountNumber',
   'GROWER': 'Grower',
@@ -18,6 +20,12 @@ const mappings : LabConfig["mappings"] = {
   'CROP': undefined,
   'TYPE': undefined,
 }
+
+/*
+const depthInfo: LabConfig["depthInfo"] = {
+
+}
+*/
 
 const analytes : LabConfig["analytes"] = {
   'OM': {

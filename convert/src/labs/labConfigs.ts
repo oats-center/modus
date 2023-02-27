@@ -1,9 +1,15 @@
 import type { Units, NutrientResult } from '@modusjs/units';
+import debug from 'debug';
 import * as airtable from '@modusjs/airtable';
 import jp from 'jsonpath';
 
 import { default as a_l_west } from './a_l_west.js';
 import { default as tomkat} from './tomkat.js';
+
+//const info = debug('@modusjs/convert#labs-automated:info');
+//const trace = debug('@modusjs/convert#labs-automated:trace');
+const warn = debug('@modusjs/convert#labConfigs:warn');
+//const error = debug('@modusjs/convert#labs-automated:error');
 
 export let labConfigs : Record<string, LabConfig> = {
   a_l_west,
@@ -47,19 +53,32 @@ export type LabConfig = {
   //mappings: Record<string, keyof typeof toModusJsonPath | keyof typeof toModusJsonPath[] | undefined>;
   //examplesKey?: keyof typeof examples;
   examplesKey?: string;
+  depthInfo?: Depth | ((row: any) => Depth);
+}
+
+type Depth = {
+  Name?: string;
+  DepthUnit?: string;
+  StartingDepth?: number;
+  EndingDepth?: number;
+  ColumnDepth?: number;
 }
 
 type ModusMapping = {
   path: string;
   type?: string;
+  fullpath?: string;
+  //TODO: Is there a better way that's already established to do this?
+  parse?: string | undefined;
 }
 
-const toModusJsonPath = {
+export const toModusJsonPath = {
   //Per-event basis
   'EventDate': {
     type: 'event',
     path: '$.EventMetaData.EventDate',
     fullpath: '$.Events.*.EventMetaData.EventDate',
+    parse: 'date',
   },
   'EventCode': {
     type: 'event',
@@ -85,11 +104,13 @@ const toModusJsonPath = {
     type: 'event',
     path: '$.LabMetaData.LabID',
     fullpath: '$.Events.*.LabMetaData.LabID',
+    parse: 'string',
   },
   'ProcessedDate': {
     type: 'event',
     path: '$.LabMetaData.ProcessedDate',
     fullpath: '$.Events.*.LabMetaData.ProcessedDate',
+    parse: 'date',
   },
   'Name': {
     type: 'event',
@@ -100,16 +121,17 @@ const toModusJsonPath = {
     type: 'event',
     path: '$.LabMetaData.ClientAccount.AccountNumber',
     fullpath: '$.Events.*.LabMetaData.ClientAccount.AccountNumber',
+    parse: 'string',
   },
   'Address1': {
     type: 'event',
-    path: '$.LabMetaData.ClientAccount.Address 1',
-    fullpath: '$.Events.*.LabMetaData.ClientAccount.Address 1',
+    path: `$.LabMetaData.ClientAccount['Address 1']`,
+    fullpath: `$.Events.*.LabMetaData.ClientAccount['Address 1']`,
   },
   'Address2': {
     type: 'event',
-    path: '$.LabMetaData.ClientAccount.Address 2',
-    fullpath: '$.Events.*.LabMetaData.ClientAccount.Address 2',
+    path: `$.LabMetaData.ClientAccount['Address 2']`,
+    fullpath: `$.Events.*.LabMetaData.ClientAccount['Address 2']`,
   },
   'Zip': {
     type: 'event',
@@ -149,6 +171,7 @@ const toModusJsonPath = {
     type: 'sample',
     path: '$.SampleMetaData.SampleContainerID',
     fullpath: '$.Events.*.EventSamples.Soil.SoilSamples.*.SampleMetaData.SampleContainerID',
+    parse: 'string',
   },
   'FMISSampleID': {
     type: 'sample',
@@ -159,17 +182,15 @@ const toModusJsonPath = {
     type: 'depth',
     path: '$.StartingDepth',
     fullpath: '$.Events.*.EventSamples.Soil.DepthRefs.*.StartingDepth',
+    parse: 'number'
   },
   'EndingDepth': {
     type: 'depth',
     path: '$.EndingDepth',
     fullpath: '$.Events.*.EventSamples.Soil.DepthRefs.*.EndingDepth',
+    parse: 'number'
   },
 }
-
-const modusPaths = Object.fromEntries(
-  Object.entries(toModusJsonPath).map(([k, v]) => ([v, k]))
-);
 
 export function toDetailedMappings(mm: LabConfig['mappings']): Record<string, ModusMapping> | undefined {
   if (mm === undefined) return undefined;
@@ -182,15 +203,27 @@ export function toDetailedMappings(mm: LabConfig['mappings']): Record<string, Mo
   )
 }
 
+export function parseMappingValue(val: any, mapping: ModusMapping) {
+  switch (mapping.parse) {
+    case 'number':
+      return +val;
+    case 'date':
+      return new Date(val).toISOString();
+    case 'string':
+      return ''+val;
+    default:
+      return val;
+  }
+}
+
 export function setMappings(modusPiece: any, labConfig: LabConfig, type: string, row: any) {
   if (labConfig.mappings === undefined) return;
   Object.entries(toDetailedMappings(labConfig.mappings) || {})
   .filter(([_, m]) => m.type === type)
   .forEach(([key, m]) => {
-    console.log({key, m, modusPiece, got: jp.query(modusPiece,m.path)})
-    jp.value(modusPiece, m.path, row[key]);
-    //jp.apply(modusPiece, m.path, (v:any) => row[key]);
-    console.log(modusPiece);
+    console.log({key, value: row[key]});
+    let val: any = parseMappingValue(row[key], m)
+    jp.value(modusPiece, m.path, val);
   })
   return modusPiece
 }
