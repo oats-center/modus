@@ -21,7 +21,10 @@ const lCs = airtable.labConfigs as unknown as Record<string, LabConfig>;
 labConfigs = Object.fromEntries(Object.entries(labConfigs)
   .map(([key, obj]: [string, LabConfig]) => {
     if (Object.keys(lCs).includes(obj.name)) {
-      obj.analytes = lCs[obj.name]!.analytes;
+      obj.analytes = {
+        ...obj.analytes,
+        ...lCs[obj.name]!.analytes,
+      }
     }
     return [key, obj]
   }))
@@ -221,7 +224,6 @@ export function setMappings(modusPiece: any, labConfig: LabConfig, type: string,
   Object.entries(toDetailedMappings(labConfig.mappings) || {})
   .filter(([_, m]) => m.type === type)
   .forEach(([key, m]) => {
-    console.log({key, value: row[key]});
     let val: any = parseMappingValue(row[key], m)
     jp.value(modusPiece, m.path, val);
   })

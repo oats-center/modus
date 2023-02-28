@@ -14,6 +14,7 @@ const info = debug('@modusjs/units:info');
 const trace = debug('@modusjs/units:trace');
 
 const needMolecularWeight = 'The molecular weight of the substance represented by the units is required to perform the conversion';
+const BASEPAT = /^Base Saturation - /;
 
 type oadaNutrientResult = NutrientResults[0];
 export type NutrientResult = SetRequired<oadaNutrientResult, 'Element'>;
@@ -24,16 +25,18 @@ export function convertUnits(
   strict?: boolean,
 ): NutrientResult[] {
   from = Array.isArray(from) ? from : [from];
+  from = convertBaseSat(from);
+
   to = appendStandardUnits(from, to);
 
 
   // Validate the input units
   from = validateUnits(from);
   // Validate the output units; keep 'to' as Units instead of NutrientResult[]
-  validateUnits(Object.entries(to).map(([k, vu]) => ({
+  to = Object.fromEntries(validateUnits(Object.entries(to).map(([k, vu]) => ({
     Element: k,
     ValueUnit: vu
-  })));
+  }))).map(v => [v.Element, v.ValueUnit]));
 
   let output = from.map((nr) => {
     let toUnit = to?.[nr.Element];
@@ -41,11 +44,12 @@ export function convertUnits(
       info(`No conversion performed on element [${nr.Element}]. The element is either unitless or the input/output units were unrecognized.`)
       return nr
     }
-    trace(`Attempting to convert units for Element ${nr.Element} from ${nr.ValueUnit} to ${toUnit}; Value: ${nr.Value}`);
+    trace(`convertUnits - Element [${nr.Element}]; from units [${nr.ValueUnit}] to units [${toUnit}]; Value: ${nr.Value}`);
     let result = ucum.UcumLhcUtils.getInstance().convertUnitTo(nr.ValueUnit, nr.Value || 0, toUnit, false);
     if (result.status !== 'succeeded') {
       if (result.msg.some((str: string) => str.includes(needMolecularWeight))) {
-        trace(`Molecular weight was needed for Element ${nr.Element}. Using value: ${molecularWeights[nr.Element].adjusted}`);
+        let molElement = nr.Element.replace(/^Base Saturation - /, '');
+        trace(`Molecular weight was needed for Element ${molElement}. Using value: ${molecularWeights[molElement].adjusted}`);
         result = ucum.UcumLhcUtils.getInstance().convertUnitTo(nr.ValueUnit, nr.Value || 0, toUnit, false, molecularWeights[nr.Element].adjusted);
       } else {
         warn(`Unit conversion for element [${nr.Element}] with input units [${nr.ValueUnit}] and output units [${toUnit}] failed with error: ${result.msg}. Falling back to input value and units.`);
@@ -66,6 +70,31 @@ export function convertUnits(
   return output;
 }
 
+export function convertBaseSat(
+  nutrientResults: NutrientResult[],
+) : NutrientResult[] {
+  let CEC = nutrientResults.find(v => v.Element === 'Cation Exchange Capacity');
+
+  // No CEC, just leave the units alone
+  if (CEC === undefined) {
+    if (nutrientResults.some(v => BASEPAT.test(v.Element) && v.ValueUnit === '%')) {
+      warn(`Base Saturation Elements require CEC in order to convert from % to meq/100g`)
+    }
+    return nutrientResults
+  } else {
+    return nutrientResults.map(nr => {
+      if (BASEPAT.test(nr.Element) && nr.ValueUnit === '%') {
+        return {
+          ...nr,
+          ValueUnit: 'meq/100 g',
+          Value: nr.Value !== undefined && CEC!.Value !== undefined ?
+            CEC!.Value/100*nr.Value : undefined
+        }
+      } else return nr
+    });
+  }
+}
+
 export function appendStandardUnits(from: NutrientResult[], to?: Units): Units {
   // For all froms without out tos, grab standard units
   if (to === undefined) to = {};
@@ -75,67 +104,18 @@ export function appendStandardUnits(from: NutrientResult[], to?: Units): Units {
   return to;
 }
 
-/* These now come from airtable
- * export const standardUnits : Units = {
-  'OM': '%',
-  'ENR': '[lb_av]/[acr_us]',
-  'P (Bray P1 1:10)': '[ppm]',
-  'P (Bray P2 1:10)': '[ppm]',
-  'HCO3_P': '[ppm]',
-  'pH': '',
-  'K': '[ppm]',
-  'Mg': '[ppm]',
-  'Ca': '[ppm]',
-  'Na': '[ppm]',
-  'B-pH': '',
-  'H': 'meq/(100.g)',
-  'CEC': 'meq/(100.g)',
-  'BS%-K': '%', //Get rid of these (%). Just stick with one set of units
-  'BS%-Mg': '%',
-  'BS%-Ca': '%',
-  'BS%-H': '%',
-  'BS%-Na': '%',
-  'BS-K': 'meq/(100.g)',
-  'BS-Mg': 'meq/(100.g)',
-  'BS-Ca': 'meq/(100.g)',
-  'BS-H': 'meq/(100.g)',
-  'BS-Na': 'meq/(100.g)',
-  'NO3_N': '[ppm]',
-  'S': '[ppm]',
-  'Zn': '[ppm]',
-  'Mn': '[ppm]',
-  'Fe': '[ppm]',
-  'Cu': '[ppm]',
-  'B': '[ppm]',
-  'Excess-Lime': '',
-  'SS': 'mmho/cm',
-  'Cl': '[ppm]',
-  'Mo': '[ppm]',
-  'Al': '[ppm]',
-  'ESP': '%',
-  'NH4': '[ppm]',
-  'SO4-S': '[ppm]',
-  'SAR': '[ppm]',
-  'EC': 'dS/m',
-  'Sat-Pct': '%',
-  'CO3': '[ppm]',
-  'HCO3': '[ppm]',
-};
-*/
-
 // Some unit 'conversions' are in name only; Their values are equivalent.
 // Also prepare the units for use in UCUM.
 // For converting from UCUM back to the alias, order matters as the first alias
 // will always be taken.
-// TODO: create UCUM column in the airtable
 export const aliases : Record<string, string | undefined> = {
   'g/cc': 'g/cm3',
   'bu/ac': '[bu_us]/[acr_us]',
-  'Sum of Cation me/100g': 'cmol/kg',
+  'Sum of Cation me/100g': 'meq/(100.g)',
   'cmol(+)/kg': 'cmol/kg',
   'ppm': '[ppm]',
   'mmhos/cm': 'mmho/cm',
-  'mg/kg': '[ppm]',
+  //'mg/kg': '[ppm]',
   'lb': '[lb_av]',
   'lb/ac': '[lb_av]/[acr_us]',
   'kg/ac': 'kg/[acr_us]',
@@ -153,19 +133,7 @@ export const aliases : Record<string, string | undefined> = {
   'standard unit': undefined,
   's.u.': undefined,
 
-/* Others from MODUS that are valid in UCUM (https://ucum.nlm.nih.gov/ucum-lhc/demo.html):
-  %
-  cmol
-  cmol/kg
-  dS/m
-  g/cm3
-  g/kg
-  meq/L
-  mg/kg
-  mg/L
-  ug/kg
-  ug/L
-Others from MODUS that are unclear:
+/* Others from MODUS that are unclear:
   none
   's.u.'
   'standard units'
@@ -228,11 +196,19 @@ export function validateUnits(nrs: NutrientResult[], strict?: boolean): Nutrient
 //
 // In hindsight, I think these conversions should only be necessary for certain
 // cations (Ca, Mg, Na, K, H, Zn, Al, Fe, Mn, Cu)
-const molecularWeights: Record<string, any> = {
+//
+// In further hindsight, these conversions should only be necessary going from
+// from an element to its base-saturation representation, which are considered
+// different elements in modus anyways (though some may argue its just a unit
+// conversion). The real unit conversion that might be necessary when dealing
+// with base saturation is from % to meq/100g which requires CEC rather than
+// a straight conversion using UCUM. The more important task is to prune those
+// labs that present both _SAT and _PCT representations of base saturation.
+export const molecularWeights: Record<string, any> = {
   'Al': {
     'molecularWeight': 26.98,
     charge: 3,
-    adjusted: 26.98/3,
+    adjusted: 3/26.98,
   },
   'B': {
     molecularWeight: 10.811,
@@ -247,7 +223,7 @@ const molecularWeights: Record<string, any> = {
   'Ca': {
     'molecularWeight': 40.08,
     charge: 2,
-    adjusted: 40.08/2,
+    adjusted: 2/40.08, //this number doesn't appear to jive with ALWest sample2.csv
   },
   'Cl': {
     'molecularWeight': 35.45,
@@ -257,12 +233,12 @@ const molecularWeights: Record<string, any> = {
   'Cu': {
     'molecularWeight': 63.556,
     charge: 2,
-    adjusted: 63.546/2,
+    adjusted: 2/63.546,
    },
    'Fe': {
      'molecularWeight': 55.85,
      charge: 2,
-     adjusted: 55.85/2,
+     adjusted: 2/55.85,
   },
   'HCO3': {
     'molecularWeight': 61.02,
@@ -272,7 +248,7 @@ const molecularWeights: Record<string, any> = {
   'H': { //Using NH4 as I think that is the standard?
     'molecularWeight': 18.04,
     charge: 1,
-    adjusted: 18.04/1,
+    adjusted: 18.04,
   },
   'K': {
     'molecularWeight': 39.10,
@@ -282,17 +258,17 @@ const molecularWeights: Record<string, any> = {
   'Mg': {
     'molecularWeight': 24.31,
     charge: 2,
-    adjusted: 24.31/2,
+    adjusted: 2/24.31,
   },
   'Mn': {
     'molecularWeight': 54.94,
     charge: 2,
-    adjusted: 54.94/2,
+    adjusted: 2/54.94,
   },
   'Mo': {
     'molecularWeight': 95.94,
     charge: -1,
-    adjusted: 95.94,
+    adjusted: 2/95.94,
   },
   'Na': {
     'molecularWeight': 22.99,
@@ -302,22 +278,22 @@ const molecularWeights: Record<string, any> = {
   'NH-4': {
     'molecularWeight': 18.04,
     charge: 1,
-    adjusted: 18.04/1,
+    adjusted: 18.04,
   },
   'S': { //Using same as SO4 as I think that is the standard
     'molecularWeight': 96.06,
     charge: -2,
-    adjusted: 96.06/2
+    adjusted: 2/96.06,
   },
   'SO-4': {
     'molecularWeight': 96.06,
     charge: -2,
-    adjusted: 96.06/2
+    adjusted: 2/96.06,
   },
   'Zn': {
     'molecularWeight': 65.38,
     charge: 2,
-    adjusted: 65.38/2,
+    adjusted: 2/65.38,
   }
 }
 

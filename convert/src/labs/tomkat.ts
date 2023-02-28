@@ -22,7 +22,7 @@ const mappings : LabConfig["mappings"] = {
   'Past Crop': undefined,
 }
 
-const analytes : LabConfig["analytes"] = {
+let analytes : LabConfig["analytes"] = {
   '1:1 Soil pH': {
     Element: 'pH',
     ModusTestID: 'S-PH-1:1.02.07',
@@ -856,6 +856,20 @@ const analytes : LabConfig["analytes"] = {
     ModusTestID: 'S-BS-NA.19',
   },
 }
+analytes = Object.fromEntries(Object.entries(analytes).map(([key, val]) =>
+  [
+    key,
+    {
+      ...val,
+      CsvHeader: key
+    }
+  ]
+))
+
+const depthInfo = function(row: any) {
+
+}
+}
 
 const units : LabConfig["units"] = Object.fromEntries(
   Object.entries(analytes).map(([key, val]) => ([key, val?.ValueUnit]))
@@ -866,8 +880,9 @@ const config : LabConfig = {
   units,
   mappings,
   analytes,
-  headers: [...Object.keys(units), ...Object.keys(mappings)],
+  headers: [...Object.keys(analytes), ...Object.keys(mappings)],
   examplesKey: 'tomkat_historic',
+  depthInfo,
 };
 
 export default config;

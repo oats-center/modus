@@ -7,6 +7,7 @@ const warn = debug('@modusjs/airtable:warn');
 const info = debug('@modusjs/airtable:info');
 const trace = debug('@modusjs/airtable:trace');
 
+const AIRTABLE_EXPORT = './export.csv';
 const LABCONFIG = './gen/labConfigs.js';
 const UNITS = './gen/standardUnits.js';
 
@@ -66,6 +67,7 @@ function main(
     if (Object.keys(configs[lab_name].analytes).length < 1) delete configs[lab_name];
   }
 
+  //I'm not sure this is actually accurate it we're using an override unit...
   let standardUnits = Object.fromEntries(rows.map(obj => [obj.Element, obj.ValueUnits]))
 
   return { standardUnits, configs }
@@ -73,7 +75,7 @@ function main(
 
 // Parse the exported csv
 async function parseExport() {
-  const file = await fs.readFile('./export.csv', 'utf8');
+  const file = await fs.readFile(AIRTABLE_EXPORT, 'utf8');
   const wb = xlsx.read(file, { type: 'string'});
 
   // @ts-ignore
@@ -100,8 +102,8 @@ async function createOutputs(labConfigs, units) {
 
   await fs.writeFile(LABCONFIG, `export default ${JSON.stringify(labConfigs, null, 2)}`);
   await fs.writeFile(UNITS, `export default ${JSON.stringify(units, null, 2)}`);
-  outputs.push(`export * as labConfigs from './labConfigs.js'`);
-  outputs.push(`export * as standardUnits from './standardUnits.js'`);
+  outputs.push(`export { default as labConfigs } from './labConfigs.js'`);
+  outputs.push(`export { default as standardUnits } from './standardUnits.js'`);
   fs.writeFile('./gen/index.ts', outputs.join(`\n`) )
 }
 

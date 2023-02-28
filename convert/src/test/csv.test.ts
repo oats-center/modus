@@ -33,7 +33,6 @@ export default async function run(lib: typeof MainLib) {
   */
 
   test('First result has LabMetaData.Reports[0].FileDescription');
-  console.log(JSON.stringify(results[0], null, 2))
   if (!results[0]!.Events?.[0]?.LabMetaData?.Reports?.[0]?.FileDescription) {
     throw new Error('First result did not have a report with FileDescription');
   }

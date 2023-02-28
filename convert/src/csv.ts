@@ -15,6 +15,8 @@ const warn = debug('@modusjs/convert#csv:error');
 const info = debug('@modusjs/convert#csv:info');
 const trace = debug('@modusjs/convert#csv:trace');
 
+const BASEPAT = /^Base Saturation - /;
+
 export const supportedFormats = ['generic'];
 export type SupportedFormats = 'generic';
 
@@ -208,7 +210,10 @@ function parseWorkbook({
 
     // Parse structured header format for reverse conversion
     let headers = Object.fromEntries(
-      colnames.map(n => ([n, parseColumnHeaderName(n, labConfig, unitOverrides)]))
+      colnames.map(n => ([n, {
+        ...parseColumnHeaderName(n, labConfig),
+        unitsOverride: unitOverrides?.[n],
+      }]))
     );
 
     // Determine a "date" column for this dataset
@@ -379,18 +384,16 @@ function setNutrientResultUnits({
   labConfig?: LabConfig,
 }) : NutrientResult[] {
   return nutrientResults.map(nr => {
-    let header = Object.values(headers)
-      .find(h => h.nutrientResult?.Element === nr.Element);
-    let override = unitOverrides?.[header!.original];
-    let headerUnit = header?.units;
-    let labConfigUnit = labConfig?.units[nr.Element];
+    const header = Object.values(headers).find(h => h.original === nr.CsvHeader);
+    const override = unitOverrides?.[header!.original];
+    const headerUnit = header?.units;
+    const labConfigUnit = header ? labConfig?.units[header.original] : undefined;
 
     trace(`Ordered unit prioritization of ${nr.Element}: Override:[${override}] `
-          + `> Header:[${headerUnit}] > LabConfig:[${labConfigUnit}] > default:`
-          + `[${nr.ValueUnit}]`);
+      + `> Header:[${headerUnit}] > LabConfig:[${labConfigUnit}]`);
     return {
       ...nr,
-      ValueUnit: override || headerUnit || labConfigUnit || nr.ValueUnit,
+      ValueUnit: override || headerUnit || labConfigUnit,
     }
   });
 }
@@ -498,10 +501,10 @@ function parseWKTFromPointMetaOrRow(meta_or_row: any): string {
 // but I don't think we need that level of complexity.  We can just search string for first
 // and last occurences of (), and [] chars from start and from end, then just use whatever is in the middle.
 // for "stuff (other) [[ppm]]", between "[" and "]" returns "[ppm]" and "()" returns "other"
-function extractBetween(str: string, startChar: string, endChar: string): string {
+function extractBetween(str: string, startChar: string, endChar: string): string | undefined {
   const start = str.indexOf(startChar);
   const end = str.lastIndexOf(endChar);
-  if (start < 0) return str; // start char not found
+  if (start < 0) return; // start char not found
   if (start > str.length-1) return ''; // start char at end of string
   if (end < 0) return str.slice(start+1); // end not found, return start through end of string
   return str.slice(start+1,end); // start+1 to avoid including the start/end chars in output
@@ -518,13 +521,13 @@ function extractBefore(str: string, startChar: string): string {
 type ColumnHeader = {
   original: string;
   element: string;
-  modifier: string;
-  units: string;
+  modifier?: string;
+  units?: string;
   nutrientResult: NutrientResult;
   unitsOverride?: string;
 };
 
-function parseColumnHeaderName(original: string, labConfig?: LabConfig, unitOverrides?: Units): ColumnHeader {
+function parseColumnHeaderName(original: string, labConfig?: LabConfig): ColumnHeader {
   original = original
     .trim()
     .replace(/\n/g, ' ')
@@ -539,13 +542,12 @@ function parseColumnHeaderName(original: string, labConfig?: LabConfig, unitOver
     modifier,
     units,
     nutrientResult,
-    unitsOverride: unitOverrides?.[original],
   };
 }
 
-// If we aren't careful and we allow extra things through, we could end up with
-// nutrient results for e.g., "Date", "Location", and other non-NRs.
 // TODO: 'strict' means exclude all elements unknown to modus
+// This function also filters all duplicate base saturation elements in the event that
+// percent and meq/100g units are provided.
 function parseNutrientResults({
   row,
   labConfig
@@ -555,14 +557,25 @@ function parseNutrientResults({
   labConfig: LabConfig,
   //strict?: boolean
 }): NutrientResult[] {
-  // @ts-ignore
-  return Object.keys(row)
+  const nutrientResults = Object.keys(row)
     .filter(key => Object.keys(labConfig.analytes).includes(key))
     .filter(key => !isNaN(row[key]))
     .map(key => ({
       ...labConfig.analytes[key],
       Value: +row[key],
     }))
+    .filter(v => v.Element)
+
+  // Now eliminate duplicate Base Saturation entries
+  // @ts-ignore
+  return nutrientResults.filter((v, i) => !nutrientResults.some(
+      (item, j) => (
+        // @ts-ignore
+        v.Element === item.Element && i !== j && BASEPAT.test(v.Element) &&
+        // @ts-ignore
+          BASEPAT.test(item.Element) && v.ValueUnit === '%'
+    ))
+  )
 }
 
 function parseDepth(row: any, labConfig: LabConfig, headers: Record<string, ColumnHeader>): Depth {

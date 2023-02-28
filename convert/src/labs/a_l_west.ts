@@ -240,34 +240,36 @@ const analytes : LabConfig["analytes"] = {
   },
 
   // TODO: Analytes present only in tissue samples...I think this is still fine?
+  /*
   'N': {
     ValueUnit: 'meq/100g',
-    Element: 'Nitrogen',
+    Element: 'N',
   },
   'P': {
     ValueUnit: 'meq/100g',
-    Element: 'Phosphorus',
+    Element: 'P',
   },
   'PO4_P': {
     ValueUnit: 'meq/100g',
-    Element: 'Phosphate',
+    Element: 'PO4_P',
   },
   'K_EXT': {
     ValueUnit: 'meq/100g',
     Element: 'Potassium Extracted',
   },
+  */
 }
 
 const units = Object.fromEntries(
-  Object.entries(analytes).map(([key, val]) => ([key, val?.ValueUnit]))
+  Object.entries(analytes).map(([k, val]) => ([k, val?.ValueUnit]))
 );
 
 const config : LabConfig = {
-  name: 'A & L Labs West',
+  name: 'A&L Western Agricultural Labs - Modesto, CA',
   units,
   mappings,
   analytes,
-  headers: [...Object.keys(units), ...Object.keys(mappings)],
+  headers: [...Object.keys(analytes), ...Object.keys(mappings)],
   examplesKey: 'a_l_west'
 };
 

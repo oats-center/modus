@@ -5,6 +5,7 @@ import fs from 'fs/promises';
 import * as mainlib from '../../node/index.js';
 
 import htmlTests from './html.test.js';
+import unitsTests from '../units.test.js';
 
 const info = debug('@modusjs/xml#test-node:info');
 const { red } = chalk;
@@ -24,6 +25,9 @@ const { red } = chalk;
 
     info('testing node HTML');
     await htmlTests(mainlib);
+
+    info('testing node units');
+    await unitsTests(mainlib);
 
     info('All tests passed!');
   } catch (e: any) {

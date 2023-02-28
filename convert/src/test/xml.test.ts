@@ -25,8 +25,8 @@ export default async function run(lib: typeof MainLib) {
   test('Comparing parsed ModusResult with hand-modus_json');
   const diff = deepdiff(mr, json_sample1);
   if (diff.length > 0) {
-    console.log('parsed result (a): ', mr);
-    console.log('sample 1 hand-created json (b): ', json_sample1);
+    info('parsed result (a): ', mr);
+    info('sample 1 hand-created json (b): ', json_sample1);
     throw new Error(
       `Hand-created json (a) and parsed result for sample1 (b) are different and they should be the same. Differences are: ${JSON.stringify(
         diff,

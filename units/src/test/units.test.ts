@@ -6,8 +6,7 @@ import { deepdiff } from './util.js';
 import type * as MainLib from '../index.js';
 //@ts-ignore
 import ucum from '@lhncbc/ucum-lhc';
-import { aliasToUcum } from '../index.js';
-//import { aliasToUcum } from '../units.js';
+import { standardUnits, labConfigs } from '@modusjs/airtable';
 
 const trace = debug('@modusjs/convert#test-units:trace');
 const info = debug('@modusjs/convert#test-units:info');
@@ -47,40 +46,10 @@ export default async function run(lib: typeof MainLib) {
   */
 
 
-  test('Validating known nomenclature units against units library');
-  let allUnits = [
-    'mg/kg',
-    'ppm',
-    'meq/100g',
-    'cmol/kg',
-    'lb/ac/day',
-    'kg/ac/day',
-    '%',
-    'mg/L',
-    'ug/kg',
-    'kg/ha',
-    'lb/ac/day',
-    'million lb/ac',
-    'million lb/ac depth',
-    'mmhos/cm',
-    'dS/m',
-    'g/kg',
-    //'in/depth', // From moisture-related test. I don't see this as acceptable. My
-                  // best guess at something acceptable would be in/in.
-    'in/ft',
-    'tons/ac',
-    'kPa',
-    'MPa',
-    '% BS',
-    '% CEC',
-    'none',
-    'standard unit',
-    's.u.',
-  ];
-
-  for (const unit of allUnits) {
-    let alias = aliasToUcum(unit) || unit;
-    let result = utils.validateUnitString(alias, true);
+  test('Validating all aliased units');
+  for (const unit of Object.values(lib.aliases)) {
+    if (!unit) continue;
+    let result = utils.validateUnitString(unit, true);
     if (!result) throw new Error(`Unit ${unit} was unrecognized by units lib`);
   }
 
@@ -97,7 +66,7 @@ export default async function run(lib: typeof MainLib) {
 
   test('Perform some specific unit conversions and check output values.');
   let unitsTests = [{
-    from: 'mm/kg',
+    from: 'mg/kg',
     to: 'ppm',
     fromVal: 1,
     toVal: 1,
@@ -111,8 +80,40 @@ export default async function run(lib: typeof MainLib) {
       throw new Error(`Unit conversion from ${t.from} to ${t.to} did not produce the expected value.`);
   }
 
-  test('Perform a unit conversion requiring molecular weight');
-//  let cResult = utils.convertUnitTo(t.from, t.fromVal, t.to)
+  /* This really isn't necessary unless we decide to offer conversions from ppm
+   * to meq or vice versa. Also, its hard to say how they've computed CA_SAT
+   * (meq/100g) vs CA (ppm).
+  test('Perform a unit conversion of Calcium requiring molecular weight');
+  let element = 'Base Saturation - Ca';
+  let molElement = element.replace(/^Base Saturation - /, '');
+  let cResult = utils.convertUnitTo('meq/(100.g)', 6.9, '[ppm]', undefined,
+    lib.molecularWeights[molElement].adjusted);
+  if (!(cResult.toVal < 2675) && !(cResult.toVal > 2673))
+    throw new Error('Molecular weight conversion failed.')
+  */
+
+  test(`Should convert Base Saturation from % to meq/100g if CEC is present`);
+  let res = lib.convertBaseSat([{
+    Element: 'Base Saturation - Ca',
+    Value: 25.9,
+    ValueUnit: '%'
+  }, {
+    Element: 'CEC',
+    Value: 19.1,
+    ValueUnit: 'meq/100 g'
+  }]);
+  console.log(res);
+  if (!(res[0]!.Value! > 4.9 && res[0]!.Value! < 5)) throw new Error('Conversion of Base Saturation from % to meq failed.');
+
+  test('LabConfig units imported from airtable should all work');
+  for (const { analytes } of Object.values(labConfigs)) {
+    for (const { ValueUnit: unit } of Object.values(analytes)) {
+      let alias = lib.aliasToUcum(unit) || unit;
+      let result = utils.validateUnitString(alias, true);
+      if (!result) throw new Error(`Unit ${unit} was unrecognized by units lib`);
+    }
+  }
+
 
   test('All units tests passed');
 
