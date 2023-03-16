@@ -37,8 +37,8 @@
   "author": "Aaron Ault <aultac@gmail.com>",
   "license": "Apache-2.0",
   "devDependencies": {
-    "@modusjs/airtable": "workspace:^",
     "@modusjs/examples": "workspace:^",
+    "@modusjs/industry": "workspace:^",
     "@modusjs/units": "workspace:^",
     "@oada/formats": "^3.4.1",
     "@rollup/plugin-commonjs": "^23.0.0",
@@ -65,10 +65,11 @@
   },
   "dependencies": {
     "@lhncbc/ucum-lhc": "^4.1.6",
-    "@oada/types": "^3.4.2",
+    "@oada/types": "^3.4.3",
     "@overleaf/o-error": "^3.4.0",
     "chalk": "^4.0.0",
     "cheerio": "^1.0.0-rc.12",
+    "date-fns": "^2.29.3",
     "dayjs": "^1.11.5",
     "debug": "^4.3.4",
     "domhandler": "^5.0.3",

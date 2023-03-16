@@ -83,4 +83,4 @@ To run all tests live as you code (you should run `yarn dev` at the same time): 
 
 ---
 
-#### Airtable Integration
+#### Industry Data Integration

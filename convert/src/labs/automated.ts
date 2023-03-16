@@ -18,9 +18,11 @@ export function cobbleLabConfig(headers: string[]) {
   warn(`Attempting to identify header matches individually.`);
   //1. Find modus mappings (non-analytes)
   let lcMappings = Object.values(labConfigs)
-    .map(lc => Object.fromEntries(Object.entries(lc.mappings).map(([k, v]) => (
-      [keysToUpperNoSpacesDashesOrUnderscores(k), v]
-    ))))
+    .map(lab => Object.values(lab)
+      .map(lc => Object.fromEntries(Object.entries(lc.mappings).map(([k, v]) => (
+        [keysToUpperNoSpacesDashesOrUnderscores(k), v]
+      ))))
+    ).flat(1)
   let mappings: LabConfig['mappings'] = {};
   headers.forEach((h) => {
     //Find potential matches
@@ -52,9 +54,11 @@ export function cobbleLabConfig(headers: string[]) {
   //remaining = remaining.filter(h => h !== )
 
   let lcAnalytes = Object.values(labConfigs)
-    .map(lc => Object.fromEntries(Object.entries(lc.analytes).map(([k, v]) => (
-      [keysToUpperNoSpacesDashesOrUnderscores(k), v]
-    ))))
+    .map(lab => Object.values(lab)
+      .map(lc => Object.fromEntries(Object.entries(lc.analytes).map(([_, v]) => (
+        [keysToUpperNoSpacesDashesOrUnderscores(v.CsvHeader || v.Element), v]
+      ))))
+    ).flat(1)
   let analytes: LabConfig['analytes'] = {};
   remaining.forEach((h) => {
     //Find potential matches
@@ -102,7 +106,8 @@ export function getDateColumn(headers: string[]): string {
 
 // Autodetect via headers being a perfect subset of a known lab.
 export function autoDetectLabConfig(headers: string[], sheetname?: string) : LabConfig | undefined {
-  let match = Object.values(labConfigs).find(lab => labMatches({lab, headers}));
+  let match = Object.values(labConfigs).map(o => Object.values(o)).flat(1)
+    .find(lab => labMatches({lab, headers}));
   if (match) {
     info(`Recognized sheet ${sheetname !== undefined ? `[${sheetname}] ` : '' }as lab: ${match!.name}`);
     return match;
@@ -126,7 +131,7 @@ function labMatches({
   })
 }
 
-function keysToUpperNoSpacesDashesOrUnderscores(obj: any) {
+export function keysToUpperNoSpacesDashesOrUnderscores(obj: any) {
   const ret: any = {};
   for (const [key, val] of Object.entries(obj)) {
     const newkey = key.toUpperCase().replace(/([ _]|-)*/g, '');
@@ -138,13 +143,17 @@ function keysToUpperNoSpacesDashesOrUnderscores(obj: any) {
   return ret;
 }
 
-export function modusKeyToHeader(item: string, labConfig: LabConfig) : string | undefined {
-  let match = Object.entries(labConfig.mappings).find(([_, v]) => v === item);
+export function modusKeyToHeader(item: string, labConfig?: LabConfig) : string | undefined {
+  if (!labConfig) return undefined;
+  let match = Object.entries(labConfig.mappings).find(([_, v]) =>
+    Array.isArray(v) ? v.some(k => k === item) : v === item
+  );
   return match?.[0];
 }
 
 // Get a header from the labconfig
-export function modusKeyToValue(row: any, item: string, labConfig: LabConfig) {
+export function modusKeyToValue(row: any, item: string, labConfig?: LabConfig) {
+  if (item in row) return row[item];
   let match = modusKeyToHeader(item, labConfig);
   if (match) {
     let mapping = toModusJsonPath[item as keyof typeof toModusJsonPath];

@@ -29,7 +29,8 @@ export default async function run(lib: typeof MainLib) {
     // some wierd units because they have some wierd extra non-modus test. We
     // should let them use that and just pass it along in modus, I think.
     test(`Validating units for LabConfig: ${labConf.name}...`)
-    validateUnits(Object.values(labConf.analytes) as unknown as NutrientResult[], true)
+    validateUnits(Object.values(labConf.analytes) as unknown as NutrientResult[])
+    //validateUnits(Object.values(labConf.analytes) as unknown as NutrientResult[], true)
 
 
     // @ts-ignore
@@ -58,7 +59,7 @@ export default async function run(lib: typeof MainLib) {
 
       test(`All examples for LabConfig [${labConf.name}] should parse.`)
       const res = lib.csv.parse({wb});
+      console.log('done')
     }
   }
-  test('All parse tests passed');
 }

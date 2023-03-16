@@ -8,7 +8,7 @@ import * as units from '@modusjs/units';
 import ModusResult, {
   assert as assertModusResult,
 } from '@oada/types/modus/v1/modus-result.js';
-import type { LabConfig } from './labs/index.js';
+import type { LabConfig, LabType } from './labs/index.js';
 import { autoDetectLabConfig, cobbleLabConfig, labConfigsMap, modusKeyToValue, modusKeyToHeader, setMappings } from './labs/index.js';
 const error = debug('@modusjs/convert#csv:error');
 const warn = debug('@modusjs/convert#csv:error');
@@ -34,9 +34,10 @@ export function getWorkbookFromData({
   // Make sure we have an actual workbook to work with:
   if (!wb) {
     try {
-      if (str) wb = xlsx.read(str, { type: 'string' });
-      if (arrbuf) wb = xlsx.read(arrbuf, { type: 'array' });
-      if (base64) wb = xlsx.read(base64, { type: 'base64' });
+      //if (str) wb = xlsx.read(str, { type: 'string'});
+      if (str) wb = xlsx.read(str, { type: 'string', cellDates: true });
+      if (arrbuf) wb = xlsx.read(arrbuf, { type: 'array', cellDates: true });
+      if (base64) wb = xlsx.read(base64, { type: 'base64', cellDates: true });
     } catch (e: any) {
       throw oerror.tag(e, 'Failed to parse input data with xlsx/csv reader');
     }
@@ -65,7 +66,7 @@ export function parse({
   arrbuf?: ArrayBuffer;
   base64?: string; // base64 string
   format?: 'generic'; // add others here as more become known
-  lab?: LabConfig | keyof typeof labConfigsMap.keys
+  lab?: LabConfig | keyof typeof labConfigsMap.keys;
 }): ModusResult[] {
   // Make sure we have an actual workbook to work with:
   wb = getWorkbookFromData({ wb, str, arrbuf, base64 })
@@ -80,59 +81,64 @@ export function parse({
   }
 }
 
-export function partitionSheets(wb: xlsx.WorkBook, header?: string) : {
-  pointmeta: Record<string, any>,
+// Split the sheet names into the metadata sheets and the data sheets
+export function partitionSheets(wb: xlsx.WorkBook) : {
   datasheets: DataSheet[],
-  metadatasheets: any[],
+  metadatasheet: MetaDataSheet | undefined, //TODO: Should this be an array?
 } {
   // Grab the point meta data out of any master sheet:
   // Any sheet whose name contains "point meta" regardless of spacing, case, or punctuation will be considered
   // point metadata.  i.e. 'Point Meta-Data'  would match as well as 'pointmetadata'
-  const pointmeta: { [pointid: string]: any } = {}; // just build this as we go to keep code simpler
-  // Split the sheet names into the metadata sheets and the data sheets
-  const metadatasheets = wb.SheetNames.filter(isPointMetadataSheetname)
-    .map(sheetname => {
-      const rows = xlsx.utils
-        .sheet_to_json(wb.Sheets[sheetname]!, { raw: false })
-        .map(keysToUpperNoSpacesDashesOrUnderscores);
-      return { rows, sheetname }
-    })
-  trace('metadatasheets:', metadatasheets.map(sh => sh.sheetname));
-  if (metadatasheets) {
-    for (const { rows } of metadatasheets) {
-      // If you don't put { raw: false } for sheet_to_json, it will parse dates as ints instead of the formatted strings
-      //TODO: Move into Lab Config, methinks
-      for (const r of rows) {
-        const id = header ? r[header] : r['POINTID'] || r['FMISSAMPLEID'] || r['SAMPLEID'];
-        if (!id) continue;
-        pointmeta[id] = r;
-      }
-    }
+  const matchsheet = wb.SheetNames.find(isPointMetadataSheetname)
+  let metadatasheet : MetaDataSheet | undefined;
+  if (matchsheet) {
+    const rows = xlsx.utils
+      // Without { raw: false } in sheet_to_json, dates will be parsed as excel ints instead of the formatted strings
+      .sheet_to_json(wb.Sheets[matchsheet]!, { raw: false })
+      .map(keysToUpperNoSpacesDashesOrUnderscores);
+    metadatasheet = { rows, sheetname: matchsheet }
+    trace('metadatasheet:', metadatasheet.sheetname);
   }
 
   const datasheets = wb.SheetNames
-  .filter(sh => !isPointMetadataSheetname(sh))
-  .map(sheetname => {
+    .filter(sh => !isPointMetadataSheetname(sh))
+    .map(sheetname => {
 
-    const sheet = wb.Sheets[sheetname]!;
-    const allrows = xlsx.utils.sheet_to_json(sheet, {defval: ''}); // include empty column values! undefined doesn't seem to get empty cols to show up.
-    const rows = allrows.filter(isDataRow);
-    // Get a list of all the header names for future reference as needed. Since
-    // keys are omitted for rows where a column has no value, we must look
-    // through all the rows and accumulate the unique set of column headers.
-    const colnames = [...new Set(rows.map((obj: any) => Object.keys(obj))
-      .reduce((prev, cur) => prev.concat(cur), [])
-    )];
-    return {
-      sheetname,
-      allrows,
-      rows,
-      colnames
-    }
-  });
+      const sheet = wb.Sheets[sheetname]!;
+      const allrows = xlsx.utils.sheet_to_json(sheet, {defval: ''}); // include empty column values! undefined doesn't seem to get empty cols to show up.
+      const rows = allrows.filter(isDataRow);
+      // Get a list of all the header names for future reference as needed. Since
+      // keys are omitted for rows where a column has no value, we must look
+      // through all the rows and accumulate the unique set of column headers.
+      const colnames = [...new Set(rows.map((obj: any) => Object.keys(obj))
+        .reduce((prev, cur) => prev.concat(cur), [])
+      )];
+      return {
+        sheetname,
+        allrows,
+        rows,
+        colnames
+      }
+    });
 
-  return { pointmeta, metadatasheets, datasheets };
+  return { metadatasheet, datasheets };
 }
+
+function getPointMeta(metadatasheet: MetaDataSheet, labConfig?: LabConfig) : Record<string, any> {
+  const pointmeta : Record<string, any> = {};
+  for (const r of metadatasheet.rows) {
+    const id = modusKeyToValue(r, 'SampleNumber', labConfig) || r['POINTID'] || r['FMISSAMPLEID'] || r['SAMPLEID'];
+    if (!id) continue;
+    pointmeta[id] = r;
+  }
+  return pointmeta;
+}
+
+type MetaDataSheet = {
+  rows: any[];
+  sheetname: string;
+};
+
 
 type DataSheet = {
   colnames: string[];
@@ -191,13 +197,16 @@ function parseWorkbook({
   lab?: LabConfig | keyof typeof labConfigsMap.keys,
   allowOverrides?: boolean
 }): ModusResult[] {
-  const { pointmeta, datasheets } = partitionSheets(wb);
+  const { metadatasheet, datasheets } = partitionSheets(wb);
 
   const labConfig: LabConfig | undefined = (lab && typeof lab === 'string') ?
     labConfigsMap.get(lab) : findAndAutodetectLab(datasheets);
-  if (!labConfig) info(`LabConfig was either not supplied or not auto-detected. Defaulting to standard config.`);
-  if (!labConfig) throw new Error('Unable to detect or generate lab configuration.')
+  if (!labConfig) warn(`LabConfig was either not supplied or not auto-detected. It may parse if using standardized CSV input...`);
+//  if (!labConfig) throw new Error('Unable to detect or generate lab configuration.')
 
+
+  let pointMeta : Record<string, any> | undefined;
+  if (metadatasheet) pointMeta = getPointMeta(metadatasheet, labConfig);
 
   trace('datasheets:', datasheets);
   const ret: ModusResult[] = [];
@@ -218,7 +227,7 @@ function parseWorkbook({
 
     // Determine a "date" column for this dataset
     // Let some "known" candidates for date column name take precedence over others:
-    let datecol = modusKeyToHeader('EventDate', labConfig);
+    let datecol = 'EventDate' in rows[0] ? 'EventDate' : modusKeyToHeader('EventDate', labConfig);
     if (!datecol) {
       error('No date column in sheet', sheetname, ', columns are:', colnames);
       throw new Error(
@@ -231,44 +240,62 @@ function parseWorkbook({
     const grouped_rows = groupRows(rows, datecol);
     // Now we can loop through all the groups and actually make the darn Modus
     // file:
-    let groupcount = 1;
+    let groupcount = 1
     for (const [date, g_rows] of Object.entries(grouped_rows)) {
       // Start to build the modus output, this is one "Event"
+      //TODO: Soil labtype isn't the best default because its really the only "different" one.
+      //      We could also use existence of depth info to determine if its soil.
+      const type : LabType = (typeof labConfig?.type === 'function' ? labConfig?.type(g_rows?.[0]) : labConfig?.type) || modusKeyToValue(g_rows[0], 'EventType', labConfig) || 'Soil';
+      const sampleType = `${type}Samples`;//Should be Sample according to modus
       const output: ModusResult | any = {
         Events: [
           {
-            LabMetaData: {
-              Reports: [
-                {
-                  ReportID: 1,
-                  FileDescription: `${sheetname}_${groupcount++}`,
-                },
-              ],
-            },
             EventMetaData: {
-              //TODO: LabConfig can override this EventDate
               EventDate: date, // TODO: process this into the actual date format we are allowed to have in schema.
-              EventType: { Soil: true },
+              EventType: { [type]: true },
             },
             EventSamples: {
-              Soil: {
-                DepthRefs: [],
-                SoilSamples: [],
+              [type]: {
+                [sampleType]: [],
               },
             },
           },
         ],
       };
       let event = output.Events![0]!;
-      const depthrefs = event.EventSamples!.Soil!.DepthRefs!;
-      const samples = event.EventSamples!.Soil!.SoilSamples!;
+
+      if (type === 'Soil') event.EventSamples![type].DepthRefs = [];
+      if (type === 'Plant') event.EventMetaData.EventType!.Plant = {
+        Crop: {
+          Name: modusKeyToValue(g_rows[0], 'Crop', labConfig) || 'Unknown Crop',
+          ClientID: modusKeyToValue(g_rows[0], 'Client', labConfig) || 'Unknown Client',
+          GrowthStage: {
+            Name: modusKeyToValue(g_rows[0], 'GrowthStage', labConfig) || 'Unknown Growth Stage',
+            ClientID: modusKeyToValue(g_rows[0], 'Client', labConfig) || 'Unknown Client',
+          },
+          SubGrowthStage: {
+            Name: modusKeyToValue(g_rows[0], 'SubGrowthStage', labConfig) || 'Unknown Sub-Growth Stage',
+            ClientID: modusKeyToValue(g_rows[0], 'Client', labConfig) || 'Unknown Client',
+          },
+        },
+        PlantPart: modusKeyToValue(g_rows[0], 'PlantPart', labConfig) || 'Unknown Plant Part',
+      };
+      const depthrefs = type === 'Soil' ? event.EventSamples![type]!.DepthRefs! : undefined;
+      const samples = event.EventSamples![type]![sampleType]!;
 
       for (const [_, row] of g_rows.entries()) {
-        event = setMappings(event, labConfig, 'event', row);
+        event = setMappings(event, 'event', row, labConfig); //TODO: Like this or { ...event, getMappings } ?
+        event.LabMetaData = {
+          LabName: modusKeyToValue(row, 'LabName', labConfig) || labConfig?.name || 'Unnamed Lab',
+          ProcessedDate: modusKeyToValue(row, 'ProcessedDate', labConfig) || date,
+          ReceivedDate: modusKeyToValue(row, 'ReceivedDate', labConfig) || date,
+          Reports: [],
+        };
 
         let nutrientResults = parseNutrientResults({
           row,
-          labConfig
+          headers,
+          labConfig,
         });
 
         // Units can come from several places
@@ -281,41 +308,41 @@ function parseWorkbook({
         nutrientResults = units.convertUnits(nutrientResults);
 
         const id = modusKeyToValue(row, 'SampleNumber', labConfig);
-        // where does the pointmeta go again (Latitude_DD, Longitude_DD, Field,
+        // where does the pointMeta go again (Latitude_DD, Longitude_DD, Field,
         // Acreage, etc.)?
-        const meta = pointmeta[id] || null;
+        const meta = pointMeta?.[id];
 
-        const depth = parseDepth(row, labConfig, headers);
-        // mutates depthrefs if missing, returns depthid
-        const DepthID = '' + ensureDepthInDepthRefs(depth, depthrefs);
-
+        let DepthID: string | undefined;
+        if (type === 'Soil') {
+          const depth = parseDepth(row, headers, labConfig);
+          // mutates depthrefs if missing, returns depthid
+          DepthID = '' + ensureDepthInDepthRefs(depth, depthrefs);
+        }
 
         // Get the ReportID integer from the LabReportID string after ensuring
         // a Reports entry exists for it.
         const labReportId = modusKeyToValue(row, 'LabReportID', labConfig);
-        const ReportID = ensureLabReportId(event.LabMetaData.Reports, labReportId);
+        const fileDescription = `${sheetname}_${groupcount++}`;
+        const ReportID = ensureLabReportId(event.LabMetaData.Reports, labReportId, fileDescription);
 
         let sample: any = {
           SampleMetaData: {
             ReportID: ReportID || 1,
-          },
-          Depths: [{
+          }
+        }
+        if (type === 'Soil') {
+          sample.Depths = [{
             DepthID,
             NutrientResults: nutrientResults
-          }],
-        };
+          }]
+        } else {
+          sample.NutrientResults = nutrientResults;
+        }
 
-        sample = setMappings(sample, labConfig, 'sample', row);
+        sample = setMappings(sample, 'sample', row, labConfig);
 
         // Parse locations: either in the sample itself or in the meta.  Sample takes precedence over meta.
-        let wkt = parseWKTFromPointMetaOrRow(row);
-        if (!wkt && meta) {
-          //trace('No location info found in row, checking for any in meta');
-          wkt = parseWKTFromPointMetaOrRow(meta);
-        }
-        if (!wkt) {
-          //trace('No location info found for row either in the row or in the meta');
-        }
+        let wkt = parseWKTFromPointMetaOrRow(meta) || parseWKTFromPointMetaOrRow(row);
         if (wkt) {
           sample.SampleMetaData.Geometry = { wkt };
         }
@@ -385,7 +412,7 @@ function setNutrientResultUnits({
 }) : NutrientResult[] {
   return nutrientResults.map(nr => {
     const header = Object.values(headers).find(h => h.original === nr.CsvHeader);
-    const override = unitOverrides?.[header!.original];
+    const override = header?.original ? unitOverrides?.[header?.original] : undefined;
     const headerUnit = header?.units;
     const labConfigUnit = header ? labConfig?.units[header.original] : undefined;
 
@@ -470,7 +497,8 @@ function ensureDepthInDepthRefs(depth: Depth, depthrefs: Depth[]): number {
 
 // Make a WKT from point meta's Latitude_DD and Longitude_DD.  Do a "tolerant" parse so anything
 // with latitude or longitude (can insensitive) or "lat" and "lon" or "long" would still get a WKT
-function parseWKTFromPointMetaOrRow(meta_or_row: any): string {
+function parseWKTFromPointMetaOrRow(meta_or_row: any): string | undefined {
+  if (meta_or_row === undefined) return undefined;
   let copy = keysToUpperNoSpacesDashesOrUnderscores(meta_or_row);
 
   let longKey = Object.keys(copy).find((key) => key.includes('LONGITUDE'));
@@ -509,9 +537,12 @@ function extractBetween(str: string, startChar: string, endChar: string): string
   if (end < 0) return str.slice(start+1); // end not found, return start through end of string
   return str.slice(start+1,end); // start+1 to avoid including the start/end chars in output
 }
-function extractBefore(str: string, startChar: string): string {
-  const start = str.indexOf(startChar);
-  if (start < 0) return str; // start char not found
+function extractBefore(str: string, startChars: string | string[]): string {
+  let chars = Array.isArray(startChars) ? startChars : [startChars];
+
+  const first = chars.find(key => str.indexOf(key) >= 0);
+  if (!first) return str; // start char not found
+  const start = str.indexOf(first);
   return str.slice(0,start);
 }
 
@@ -527,14 +558,14 @@ type ColumnHeader = {
   unitsOverride?: string;
 };
 
-function parseColumnHeaderName(original: string, labConfig?: LabConfig): ColumnHeader {
+export function parseColumnHeaderName(original: string, labConfig?: LabConfig): ColumnHeader {
   original = original
     .trim()
     .replace(/\n/g, ' ')
     .replace(/ +/g, ' ');
-  const element = extractBefore(original, '(') || original;
-  const modifier = extractBetween(original, '(', ')');
-  const units = extractBetween(original, '[', ']');
+  const element = extractBefore(original, ['(', '[']).trim() || original;
+  const modifier = extractBetween(original, '(', ')')?.trim();
+  const units = extractBetween(original, '[', ']')?.trim();
   const nutrientResult = labConfig?.analytes[element] || { Element: element };
   return {
     original,
@@ -550,38 +581,61 @@ function parseColumnHeaderName(original: string, labConfig?: LabConfig): ColumnH
 // percent and meq/100g units are provided.
 function parseNutrientResults({
   row,
+  headers,
   labConfig
   //strict,
 } : {
   row: Record<string, any>,
-  labConfig: LabConfig,
+  headers: Record<string, ColumnHeader>,
+  labConfig?: LabConfig,
   //strict?: boolean
 }): NutrientResult[] {
-  const nutrientResults = Object.keys(row)
-    .filter(key => Object.keys(labConfig.analytes).includes(key))
-    .filter(key => !isNaN(row[key]))
-    .map(key => ({
-      ...labConfig.analytes[key],
-      Value: +row[key],
-    }))
-    .filter(v => v.Element)
+  //TODO: Handling the standardized CSV output is challenging here (no labconfig). The only real way we are
+  // deciphering nutrient results is those columns having either units or a modus id. This can be decieving as
+  // some nutrient results may not have that info and other columns such as starting/ending depth can have
+  // units.
+  let nutrientResults : any = Object.keys(row)
+    .filter(key => labConfig?.analytes === undefined ? true : Object.keys(labConfig?.analytes).includes(key))
+    .filter((key: any) => !isNaN(row[key]) && row[key] !== '')
+    .filter((key: any) => !(labConfig?.analytes?.[key] === undefined && (
+      headers?.[key]?.units === undefined && headers?.[key]?.modifier === undefined)))
+    // Handle the only other things that have units that we know about, but are not nutrient results
+    .filter((key: any) => !(labConfig?.analytes?.[key] === undefined &&
+      ['StartingDepth', 'EndingDepth', 'ColumnDepth'].includes(headers?.[key]!.element)))
+    .map((key: any) => {
+      if (labConfig?.analytes?.[key] !== undefined) {
+        return {
+          ...labConfig?.analytes?.[key],
+          Value: +row[key]
+        }
+      } else {
+        return {
+          Element: headers?.[key]?.element,
+          ValueUnits: headers?.[key]?.units,
+          ModusTestID: headers?.[key]?.modifier,
+          CsvHeader: headers?.[key]?.original,
+          Value: +row[key],
+        }
+      }
+    })
 
   // Now eliminate duplicate Base Saturation entries
   // @ts-ignore
   return nutrientResults.filter((v, i) => !nutrientResults.some(
+    //@ts-ignore
       (item, j) => (
         // @ts-ignore
         v.Element === item.Element && i !== j && BASEPAT.test(v.Element) &&
         // @ts-ignore
-          BASEPAT.test(item.Element) && v.ValueUnit === '%'
+          BASEPAT.test(item.Element) && v.ValueUnit !== '%'
     ))
   )
 }
 
-function parseDepth(row: any, labConfig: LabConfig, headers: Record<string, ColumnHeader>): Depth {
+function parseDepth(row: any, headers: Record<string, ColumnHeader>, labConfig?: LabConfig): Depth {
   let depthInfo: any = typeof labConfig?.depthInfo !== 'function' ?
     // @ts-ignore
-    labConfig.depthInfo : labConfig?.depthInfo(row);
+    labConfig?.depthInfo : labConfig?.depthInfo(row);
 
   // Depth info can come from:
   // 1) Within the spreadsheet, as columns for each property
@@ -590,7 +644,8 @@ function parseDepth(row: any, labConfig: LabConfig, headers: Record<string, Colu
   //    protocol (depthInfo as an object)
   // 4) Some combination of the row data with custom logic applied (depthInfo as
   //    a function)
-  // 5) Unknown (some defaults)
+  // 5) Unknown (some defaults); Name will default to `<start> to <end>` unless
+  //    <end> is unknown (defaults to 0), in which case Name = 'Unnamed Depth'
   const depth: any = {};
   depth.StartingDepth = modusKeyToValue(row, 'StartingDepth', labConfig) ||
     depthInfo?.StartingDepth || 0;
@@ -600,7 +655,7 @@ function parseDepth(row: any, labConfig: LabConfig, headers: Record<string, Colu
     depthInfo?.ColumnDepth || Math.abs(depth.EndingDepth - depth.StartingDepth)
     || 0; // 0 is allowed in our json schema, but technically not allowed per xsd
   depth.Name = modusKeyToValue(row, 'DepthName', labConfig) || depthInfo?.Name ||
-    'Unnamed Depth';
+    depth.EndingDepth === 0 ? 'Unnamed Depth' : `${depth.StartingDepth} to ${depth.EndingDepth}`;
 
   depth.DepthUnit = (() => { // Overrides take precedence out of the options
       let start = modusKeyToHeader('StartingDepth', labConfig);
@@ -649,41 +704,179 @@ export function toCsv(input: ModusResult | ModusResult[], opts?: ToCsvOpts) {
   };
 }
 
-function toCsvObject(input: ModusResult) {
+//TODO: Generalize to modus types other than Soil
+export function toCsvObject(input: ModusResult, separateMetadata?: boolean) {
   return input
     .Events!.map((event) => {
       let eventMeta = {
         EventDate: event.EventMetaData!.EventDate,
-        EventType: 'Soil', // Hard-coded for now. This is all soil data at the moment
+        EventCode: event.EventMetaData?.EventCode,
+        EventType: Object.keys(event.EventMetaData?.EventType || {})[0] || 'Soil' // Hard-coded for now. This is all soil data at the moment
       };
+      const type = eventMeta.EventType;
+      if (type === 'Plant') {
+        eventMeta = {
+          ...eventMeta,
+          // @ts-expect-error messed up schema I guess? Fix
+          Crop: event.EventMetaData?.EventType?.Plant?.Crop?.Name,
+          PlantClient: event.EventMetaData?.EventType?.Plant?.Crop?.ClientID,
+          GrowthStage: event.EventMetaData?.EventType?.Plant?.Crop?.GrowthStage?.Name,
+          GrowthStageClient: event.EventMetaData?.EventType?.Plant?.Crop?.GrowthStage?.ClientID,
+          SubGrowthStage: event.EventMetaData?.EventType?.Plant?.Crop?.SubGrowthStage?.Name,
+          SubGrowthStageClient: event.EventMetaData?.EventType?.Plant?.Crop?.SubGrowthStage?.ClientID,
+          PlantPart: event.EventMetaData?.EventType?.Plant?.PlantPart,
+        }
+
+      }
+
+      let labMeta = {
+        LabName: event.LabMetaData?.LabName,
+        LabID: event.LabMetaData?.LabID,
+        LabReportID: event.LabMetaData?.LabReportID,
+        LabEventID: event.LabMetaData?.LabEventID,
+        ReceivedDate: event.LabMetaData?.ReceivedDate,
+        ProcessedDate: event.LabMetaData?.ProcessedDate,
+        ClientAccountNumber: event.LabMetaData?.ClientAccount?.AccountNumber,
+        ClientName: event.LabMetaData?.ClientAccount?.Name,
+        ClientCompany: event.LabMetaData?.ClientAccount?.Company,
+        ClientCity: event.LabMetaData?.ClientAccount?.City,
+        ClientState: event.LabMetaData?.ClientAccount?.State,
+        ClientZip: event.LabMetaData?.ClientAccount?.Zip,
+        LabContactName: event.LabMetaData?.Contact?.Name,
+        LabContactPhone: event.LabMetaData?.Contact?.Phone,
+        LabContactAddress: event.LabMetaData?.Contact?.Address,
+      }
+
+      let fmisMeta = {
+        FMISEventID: event.FMISMetadata?.FMISEventID,
+        FMISProfileGrower: event.FMISMetadata?.FMISProfile?.Grower,
+        FMISProfileFarm: event.FMISMetadata?.FMISProfile?.Farm,
+        FMISProfileField: event.FMISMetadata?.FMISProfile?.Field,
+        'FMISProfileSubField': event.FMISMetadata?.FMISProfile?.['Sub-Field'],
+      }
 
       let allReports = toReportsObj(event.LabMetaData!.Reports);
 
-      let allDepthRefs = toDepthRefsObj(event.EventSamples!.Soil!.DepthRefs);
+      let allDepthRefs = toDepthRefsObj(event.EventSamples?.Soil?.DepthRefs);
+      let samplesType = `${type}Samples`;
 
-      return event.EventSamples!.Soil!.SoilSamples!.map((sample) => {
+      // @ts-expect-error make union type later
+      return event.EventSamples![type]![samplesType]!.map((sample) => {
         let sampleMeta = toSampleMetaObj(sample.SampleMetaData, allReports);
 
-        return sample.Depths!.map((depth) => {
-          let nutrients = toNutrientResultsObj(depth);
+        if (type === 'Soil') {
+          return sample.Depths!.map((depth: any) => {
+            let nutrients = toNutrientResultsObj(depth);
 
+            return {
+              ...eventMeta,
+              ...labMeta,
+              ...fmisMeta,
+              ...sampleMeta,
+              ...allReports[sampleMeta.ReportID],
+              ...allDepthRefs[depth.DepthID!],
+              ...nutrients,
+            };
+          });
+        } else {
+          let nutrients = toNutrientResultsObj(sample);
           return {
             ...eventMeta,
+            ...labMeta,
+            ...fmisMeta,
             ...sampleMeta,
-            ...allDepthRefs[depth.DepthID!],
+            ...allReports[sampleMeta.ReportID],
             ...nutrients,
           };
-        });
+        };;
       });
     })
-    .flat(3);
+    .flat(3); // TODO: Flatten 3 for soil and 2 for other types? Check when we get there.
 }
+
+/*
+export function toCsvObject2(input: ModusResult, separateMetadata?: boolean) {
+  let output = input
+    .Events!.map((event) => {
+      let eventMeta = {
+        EventDate: event.EventMetaData!.EventDate,
+        EventCode: event.EventMetaData?.EventCode,
+        EventType: Object.keys(event.EventMetaData?.EventType || {})[0] || 'Soil' // Hard-coded for now. This is all soil data at the moment
+      };
+      const type = eventMeta.EventType;
+
+      let labMeta = {
+        LabName: event.LabMetaData?.LabName,
+        LabID: event.LabMetaData?.LabID,
+        LabReportID: event.LabMetaData?.LabReportID,
+        LabEventID: event.LabMetaData?.LabEventID,
+        ReceivedDate: event.LabMetaData?.ReceivedDate,
+        ProcessedDate: event.LabMetaData?.ProcessedDate,
+        ClientAccountNumber: event.LabMetaData?.ClientAccount?.AccountNumber,
+        ClientName: event.LabMetaData?.ClientAccount?.Name,
+        ClientCompany: event.LabMetaData?.ClientAccount?.Company,
+        ClientCity: event.LabMetaData?.ClientAccount?.City,
+        ClientState: event.LabMetaData?.ClientAccount?.State,
+        ClientZip: event.LabMetaData?.ClientAccount?.Zip,
+        LabContactName: event.LabMetaData?.Contact?.Name,
+        LabContactPhone: event.LabMetaData?.Contact?.Phone,
+        LabContactAddress: event.LabMetaData?.Contact?.Address,
+      }
+
+      let fmisMeta = {
+        FMISEventID: event.FMISMetadata?.FMISEventID,
+        FMISProfileGrower: event.FMISMetadata?.FMISProfile?.Grower,
+        FMISProfileFarm: event.FMISMetadata?.FMISProfile?.Farm,
+        FMISProfileField: event.FMISMetadata?.FMISProfile?.Field,
+        'FMISProfileSubField': event.FMISMetadata?.FMISProfile?.['Sub-Field'],
+      }
+
+      let allReports = toReportsObj(event.LabMetaData!.Reports);
+
+      let allDepthRefs = toDepthRefsObj(event.EventSamples?.Soil?.DepthRefs);
+      let samplesType = `${type}Samples`;
+
+      // @ts-expect-error make union type later
+      return event.EventSamples![type]![samplesType]!.map((sample) => {
+        let sampleMeta = toSampleMetaObj(sample.SampleMetaData, allReports);
+
+        if (type === 'Soil') {
+          return sample.Depths!.map((depth: any) => {
+            let nutrients = toNutrientResultsObj(depth);
+
+            return {
+              ...eventMeta,
+              ...labMeta,
+              ...fmisMeta,
+              ...sampleMeta,
+              ...allReports[sampleMeta.ReportID],
+              ...allDepthRefs[depth.DepthID!],
+              ...nutrients,
+            };
+          });
+        } else {
+          let nutrients = toNutrientResultsObj(sample);
+          return {
+            ...eventMeta,
+            ...labMeta,
+            ...fmisMeta,
+            ...sampleMeta,
+            ...allReports[sampleMeta.ReportID],
+            ...nutrients,
+          };
+        }
+      })
+    }).flat(3); // TODO: Flatten 3 for soil and 2 for other types? Check when we get there.
+}
+*/
 
 function toSampleMetaObj(sampleMeta: any, allReports: any) {
   const base = {
     SampleNumber: sampleMeta.SampleNumber,
     ...allReports[sampleMeta.ReportID],
     FMISSampleID: sampleMeta.FMISSampleID,
+    SampleContainerID: sampleMeta.SampleContainerID,
+    ReportID: sampleMeta.ReportID,
   };
   let ll = sampleMeta?.Geometry?.wkt
     ?.replace('POINT(', '')
@@ -699,6 +892,7 @@ function toSampleMetaObj(sampleMeta: any, allReports: any) {
 }
 
 function toDepthRefsObj(depthRefs: any): any {
+  if (!depthRefs) return undefined;
   return Object.fromEntries(
     depthRefs.map((dr: Depth) => [
       dr.DepthID,
@@ -719,6 +913,7 @@ function toReportsObj(reports: any): any {
       {
         FileDescription: r.FileDescription,
         ReportID: r.ReportID,
+        LabReportID: r.LabReportID,
       },
     ])
   );
@@ -727,54 +922,23 @@ function toReportsObj(reports: any): any {
 function toNutrientResultsObj(sampleDepth: any) {
   return Object.fromEntries(
     sampleDepth.NutrientResults.map((nr: NutrientResult) => [
-      `${nr.Element} [${nr.ValueUnit}]`,
+      `${nr.Element}${nr.ModusTestID ? ` (${nr.ModusTestID})` : ''} [${nr.ValueUnit}]`,
       nr.Value,
     ])
   );
 }
 
-function ensureLabReportId(reports: any[], labReportId: string) {
-  let rep = reports.find((r: any) => r.LabReportID === labReportId)
+function ensureLabReportId(reports: any[], LabReportID: string, FileDescription: string) {
+  let rep = reports.find((r: any) => r.LabReportID === LabReportID)
   // First and only report is missing LabReportID. Use it.
   if (!rep) {
-    if (reports.length === 1 && !reports[0]) {
-      reports[0].LabReportID = labReportId;
-      return reports[0].ReportID;
-    } else {
-      rep = {
-        LabReportID: labReportId,
-        ReportID: reports.length,
-      };
-      reports.push(rep);
-      return rep.ReportID;
-    }
+    const ReportID = reports.length + 1;
+    rep = {
+      LabReportID: LabReportID || `Report ${ReportID}`,
+      ReportID,
+      FileDescription
+    };
+    reports.push(rep);
+    return rep.ReportID;
   } else return rep.ReportID;
 }
-
-/* Didn't see these in the official modus element list
-  "LBC 1": [],
-  "Total Microbial Biomass": [],
-  "Total Bacteria Biomass": [],
-  "Actinomycetes Biomass": [],
-  "Gram (-) Biomass": [],VFINX VINEX
-  "Rhizobia Biomass": [],
-  "Gram (+) Biomass": [],
-  "Total Fungi Biomass": [],
-  "Arbuscular Mycorrhizal Biomass": [],
-  "Saprophyte Biomass": [],
-  "Protozoa Biomass": [],
-  "Fungi:Bacteria": [],
-  "Gram(+):Gram(-)": [],
-  "Sat:Unsat": [],
-  "Mono:Poly": []
- */
-
-// This takes an mappings in the lab configs and sets modus values
-// If multiple columns map to the same modus, take the last defined one.
-/*
-function handleModusMappers(modus: ModusResult, mm: ModusMappings) {
-  //1. Split on [*] and iterate over the parent?
-
-
-}
-*/

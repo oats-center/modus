@@ -6,7 +6,7 @@ import { deepdiff } from './util.js';
 import type * as MainLib from '../index.js';
 //@ts-ignore
 import ucum from '@lhncbc/ucum-lhc';
-import { standardUnits, labConfigs } from '@modusjs/airtable';
+import { labConfigs } from '@modusjs/industry';
 
 const trace = debug('@modusjs/convert#test-units:trace');
 const info = debug('@modusjs/convert#test-units:info');
@@ -25,7 +25,11 @@ export default async function run(lib: typeof MainLib) {
   let result = lib.convertUnits(testElementFrom);
 
   test('Testing convertUnits with specific "to" Units');
-  const testToUnits = { 'K': 'ppm' };
+  const testToUnits = {
+    Element: 'K',
+    ValueUnit: 'ppm',
+    UCUM_ValueUnit: 'ppm'
+  };
   result = lib.convertUnits(testElementFrom, testToUnits);
   if (Math.abs((result[0]?.Value || 1) - 391.0) > 0.0000001) {
     throw new Error('ERROR: result of conversion from 1.0 cmol/kg K to ppm is not 391.');
@@ -93,7 +97,7 @@ export default async function run(lib: typeof MainLib) {
   */
 
   test(`Should convert Base Saturation from % to meq/100g if CEC is present`);
-  let res = lib.convertBaseSat([{
+  let nrs = [{
     Element: 'Base Saturation - Ca',
     Value: 25.9,
     ValueUnit: '%'
@@ -101,13 +105,20 @@ export default async function run(lib: typeof MainLib) {
     Element: 'CEC',
     Value: 19.1,
     ValueUnit: 'meq/100 g'
-  }]);
-  console.log(res);
-  if (!(res[0]!.Value! > 4.9 && res[0]!.Value! < 5)) throw new Error('Conversion of Base Saturation from % to meq failed.');
+  }]
+  let res = lib.convertBaseSat(nrs, nrs[0]!, {
+    ...nrs[0]!,
+    ValueUnit: 'meq/100 g',
+    UCUM_ValueUnit: 'meq/(100.g)'
+  });
+  if (!(res.Value! > 4.9 && res.Value! < 5)) throw new Error('Conversion of Base Saturation from % to meq failed.');
 
-  test('LabConfig units imported from airtable should all work');
+  test('LabConfig units imported from industry data should all work');
   for (const { analytes } of Object.values(labConfigs)) {
-    for (const { ValueUnit: unit } of Object.values(analytes)) {
+    // @ts-ignore
+    let ans = Object.values(analytes).filter(v => v!.ValueUnit !== undefined)
+    // @ts-ignore
+    for (const { ValueUnit: unit } of ans) {
       let alias = lib.aliasToUcum(unit) || unit;
       let result = utils.validateUnitString(alias, true);
       if (!result) throw new Error(`Unit ${unit} was unrecognized by units lib`);

@@ -1,4 +1,4 @@
-import type { LabConfig } from './index.js';
+import type { LabConfig } from '../index.js';
 
 const mappings : LabConfig["mappings"] = {
   // ID numbers
@@ -20,12 +20,6 @@ const mappings : LabConfig["mappings"] = {
   'CROP': undefined,
   'TYPE': undefined,
 }
-
-/*
-const depthInfo: LabConfig["depthInfo"] = {
-
-}
-*/
 
 const analytes : LabConfig["analytes"] = {
   'OM': {
@@ -86,7 +80,7 @@ const analytes : LabConfig["analytes"] = {
     //calculated, i.e., S-BPH.19
   },
   'CEC': {
-    ValueUnit: 'meq/100g',
+    ValueUnit: 'meq/100 g',
     Element: 'CEC',
     ModusTestID: 'S-CEC.19', //OR S-CEC-NH4N.05 OR S-CEC-AA.23
   },
@@ -178,7 +172,7 @@ const analytes : LabConfig["analytes"] = {
 
   //TODO: Methods unlisted in data provided by ALWest
   'H': {
-    ValueUnit: 'meq/100g',
+    ValueUnit: 'meq/100 g',
     Element: 'H',
     // If Calculated, use 'S-H.19'
   },
@@ -223,41 +217,21 @@ const analytes : LabConfig["analytes"] = {
 
   // Alternative units to existing analytes
   'CA_SAT': {
-    ValueUnit: 'meq/100g',
+    ValueUnit: 'meq/100 g',
     Element: 'BS-Ca',
   },
   'MG_SAT': {
-    ValueUnit: 'meq/100g',
+    ValueUnit: 'meq/100 g',
     Element: 'BS-Mg',
   },
   'NA_SAT': {
-    ValueUnit: 'meq/100g',
+    ValueUnit: 'meq/100 g',
     Element: 'BS-Na',
   },
   'B_SAT': {
-    ValueUnit: 'meq/100g',
+    ValueUnit: 'meq/100 g',
     Element: 'BS-B',
   },
-
-  // TODO: Analytes present only in tissue samples...I think this is still fine?
-  /*
-  'N': {
-    ValueUnit: 'meq/100g',
-    Element: 'N',
-  },
-  'P': {
-    ValueUnit: 'meq/100g',
-    Element: 'P',
-  },
-  'PO4_P': {
-    ValueUnit: 'meq/100g',
-    Element: 'PO4_P',
-  },
-  'K_EXT': {
-    ValueUnit: 'meq/100g',
-    Element: 'Potassium Extracted',
-  },
-  */
 }
 
 const units = Object.fromEntries(
@@ -270,7 +244,18 @@ const config : LabConfig = {
   mappings,
   analytes,
   headers: [...Object.keys(analytes), ...Object.keys(mappings)],
-  examplesKey: 'a_l_west'
-};
+  examplesKey: 'a_l_west',
+//  type: 'Soil',
+  type: (row: any) => {
+    switch(row.TYPE) {
+      case 4:
+        return 'Plant';
+      case 5:
+        return 'Soil';
+      default:
+        return 'Soil';
+    }
+  },
+}
 
 export default config;
