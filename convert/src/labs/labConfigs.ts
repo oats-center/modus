@@ -131,6 +131,12 @@ export const toModusJsonPath = {
     path: '$.FMISMetaData.FMISProfile.Field',
     fullpath: '$.Events.*.FMISMetaData.FMISProfile.Field',
   },
+  'SubField': {
+    type: 'event',
+    path: '$.FMISMetaData.FMISProfile.Field',
+    fullpath: '$.Events.*.FMISMetaData.FMISProfile.Sub-Field',
+  },
+
   'LabEventID': {
     type: 'event',
     path: '$.LabMetaData.LabEventID',

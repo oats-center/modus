@@ -17,6 +17,7 @@ import ModusSubmit, {
   assert as assertModusSubmit,
   is as isModusSubmit,
 } from '@oada/types/modus/v1/modus-submit.js';
+import { fixModus } from './json.js';
 
 // Re-Export the types for convenience
 export { ModusSubmit, assertModusSubmit, isModusSubmit };
@@ -318,7 +319,7 @@ export function parse(xmlstring: string): any {
     throw new Error('No ModusResult found.');
   }
 
-  const ret = parseObject({
+  let ret = parseObject({
     xml: modus_result,
     opts: {
       overrides: {
@@ -391,6 +392,9 @@ export function parse(xmlstring: string): any {
       },
     },
   });
+
+  //TODO: Some additional massaging into valid Modus...
+  ret = fixModus(ret);
 
   ret._type = 'application/vnd.modus.v1.modus-result+json';
   return ret;

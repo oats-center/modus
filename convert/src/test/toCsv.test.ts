@@ -75,4 +75,5 @@ export default async function run(lib: typeof MainLib) {
 
     test('Now re-parse the standardized csv back into modus json');
     let csvResult = lib.csv.parse({wb});
+    console.log(csvResult);
 }

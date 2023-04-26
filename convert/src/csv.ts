@@ -286,11 +286,28 @@ function parseWorkbook({
       for (const [_, row] of g_rows.entries()) {
         event = setMappings(event, 'event', row, labConfig); //TODO: Like this or { ...event, getMappings } ?
         event.LabMetaData = {
-          LabName: modusKeyToValue(row, 'LabName', labConfig) || labConfig?.name || 'Unnamed Lab',
+          LabName: modusKeyToValue(row, 'LabName', labConfig) || labConfig?.name || 'Unknown Lab',
+          LabEventID: modusKeyToValue(row, 'LabEventID', labConfig) || labConfig?.name || 'Unknown Lab Event ID',
           ProcessedDate: modusKeyToValue(row, 'ProcessedDate', labConfig) || date,
           ReceivedDate: modusKeyToValue(row, 'ReceivedDate', labConfig) || date,
           Reports: [],
+          ClientAccount: {
+            AccountNumber: modusKeyToValue(row, 'AccountNumber', labConfig) || 'Unknown Client Account',
+            Company: modusKeyToValue(row, 'Company', labConfig) || 'Unknown Client Company',
+            Name: modusKeyToValue(row, 'Name', labConfig) || 'Unknown Client Name',
+            City: modusKeyToValue(row, 'City', labConfig) || 'Unknown Client City',
+            State: modusKeyToValue(row, 'State', labConfig) || 'Unknown Client State',
+            Zip: modusKeyToValue(row, 'Zip', labConfig) || 'Unknown Client Zip',
+          }
         };
+        event.FMISMetaData = {
+          FMISProfile: {
+            Grower: modusKeyToValue(row, 'Grower', labConfig) || 'Unknown Grower',
+            Farm: modusKeyToValue(row, 'Farm', labConfig) || 'Unknown Farm',
+            Field: modusKeyToValue(row, 'Field', labConfig) || 'Unknown Field',
+            'Sub-Field': modusKeyToValue(row, 'Sub-Field', labConfig) || 'Unknown Sub-Field',
+          }
+        }
 
         let nutrientResults = parseNutrientResults({
           row,
@@ -655,7 +672,7 @@ function parseDepth(row: any, headers: Record<string, ColumnHeader>, labConfig?:
     depthInfo?.ColumnDepth || Math.abs(depth.EndingDepth - depth.StartingDepth)
     || 0; // 0 is allowed in our json schema, but technically not allowed per xsd
   depth.Name = modusKeyToValue(row, 'DepthName', labConfig) || depthInfo?.Name ||
-    depth.EndingDepth === 0 ? 'Unnamed Depth' : `${depth.StartingDepth} to ${depth.EndingDepth}`;
+    depth.EndingDepth === 0 ? 'Unknown Depth' : `${depth.StartingDepth} to ${depth.EndingDepth}`;
 
   depth.DepthUnit = (() => { // Overrides take precedence out of the options
       let start = modusKeyToHeader('StartingDepth', labConfig);

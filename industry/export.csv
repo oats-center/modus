@@ -1,0 +1,479 @@
+﻿lab_method_name,lab_csv_header,Element,ExtractionMethod,MeasurementMethod,lab_Unit_of_Measurement_Default,ValueUnits,UCUM_ValueUnits,AlternativeUnits,Modus_Soil_Test,Lab,lab_name
+Sprinkle Infiltrometer,,Aggregate Stability,Infiltration,Single Ring Infiltration,,cm/min,,,S-AS-SI-OT,,
+Bioavailable nitrogen measured by ACE Protein method,,,,,,,,,,,
+PLFA,,,,,,,,,,,
+β-Glucosidase (BG),,,,,,,,,,,
+Enzyme Assay,,Enzyme activity,p-nitrophenol release,Spectrophotometric,,mg/kg,mg/kg,,S-EA-EA-PN-S-OT,,
+autoclaved citrate extractable protein,,Bioavailable nitrogen,Bicinchoninic Acid Protein Assay,Calculated,,mg/g,mg/g,,S-SP-ACE-OT,,
+Phospholipid fatty acid (PLFA),,Microbial Diversity,Buyer and Sasser 2012,Calculated,,%,%,,S-MD-BS-C-OT,,
+Bulk Density,,Bulk Density,Intact Core,Weight,,g/cm3,g/cm3,,S-BD-Core.01-OT,,
+pH test,,,,,,,,,,,
+Soil Nitrate (PSNT),,,,,,,,,,"""A&L Great Lakes Laboratory - Fort Wayne, IN""","A&L Great Lakes Laboratory - Fort Wayne, IN"
+Soil Ammonium,,,,,,,,,,"""A&L Great Lakes Laboratory - Fort Wayne, IN""","A&L Great Lakes Laboratory - Fort Wayne, IN"
+Soluble Salts,,,,,,,,,,"""A&L Great Lakes Laboratory - Fort Wayne, IN""","A&L Great Lakes Laboratory - Fort Wayne, IN"
+Sodium,,,,,,,,,,"""A&L Great Lakes Laboratory - Fort Wayne, IN""","A&L Great Lakes Laboratory - Fort Wayne, IN"
+Neutralization Potential,,,,,,,,,,"""A&L Great Lakes Laboratory - Fort Wayne, IN""","A&L Great Lakes Laboratory - Fort Wayne, IN"
+Pyritic Sulfur,,,,,,,,,,"""A&L Great Lakes Laboratory - Fort Wayne, IN""","A&L Great Lakes Laboratory - Fort Wayne, IN"
+Potential Acidity,,,,,,,,,,"""A&L Great Lakes Laboratory - Fort Wayne, IN""","A&L Great Lakes Laboratory - Fort Wayne, IN"
+Net Neutralization Potential,,,,,,,,,,"""A&L Great Lakes Laboratory - Fort Wayne, IN""","A&L Great Lakes Laboratory - Fort Wayne, IN"
+Saturated Paste Extract,,,,,,,,,,"""A&L Great Lakes Laboratory - Fort Wayne, IN""","A&L Great Lakes Laboratory - Fort Wayne, IN"
+Resistivity,,,,,,,,,,"""A&L Great Lakes Laboratory - Fort Wayne, IN""","A&L Great Lakes Laboratory - Fort Wayne, IN"
+Sulfate,,,,,,,,,,"""A&L Great Lakes Laboratory - Fort Wayne, IN""","A&L Great Lakes Laboratory - Fort Wayne, IN"
+Chloride,,,,,,,,,,"""A&L Great Lakes Laboratory - Fort Wayne, IN""","A&L Great Lakes Laboratory - Fort Wayne, IN"
+Sand Classification,,,,,,,,,,"""A&L Great Lakes Laboratory - Fort Wayne, IN""","A&L Great Lakes Laboratory - Fort Wayne, IN"
+%Sand,,Sand,Sedimentation,Hydrometer Method,,%,%,"%, g/kg",S-SAND-SED.10,"""A&L Great Lakes Laboratory - Fort Wayne, IN""","A&L Great Lakes Laboratory - Fort Wayne, IN"
+%Silt,,Silt,Sedimentation,Hydrometer Method,,%,%,"%, g/kg",S-SILT-SED.10,"""A&L Great Lakes Laboratory - Fort Wayne, IN""","A&L Great Lakes Laboratory - Fort Wayne, IN"
+%Clay,,Clay,Sedimentation,Hydrometer Method,,%,%,"%, g/kg",S-CLAY-SED.10,"""A&L Great Lakes Laboratory - Fort Wayne, IN""","A&L Great Lakes Laboratory - Fort Wayne, IN"
+Textural Classification,,,,,,,,,,"""A&L Great Lakes Laboratory - Fort Wayne, IN""","A&L Great Lakes Laboratory - Fort Wayne, IN"
+Particle Size Analysis,,,,,,,,,,"""A&L Great Lakes Laboratory - Fort Wayne, IN""","A&L Great Lakes Laboratory - Fort Wayne, IN"
+Strong Bray Phosphorus,,,,,,,,,,"""A&L Great Lakes Laboratory - Fort Wayne, IN""","A&L Great Lakes Laboratory - Fort Wayne, IN"
+Sodium Bicarbonate Phosphorus,,,,,,,,,,"""A&L Great Lakes Laboratory - Fort Wayne, IN""","A&L Great Lakes Laboratory - Fort Wayne, IN"
+Iron,,,,,,,,,,"""A&L Great Lakes Laboratory - Fort Wayne, IN""","A&L Great Lakes Laboratory - Fort Wayne, IN"
+Copper,,,,,,,,,,"""A&L Great Lakes Laboratory - Fort Wayne, IN""","A&L Great Lakes Laboratory - Fort Wayne, IN"
+Sulfur,,,,,,,,,,"""A&L Great Lakes Laboratory - Fort Wayne, IN""","A&L Great Lakes Laboratory - Fort Wayne, IN"
+Boron,,,,,,,,,,"""A&L Great Lakes Laboratory - Fort Wayne, IN""","A&L Great Lakes Laboratory - Fort Wayne, IN"
+Manganese,,,,,,,,,,"""A&L Great Lakes Laboratory - Fort Wayne, IN""","A&L Great Lakes Laboratory - Fort Wayne, IN"
+Organic Matter,,Organic Matter,Dumas,Combustion Analyzer,,%,%,%,S-OM-DUMAS.16,"""A&L Great Lakes Laboratory - Fort Wayne, IN""","A&L Great Lakes Laboratory - Fort Wayne, IN"
+Available Phosphorus,,Phosphorus,Bicarbonate (Olsen),Spectrophotometric,,mg/kg,mg/kg,"mg/kg, ppm, lb/ac, kg/ha",S-P-BIC.01.03,"""A&L Great Lakes Laboratory - Fort Wayne, IN""","A&L Great Lakes Laboratory - Fort Wayne, IN"
+Exchangeable Potassium,,Exchangeable Potassium Percentage,1.0 M KCl,Calculated,,%,%,%,S-EKP.19,"""A&L Great Lakes Laboratory - Fort Wayne, IN""","A&L Great Lakes Laboratory - Fort Wayne, IN"
+Magnesium,,Magnesium,Saturated Paste,ICP,,meq/L,meq/L,"meq/L, ppm, mg/L, lb/ac, kg/ha",S-MG-SP.05,"""A&L Great Lakes Laboratory - Fort Wayne, IN""","A&L Great Lakes Laboratory - Fort Wayne, IN"
+Calcium,,,,,,,,,,"""A&L Great Lakes Laboratory - Fort Wayne, IN""","A&L Great Lakes Laboratory - Fort Wayne, IN"
+Buffer pH,,Buffer pH,SMP,H+ ISE,,none,,none,S-BPH-SMPB.02,"""A&L Great Lakes Laboratory - Fort Wayne, IN""","A&L Great Lakes Laboratory - Fort Wayne, IN"
+Cation Exchange Capacity,,Cation Exchange Capacity,Displacement - Potassium,"""ICP-AES, AAS""",,cmol/kg,cmol/kg,"cmol/kg, meq/100 g",S-CEC-K.05,"""A&L Great Lakes Laboratory - Fort Wayne, IN""","A&L Great Lakes Laboratory - Fort Wayne, IN"
+Percent Base Saturation of Cation Elements,,,,,,,,,,"""A&L Great Lakes Laboratory - Fort Wayne, IN""","A&L Great Lakes Laboratory - Fort Wayne, IN"
+Zinc,,,,,,,,,,"""A&L Great Lakes Laboratory - Fort Wayne, IN""","A&L Great Lakes Laboratory - Fort Wayne, IN"
+Soil pH,,pH,1:1 soil:water ,H+ ISE,,standard units,,"standard units, s.u., none",S-PH-1:1.02.07,"""A&L Great Lakes Laboratory - Fort Wayne, IN""","A&L Great Lakes Laboratory - Fort Wayne, IN"
+Organic Matter,,,,,,,,,,A&L Great Lakes Laboratory - Wisconsin,A&L Great Lakes Laboratory - Wisconsin
+Soil pH,,,,,,,,,,A&L Great Lakes Laboratory - Wisconsin,A&L Great Lakes Laboratory - Wisconsin
+Buffer pH,,,,,,,,,,A&L Great Lakes Laboratory - Wisconsin,A&L Great Lakes Laboratory - Wisconsin
+Phosphorus,,,,,,,,,,A&L Great Lakes Laboratory - Wisconsin,A&L Great Lakes Laboratory - Wisconsin
+Potassium,,,,,,,,,,A&L Great Lakes Laboratory - Wisconsin,A&L Great Lakes Laboratory - Wisconsin
+Calcium,,,,,,,,,,A&L Great Lakes Laboratory - Wisconsin,A&L Great Lakes Laboratory - Wisconsin
+Magnesium,,,,,,,,,,A&L Great Lakes Laboratory - Wisconsin,A&L Great Lakes Laboratory - Wisconsin
+Cation Exchange Capacity,,,,,,,,,,A&L Great Lakes Laboratory - Wisconsin,A&L Great Lakes Laboratory - Wisconsin
+Percent Base Saturation of Cation Elements,,,,,,,,,,A&L Great Lakes Laboratory - Wisconsin,A&L Great Lakes Laboratory - Wisconsin
+Iron,,,,,,,,,,A&L Great Lakes Laboratory - Wisconsin,A&L Great Lakes Laboratory - Wisconsin
+Copper,,,,,,,,,,A&L Great Lakes Laboratory - Wisconsin,A&L Great Lakes Laboratory - Wisconsin
+Sulfur,,,,,,,,,,A&L Great Lakes Laboratory - Wisconsin,A&L Great Lakes Laboratory - Wisconsin
+Boron ,,,,,,,,,,A&L Great Lakes Laboratory - Wisconsin,A&L Great Lakes Laboratory - Wisconsin
+Manganese,,,,,,,,,,A&L Great Lakes Laboratory - Wisconsin,A&L Great Lakes Laboratory - Wisconsin
+Zinc,,,,,,,,,,A&L Great Lakes Laboratory - Wisconsin,A&L Great Lakes Laboratory - Wisconsin
+Lime Presence,EX__LIME,Lime Recommendation,SMP,Calculated,none,none,[ston_av]/[acr_us],"tons/ac, kg/ha",S-LR-SMP,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA"
+NH4-N,NH4,Ammonium-Nitrogen,,,ppm,ppm,[ppm],,,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA"
+Ca,CA,Calcium,Ammonium Acetate,"""ICP, AAS""",ppm,ppm,[ppm],"mg/kg, ppm, meq/100 g, cmol/kg, lb/ac, kg/ha",S-CA-NH4AC.05,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA"
+% Soil Moisture,,Moisture,,,%,%,%,,,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA"
+SAR,SAR,Sodium Adsorption Ratio,,,none,none,,,,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA"
+PO4-P (Bray-P1),P1,Phosphorus,Bray P1 (1:10),Spectrophotometric,ppm,ppm,[ppm],"mg/kg, ppm, lb/ac, kg/ha",S-P-B1-1:10.01.03,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA"
+PO4-P (Bray-P2),P2,Phosphorus,,,ppm,ppm,[ppm],,,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA"
+PO4-P (Olsen),HCO3_P,Phosphorus,,,ppm,ppm,[ppm],,,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA"
+K-AA,K,Potassium,,,ppm,ppm,[ppm],,,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA"
+Particle Size Analysis - PSA - Sand,,Sand,,,%,%,%,,,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA"
+Silt Clay - Soil Texture,,Silt+Clay,,,%,%,%,,,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA"
+Available Water Capacity,,Moisture,,,%,%,%,,,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA"
+Total N,TN,"""Nitrogen, Total""",,,,,,,,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA"
+Organic Matter (OM),OM,Organic Matter,Loss-on-Ignition ,Gravimetric,%,%,%,"%, g/kg",S-SOM-LOI.15,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA"
+Organic Carbon (OC),,Organic Carbon,,,,,,,,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA"
+%CaCO3,,Calcium Carbonate,,,,,,,,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA"
+C:N ratio,,C:N Ratio,,,none,none,,,,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA"
+B,B,Boron,DTPA-Sorbitol,"""ICP, AAS""",ppm,ppm,[ppm],"mg/kg, ppm, lb/ac, kg/ha",S-B-DTPA-SORB.05,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA"
+Zn,ZN,Zinc,DTPA-Sorbitol,"""ICP, AAS""",ppm,ppm,[ppm],"mg/kg, ppm, lb/ac, kg/ha",S-ZN-DTPA-SORB.05,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA"
+Mn,MN,Manganese,DTPA-Sorbitol,"""ICP, AAS""",ppm,ppm,[ppm],"mg/kg, ppm, lb/ac, kg/ha",S-MN-DTPA-SORB.05,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA"
+Molybdenum,MO,Molybdenum,,,,,,,,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA"
+Chlorine,CL,Chloride,Saturated Paste,Spectrophotometric,ppm,ppm,[ppm],"mg/L, meq/L, ppm, lb/ac, kg/ha",S-CL-SP.01,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA"
+Fe,FE,Iron,DTPA-Sorbitol,"""ICP, AAS""",ppm,ppm,[ppm],"mg/kg, ppm, lb/ac, kg/ha",S-FE-DTPA-SORB.05,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA"
+Cu,CU,Copper,DTPA-Sorbitol,"""ICP, AAS""",ppm,ppm,[ppm],"mg/kg, ppm, lb/ac, kg/ha",S-CU-DTPA-SORB.05,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA"
+CEC,CEC,Cation Exchange Capacity,,,%,%,%,,,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA"
+Extractable Ca,CA,Calcium,Ammonium Acetate,"""ICP, AAS""",,mg/kg,mg/kg,"mg/kg, ppm, meq/100 g, cmol/kg, lb/ac, kg/ha",S-CA-NH4AC.05,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA"
+OM (LOI),OM,Organic Matter,Loss-on-Ignition ,Gravimetric,,%,%,"%, g/kg",S-SOM-LOI.15,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA"
+EC,EC,Electrical Conductivity,,,,,,,,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA"
+Soil pH,PH,pH,Saturated Paste,H+ ISE,none,none,,"standard units, s.u., none",S-PH-SP.02,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA"
+K,K,Potassium,Ammonium Acetate,"""ICP, AAS""",ppm,ppm,[ppm],"mg/kg, ppm, meq/100 g, cmol/kg, lb/ac, kg/ha",S-K-NH4AC.05,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA"
+Mg,MG,Magnesium,Ammonium Acetate,"""ICP, AAS""",ppm,ppm,[ppm],"mg/kg, ppm, meq/100 g, cmol/kg, lb/ac, kg/ha",S-MG-NH4AC.05,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA"
+Na,NA,Sodium,Ammonium Acetate,"""ICP, AAS""",ppm,ppm,[ppm],"mg/kg, ppm, meq/100 g, cmol/kg, lb/ac, kg/ha",S-NA-NH4AC.05,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA"
+NO3-N,NO3_N,Nitrate-Nitrogen,1:5 2.0 N KCl ,Cd Red/Spectrophotometric,ppm,ppm,[ppm],"mg/kg, ppm, lb/ac, kg/ha",S-NO3-1:5.01.01,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA"
+SO4-S,SO4_S,Sulfur,Ammonium Acetate,ICP,ppm,ppm,[ppm],"mg/kg, ppm, lb/ac, kg/ha",S-S-NH4AC.05,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA"
+Buffer pH,BUFFER_PH,Buffer pH,Sikora 1 buffer,H+ ISE,none,none,,none,S-BPH-SIK1.02,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA"
+Soluble Salts,S__SALTS,Saturation Paste %,Balance,Calculated,,%,%,%,S-SP%.19,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA"
+H,H,Hydrogen,,,meq/100 g,meq/100 g,meq/(100.g),,,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA"
+PERCENT CATION SATURATION (COMPUTED),SAT_PCT,Saturation Paste %,Balance,Calculated,,%,%,%,S-SP%.19,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA"
+ENR,ENR,Estimated Nitrogen Release,Saturated Paste,Calculated,lb/ac,lb/ac,[lb_av]/[acr_us],"ppm, lb, lb/ac, kg/ha",S-ENR.19,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA"
+Exchangeable Sodium Percentage,ESP,Exchangeable Sodium Percentage,1.0 M KCl,Calculated,,%,%,%,S-ESP.19,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA"
+CO3,CO3,Carbonate,Saturated Paste,Titration,,meq/L,meq/L,"meq/L, mg/L, ppm",S-CO3-SP.12,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA"
+Aluminum,AL,Aluminum,,,ppm,ppm,[ppm],,,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA"
+K_PCT,K_PCT,Base Saturation - K,EPA 3050 Digestion Acid Recoverable,Calculated,,%,%,%,S-BS-K.19,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA"
+H_PCT,H_PCT,Base Saturation - H,EPA 3050 Digestion Acid Recoverable,Calculated,,%,%,%,S-BS-H.19,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA"
+MG_PCT,MG_PCT,Base Saturation - Mg,EPA 3050 Digestion Acid Recoverable,Calculated,,%,%,%,S-BS-MG.19,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA"
+CA_PCT,CA_PCT,Base Saturation - Ca,EPA 3050 Digestion Acid Recoverable,Calculated,,%,%,%,S-BS-MG,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA"
+NA_PCT,NA_PCT,Base Saturation - Na,EPA 3050 Digestion Acid Recoverable,Calculated,,%,%,%,S-BS-NA.19,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA"
+S,S,Sulfur,,,ppm,ppm,[ppm],,,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA"
+CA_SAT,CA_SAT,Base Saturation - Ca,EPA 3050 Digestion Acid Recoverable,Calculated,meq/100 g,meq/100 g,meq/(100.g),%,S-BS-MG,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA"
+MG_SAT,MG_SAT,Base Saturation - Mg,EPA 3050 Digestion Acid Recoverable,Calculated,meq/100 g,meq/100 g,meq/(100.g),%,S-BS-MG.19,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA"
+NA_SAT,NA_SAT,Base Saturation - Na,EPA 3050 Digestion Acid Recoverable,Calculated,meq/100 g,meq/100 g,meq/(100.g),%,S-BS-NA.19,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA"
+B_SAT,B_SAT,Boron,,,meq/100 g,meq/100 g,meq/(100.g),,,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA"
+HCO3,HCO3,Bicarbonate,Saturated Paste,Calculated,,meq/L,meq/L,"meq/L, mg/L, ppm",S-HCO3-SP.19,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA"
+Eff,,,,,,,,,,"""Ag Test LLC - Kittitas, WA""","Ag Test LLC - Kittitas, WA"
+Total Copper,,,,,,,,,,"""Ag Test LLC - Kittitas, WA""","Ag Test LLC - Kittitas, WA"
+Mo,,,,,,,,,,"""Ag Test LLC - Kittitas, WA""","Ag Test LLC - Kittitas, WA"
+Cl,,,,,,,,,,"""Ag Test LLC - Kittitas, WA""","Ag Test LLC - Kittitas, WA"
+Total Bases,,,,,,,,,,"""Ag Test LLC - Kittitas, WA""","Ag Test LLC - Kittitas, WA"
+Na,,,,,,,,,,"""Ag Test LLC - Kittitas, WA""","Ag Test LLC - Kittitas, WA"
+CEC,,,,,,,,,,"""Ag Test LLC - Kittitas, WA""","Ag Test LLC - Kittitas, WA"
+Moisture,,,,,,,,,,"""Ag Test LLC - Kittitas, WA""","Ag Test LLC - Kittitas, WA"
+Mn,,,,,,,,,,"""Ag Test LLC - Kittitas, WA""","Ag Test LLC - Kittitas, WA"
+Cu,,,,,,,,,,"""Ag Test LLC - Kittitas, WA""","Ag Test LLC - Kittitas, WA"
+Fe,,Iron,DTPA,"""ICP, AAS""",,mg/kg,mg/kg,"mg/kg, ppm, lb/ac, kg/ha",S-FE-DTPA.05,"""Ag Test LLC - Kittitas, WA""","Ag Test LLC - Kittitas, WA"
+Ca,,,,,,,,,,"""Ag Test LLC - Kittitas, WA""","Ag Test LLC - Kittitas, WA"
+Mg,,,,,,,,,,"""Ag Test LLC - Kittitas, WA""","Ag Test LLC - Kittitas, WA"
+B,,,,,,,,,,"""Ag Test LLC - Kittitas, WA""","Ag Test LLC - Kittitas, WA"
+SS,,,,,,,,,,"""Ag Test LLC - Kittitas, WA""","Ag Test LLC - Kittitas, WA"
+S,,,,,,,,,,"""Ag Test LLC - Kittitas, WA""","Ag Test LLC - Kittitas, WA"
+Zn,,,,,,,,,,"""Ag Test LLC - Kittitas, WA""","Ag Test LLC - Kittitas, WA"
+pH,,pH,1:1 soil:water ,H+ ISE,,standard units,,"standard units, s.u., none",S-PH-1:1.02.07,"""Ag Test LLC - Kittitas, WA""","Ag Test LLC - Kittitas, WA"
+K,,,,,,,,,,"""Ag Test LLC - Kittitas, WA""","Ag Test LLC - Kittitas, WA"
+OM (Organic Matter),,Organic Matter,Loss-on-Ignition ,Gravimetric,,%,%,"%, g/kg",S-SOM-LOI.15,"""Ag Test LLC - Kittitas, WA""","Ag Test LLC - Kittitas, WA"
+NH4-N,,,,,,,,,,"""Ag Test LLC - Kittitas, WA""","Ag Test LLC - Kittitas, WA"
+ P,,,,,,,,,,"""Ag Test LLC - Kittitas, WA""","Ag Test LLC - Kittitas, WA"
+NO3-N,,,,,,,,,,"""Ag Test LLC - Kittitas, WA""","Ag Test LLC - Kittitas, WA"
+Cu - Copper,,,,,,,,,,"""AgLab Express - Sioux Falls, SD""","AgLab Express - Sioux Falls, SD"
+Na — Sodium,,,,,,,,,,"""AgLab Express - Sioux Falls, SD""","AgLab Express - Sioux Falls, SD"
+Cl — Chloride,,,,,,,,,,"""AgLab Express - Sioux Falls, SD""","AgLab Express - Sioux Falls, SD"
+% sand,,,,,,,,,,"""AgLab Express - Sioux Falls, SD""","AgLab Express - Sioux Falls, SD"
+silt,,,,,,,,,,"""AgLab Express - Sioux Falls, SD""","AgLab Express - Sioux Falls, SD"
+clay,,,,,,,,,,"""AgLab Express - Sioux Falls, SD""","AgLab Express - Sioux Falls, SD"
+Potassium,,,,,,,,,,"""AgLab Express - Sioux Falls, SD""","AgLab Express - Sioux Falls, SD"
+Buffer pH,,,,,,,,,,"""AgLab Express - Sioux Falls, SD""","AgLab Express - Sioux Falls, SD"
+pH,,,,,,,,,,"""AgLab Express - Sioux Falls, SD""","AgLab Express - Sioux Falls, SD"
+B — Boron,,,,,,,,,,"""AgLab Express - Sioux Falls, SD""","AgLab Express - Sioux Falls, SD"
+Fe — Iron,,,,,,,,,,"""AgLab Express - Sioux Falls, SD""","AgLab Express - Sioux Falls, SD"
+ESP - Exchangeable Sodium Percentage,,,,,,,,,,"""AgLab Express - Sioux Falls, SD""","AgLab Express - Sioux Falls, SD"
+Ca — Calcium,,,,,,,,,,"""AgLab Express - Sioux Falls, SD""","AgLab Express - Sioux Falls, SD"
+NO3-N - Nitrate Nitrogen,,,,,,,,,,"""AgLab Express - Sioux Falls, SD""","AgLab Express - Sioux Falls, SD"
+B Sat % - Percent Base Saturation,,,,,,,,,,"""AgLab Express - Sioux Falls, SD""","AgLab Express - Sioux Falls, SD"
+Excess Lime,,,,,,,,,,"""AgLab Express - Sioux Falls, SD""","AgLab Express - Sioux Falls, SD"
+Texture Class,,,,,,,,,,"""AgLab Express - Sioux Falls, SD""","AgLab Express - Sioux Falls, SD"
+Mg — Magnesium,,,,,,,,,,"""AgLab Express - Sioux Falls, SD""","AgLab Express - Sioux Falls, SD"
+Mn — Manganese,,,,,,,,,,"""AgLab Express - Sioux Falls, SD""","AgLab Express - Sioux Falls, SD"
+CEC — Cation Exchange Capacity,,,,,,,,,,"""AgLab Express - Sioux Falls, SD""","AgLab Express - Sioux Falls, SD"
+Potassium,,,,,,,,,,"""AgLab Express - Sioux Falls, SD""","AgLab Express - Sioux Falls, SD"
+Buffer pH,,,,,,,,,,"""AgLab Express - Sioux Falls, SD""","AgLab Express - Sioux Falls, SD"
+S — Sulfur (Sulfate),,,,,,,,,,"""AgLab Express - Sioux Falls, SD""","AgLab Express - Sioux Falls, SD"
+pH,,,,,,,,,,"""AgLab Express - Sioux Falls, SD""","AgLab Express - Sioux Falls, SD"
+Zn — Zinc,,,,,,,,,,"""AgLab Express - Sioux Falls, SD""","AgLab Express - Sioux Falls, SD"
+Salts — Electrical Conductivity,,,,,,,,,,"""AgLab Express - Sioux Falls, SD""","AgLab Express - Sioux Falls, SD"
+P — Phosphorus,,,,,,,,,,"""AgLab Express - Sioux Falls, SD""","AgLab Express - Sioux Falls, SD"
+OM — Organic Matter,,,,,,,,,,"""AgLab Express - Sioux Falls, SD""","AgLab Express - Sioux Falls, SD"
+Iron (DTPA),,Iron,DTPA,"""ICP, AAS""",,mg/kg,mg/kg,"mg/kg, ppm, lb/ac, kg/ha",S-FE-DTPA.05,"""AGQ Labs USA - Oxnard, CA""","AGQ Labs USA - Oxnard, CA"
+Manganese (DTPA),,Manganese,DTPA,"""ICP, AAS""",,mg/kg,mg/kg,"mg/kg, ppm, lb/ac, kg/ha",S-MN-DTPA.05,"""AGQ Labs USA - Oxnard, CA""","AGQ Labs USA - Oxnard, CA"
+Zinc (DTPA),,Zinc,DTPA,"""ICP, AAS""",,mg/kg,mg/kg,"mg/kg, ppm, lb/ac, kg/ha",S-ZN-DTPA.05,"""AGQ Labs USA - Oxnard, CA""","AGQ Labs USA - Oxnard, CA"
+Copper (DTPA),,Copper,DTPA,"""ICP, AAS""",,mg/kg,mg/kg,"mg/kg, ppm, lb/ac, kg/ha",S-CU-DTPA.05,"""AGQ Labs USA - Oxnard, CA""","AGQ Labs USA - Oxnard, CA"
+Boron,,,,,,,,,,"""AGQ Labs USA - Oxnard, CA""","AGQ Labs USA - Oxnard, CA"
+Texture Classification,,,,,,,,,,"""AGQ Labs USA - Oxnard, CA""","AGQ Labs USA - Oxnard, CA"
+"Microelements (B, Zn, Cu, Mn)",,,,,,,,,,"""AGQ Labs USA - Oxnard, CA""","AGQ Labs USA - Oxnard, CA"
+Exchangeable Calcium,,,,,,,,,,"""AGQ Labs USA - Oxnard, CA""","AGQ Labs USA - Oxnard, CA"
+Available Calcium,,,,,,,,,,"""AGQ Labs USA - Oxnard, CA""","AGQ Labs USA - Oxnard, CA"
+Exchangeable Magnesium,,,,,,,,,,"""AGQ Labs USA - Oxnard, CA""","AGQ Labs USA - Oxnard, CA"
+Available Magnesium,,,,,,,,,,"""AGQ Labs USA - Oxnard, CA""","AGQ Labs USA - Oxnard, CA"
+Exchangeable Potassium,,,,,,,,,,"""AGQ Labs USA - Oxnard, CA""","AGQ Labs USA - Oxnard, CA"
+Sand Tests,,,,,,,,,,"""AGQ Labs USA - Oxnard, CA""","AGQ Labs USA - Oxnard, CA"
+Lime Tests,,,,,,,,,,"""AGQ Labs USA - Oxnard, CA""","AGQ Labs USA - Oxnard, CA"
+Clay Tests,,,,,,,,,,"""AGQ Labs USA - Oxnard, CA""","AGQ Labs USA - Oxnard, CA"
+Texture,,,,,,,,,,"""AGQ Labs USA - Oxnard, CA""","AGQ Labs USA - Oxnard, CA"
+Available K,,,,,,,,,,"""AGQ Labs USA - Oxnard, CA""","AGQ Labs USA - Oxnard, CA"
+Available Na,,,,,,,,,,"""AGQ Labs USA - Oxnard, CA""","AGQ Labs USA - Oxnard, CA"
+pH (1:2.5 Extract),,pH,1:2.5 (Soil:Water),H+ ISE,,standard units,,"standard units, s.u., none",S-PH-1:2.5.02.07,"""AGQ Labs USA - Oxnard, CA""","AGQ Labs USA - Oxnard, CA"
+Exchangeable Na,,,,,,,,,,"""AGQ Labs USA - Oxnard, CA""","AGQ Labs USA - Oxnard, CA"
+Total Nitrogen (Dumas),,,,,,,,,,"""AGQ Labs USA - Oxnard, CA""","AGQ Labs USA - Oxnard, CA"
+Exchangeable Aluminum,,,,,,,,,,"""AGQ Labs USA - Oxnard, CA""","AGQ Labs USA - Oxnard, CA"
+KCl Exchangeable Acidity,,,,,,,,,,"""AGQ Labs USA - Oxnard, CA""","AGQ Labs USA - Oxnard, CA"
+Cation Exchange Capacity (CEC) - statistical,,,,,,,,,,"""AGQ Labs USA - Oxnard, CA""","AGQ Labs USA - Oxnard, CA"
+Active Lime,,,,,,,,,,"""AGQ Labs USA - Oxnard, CA""","AGQ Labs USA - Oxnard, CA"
+Ca,,,,,,,,,,"""AGQ Labs USA - Oxnard, CA""","AGQ Labs USA - Oxnard, CA"
+Mg,,,,,,,,,,"""AGQ Labs USA - Oxnard, CA""","AGQ Labs USA - Oxnard, CA"
+K,,,,,,,,,,"""AGQ Labs USA - Oxnard, CA""","AGQ Labs USA - Oxnard, CA"
+pH (2.5),,,,,,,,,,"""AGQ Labs USA - Oxnard, CA""","AGQ Labs USA - Oxnard, CA"
+Total Nitrogen,,,,,,,,,,"""AGQ Labs USA - Oxnard, CA""","AGQ Labs USA - Oxnard, CA"
+"Available Phosphorus (Olsen, Bray (pH 6))",,,,,,,,,,"""AGQ Labs USA - Oxnard, CA""","AGQ Labs USA - Oxnard, CA"
+C/N Ratio,,,,,,,,,,"""AGQ Labs USA - Oxnard, CA""","AGQ Labs USA - Oxnard, CA"
+Electrical Conductivity (1:5),,Electrical Conductivity,EC 1:5 Ratio,Conductivity,,dS/m,dS/m,"dS/m, mmhos/cm, meq/100 g, cmol/kg",S-EC-1:5.03,"""AGQ Labs USA - Oxnard, CA""","AGQ Labs USA - Oxnard, CA"
+Organic Matter,,,,,,,,,,"""AGQ Labs USA - Oxnard, CA""","AGQ Labs USA - Oxnard, CA"
+Soil pH,,,,,,,,,,"""Agri-Labs, Inc. - Auburn, IN""","Agri-Labs, Inc. - Auburn, IN"
+Buffer pH,,,,,,,,,,"""Agri-Labs, Inc. - Auburn, IN""","Agri-Labs, Inc. - Auburn, IN"
+CEC,,,,,,,,,,"""Agri-Labs, Inc. - Auburn, IN""","Agri-Labs, Inc. - Auburn, IN"
+POTASSIUM (K),,,,,,,,,,"""Agri-Labs, Inc. - Auburn, IN""","Agri-Labs, Inc. - Auburn, IN"
+PHOSPHORUS (P1),,,,,,,,,,"""Agri-Labs, Inc. - Auburn, IN""","Agri-Labs, Inc. - Auburn, IN"
+CALCIUM (Ca),,,,,,,,,,"""Agri-Labs, Inc. - Auburn, IN""","Agri-Labs, Inc. - Auburn, IN"
+MAGNESIUM (Mg),,,,,,,,,,"""Agri-Labs, Inc. - Auburn, IN""","Agri-Labs, Inc. - Auburn, IN"
+ZINC (Zn),,,,,,,,,,"""Agri-Labs, Inc. - Auburn, IN""","Agri-Labs, Inc. - Auburn, IN"
+MANGANESE (Mn),,,,,,,,,,"""Agri-Labs, Inc. - Auburn, IN""","Agri-Labs, Inc. - Auburn, IN"
+SULFUR (S),,,,,,,,,,"""Agri-Labs, Inc. - Auburn, IN""","Agri-Labs, Inc. - Auburn, IN"
+BORON (B),,,,,,,,,,"""Agri-Labs, Inc. - Auburn, IN""","Agri-Labs, Inc. - Auburn, IN"
+Organic Matter (OM),,,,,,,,,,"""Agri-Labs, Inc. - Auburn, IN""","Agri-Labs, Inc. - Auburn, IN"
+PSNT (Pre-Sidedress Nitrogen Test),,,,,,,,,,"""Agri-Labs, Inc. - Auburn, IN""","Agri-Labs, Inc. - Auburn, IN"
+Soil pH,,pH,1:1 soil:water ,H+ ISE,,standard units,,"standard units, s.u., none",S-PH-1:1.02.07,"""AgroLab, Inc. - Harrington, DE""","AgroLab, Inc. - Harrington, DE"
+Buffer pH,,,,,,,,,,"""AgroLab, Inc. - Harrington, DE""","AgroLab, Inc. - Harrington, DE"
+Organic matter (%),,,,,,,,,,"""AgroLab, Inc. - Harrington, DE""","AgroLab, Inc. - Harrington, DE"
+Cation exchange capacity/sum of the cations (meq/100g),,,,,,,,,,"""AgroLab, Inc. - Harrington, DE""","AgroLab, Inc. - Harrington, DE"
+Phosphorus (ppm P),,,,,,,,,,"""AgroLab, Inc. - Harrington, DE""","AgroLab, Inc. - Harrington, DE"
+Phosphorus Saturation Ratio,,,,,,,,,,"""AgroLab, Inc. - Harrington, DE""","AgroLab, Inc. - Harrington, DE"
+Potassium (ppm K),,,,,,,,,,"""AgroLab, Inc. - Harrington, DE""","AgroLab, Inc. - Harrington, DE"
+Calcium (ppm Ca),,,,,,,,,,"""AgroLab, Inc. - Harrington, DE""","AgroLab, Inc. - Harrington, DE"
+Magnesium (ppm Mg),,,,,,,,,,"""AgroLab, Inc. - Harrington, DE""","AgroLab, Inc. - Harrington, DE"
+Cation base saturations,,,,,,,,,,"""AgroLab, Inc. - Harrington, DE""","AgroLab, Inc. - Harrington, DE"
+Sulfur (ppm SO4-S),,,,,,,,,,"""AgroLab, Inc. - Harrington, DE""","AgroLab, Inc. - Harrington, DE"
+Manganese (ppm Mn),,,,,,,,,,"""AgroLab, Inc. - Harrington, DE""","AgroLab, Inc. - Harrington, DE"
+Zinc (ppm Zn),,,,,,,,,,"""AgroLab, Inc. - Harrington, DE""","AgroLab, Inc. - Harrington, DE"
+ Boron (ppm B),,,,,,,,,,"""AgroLab, Inc. - Harrington, DE""","AgroLab, Inc. - Harrington, DE"
+Copper (ppm Cu),,,,,,,,,,"""AgroLab, Inc. - Harrington, DE""","AgroLab, Inc. - Harrington, DE"
+Iron (ppm Fe),,,,,,,,,,"""AgroLab, Inc. - Harrington, DE""","AgroLab, Inc. - Harrington, DE"
+Sodium (ppm Na),,,,,,,,,,"""AgroLab, Inc. - Harrington, DE""","AgroLab, Inc. - Harrington, DE"
+Aluminum (ppm Al),,,,,,,,,,"""AgroLab, Inc. - Harrington, DE""","AgroLab, Inc. - Harrington, DE"
+Soluble Salts (mmho/cm),,,,,,,,,,"""AgroLab, Inc. - Harrington, DE""","AgroLab, Inc. - Harrington, DE"
+Nitrate (NO3-N),,,,,,,,,,"""AgroLab, Inc. - Harrington, DE""","AgroLab, Inc. - Harrington, DE"
+Ammonium (NH4-N),,,,,,,,,,"""AgroLab, Inc. - Harrington, DE""","AgroLab, Inc. - Harrington, DE"
+% sand,,,,,,,,,,"""AgroLab, Inc. - Harrington, DE""","AgroLab, Inc. - Harrington, DE"
+% silt,,,,,,,,,,"""AgroLab, Inc. - Harrington, DE""","AgroLab, Inc. - Harrington, DE"
+% silt,,,,,,,,,,"""AgroLab, Inc. - Harrington, DE""","AgroLab, Inc. - Harrington, DE"
+USDA soil classification,,USDA Soil Classification,,,,,,,S-USDA-soil.class-OT,"""AgroLab, Inc. - Harrington, DE""","AgroLab, Inc. - Harrington, DE"
+Mehlich III nutrients,,,,,,,,,,"""AgroLab, Inc. - Harrington, DE""","AgroLab, Inc. - Harrington, DE"
+particle size separation % retained,,,,,,,,,,"""AgroLab, Inc. - Harrington, DE""","AgroLab, Inc. - Harrington, DE"
+particle size separation % passing,,,,,,,,,,"""AgroLab, Inc. - Harrington, DE""","AgroLab, Inc. - Harrington, DE"
+Total N,,,,,,,,,,"""AgroLab, Inc. - Harrington, DE""","AgroLab, Inc. - Harrington, DE"
+total P,,,,,,,,,,"""AgroLab, Inc. - Harrington, DE""","AgroLab, Inc. - Harrington, DE"
+Solvita soil health,,,,,,,,,,"""AgroLab, Inc. - Harrington, DE""","AgroLab, Inc. - Harrington, DE"
+Modified Morgan extraction,,,,,,,,,,"""AgroLab, Inc. - Harrington, DE""","AgroLab, Inc. - Harrington, DE"
+water extraction,,,,,,,,,,"""AgroLab, Inc. - Harrington, DE""","AgroLab, Inc. - Harrington, DE"
+dissolved phosphorus,,,,,,,,,,"""AgroLab, Inc. - Harrington, DE""","AgroLab, Inc. - Harrington, DE"
+saturated paste,,,,,,,,,,"""AgroLab, Inc. - Harrington, DE""","AgroLab, Inc. - Harrington, DE"
+pH,,,,,,,,,,"""AgSource - Harris, Lincoln, NE""","AgSource - Harris, Lincoln, NE"
+buffer pH,,,,,,,,,,"""AgSource - Harris, Lincoln, NE""","AgSource - Harris, Lincoln, NE"
+soluble salt,,,,,,,,,,"""AgSource - Harris, Lincoln, NE""","AgSource - Harris, Lincoln, NE"
+excess carbonate,,,,,,,,,,"""AgSource - Harris, Lincoln, NE""","AgSource - Harris, Lincoln, NE"
+organic matter,,,,,,,,,,"""AgSource - Harris, Lincoln, NE""","AgSource - Harris, Lincoln, NE"
+sodium,,,,,,,,,,"""AgSource - Harris, Lincoln, NE""","AgSource - Harris, Lincoln, NE"
+phosphorus,,,,,,,,,,"""AgSource - Harris, Lincoln, NE""","AgSource - Harris, Lincoln, NE"
+potassium,,,,,,,,,,"""AgSource - Harris, Lincoln, NE""","AgSource - Harris, Lincoln, NE"
+magnesium,,,,,,,,,,"""AgSource - Harris, Lincoln, NE""","AgSource - Harris, Lincoln, NE"
+calcium,,,,,,,,,,"""AgSource - Harris, Lincoln, NE""","AgSource - Harris, Lincoln, NE"
+CEC,,,,,,,,,,"""AgSource - Harris, Lincoln, NE""","AgSource - Harris, Lincoln, NE"
+percent base saturation,,,,,,,,,,"""AgSource - Harris, Lincoln, NE""","AgSource - Harris, Lincoln, NE"
+nitrate,,,,,,,,,,"""AgSource - Harris, Lincoln, NE""","AgSource - Harris, Lincoln, NE"
+sulfur,,,,,,,,,,"""AgSource - Harris, Lincoln, NE""","AgSource - Harris, Lincoln, NE"
+zinc,,,,,,,,,,"""AgSource - Harris, Lincoln, NE""","AgSource - Harris, Lincoln, NE"
+manganese,,,,,,,,,,"""AgSource - Harris, Lincoln, NE""","AgSource - Harris, Lincoln, NE"
+copper,,,,,,,,,,"""AgSource - Harris, Lincoln, NE""","AgSource - Harris, Lincoln, NE"
+iron,,,,,,,,,,"""AgSource - Harris, Lincoln, NE""","AgSource - Harris, Lincoln, NE"
+boron,,,,,,,,,,"""AgSource - Harris, Lincoln, NE""","AgSource - Harris, Lincoln, NE"
+Particle Size Analysis,,,,,,,,,,"""AgSource - Harris, Lincoln, NE""","AgSource - Harris, Lincoln, NE"
+Saturated Paste Extract (salinity),,,,,,,,,,"""AgSource - Harris, Lincoln, NE""","AgSource - Harris, Lincoln, NE"
+Soybean Cyst Nematode,,,,,,,,,,"""AgSource - Harris, Lincoln, NE""","AgSource - Harris, Lincoln, NE"
+Late Spring/Pre-Sidedress Nitrate Testing – option to add ammonia,,,,,,,,,,"""AgSource - Harris, Lincoln, NE""","AgSource - Harris, Lincoln, NE"
+"Haney H3A Extraction: : Orthophosphate-P, Phosphorus, Potassium, Calcium, Iron and Aluminum",,,,,,,,,,"""AgSource - Harris, Lincoln, NE""","AgSource - Harris, Lincoln, NE"
+CO2 Respiration,,,,,,,,,,"""AgSource - Harris, Lincoln, NE""","AgSource - Harris, Lincoln, NE"
+C:N Ratio,,,,,,,,,,"""AgSource - Harris, Lincoln, NE""","AgSource - Harris, Lincoln, NE"
+Carbon,,,,,,,,,,"""AgSource - Harris, Lincoln, NE""","AgSource - Harris, Lincoln, NE"
+Total Nitrogen,,,,,,,,,,"""AgSource - Harris, Lincoln, NE""","AgSource - Harris, Lincoln, NE"
+Nitrate-N,,,,,,,,,,"""AgSource - Harris, Lincoln, NE""","AgSource - Harris, Lincoln, NE"
+Ammoniacal-N,,,,,,,,,,"""AgSource - Harris, Lincoln, NE""","AgSource - Harris, Lincoln, NE"
+Orthophosphate-P,,,,,,,,,,"""AgSource - Harris, Lincoln, NE""","AgSource - Harris, Lincoln, NE"
+Water Saturation %,,,,,,,,,,"""AgSource - Harris, Lincoln, NE""","AgSource - Harris, Lincoln, NE"
+NITRATE-NITROGEN,,,,,,,,,,"""AGVISE Laboratories - Benson, MN;""","AGVISE Laboratories - Benson, MN;"
+PHOSPHORUS (BRAY/OLSEN),,,,,,,,,,"""AGVISE Laboratories - Benson, MN;""","AGVISE Laboratories - Benson, MN;"
+POTASSIUM,,,,,,,,,,"""AGVISE Laboratories - Benson, MN;""","AGVISE Laboratories - Benson, MN;"
+SULFATE-SULFUR,,,,,,,,,,"""AGVISE Laboratories - Benson, MN;""","AGVISE Laboratories - Benson, MN;"
+CALCIUM,,,,,,,,,,"""AGVISE Laboratories - Benson, MN;""","AGVISE Laboratories - Benson, MN;"
+MAGNESIUM,,,,,,,,,,"""AGVISE Laboratories - Benson, MN;""","AGVISE Laboratories - Benson, MN;"
+SODIUM,,,,,,,,,,"""AGVISE Laboratories - Benson, MN;""","AGVISE Laboratories - Benson, MN;"
+BORON,,,,,,,,,,"""AGVISE Laboratories - Benson, MN;""","AGVISE Laboratories - Benson, MN;"
+CHLORIDE,,,,,,,,,,"""AGVISE Laboratories - Benson, MN;""","AGVISE Laboratories - Benson, MN;"
+COPPER,,,,,,,,,,"""AGVISE Laboratories - Benson, MN;""","AGVISE Laboratories - Benson, MN;"
+IRON,,,,,,,,,,"""AGVISE Laboratories - Benson, MN;""","AGVISE Laboratories - Benson, MN;"
+MANGANESE,,,,,,,,,,"""AGVISE Laboratories - Benson, MN;""","AGVISE Laboratories - Benson, MN;"
+ZINC,,,,,,,,,,"""AGVISE Laboratories - Benson, MN;""","AGVISE Laboratories - Benson, MN;"
+PH2,,,,,,,,,,"""AGVISE Laboratories - Benson, MN;""","AGVISE Laboratories - Benson, MN;"
+SOLUBLE SALTS (EC),,,,,,,,,,"""AGVISE Laboratories - Benson, MN;""","AGVISE Laboratories - Benson, MN;"
+ORGANIC MATTER,,,,,,,,,,"""AGVISE Laboratories - Benson, MN;""","AGVISE Laboratories - Benson, MN;"
+CARBONATE,,,,,,,,,,"""AGVISE Laboratories - Benson, MN;""","AGVISE Laboratories - Benson, MN;"
+CEC,,,,,,,,,,"""AGVISE Laboratories - Benson, MN;""","AGVISE Laboratories - Benson, MN;"
+BASE SATURATION,,,,,,,,,,"""AGVISE Laboratories - Benson, MN;""","AGVISE Laboratories - Benson, MN;"
+CO2 RESPIRATION,,CO2 Respiration,CO2 Respiration,Solvita 24 Respiration,,%,%,"%, g/kg",S-CO2-RESP.01,"""AGVISE Laboratories - Benson, MN;""","AGVISE Laboratories - Benson, MN;"
+ACTIVE CARBON,,"""Carbon, Active""",KMnO4,Spectrophotometric,,mg/kg,mg/kg,"mg/kg, ppm",S-AC-KMNO4.01,"""AGVISE Laboratories - Benson, MN;""","AGVISE Laboratories - Benson, MN;"
+TOTAL ORGANIC CARBON,,,,,,,,,,"""AGVISE Laboratories - Benson, MN;""","AGVISE Laboratories - Benson, MN;"
+BIOAVAILABLE NITROGEN,,Bioavailable nitrogen,Bicinchoninic Acid Protein Assay,Calculated,,mg/g,mg/g,,S-SP-ACE-OT,"""AGVISE Laboratories - Benson, MN;""","AGVISE Laboratories - Benson, MN;"
+SOIL AGGREGATE STABILITY,,Aggregate Stability,Sieve,Calculated,,,,,S-AS-WAS-OT,"""AGVISE Laboratories - Benson, MN;""","AGVISE Laboratories - Benson, MN;"
+SAND CORRECTION,,,,,,,,,,"""AGVISE Laboratories - Benson, MN;""","AGVISE Laboratories - Benson, MN;"
+pH,,pH,1:2 soil:water ,H+ ISE,,standard units,,"standard units, s.u., none",S-PH-1:2.02.07,BI labs,BI labs
+LOI,,Organic Matter,Loss-on-Ignition ,Gravimetric,,%,%,"%, g/kg",S-SOM-LOI.15,BI labs,BI labs
+Respiration,,CO2 Respiration,CO2 Respiration,Solvita 24 Respiration,,%,%,"%, g/kg",S-CO2-RESP.01,BI labs,BI labs
+Antioxidants,,,,,,,,,,BI labs,BI labs
+Polyphenols,,,,,,,,,,BI labs,BI labs
+Brix,,,,,,,,,,BI labs,BI labs
+Dry weight,,,,,,,,,,BI labs,BI labs
+Ca,,,,,,,,,,BI labs,BI labs
+Cu,,,,,,,,,,BI labs,BI labs
+Fe,,,,,,,,,,BI labs,BI labs
+K,,,,,,,,,,BI labs,BI labs
+Mg,,,,,,,,,,BI labs,BI labs
+Mn,,,,,,,,,,BI labs,BI labs
+P,,,,,,,,,,BI labs,BI labs
+Zn,,,,,,,,,,BI labs,BI labs
+Predicted autoclave-citrate extractable (ACE) protein test,,,,,,,,,,Cornell Soil Health Lab,Cornell Soil Health Lab
+Electrical Conductivity (Soluble Salts),,Electrical Conductivity,EC 1:2 Ratio,Conductivity,,dS/m,dS/m,"dS/m, mmhos/cm, meq/100 g, cmol/kg",S-EC-1:2.03,Cornell Soil Health Lab,Cornell Soil Health Lab
+Laboratory Analysis Autoclave-Citrate Extractable (ACE) protein test,ACE Soil Protein Index,Bioavailable nitrogen,Bicinchoninic Acid Protein Assay,Calculated,,mg/g,mg/g,,S-SP-ACE-OT,Cornell Soil Health Lab,Cornell Soil Health Lab
+Soil Texture,Measured Soil Textural Class,Textural Classification,Sieve and Sedimentation,Texture Autolookup,,USDA Texture Class,,,S-TEXTURE-SS-TA-USDA-OT,Cornell Soil Health Lab,Cornell Soil Health Lab
+Soil Respiration,Soil Respiration,CO2 Respiration,CO2 Respiration,Solvita 24 Respiration,,%,%,"%, g/kg",S-CO2-RESP.01,Cornell Soil Health Lab,Cornell Soil Health Lab
+Predicted available water capacity,Available Water Capacity,,,,,,,,,Cornell Soil Health Lab,Cornell Soil Health Lab
+Soil pH,Soil pH,pH,1:2 soil:water ,H+ ISE,,standard units,,"standard units, s.u., none",S-PH-1:2.02.07,Cornell Soil Health Lab,Cornell Soil Health Lab
+Organic Matter,Organic Matter,Organic Matter,Loss-on-Ignition ,Gravimetric,,%,%,"%, g/kg",S-SOM-LOI.15,Cornell Soil Health Lab,Cornell Soil Health Lab
+Modified Morgan Extractable P,Extractable Phosphorus,P (Mod Morgan),Modified Morgan,ICP,,mg/kg,mg/kg,ppm,S-P-MMOR-OT,Cornell Soil Health Lab,Cornell Soil Health Lab
+Modified Morgan Extractable K,Extractable Potassium,Potassium,Modified Morgan,"""ICP, AAS""",,mg/kg,mg/kg,"mg/kg, ppm, meq/100 g, cmol/kg, lb/ac, kg/ha",S-K-MMOR.05,Cornell Soil Health Lab,Cornell Soil Health Lab
+Modified Morgan Extractable Micronutrients,Minor Elements,,,,,,,,,Cornell Soil Health Lab,Cornell Soil Health Lab
+Wet Aggregate Stability,Aggregate Stability,Aggregate Stability,Sieve,Calculated,,,,,S-AS-WAS-OT,Cornell Soil Health Lab,Cornell Soil Health Lab
+Active Carbon,Active Carbon,"""Carbon, Active""",KMnO4,Spectrophotometric,,mg/kg,mg/kg,"mg/kg, ppm",S-AC-KMNO4.01,Cornell Soil Health Lab,Cornell Soil Health Lab
+Total Carbon,,Total Carbon,Dry Combustion,Gravimetric,,%,%,%,S-TC-COMB.15,Cornell Soil Health Lab,Cornell Soil Health Lab
+Total Nitrogen,,"""Nitrogen, Total""",Combustion Analyzer,Combustion Analyzer,,%,%,"%, g/kg",S-TN.16,Cornell Soil Health Lab,Cornell Soil Health Lab
+Total Carbon:Total Nitrogen,,Total Carbon:Total Nitrogen,Dry Combustion,Calculated,,none,,none,S-TC:TN.19,Cornell Soil Health Lab,Cornell Soil Health Lab
+Surface hardness,Surface Hardness,,,,,,,,,Cornell Soil Health Lab,Cornell Soil Health Lab
+Sub-surface hardness,Subsurface Hardness,,,,,,,,,Cornell Soil Health Lab,Cornell Soil Health Lab
+Soil Texture Sand,,Sand,Sieve,Calculated,,%,%,"%, g/kg",S-SAND-SV.19,Cornell Soil Health Lab,Cornell Soil Health Lab
+Soil Texture Silt,,Silt,Sedimentation,Gravimeteric,,%,%,,S-SILT-ST-OT,Cornell Soil Health Lab,Cornell Soil Health Lab
+Soil Texture Clay,,Clay,Sedimentation,Gravimetric,,%,%,,S-CLAY-ST-OT,Cornell Soil Health Lab,Cornell Soil Health Lab
+CO2 (RESP) 4 day,,"CO2 Respiration, CO2 Respiration, CO2 Respiration","CO2 Respiration, CO2 Respiration, CO2 Respiration","conductivty, gas chromatography, Titration",,"mg/g, mg/g, mg/g","mg/g, mg/g, mg/g",,"S-CO2-RESP-4DAY-C-OT,S-CO2-RESP-4DAY-GC-OT,S-CO2-RESP-4DAY-T-OT",Cornell Soil Health Lab,Cornell Soil Health Lab
+Modified Morgan Extractable Cu,,Cu (Mod Morgan),Modified Morgan,ICP,,mg/kg,mg/kg,ppm,S-Cu-MMOR-OT,Cornell Soil Health Lab,Cornell Soil Health Lab
+Modified Morgan Extractable Fe,,Fe (Mod Morgan),Modified Morgan,ICP,,mg/kg,mg/kg,ppm,S-Fe-MMOR-OT,Cornell Soil Health Lab,Cornell Soil Health Lab
+Modified Morgan Extractable Mg,,Magnesium,Modified Morgan,"""ICP, AAS""",,mg/kg,mg/kg,"mg/kg, ppm, meq/100 g, cmol/kg, lb/ac, kg/ha",S-MG-MMOR.05,Cornell Soil Health Lab,Cornell Soil Health Lab
+Modified Morgan Extractable Mn,,Mn (Mod Morgan),Modified Morgan,ICP,,mg/kg,mg/kg,ppm,S-Mn-MMOR-OT,Cornell Soil Health Lab,Cornell Soil Health Lab
+Moisture,,"Moisture, Moisture","15 Bar Moisture Tension, 0.1 Bar Moisture Tension","Pressure Plate, Pressure Plate",,"%, %","%, %","%, in/ft, in/depth, g/kg","S-15BAR.14,S-MOIST-0.1BMT-PP-OT",Cornell Soil Health Lab,Cornell Soil Health Lab
+Modified Morgan Extractable Zn,,Zn (Mod Morgan),Modified Morgan,ICP,,mg/kg,mg/kg,ppm,S-Zn-MMOR-OT,Cornell Soil Health Lab,Cornell Soil Health Lab
+Modified Morgan Extractable Al,,Al (Mod Morgan),Modified Morgan,ICP,,mg/kg,mg/kg,ppm,S-Al-MMOR-OT,Cornell Soil Health Lab,Cornell Soil Health Lab
+Modified Morgan Extractable Ca,,Calcium,Modified Morgan,"""ICP, AAS""",,mg/kg,mg/kg,"mg/kg, ppm, meq/100 g, cmol/kg, lb/ac, kg/ha",S-CA-MMOR.05,Cornell Soil Health Lab,Cornell Soil Health Lab
+Modified Morgan Extractable S,,Sulfur,Ammonium Acetate,ICP,,mg/kg,mg/kg,"mg/kg, ppm, lb/ac, kg/ha",S-S-NH4AC.05,Cornell Soil Health Lab,Cornell Soil Health Lab
+Modified Morgan Extractable B,,B (Mod Morgan),Modified Morgan,ICP,,mg/kg,mg/kg,ppm,S-B-MMOR-OT,Cornell Soil Health Lab,Cornell Soil Health Lab
+Potential Oxidizable Carbon,,Potential Oxidizable Carbon,permanganate oxidizable carbon ,Spectrophotometric,,mg/kg,mg/kg,"mg/kg, ppm",S-POXC.01.0,Cornell Soil Health Lab,Cornell Soil Health Lab
+Bulk Density,,Bulk Density,Intact Core,Weight,,g/cm3,g/cm3,,S-BD-Core.01-OT,Cornell Soil Health Lab,Cornell Soil Health Lab
+Carbonate,,Carbonate,Acid Reaction,Calcimetry,,,,%,S-CO3-AR-C-OT,Cornell Soil Health Lab,Cornell Soil Health Lab
+Total Exchange Capacity,,Cation Exchange Capacity,Displacement - Ammonium Acetate,ICP-OES,,cmol/kg,cmol/kg,"cmol/kg, meq/100 g",S-CEC-AA.23,Logan Labs,Logan Labs
+% Base saturation Ca,,Base Saturation - Ca,EPA 3050 Digestion Acid Recoverable,Calculated,,%,%,%,S-BS-MG,Logan Labs,Logan Labs
+% Base saturation Mg,,Base Saturation - Mg,EPA 3050 Digestion Acid Recoverable,Calculated,,%,%,%,S-BS-MG.19,Logan Labs,Logan Labs
+% Base saturation K,,Base Saturation - K,EPA 3050 Digestion Acid Recoverable,Calculated,,%,%,%,S-BS-K.19,Logan Labs,Logan Labs
+% Base saturation Na,,Base Saturation - Na,EPA 3050 Digestion Acid Recoverable,Calculated,,%,%,%,S-BS-NA.19,Logan Labs,Logan Labs
+Soluble Salts,,Soluble Salts,5:1 Water Extraction,Calculated,,ppm,[ppm],"ppm, lb/ac, dS/m, mmhos/cm",S-SS.19,Logan Labs,Logan Labs
+Conductivity,,Electrical Conductivity,EC 1:2 Ratio,Conductivity,,dS/m,dS/m,"dS/m, mmhos/cm, meq/100 g, cmol/kg",S-EC-1:2.03,Logan Labs,Logan Labs
+Carbonate,,Carbonate,Saturated Paste,Titration,,meq/L,meq/L,"meq/L, mg/L, ppm",S-CO3-SP.12,Logan Labs,Logan Labs
+Salt Concentration,,,,,,,,,,Logan Labs,Logan Labs
+Sand Fractions,,,,,,,,,,Logan Labs,Logan Labs
+Aluminium,,Aluminum,Mehlich 3 ICP,ICP,,mg/kg,mg/kg,"mg/kg, ppm, meq/100 g, cmol/kg, lb/ac, kg/ha",S-AL-M3.05,Logan Labs,Logan Labs
+Sodium Adsorption Ratio,,Sodium Adsorption Ratio,Saturated Paste,Calculated,,none,,none,S-SAR-SP.00,Logan Labs,Logan Labs
+Chloride,,Chloride,Saturated Paste,ion selective electrode,,meq/L,meq/L,"meq/L, mg/L, ppm, lb/ac, kg/ha",S-CL-SP.02,Logan Labs,Logan Labs
+Bicarbonate,,Bicarbonate,Saturated Paste,Titration,,meq/L,meq/L,"meq/L, mg/L, ppm",Unnamed record,Logan Labs,Logan Labs
+% Sand,,Sand,Sedimentation,Hydrometer Method,,%,%,"%, g/kg",S-SAND-SED.10,Logan Labs,Logan Labs
+% Clay,,Clay,Sedimentation,Hydrometer Method,,%,%,"%, g/kg",S-CLAY-SED.10,Logan Labs,Logan Labs
+% Silt,,Silt,Sedimentation,Hydrometer Method,,%,%,"%, g/kg",S-SILT-SED.10,Logan Labs,Logan Labs
+pH,,pH,1:1 soil:water ,H+ ISE,,standard units,,"standard units, s.u., none",S-PH-1:1.02.07,Logan Labs,Logan Labs
+Organic Matter,,Organic Matter,Loss-on-Ignition ,Gravimetric,,%,%,"%, g/kg",S-SOM-LOI.15,Logan Labs,Logan Labs
+Phosphorous,,Phosphorus,Mehlich 3 ICP,ICP,,mg/kg,mg/kg,"mg/kg, ppm, lb/ac, kg/ha",S-P-M3.04,Logan Labs,Logan Labs
+Manganese,,Manganese,Mehlich 3 ICP,"""ICP, AAS""",,mg/kg,mg/kg,"mg/kg, ppm, lb/ac, kg/ha",S-MN-M3.05,Logan Labs,Logan Labs
+Copper,,Copper,Mehlich 3 ICP,"""ICP, AAS""",,mg/kg,mg/kg,"mg/kg, ppm, lb/ac, kg/ha",S-CU-M3.05,Logan Labs,Logan Labs
+Zinc,,Zinc,Mehlich 3 ICP,"""ICP, AAS""",,mg/kg,mg/kg,"mg/kg, ppm, lb/ac, kg/ha",S-ZN-M3.05,Logan Labs,Logan Labs
+Sulfur,,Sulfur,Mehlich 3 ICP,ICP,,mg/kg,mg/kg,"mg/kg, ppm, lb/ac, kg/ha",S-S-M3.05,Logan Labs,Logan Labs
+Calcium,,Calcium,Mehlich 3 ICP,"""ICP, AAS""",,mg/kg,mg/kg,"mg/kg, ppm, meq/100 g, cmol/kg, lb/ac, kg/ha",S-CA-M3.05,Logan Labs,Logan Labs
+Magnesium,,Magnesium,Mehlich 3 ICP,"""ICP, AAS""",,mg/kg,mg/kg,"mg/kg, ppm, meq/100 g, cmol/kg, lb/ac, kg/ha",S-MG-M3.05,Logan Labs,Logan Labs
+Potassium,,Potassium,Mehlich 3 ICP,"""ICP, AAS""",,mg/kg,mg/kg,"mg/kg, ppm, meq/100 g, cmol/kg, lb/ac, kg/ha",S-K-M3.05,Logan Labs,Logan Labs
+Sodium,,Sodium,Mehlich 3 ICP,"""ICP, AAS""",,mg/kg,mg/kg,"mg/kg, ppm, meq/100 g, cmol/kg, lb/ac, kg/ha",S-NA-M3.05,Logan Labs,Logan Labs
+Boron,,Boron,Mehlich 3 ICP,ICP,,mg/kg,mg/kg,"mg/kg, ppm, lb/ac, kg/ha",S-B-M3.04,Logan Labs,Logan Labs
+Iron,,Iron,Mehlich 3 ICP,"""ICP, AAS""",,mg/kg,mg/kg,"mg/kg, ppm, lb/ac, kg/ha",S-FE-M3.05,Logan Labs,Logan Labs
+Mineralizable N (PMN),,Potential Mineralizable Nitrogen,permanganate mineralizable nitrogen ,Spectrophotometric,,mg/kg,mg/kg,"mg/kg, ppm",S-PMN.01.0,MSU - Rabin's Methods,MSU - Rabin's Methods
+Mineralizable C (PMC),,,,,,,,,,MSU - Rabin's Methods,MSU - Rabin's Methods
+POX-C,,Potential Oxidizable Carbon,permanganate oxidizable carbon ,Spectrophotometric,,mg/kg,mg/kg,"mg/kg, ppm",S-POXC.01.0,MSU - Rabin's Methods,MSU - Rabin's Methods
+Free particulate organic matter (F-POM),,,,,,,,,,MSU - Rabin's Methods,MSU - Rabin's Methods
+Protected POM (P-POM),,,,,,,,,,MSU - Rabin's Methods,MSU - Rabin's Methods
+F-POM N,,,,,,,,,,MSU - Rabin's Methods,MSU - Rabin's Methods
+P-POM N,,,,,,,,,,MSU - Rabin's Methods,MSU - Rabin's Methods
+Inorganic N (nitrate + ammonium),,Ammonium-Nitrogen,2 M KCl,Spectrophotometric,,mg/kg,mg/kg,"mg/kg, ppm, lb/ac, kg/ha",S-NH4N-2KCL.01,MSU - Rabin's Methods,MSU - Rabin's Methods
+pH,,pH,1:1 soil:water ,H+ ISE,,standard units,,"standard units, s.u., none",S-PH-1:1.02.07,MSU - Rabin's Methods,MSU - Rabin's Methods
+Bray-1 P,,Phosphorus,Bray P1 (1:10),Spectrophotometric,,mg/kg,mg/kg,"mg/kg, ppm, lb/ac, kg/ha",S-P-B1-1:10.01.03,MSU - Rabin's Methods,MSU - Rabin's Methods
+K,,Potassium,Mehlich 3 ICP,"""ICP, AAS""",,mg/kg,mg/kg,"mg/kg, ppm, meq/100 g, cmol/kg, lb/ac, kg/ha",S-K-M3.05,MSU - Rabin's Methods,MSU - Rabin's Methods
+Ma,,Magnesium,Mehlich 3 ICP,"""ICP, AAS""",,mg/kg,mg/kg,"mg/kg, ppm, meq/100 g, cmol/kg, lb/ac, kg/ha",S-MG-M3.05,MSU - Rabin's Methods,MSU - Rabin's Methods
+Ca,,Calcium,Mehlich 3 ICP,"""ICP, AAS""",,mg/kg,mg/kg,"mg/kg, ppm, meq/100 g, cmol/kg, lb/ac, kg/ha",S-CA-M3.05,MSU - Rabin's Methods,MSU - Rabin's Methods
+Cation exchange capacity (CEC),,Cation Exchange Capacity,Alcohol Prewash/Ammonium Acetate,Calculated,,cmol/kg,cmol/kg,"cmol/kg, meq/100 g",S-CEC.19,MSU - Rabin's Methods,MSU - Rabin's Methods
+Total N,,"""Nitrogen, Total""",Combustion Analyzer,Combustion Analyzer,,%,%,"%, g/kg",S-TN.16,MSU - Rabin's Methods,MSU - Rabin's Methods
+Soil organic matter (SOM),,Organic Matter,Walkley-Black ,Spectrophotometric,,%,%,"%, g/kg",S-SOM-WB.01.09,MSU - Rabin's Methods,MSU - Rabin's Methods
+Bulk density,,Bulk Density,Core,Weight,,g/cm3,g/cm3,g/cm3,S-BD-Core.00,MSU - Rabin's Methods,MSU - Rabin's Methods
+Sand,,Sand,Sedimentation,Pipette Method,,%,%,"%, g/kg",S-SAND-SED.11,MSU - Rabin's Methods,MSU - Rabin's Methods
+Silt,,Silt,Sedimentation,Pipette Method,,%,%,"%, g/kg",S-SILT-SED.11,MSU - Rabin's Methods,MSU - Rabin's Methods
+Clay,,Clay,Sedimentation,Pipette Method,,%,%,"%, g/kg",S-CLAY-SED.11,MSU - Rabin's Methods,MSU - Rabin's Methods
+,,,,,,,,,,MSU - Rabin's Methods,MSU - Rabin's Methods
+,,Nitrate-Nitrogen,2 M KCl,Spectrophotometric,,mg/kg,mg/kg,"mg/kg, ppm, lb/ac, kg/ha",S-NO3N.2KCL.01,MSU - Rabin's Methods,MSU - Rabin's Methods
+,,Phosphorus,Bray P1 (1:10),Spectrophotometric,,mg/kg,mg/kg,"mg/kg, ppm, lb/ac, kg/ha",S-P-B1-1:10.01.03,MSU - Rabin's Methods,MSU - Rabin's Methods
+(Alfalfa) P,,,,,,,,,,"""Northwood, ND""","Northwood, ND"
+CEC,,,,,,,,,,"""Northwood, ND""","Northwood, ND"
+Total Cu,,,,,,,,,,"""Northwood, ND""","Northwood, ND"
+SO4,,,,,,,,,,"""Northwood, ND""","Northwood, ND"
+Eff,,,,,,,,,,"""Northwood, ND""","Northwood, ND"
+CEC – Cation Exchange Capacity,,,,,,,,,,"""Northwood, ND""","Northwood, ND"
+Total Nitrogen,,,,,,,,,,"""Northwood, ND""","Northwood, ND"
+SMP Buffer pH – Lime Requirement,,,,,,,,,,"""Northwood, ND""","Northwood, ND"
+Soluble Salts,,,,,,,,,,"""Northwood, ND""","Northwood, ND"
+Na – Gypsum Requirement,,,,,,,,,,"""Northwood, ND""","Northwood, ND"
+Soil Texture Analysis,,,,,,,,,,"""Northwood, ND""","Northwood, ND"
+Hydrometer Method,,,,,,,,,,"""Northwood, ND""","Northwood, ND"
+Chloride Analysis,,,,,,,,,,"""Northwood, ND""","Northwood, ND"
+Electrical Conductivity of Saturation Extract,,,,,,,,,,"""Northwood, ND""","Northwood, ND"
+Sodiuim Adsorption Ratio of Saturation Extract (SAR),,,,,,,,,,"""Northwood, ND""","Northwood, ND"
+CaCO3 Equivalency (Calcium Carbonate),,,,,,,,,,"""Northwood, ND""","Northwood, ND"
+Nematode Analysis (with identification),,,,,,,,,,"""Northwood, ND""","Northwood, ND"
+Nematode Analysis (without identification),,,,,,,,,,"""Northwood, ND""","Northwood, ND"
+Soil Saturtion Paste,,,,,,,,,,"""Northwood, ND""","Northwood, ND"
+Mn,,,,,,,,,,"""Northwood, ND""","Northwood, ND"
+Cu,,,,,,,,,,"""Northwood, ND""","Northwood, ND"
+Fe,,,,,,,,,,"""Northwood, ND""","Northwood, ND"
+Ca,,,,,,,,,,"""Northwood, ND""","Northwood, ND"
+Mg,,,,,,,,,,"""Northwood, ND""","Northwood, ND"
+Na,,,,,,,,,,"""Northwood, ND""","Northwood, ND"
+SS,,,,,,,,,,"""Northwood, ND""","Northwood, ND"
+H2O,,,,,,,,,,"""Northwood, ND""","Northwood, ND"
+B,,,,,,,,,,"""Northwood, ND""","Northwood, ND"
+Zn,,,,,,,,,,"""Northwood, ND""","Northwood, ND"
+OM,,,,,,,,,,"""Northwood, ND""","Northwood, ND"
+P,,,,,,,,,,"""Northwood, ND""","Northwood, ND"
+NH4,,,,,,,,,,"""Northwood, ND""","Northwood, ND"
+S,,,,,,,,,,"""Northwood, ND""","Northwood, ND"
+K,,,,,,,,,,"""Northwood, ND""","Northwood, ND"
+pH,,,,,,,,,,"""Northwood, ND""","Northwood, ND"
+NO3,,,,,,,,,,"""Northwood, ND""","Northwood, ND"
+Bulk Density,,,,,,,,,,"""Northwood, ND""","Northwood, ND"
+Coarse Fragments,,,,,,,,,,"""Northwood, ND""","Northwood, ND"
+buffer pH,,,,,,,,,,Ward Labs,Ward Labs
+Sum of cations (CEC),,,,,,,,,,Ward Labs,Ward Labs
+base saturation %,,Base Saturation,EPA 3050 Digestion Acid Recoverable,Calculated,,%,%,"%, cmol",S-BS.19,Ward Labs,Ward Labs
+Phosphorous,,Phosphorus,H3A-1 Extractant,ICP,,mg/kg,mg/kg,"mg/kg, ppm, lb/ac, kg/ha",S-P-H3A1.01.04,Ward Labs,Ward Labs
+sodium,,Sodium,H3A-1 Extractant,ICP,,mg/kg,mg/kg,"mg/kg, ppm, meq/100 g, cmol/kg, lb/ac, kg/ha",S-NA-H3A1.01.04,Ward Labs,Ward Labs
+total bacteria gram (+),,,,,,,,,,Ward Labs,Ward Labs
+total bacteria gram (-),,,,,,,,,,Ward Labs,Ward Labs
+Total fungi ?,,,,,,,,,,Ward Labs,Ward Labs
+Undifferentiated microorganisms,,,,,,,,,,Ward Labs,Ward Labs
+extract - ammonium-nitrogen,,Ammonium-Nitrogen,H3A-1 Extractant,Spectrophotometric,,mg/kg,mg/kg,"mg/kg, ppm, lb/ac, kg/ha",S-NH4-H3A1.01.05,Ward Labs,Ward Labs
+extract - inorganic nitrogen,,"""Nitrogen, Total""",Combustion Analyzer,Combustion Analyzer,,%,%,"%, g/kg",S-TN.16,Ward Labs,Ward Labs
+extract - total phosphorous,,,,,,,,,,Ward Labs,Ward Labs
+extract - inorganic phosphorous,,,,,,,,,,Ward Labs,Ward Labs
+extract - organic phosphorous,,,,,,,,,,Ward Labs,Ward Labs
+Soil Respiration,,CO2 Respiration,CO2 Respiration,Solvita 24 Respiration,,%,%,"%, g/kg",S-CO2-RESP.01,Ward Labs,Ward Labs
+Aluminium,,,,,,,,,,Ward Labs,Ward Labs
+Excess Lime Rating,,,,,,,,,,Ward Labs,Ward Labs
+H2O extract - ammonium-nitrogen ,,Ammonium-Nitrogen,1:1 Water Extraction,Spectrophotometric,,mg/kg,mg/kg,"mg/kg, ppm, lb/ac, kg/ha",S-NH4N-W1:1.01,Ward Labs,Ward Labs
+H2O extract - nitrate-nitrogen,,Nitrate-Nitrogen,1:1 Water Extraction,Cd Red/Spectrophotometric,,meq/L,meq/L,"meq/L, mg/L, ppm, mg/kg, lb/ac, kg/ha",S-NO3-W1:1.01.01,Ward Labs,Ward Labs
+H2O extract - total nitrogen,,"""Nitrogen, Total""",Water Extraction,Spectrophotometric,,ppm,[ppm],ppm,S-TN-W.01,Ward Labs,Ward Labs
+H2O extract - total organic carbon,,"""Organic Carbon, Total""",Combustion Analyzer,Combustion Analyzer,,%,%,"%, g/kg",S-TOC.16,Ward Labs,Ward Labs
+H2O extract - total organic nitrogen,,,,,,,,,,Ward Labs,Ward Labs
+H2O extract - H3A,,,,,,,,,,Ward Labs,Ward Labs
+pH,,pH,1:1 soil:water ,H+ ISE,,standard units,,"standard units, s.u., none",S-PH-1:1.02.07,Ward Labs,Ward Labs
+soluble salts,,Soluble Salts,5:1 Water Extraction,Calculated,,ppm,[ppm],"ppm, lb/ac, dS/m, mmhos/cm",S-SS.19,Ward Labs,Ward Labs
+organic matter,,Organic Matter,Loss-on-Ignition ,Gravimetric,,%,%,"%, g/kg",S-SOM-LOI.15,Ward Labs,Ward Labs
+nitrate-nitrogen,,Nitrate-Nitrogen,H3A-1 Extractant,Spectrophotometric,,mg/kg,mg/kg,"mg/kg, ppm, lb/ac, kg/ha",S-NO3-H3A1.01.05,Ward Labs,Ward Labs
+Potassium,,Potassium,H3A-1 Extractant,ICP,,mg/kg,mg/kg,"mg/kg, ppm, meq/100 g, cmol/kg, lb/ac, kg/ha",S-K-H3A1.01.04,Ward Labs,Ward Labs
+Calcium,,Calcium,Mehlich 3 ICP,"""ICP, AAS""",,mg/kg,mg/kg,"mg/kg, ppm, meq/100 g, cmol/kg, lb/ac, kg/ha",S-CA-M3.05,Ward Labs,Ward Labs
+Magnesium,,Magnesium,H3A-1 Extractant,ICP,,mg/kg,mg/kg,"mg/kg, ppm, meq/100 g, cmol/kg, lb/ac, kg/ha",S-MG-H3A1.01.04,Ward Labs,Ward Labs
+sulfur,,Sulfur,H3A-1 Extractant,ICP,,ppm,[ppm],ppm,S-S-H3A.04,Ward Labs,Ward Labs
+zinc,,Zinc,H3A-1 Extractant,ICP,,mg/kg,mg/kg,"mg/kg, ppm, lb/ac, kg/ha",S-ZN-H3A1.01.04,Ward Labs,Ward Labs
+iron,,Iron,H3A-1 Extractant,ICP,,ppm,[ppm],ppm,S-FE-H3A.04,Ward Labs,Ward Labs
+Manganese,,Manganese,Mehlich 3 ICP,"""ICP, AAS""",,mg/kg,mg/kg,"mg/kg, ppm, lb/ac, kg/ha",S-MN-M3.05,Ward Labs,Ward Labs
+Copper,,Copper,H3A-1 Extractant,ICP,,mg/kg,mg/kg,"mg/kg, ppm, lb/ac, kg/ha",S-CU-H3A1.01.04,Ward Labs,Ward Labs

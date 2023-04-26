@@ -8,11 +8,16 @@ import ModusResult, {
 } from '@oada/types/modus/v1/modus-result.js';
 import { parse as csvParse, supportedFormats, SupportedFormats } from './csv.js';
 import { parseModusResult as xmlParseModusResult } from './xml.js';
+import { convertUnits } from '@modusjs/units';
+import { simpleConvert } from '../../units/dist/index.js';
+import { modusTests } from '@modusjs/industry';
+import type { NutrientResult } from '@modusjs/units';
 
 const error = debug('@modusjs/convert#tojson:error');
 const warn = debug('@modusjs/convert#tojson:error');
 const info = debug('@modusjs/convert#tojson:info');
 const trace = debug('@modusjs/convert#tojson:trace');
+const DEPTHUNITS = 'cm';
 
 export type SupportedFileType = 'xml' | 'csv' | 'xlsx' | 'json' | 'zip';
 export const supportedFileTypes = ['xml', 'csv', 'xlsx', 'json', 'zip'];
@@ -245,4 +250,66 @@ export async function zipParse(file: ZipFile) {
     all_convert_inputs.push(convert_input);
   }
   return toJson(all_convert_inputs);
+}
+
+export function fixModus(modus: ModusResult): ModusResult {
+  //Fix Non-Standard (not specified by modus) Depth Units
+  modus = fixDepthUnits(modus);
+
+  //Fix Non-Standard Nutrient Results (lookup modus id and append everything else)
+  modus = fixNutrientResults(modus);
+  return modus;
+}
+
+export function fixDepthUnits(modus: ModusResult): ModusResult {
+  let evts = (modus.Events || []).map((evt) => {
+    if (evt.EventSamples?.Soil) {
+      evt.EventSamples.Soil.DepthRefs = evt.EventSamples.Soil.DepthRefs?.map((dr) => {
+        const StartingDepth = simpleConvert(dr.StartingDepth!, dr.DepthUnit!, DEPTHUNITS);
+        const EndingDepth = simpleConvert(dr.EndingDepth!, dr.DepthUnit!, DEPTHUNITS);
+        const ColumnDepth = simpleConvert(dr.ColumnDepth!, dr.DepthUnit!, DEPTHUNITS);
+        if (StartingDepth?.status === 'failed' || EndingDepth?.status === 'failed' || ColumnDepth?.status === 'failed') {
+          warn(`Standardizing soil depth units failed. Falling back to input.`);
+          return dr;
+        }
+        return {
+          ...dr,
+          StartingDepth: Math.round(StartingDepth.toVal),
+          EndingDepth: Math.round(EndingDepth.toVal),
+          ColumnDepth: Math.round(ColumnDepth.toVal),
+          DepthUnit: DEPTHUNITS
+        }
+      })
+    }
+    return evt
+  })
+  return { ...modus, Events: evts};
+}
+export function fixNutrientResults(modus: ModusResult): ModusResult {
+  let evts = (modus.Events || []).map((evt) => {
+    let evtSamples = Object.fromEntries(
+      Object.entries(evt.EventSamples || {}).map(([key, value]: [string, any]) => {
+        let samplesKey = `${key}Samples`;
+        if (key === 'Soil') {
+          value[samplesKey] = value[samplesKey].map((sample:any) => ({
+            ...sample,
+            Depths: sample.Depths.map((dep:any) => ({
+              ...dep,
+              NutrientResults: dep.NutrientResults.map((nr: NutrientResult) => {
+                // @ts-expect-error Element should be a part of the selected modusTest...
+                nr.Element = modusTests[nr.ModusTestID as keyof typeof modusTests]?.Element || nr.Element;
+                // Adjust to standard units!
+                return convertUnits(nr)[0];
+              })
+            }))
+          }))
+        }
+        return [key, value]
+      })
+    )
+    return {
+      ...evt, EventSamples: evtSamples
+    }
+  })
+  return { ...modus, Events: evts};
 }

@@ -6,7 +6,7 @@ import { deepdiff } from './util.js';
 import type * as MainLib from '../index.js';
 //@ts-ignore
 import ucum from '@lhncbc/ucum-lhc';
-import { labConfigs } from '@modusjs/industry';
+import * as industry from '@modusjs/industry';
 
 const trace = debug('@modusjs/convert#test-units:trace');
 const info = debug('@modusjs/convert#test-units:info');
@@ -114,14 +114,17 @@ export default async function run(lib: typeof MainLib) {
   if (!(res.Value! > 4.9 && res.Value! < 5)) throw new Error('Conversion of Base Saturation from % to meq failed.');
 
   test('LabConfig units imported from industry data should all work');
-  for (const { analytes } of Object.values(labConfigs)) {
-    // @ts-ignore
-    let ans = Object.values(analytes).filter(v => v!.ValueUnit !== undefined)
-    // @ts-ignore
-    for (const { ValueUnit: unit } of ans) {
-      let alias = lib.aliasToUcum(unit) || unit;
-      let result = utils.validateUnitString(alias, true);
-      if (!result) throw new Error(`Unit ${unit} was unrecognized by units lib`);
+  for (const lab of Object.values(industry.labConfigs)) {
+      // @ts-ignore
+    for (const { analytes } of Object.values(lab)) {
+      // @ts-ignore
+      let ans = Object.values(analytes).filter(v => v!.ValueUnit !== undefined)
+      // @ts-ignore
+      for (const { ValueUnit: unit } of ans) {
+        let alias = lib.aliasToUcum(unit) || unit;
+        let result = utils.validateUnitString(alias, true);
+        if (!result) throw new Error(`Unit ${unit} was unrecognized by units lib`);
+      }
     }
   }
 

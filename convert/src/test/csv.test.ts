@@ -40,22 +40,89 @@ export default async function run(lib: typeof MainLib) {
   test('Various mapped values should be in the correct place');
   const res = results[0] as ModusResult;
   // @ts-expect-error FMISMetaData should exist on Events...
-  if (res.Events![0]!.FMISMetaData.FMISProfile!.Grower !== 'The Grower LLC')
+  if (res.Events[0]?.FMISMetaData.FMISProfile?.Grower !== 'The Grower LLC')
     throw new Error(`GROWER mapped improperly`);
+  //if (res.Events[0]?.FMISMetaData?.ClientAccount?.Company !== 'The Grower LLC')
+  //  throw new Error(`GROWER mapped improperly`);
   // @ts-expect-error FMISMetaData should exist on Events...
-  if (res.Events![0]!.FMISMetaData!.ClientAccount!.Company !== 'The Grower LLC')
-    throw new Error(`GROWER mapped improperly`);
-  // @ts-expect-error FMISMetaData should exist on Events...
-  if (res.Events![0]!.FMISMetaData!.ClientAccount!.AccountNumber !== '11111')
+  if (res.Events[0]?.LabMetaData?.ClientAccount?.AccountNumber !== '11111')
     throw new Error(`CLIENT mapped improperly`);
   // @ts-expect-error FMISMetaData should exist on Events...
-  if (res.Events![0]!.FMISMetaData!.ClientAccount!.Name !== 'Bob Person')
+  if (res.Events[0]?.LabMetaData?.ClientAccount?.Name !== 'Bob Person')
     throw new Error(`PERSON mapped improperly`);
-  if (res.Events![0]!.EventMetaData!.EventDate !== 'test')
+  if (res.Events?.[0]?.EventMetaData?.EventDate !== '2021-05-05')
     throw new Error(`DATESAMPL mapped improperly`);
-  // @ts-expect-error FMISMetaData should exist on Events...
-  if (res.Events![0]!.LabMetaData.LabEventID !== '21-267-003')
+  if (res.Events[0]?.LabMetaData.LabEventID !== '21-267-003')
     throw new Error(`REPORTNUM mapped improperly`);
+
+  const nutrients = {
+    "Nitrogen": {
+      "ValueUnit": "meq/100g",
+      "Value": 3.26
+    },
+    "Phosphorus": {
+      "ValueUnit": "ppm",
+      "Value": 0.21
+    },
+    "Potassium": {
+      "ValueUnit": "ppm",
+      "Value": 1.61
+    },
+    "Magnesium": {
+      "ValueUnit": "ppm",
+      "Value": 0.36
+    },
+    "Calcium": {
+      "ValueUnit": "ppm",
+      "Value": 1.37
+    },
+    "Sodium": {
+      "ValueUnit": "ppm",
+      "Value": 0.01
+    },
+    "Sulfur": {
+      "ValueUnit": "ppm",
+      "Value": 0.22
+    },
+    "Zinc": {
+      "ValueUnit": "ppm",
+      "Value": 22.04
+    },
+    "Manganese": {
+      "ValueUnit": "ppm",
+      "Value": 76.95
+    },
+    "Iron": {
+      "ValueUnit": "ppm",
+      "Value": 91.35
+    },
+    "Copper": {
+      "ValueUnit": "ppm",
+      "Value": 6.81
+    },
+    "Boron": {
+      "ValueUnit": "ppm",
+      "Value": 33.16
+    },
+    "Aluminum": {
+      "ValueUnit": "ppm",
+      "Value": 30.829999999999995
+    },
+    "phosphate": {
+      "ValueUnit": "meq/100g",
+      "Value": 0
+    },
+    "Sulfate-Sulfur": {
+      "ValueUnit": "ppm",
+      "Value": 0
+    }
+  }
+  res.Events[0].EventSamples?.Plant?.PlantSample?.NutrientResults?.forEach(nr => {
+    //@ts-ignore
+    if (nutrients[nr!.Element!].Value !== nr.Value) {
+      throw new Error(`'Wrong value detected for element ${nr.Element}`)
+    }
+  })
 
   /*
   test('Should recognize CSV by headers and apply units.');

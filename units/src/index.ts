@@ -87,6 +87,27 @@ export function convertUnits(
   return output;
 }
 
+export function simpleConvert(inValue: number, inUnits: string, outUnits: string) {
+  //1. Alias units
+  const inU = aliases[inUnits] ?? inUnits;
+  const outU = aliases[outUnits] ?? outUnits;
+
+  //2. Validate units
+  let result = ucum.UcumLhcUtils.getInstance().validateUnitString(inU, true);
+  if (result.status !== 'valid') {
+    warn(`Input units [${inUnits}] are unrecognized: ${result.error ?? result.msg}. No unit conversion can be performed.`);
+    return inValue;
+  }
+  result = ucum.UcumLhcUtils.getInstance().validateUnitString(outU, true);
+  if (result.status !== 'valid') {
+    warn(`Input units [${outUnits}] are unrecognized: ${result.error ?? result.msg}. No unit conversion can be performed.`);
+    return inValue;
+  }
+  //3. Convert units
+  const res = ucum.UcumLhcUtils.getInstance().convertUnitTo(inU, inValue, outU, false);
+  return res;
+}
+
 export function convertBaseSat(
   nutrientResults: NutrientResult[],
   from: NutrientResult,
@@ -159,6 +180,8 @@ export const aliases : Record<string, string | undefined> = {
   'tons/ac': '[ston_av]/[acr_us]',
   'standard unit': undefined,
   's.u.': undefined,
+  'in': '[in_i]',
+  'ft': '[ft_i]',
 
 /* Others from MODUS that are unclear:
   none

@@ -1,0 +1,9 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "gen",
+    "outDir": "dist"
+  },
+  "include": ["gen"],
+  "exclude":["dist"]
+}
