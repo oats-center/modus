@@ -14,10 +14,11 @@ const error = debug('@modusjs/convert#labs-automated:error');
 //   but others are more ambiguous (e.g., "MG") and while we recognize the
 //   element, we shouldn't assume units or ModusTestIds
 //
-export function cobbleLabConfig(headers: string[]) {
+export function cobbleLabConfig(headers: string[], localLabConfigs?: LabConfig[]) {
+  const list = localLabConfigs || Object.values(labConfigs);
   warn(`Attempting to identify header matches individually.`);
   //1. Find modus mappings (non-analytes)
-  let lcMappings = Object.values(labConfigs)
+  let lcMappings = list
     .map(lab => Object.values(lab)
       .map(lc => Object.fromEntries(Object.entries(lc.mappings).map(([k, v]) => (
         [keysToUpperNoSpacesDashesOrUnderscores(k), v]
@@ -53,9 +54,9 @@ export function cobbleLabConfig(headers: string[]) {
 
   //remaining = remaining.filter(h => h !== )
 
-  let lcAnalytes = Object.values(labConfigs)
+  let lcAnalytes = list
     .map(lab => Object.values(lab)
-      .map(lc => Object.fromEntries(Object.entries(lc.analytes).map(([_, v]) => (
+      .map(lc => Object.fromEntries(Object.entries(lc.analytes).map(([_, v]: [unknown, any]) => (
         [keysToUpperNoSpacesDashesOrUnderscores(v.CsvHeader || v.Element), v]
       ))))
     ).flat(1)
@@ -101,12 +102,18 @@ export function getDateColumn(headers: string[]): string {
   }
 }
 
-
-
-
 // Autodetect via headers being a perfect subset of a known lab.
-export function autoDetectLabConfig(headers: string[], sheetname?: string) : LabConfig | undefined {
-  let match = Object.values(labConfigs).map(o => Object.values(o)).flat(1)
+export function autodetectLabConfig({
+  headers,
+  sheetname,
+  labConfigs: localLabConfigs,
+}: {
+  headers: string[],
+  sheetname?: string,
+  labConfigs?: LabConfig[],
+}) : LabConfig | undefined {
+  let match = (localLabConfigs || Object.values(labConfigs).map(o => Object.values(o)).flat(1))
+    .filter(labConfig => labConfig.headers)
     .find(lab => labMatches({lab, headers}));
   if (match) {
     info(`Recognized sheet ${sheetname !== undefined ? `[${sheetname}] ` : '' }as lab: ${match!.name}`);

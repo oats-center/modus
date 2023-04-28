@@ -4,19 +4,21 @@ import oerror from '@overleaf/o-error';
 import { getJsDateFromExcel } from 'excel-date-to-js';
 import dayjs from 'dayjs';
 import type { NutrientResult, Units } from '@modusjs/units';
+import type { InputFile, SupportedFileType } from './json.js';
+import { jsonFilenameFromOriginalFilename, supportedFileTypes, typeFromFilename, zipParse } from './json.js';
 import * as units from '@modusjs/units';
 import ModusResult, {
   assert as assertModusResult,
 } from '@oada/types/modus/v1/modus-result.js';
 import type { LabConfig, LabType } from './labs/index.js';
-import { autoDetectLabConfig, cobbleLabConfig, labConfigsMap, modusKeyToValue, modusKeyToHeader, setMappings } from './labs/index.js';
+import { autodetectLabConfig, cobbleLabConfig, labConfigsMap, modusKeyToValue, modusKeyToHeader, setMappings } from './labs/index.js';
 const error = debug('@modusjs/convert#csv:error');
 const warn = debug('@modusjs/convert#csv:error');
 const info = debug('@modusjs/convert#csv:info');
 const trace = debug('@modusjs/convert#csv:trace');
 
 const BASEPAT = /^Base Saturation - /;
-
+export * as labs from './labs/index.js';
 export const supportedFormats = ['generic'];
 export type SupportedFormats = 'generic';
 
@@ -60,6 +62,8 @@ export function parse({
   base64,
   format,
   lab,
+  labConfigs,
+  allowOverrides= true,
 }: {
   wb?: xlsx.WorkBook;
   str?: string;
@@ -67,6 +71,8 @@ export function parse({
   base64?: string; // base64 string
   format?: 'generic'; // add others here as more become known
   lab?: LabConfig | keyof typeof labConfigsMap.keys;
+  labConfigs?: LabConfig[]; //The set of lab configurations to choose from; defaults to @modusjs/industry, but this allows us to pass in a locally-modified set from the app
+  allowOverrides?: boolean;
 }): ModusResult[] {
   // Make sure we have an actual workbook to work with:
   wb = getWorkbookFromData({ wb, str, arrbuf, base64 })
@@ -75,11 +81,42 @@ export function parse({
 
   switch (format) {
     case 'generic':
-      return parseWorkbook({ wb, lab });
+      return convert({ ...parseWorkbook({wb, lab, labConfigs}), allowOverrides })
     default:
       throw new Error(`format type ${format} not currently supported`);
   }
 }
+
+export function prep({
+  wb,
+  str,
+  arrbuf,
+  base64,
+  format,
+  lab,
+  labConfigs,
+}: {
+  wb?: xlsx.WorkBook;
+  str?: string;
+  arrbuf?: ArrayBuffer;
+  base64?: string; // base64 string
+  format?: 'generic'; // add others here as more become known
+  lab?: LabConfig | keyof typeof labConfigsMap.keys;
+  labConfigs?: LabConfig[];
+}): WorkbookInfo {
+  // Make sure we have an actual workbook to work with:
+  wb = getWorkbookFromData({ wb, str, arrbuf, base64 })
+
+  if (!format) format = 'generic';
+
+  switch (format) {
+    case 'generic':
+      return parseWorkbook({wb, lab, labConfigs});
+    default:
+      throw new Error(`format type ${format} not currently supported`);
+  }
+}
+
 
 // Split the sheet names into the metadata sheets and the data sheets
 export function partitionSheets(wb: xlsx.WorkBook) : {
@@ -147,12 +184,20 @@ type DataSheet = {
   sheetname: string;
 };
 
-export function findAndAutodetectLab(datasheets: DataSheet[], allowImprovise?: boolean) : LabConfig | undefined {
-  const labConfig = datasheets.map(({sheetname, colnames}) => autoDetectLabConfig(colnames, sheetname))
+export function getOrAutodetectLab({
+  datasheets,
+  allowImprovise,
+  labConfigs,
+} : {
+  datasheets: DataSheet[],
+  allowImprovise?: boolean,
+  labConfigs?: LabConfig[],
+}) : LabConfig | undefined {
+  const labConfig = datasheets.map(({sheetname, colnames}) => autodetectLabConfig({headers:colnames, sheetname, labConfigs}))
     .find(sh => sh)
   if (labConfig) info(`Using LabConfig: ${labConfig.name}`);
   if (!allowImprovise) return labConfig;
-  return labConfig || datasheets.map(({colnames}) => cobbleLabConfig(colnames))
+  return labConfig || datasheets.map(({colnames}) => cobbleLabConfig(colnames, labConfigs))
     .find(sh => sh)
 }
 
@@ -191,16 +236,16 @@ function groupRows(rows: any[], datecol: string) {
 function parseWorkbook({
   wb,
   lab,
-  allowOverrides=true,
+  labConfigs,
 }: {
   wb: xlsx.WorkBook,
   lab?: LabConfig | keyof typeof labConfigsMap.keys,
-  allowOverrides?: boolean
-}): ModusResult[] {
+  labConfigs?: LabConfig[],
+}): WorkbookInfo {
   const { metadatasheet, datasheets } = partitionSheets(wb);
 
   const labConfig: LabConfig | undefined = (lab && typeof lab === 'string') ?
-    labConfigsMap.get(lab) : findAndAutodetectLab(datasheets);
+    labConfigsMap.get(lab) : getOrAutodetectLab({datasheets, labConfigs});
   if (!labConfig) warn(`LabConfig was either not supplied or not auto-detected. It may parse if using standardized CSV input...`);
 //  if (!labConfig) throw new Error('Unable to detect or generate lab configuration.')
 
@@ -209,6 +254,27 @@ function parseWorkbook({
   if (metadatasheet) pointMeta = getPointMeta(metadatasheet, labConfig);
 
   trace('datasheets:', datasheets);
+  //return convert({ datasheets, labConfig, pointMeta, allowOverrides })
+  return { datasheets, labConfig, pointMeta }
+}
+
+export type WorkbookInfo = {
+  datasheets: DataSheet[],
+  labConfig?: LabConfig,
+  pointMeta?: Record<string, any>
+}
+
+function convert({
+  datasheets,
+  labConfig,
+  pointMeta,
+  allowOverrides=true,
+}: {
+  datasheets: DataSheet[],
+  labConfig?: LabConfig,
+  pointMeta?: Record<string, any>,
+  allowOverrides?: boolean
+}): ModusResult[] {
   const ret: ModusResult[] = [];
 
   for (const {sheetname, allrows, rows, colnames } of datasheets) {
@@ -389,7 +455,7 @@ function parseWorkbook({
   } // end looping over all the sheets
 
   return ret;
-} // end parseTomKat function
+}
 
 //----------------------------------------------
 // Helpers
@@ -628,7 +694,7 @@ function parseNutrientResults({
       } else {
         return {
           Element: headers?.[key]?.element,
-          ValueUnits: headers?.[key]?.units,
+          ValueUnit: headers?.[key]?.units,
           ModusTestID: headers?.[key]?.modifier,
           CsvHeader: headers?.[key]?.original,
           Value: +row[key],
@@ -959,3 +1025,114 @@ function ensureLabReportId(reports: any[], LabReportID: string, FileDescription:
     return rep.ReportID;
   } else return rep.ReportID;
 }
+
+export async function toLabConfig(
+  files: InputFile[] | InputFile,
+  labConfigs?: LabConfig[]
+): Promise<LabConfigResult[]> {
+  if (!Array.isArray(files)) {
+    files = [files];
+  }
+  let results: LabConfigResult[] = [];
+  for (const file of files) {
+    const format = file.format || 'generic';
+    let original_type = typeFromFilename(file.filename);
+    if (!original_type) {
+      warn('WARNING: unable to determine file type from filename',file.filename,'.  Supported types are:',supportedFileTypes,'.  Skipping file.');
+      continue;
+    }
+
+    if (original_type === 'csv' || original_type === 'xlsx') {
+      //TODO: Implement this against LabConfigs?
+      if (!supportedFormats.find((f) => f === format)) {
+        warn('ERROR: format', format, 'is not supported for file',file.filename,'.  Supported formats are: ',supportedFormats,'.  Skipping file.');
+        continue;
+      }
+    }
+    switch (original_type) {
+      case 'zip':
+        info(`Lab configurations can only be generated from .csv/.xlsx files. Skipping ${file.filename}`)
+        continue;
+        /* //TODO: Should be minor reworking to allow zip, but set aside for now
+        if (!file.arrbuf && !file.base64) {
+          warn('Type of',file.filename,'was',original_type,'but that must be an ArrayBuffer or Base64 encoded string.  Skipping.');
+          continue;
+        }
+        break;
+        */
+      case 'xml':
+        info(`Lab configurations can only be generated from .csv/.xlsx files. Skipping ${file.filename}`)
+        continue;
+      case 'json':
+        info(`Lab configurations can only be generated from .csv/.xlsx files. Skipping ${file.filename}`)
+        continue;
+      case 'csv':
+        break;
+      case 'xlsx':
+        break;
+    }
+    const base = { original_filename: file.filename, original_type };
+    const type = original_type; // just to make things shorter later in json filename determination
+    const filename = file.filename;
+    let output_filename = '';
+    let wbinfo: WorkbookInfo | any | null = null;
+    try {
+      switch (original_type) {
+        /*
+        case 'zip':
+          const zip_modus = await zipParse(file);
+          results = [...results, ...zip_modus];
+          break;
+          */
+        case 'csv':
+        case 'xlsx':
+          let parseargs: any;
+          if (original_type === 'csv') parseargs = { str: file.str, format };
+          else {
+            if (file.arrbuf)
+              parseargs = {
+                arrbuf: file.arrbuf,
+                format,
+              };
+            // checked for at least one of these above
+            else parseargs = { base64: file.base64, format };
+          }
+          const wbinfo = prep({...parseargs, labConfigs});
+//          for (const [index, wbinfo] of all_wbinfo.entries()) {
+          const filename_args: FilenameArgs = { wbinfo, type, filename };
+           // if (all_wbinfo.length > 1) {
+              // multiple things, then use the index
+           //   filename_args.index = index;
+            //}
+          results.push({ ...wbinfo, ...base });
+          //}
+          break;
+      }
+    } catch (e: any) {
+      if (e.errors && e.input && Array.isArray(e.errors)) {
+        // AJV error
+        warn('ERROR: failed to validate file', file.filename);
+        for (const ajv_error of e.errors) {
+          warn('Path', ajv_error.instancePath, ajv_error.message); // '/path/to/item' 'must be an array'
+        }
+      } else {
+        warn('ERROR: failed to read file', file.filename);
+        console.log(e);
+      }
+      continue; // if error, move on to the next file
+    }
+  } // end for loop on filenames
+  return results;
+}
+
+export type LabConfigResult = {
+  original_filename: string;
+  original_type: SupportedFileType;
+  labConfig?: LabConfig;
+};
+export type FilenameArgs = {
+  wbinfo: WorkbookInfo;
+  index?: number;
+  filename: string;
+  type: SupportedFileType;
+};

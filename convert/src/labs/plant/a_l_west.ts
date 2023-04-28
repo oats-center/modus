@@ -111,7 +111,8 @@ const config : LabConfig = {
   analytes,
   headers: [...Object.keys(analytes), ...Object.keys(mappings)],
   examplesKey: 'a_l_west',
-//  type: 'Plant',
+  type: 'Plant',
+/*
   type: (row: any) => {
     switch(row.TYPE) {
       case 4:
@@ -122,6 +123,7 @@ const config : LabConfig = {
         return 'Soil';
     }
   },
+  */
 };
 
 export default config;

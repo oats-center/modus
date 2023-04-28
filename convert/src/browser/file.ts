@@ -1,5 +1,6 @@
 import debug from 'debug';
 import { csv, json } from '../index.js';
+import type { LabConfig } from '../labs/index.js';
 
 // Keep the universal things
 export * from '../file.js';
@@ -53,7 +54,8 @@ export async function fromFile(files: any | any[]) {
 }
 
 export async function fromFileBrowser(
-  files: BrowserInputFile | BrowserInputFile[]
+  files: BrowserInputFile | BrowserInputFile[],
+  labConfigs?: LabConfig[]
 ): Promise<json.ModusJSONConversionResult[]> {
   if (!Array.isArray(files)) {
     files = [files];
@@ -93,7 +95,52 @@ export async function fromFileBrowser(
   );
   // Await all the promises that are reading files, and then filter any nulls (i.e. files skipped)
   const toconvert = await Promise.all(toconvert_promises);
-  return json.toJson(toconvert.filter((f) => !!f) as json.InputFile[]);
+  return json.toJson(toconvert.filter((f) => !!f) as json.InputFile[], labConfigs);
+}
+
+export async function fromFileBrowserPre(
+  files: BrowserInputFile | BrowserInputFile[],
+  labConfigs: LabConfig[],
+): Promise<csv.LabConfigResult[]> {
+  if (!Array.isArray(files)) {
+    files = [files];
+  }
+  const toconvert_promises: Promise<json.InputFile | null>[] = files.map(
+    async (bf) => {
+      try {
+        const type = json.typeFromFilename(bf.file.name);
+        if (!type) {
+          error(
+            'File',
+            bf.file.name,
+            'has unknown type, skipping.  Supported types are:',
+            json.supportedFileTypes
+          );
+          return null;
+        }
+        const ret: json.InputFile = { filename: bf.file.name }; // filename, format if it exists
+        if (bf.format) ret.format = bf.format;
+        switch (type) {
+          case 'xml':
+          case 'csv':
+          case 'json':
+            ret.str = await readFileAsString(bf.file);
+            break;
+          case 'xlsx':
+          case 'zip':
+            ret.arrbuf = await readFileAsArrayBuffer(bf.file);
+            break;
+        }
+        return ret;
+      } catch (e: any) {
+        error('File', bf.file.name, 'failed to read.  Skipping. Error was:', e);
+        return null;
+      }
+    }
+  );
+  // Await all the promises that are reading files, and then filter any nulls (i.e. files skipped)
+  const toconvert = await Promise.all(toconvert_promises);
+  return csv.toLabConfig(toconvert.filter((f) => !!f) as json.InputFile[], labConfigs);
 }
 
 async function readFileAsString(f: File): Promise<string> {

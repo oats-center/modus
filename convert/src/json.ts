@@ -12,6 +12,7 @@ import { convertUnits } from '@modusjs/units';
 import { simpleConvert } from '../../units/dist/index.js';
 import { modusTests } from '@modusjs/industry';
 import type { NutrientResult } from '@modusjs/units';
+import type { LabConfig } from './labs/index.js';
 
 const error = debug('@modusjs/convert#tojson:error');
 const warn = debug('@modusjs/convert#tojson:error');
@@ -43,7 +44,8 @@ export type InputFile = {
 
 // This function will attempt to convert all the input files into an array of Modus JSON files
 export async function toJson(
-  files: InputFile[] | InputFile
+  files: InputFile[] | InputFile,
+  labConfigs?: LabConfig[],
 ): Promise<ModusJSONConversionResult[]> {
   if (!Array.isArray(files)) {
     files = [files];
@@ -124,7 +126,7 @@ export async function toJson(
             // checked for at least one of these above
             else parseargs = { base64: file.base64, format };
           }
-          const all_modus = csvParse(parseargs);
+          const all_modus = csvParse({...parseargs, labConfigs});
           for (const [index, modus] of all_modus.entries()) {
             const filename_args: FilenameArgs = { modus, type, filename };
             if (all_modus.length > 1) {
@@ -155,13 +157,13 @@ export async function toJson(
 
 // If index is defined, it will name the file with the index
 // If type is csv or xlsx, it will try to grab the FileDescription from the report to include the sheetname as part of the filename
-type FilenameArgs = {
+export type FilenameArgs = {
   modus: ModusResult;
   index?: number;
   filename: string;
   type: SupportedFileType;
 };
-function jsonFilenameFromOriginalFilename({
+export function jsonFilenameFromOriginalFilename({
   modus,
   index,
   filename,
@@ -257,7 +259,7 @@ export function fixModus(modus: ModusResult): ModusResult {
   modus = fixDepthUnits(modus);
 
   //Fix Non-Standard Nutrient Results (lookup modus id and append everything else)
-  modus = fixNutrientResults(modus);
+  modus = setModusNRUnits(modus);
   return modus;
 }
 
@@ -285,7 +287,7 @@ export function fixDepthUnits(modus: ModusResult): ModusResult {
   })
   return { ...modus, Events: evts};
 }
-export function fixNutrientResults(modus: ModusResult): ModusResult {
+export function setModusNRUnits(modus: ModusResult, units?: NutrientResult[]): ModusResult {
   let evts = (modus.Events || []).map((evt) => {
     let evtSamples = Object.fromEntries(
       Object.entries(evt.EventSamples || {}).map(([key, value]: [string, any]) => {
@@ -295,12 +297,12 @@ export function fixNutrientResults(modus: ModusResult): ModusResult {
             ...sample,
             Depths: sample.Depths.map((dep:any) => ({
               ...dep,
-              NutrientResults: dep.NutrientResults.map((nr: NutrientResult) => {
+              //Will convert to standard units or else
+              NutrientResults: convertUnits(dep.NutrientResults.map((nr: NutrientResult) => ({
+                ...nr,
                 // @ts-expect-error Element should be a part of the selected modusTest...
-                nr.Element = modusTests[nr.ModusTestID as keyof typeof modusTests]?.Element || nr.Element;
-                // Adjust to standard units!
-                return convertUnits(nr)[0];
-              })
+                Element: modusTests[nr.ModusTestID as keyof typeof modusTests]?.Element || nr.Element,
+              })), units)
             }))
           }))
         }

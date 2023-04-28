@@ -47,7 +47,7 @@ export default async function run(lib: typeof MainLib) {
       const wb = lib.csv.getWorkbookFromData({str: exes[ex]});
       const { datasheets } = lib.csv.partitionSheets(wb);
       test(`Example ${exa.js} should be auto-recognized.`)
-      let labConfig = lib.csv.findAndAutodetectLab(datasheets);
+      let labConfig = lib.csv.getOrAutodetectLab({datasheets});
       if (!labConfig || labConfig.name !== labConf.name) {
         error(`Example ${ex} did not auto-recognize lab config as ${labConf.name}.`);
         error(`LabConfig headers: ${labConf.headers}`);

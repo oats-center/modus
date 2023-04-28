@@ -11,7 +11,13 @@
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
+    "@emotion/react": "^11.10.6",
+    "@emotion/styled": "^11.10.6",
     "@modusjs/convert": "workspace:^",
+    "@modusjs/industry": "workspace:^",
+    "@mui/icons-material": "^5.11.16",
+    "@mui/lab": "^5.0.0-alpha.128",
+    "@mui/material": "^5.12.2",
     "@oada/client": "^4.4.1",
     "debug": "^4.3.4",
     "md5": "^2.3.0",

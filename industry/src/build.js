@@ -89,6 +89,7 @@ function main(rows, mtid_rows) {
       Element: r.Soil_Item,
       ModusTestIDv1: r.modus_test_id_prev,
       ModusTestIDv2: r.modus_test_id,
+      Units: [r.Unit_of_Measurement_Default, r.Unit_of_Measurement_Alt]
     }
   });
   mtid_rows.forEach(r => {

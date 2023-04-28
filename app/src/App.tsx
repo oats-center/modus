@@ -6,12 +6,15 @@ import './App.css';
 import { connect } from '@oada/client';
 import { tree } from './trellisTree';
 import { observer } from 'mobx-react-lite';
+import { Tab, Tabs } from '@mui/material';
+import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { context } from './state';
 import { toModus2QuickHack } from './toModus2'
 // @ts-ignore
 import { file as convertFile, units, ModusResult } from '@modusjs/convert/dist-browser/bundle.mjs';
 import type { json } from '@modusjs/convert';
 import Messages from './Messages';
+import LabConfig from './LabConfig';
 
 //localStorage.debug = '*';
 
@@ -23,7 +26,7 @@ const error = debug('@modusjs/app#App:error');
 const warn = debug('@modusjs/app#App:warn');
 
 export default observer(function App() {
-  const { state, actions } = useContext(context); 
+  const { state, actions } = useContext(context);
 
   async function toTrellis ({ domain, token, results } :
     { domain: string, token: string, results: ModusResult[] }): Promise<void> {
@@ -73,7 +76,7 @@ export default observer(function App() {
         const files = [ ...evt.dataTransfer.files ]; // It is dumb that I have to do this
         const all_file_results = await Promise.all(files.map(async f => {
           try {
-            return await convertFile.fromFileBrowser({ file: f });
+            return await convertFile.fromFileBrowser({ file: f}, Object.values(state.labConfig.list) );
           } catch(e: any) {
             info('Failed to convert file: ', f.name, '.  Error was: ', e);
             return [];
@@ -121,26 +124,51 @@ export default observer(function App() {
 
       <hr />
 
-      <div className="output">
-        <div className="tagline">
-          Drop your soil, nutrient, water or nematode sample lab results here
-          and get back a standard set of Modus JSON files or a standard CSV.
-          <br/><br/>
-        </div>
 
-        <div>
-          Output Format: &nbsp;&nbsp;
-          <select
-            value={state.output}
-            onChange={(evt) => actions.output(evt.target.value as Output)}
-          >
-            <option value="json">Modus JSON</option>
-            <option value="csv">CSV</option>
-            <option value="trellis">Sync to Trellis</option>
-            <option value="modusjson2">Modus JSON v2</option>
-          </select>
+      <TabContext
+        value={state.tab}>
+        <TabList
+        onChange={actions.changeTab}
+        >
+        <Tab value={"1"} label="Convert" />
+        <Tab value={"2"} label="CSV Configuration"/>
+      </TabList>
+      <TabPanel value="2"><LabConfig/></TabPanel>
+      <TabPanel value="1">
+        <div className="output">
+          <Messages />
+          <div className="tagline">
+            Drop your soil, nutrient, water or nematode sample lab results here
+            and get back a standard set of Modus JSON files or a standard CSV.
+            <br/><br/>
+          </div>
+
+          <div>
+            Output Format: &nbsp;&nbsp;
+            <select
+              value={state.output}
+              onChange={(evt) => actions.output(evt.target.value as Output)}
+            >
+              <option value="json">Modus JSON</option>
+              <option value="csv">CSV</option>
+              <option value="trellis">Sync to Trellis</option>
+              <option value="modusjson2">Modus JSON v2</option>
+            </select>
+          </div>
+          {/*<div>
+            Lab Format: &nbsp;&nbsp;
+            <select
+              value={state.labConfig?.selected || 'auto'}
+              onChange={actions.selectLabConfig}
+            >
+              <option value="auto">Autodetect</option>
+              {Object.entries(state.labConfig.list).map(([key, lc]) =>
+                <option value={key}>{key}</option>
+              )}
+            </select>
+          </div>*/}
+
         </div>
-      </div>
 
       {state.output==='trellis' && <div className="oada-connect-container">
         <h4>
@@ -166,8 +194,7 @@ export default observer(function App() {
         &nbsp;
       </div>
       </div>}
-      
-      <Messages />
+
 
       <div className="dropzone-container">
         <div
@@ -187,7 +214,8 @@ export default observer(function App() {
         output to your own Trellis. Your original and
         converted data never leave your computer.
       </div>
-
+      </TabPanel>
+      </TabContext>
 
       <hr />
       <div className="footer">
@@ -204,7 +232,7 @@ export default observer(function App() {
         <div style={{paddingTop: '10px'}}>
           and all participants in the
             <a href="https://farmfoundation.swoogo.com/soilhealthtech">
-              2022 "Fixing the Soil Health Tech Stack" Hackathon.
+               2022 "Fixing the Soil Health Tech Stack" Hackathon.
             </a>
         </div>
       </div>
