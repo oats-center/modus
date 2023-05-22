@@ -38,13 +38,13 @@ import { csv } from '@modusjs/convert';
 // (works for sheets that have the structure outlined below)
 
 // parse as base64:
-let json = parse({ base64: base_64_string, format: 'tomkat' });
+let json = parse({ base64: base_64_string, format: 'generic' });
 // parse as ArrayBuffer (useful when retrieving from Google Drive, for example):
-json = parse({ arrbuf: the_array_buffer, format: 'tomkat' });
+json = parse({ arrbuf: the_array_buffer, format: 'generic' });
 // parse as string (i.e. a CSV):
-json = parse({ str: csv_string, format: 'tomkat' });
+json = parse({ str: csv_string, format: 'generic' });
 // parse from an already-parsed SheetJS workbook (https://www.npmjs.com/package/xlsx)
-json = parse({ wb: parsed_workbook, format: 'tomkat' });
+json = parse({ wb: parsed_workbook, format: 'generic' });
 ```
 
 Because lab result formats are highly irregular, the CSV conversion may require some hand modifications currently to what is directly produced by a lab:
