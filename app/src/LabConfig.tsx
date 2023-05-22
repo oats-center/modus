@@ -85,7 +85,7 @@ const AutoConfigDrop = observer(function AutoConfigDrop() {
       Autodetect a CSV/XLSX file or edit an existing configuration
       <div className="dropzone-container">
         <div
-          className="dropzone"
+          className="dropzone2"
           onDragOver={handleFile({ type: 'drag' })}
           onDrop={handleFile({ type: 'drop' })}
           onDragEnter={handleFile({ type: 'drag', inout: true })}
@@ -158,7 +158,7 @@ const LabConfContent = observer(function LabConfContent() {
           <MenuItem value={'Water'}>Water</MenuItem>
         </ Select>
       </ FormControl>
-      <Typography sx={{margin: '10px'}} variant="h6">Measured Results</Typography>
+      <Typography sx={{margin: '10px'}} variant="h6">Analytes</Typography>
       <Grid container spacing={2}>
         {Object.values(state.labConfig.config.analytes || {})
           .sort(({CsvHeader: a},  {CsvHeader: b}) => (a > b ? 1 : (b > a ? -1 : 0)))

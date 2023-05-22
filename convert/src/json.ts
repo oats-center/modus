@@ -300,8 +300,8 @@ export function setModusNRUnits(modus: ModusResult, units?: NutrientResult[]): M
               //Will convert to standard units or else
               NutrientResults: convertUnits(dep.NutrientResults.map((nr: NutrientResult) => ({
                 ...nr,
-                // @ts-expect-error Element should be a part of the selected modusTest...
                 Element: modusTests[nr.ModusTestID as keyof typeof modusTests]?.Element || nr.Element,
+                ModusTestIDv2: modusTests[nr.ModusTestID as keyof typeof modusTests]?.ModusTestIDv2 || nr.ModusTestIDv2,
               })), units)
             }))
           }))

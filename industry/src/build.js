@@ -88,16 +88,17 @@ function main(rows, mtid_rows) {
     modusTests[r.modus_test_id_prev] = {
       Element: r.Soil_Item,
       ModusTestIDv1: r.modus_test_id_prev,
-      ModusTestIDv2: r.modus_test_id,
+      ModusTestIDv2: r[`﻿modus_test_id`],
       Units: [r.Unit_of_Measurement_Default, r.Unit_of_Measurement_Alt]
     }
   });
   mtid_rows.forEach(r => {
-    if (!r.modus_test_id) return;
-    modusTests[r.modus_test_id] = {
+    if (!r[`﻿modus_test_id`]) return;
+    modusTests[r[`﻿modus_test_id`]] = {
       Element: r.Soil_Item,
       ModusTestIDv1: r.modus_test_id_prev,
-      ModusTestIDv2: r.modus_test_id,
+      ModusTestIDv2: r[`﻿modus_test_id`],
+      Units: [r.Unit_of_Measurement_Default, r.Unit_of_Measurement_Alt]
     }
   });
   return { standardUnits, configs, modusTests }

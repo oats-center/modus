@@ -4,8 +4,8 @@
 
 :root {
   --background: #f4f0e9;
-  --highlight: #fe8529;
-  --highlightTransparent: #fe852930;
+  --highlight2: #fe2929;
+  --highlightTransparent2: #fe292930;
   --secondary: #771d00;
   --text: #1a1a1a;
 }
@@ -58,15 +58,15 @@ div.dropzone-container {
   height: 15vh;
 }
 
-div.dropzone {
+div.dropzone2 {
   width: 100%;
   height: 100%;
-  border: 3px dashed var(--highlight);
+  border: 3px dashed var(--highlight2);
   border-radius: 5px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--highlightTransparent);
+  background-color: var(--highlightTransparent2);
   color: var(--secondary);
 }
 
