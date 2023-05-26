@@ -7,7 +7,7 @@ const warn = debug('@modusjs/industry:warn');
 const info = debug('@modusjs/industry:info');
 const trace = debug('@modusjs/industry:trace');
 
-const LAB_EXPORT= `./Lab_Method-Sam's Export View.csv`;
+const LAB_EXPORT= `./Lab_Method-Sam's Export View2023-05-25.csv`;
 const UNITS_EXPORT= `./Modus_Soil_Test_v2-Sam's Export View.csv`;
 const LABCONFIG = './gen/labConfigs.js';
 const UNITS = './gen/standardUnits.js';
@@ -21,6 +21,7 @@ function main(rows, mtid_rows) {
   const labCounters = {};
 
   for (const row of rows) {
+    /*
     const {
       lab_csv_header,
       Element,
@@ -32,8 +33,25 @@ function main(rows, mtid_rows) {
       Modus_Soil_Test_v1,
       Modus_Soil_Test_v2,
       UCUM_ValueUnit,
-      Lab_Type,
     } = row;
+    */
+
+    const {
+      lab_csv_header,
+      'f-Analyte': Element,
+      'f-Extraction_Method': ExtractionMethod,
+      'f-Measurement_Method': MeasurementMethod,
+      'f-Unit_of_Measurement_Default': ValueUnit,
+      'f-Unit_of_Measurement_Default': AlternativeValueUnit,
+      'f-UCUM_Unit_String_Default': UCUM_ValueUnit,
+      'f-UCUM_Unit_String_Alt': AlternativeUCUM_ValueUnit,
+      'lu-lab_name-r-Lab': lab_name,
+      'r-Modus_Soil_Test_v2': Modus_Soil_Test_v2,
+      'r-Modus_Soil_Test_v1': Modus_Soil_Test_v1,
+    } = row;
+
+
+    let Lab_Type = row.lab_type ?? 'Soil';
 
     if (!lab_name) continue;
     if (!Element) continue;
@@ -104,7 +122,8 @@ function main(rows, mtid_rows) {
   return { standardUnits, configs, modusTests }
 }
 
-// Parse the exported csv
+// Parse the exported csv-----------------------------[ yarn.build ]
+
 async function parseExport(filename) {
   const file = await fs.readFile(filename, 'utf8');
   const wb = xlsx.read(file, { type: 'string'});

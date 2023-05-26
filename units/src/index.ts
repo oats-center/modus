@@ -179,6 +179,7 @@ export const aliases : Record<string, string | undefined> = {
   'in/ft': '[in_i]/[ft_i]',
   'tons/ac': '[ston_av]/[acr_us]',
   'standard unit': undefined,
+  'standard pH unit': undefined,
   's.u.': undefined,
   'in': '[in_i]',
   'ft': '[ft_i]',

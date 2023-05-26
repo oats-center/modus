@@ -1,60 +1,46 @@
-# convert
+# units
 
 ---
 
-Universal library for reading/writing/validating Modus files/resources. Converts between:
-
-- Modus v1 XML -> Modus v1 JSON
-- CSV/XLSX -> Modus v1 JSON
+Universal library for validating and converting Modus result data units.
 
 This library works in the browser and in node.
 
 ### Install
 
 ```bash
-yarn add @modusjs/convert
+yarn add @modusjs/units
 # or
-npm install @modusjs/convert
+npm install @modusjs/units
 ```
 
-### XML -> JSON
+### MODUS Unit conversion
+For converting a batch of MODUS Nutrient Results
+```javascript
+import { convertUnits } from '@modusjs/units';
+```
+
+### Simple Convert
+If you just have something you want to convert
+```javascript
+import { simpleConvert } from '@modusjs/units';
+```
+
+### Validate Units
 
 ```javascript
-import { xml } from '@modusjs/convert';
+import { validateUnits } from '@modusjs/units';
 
-// Just parse as tolerantly as possible, no validation against resulting json schema:
-const json_unvalidated = xml.parse(xml_string_from_somewhere);
-
-// parse and validate
-const json = xml.parseAsModusResult(xml_string_from_somewhere);
 ```
 
-### XLSX/CSV -> JSON
-
+### Base saturation conversion
 ```javascript
-import { csv } from '@modusjs/convert';
+import { convertUnits } from '@modusjs/units';
 
-// Using the tomkat generic xlsx parsing
-// (works for sheets that have the structure outlined below)
-
-// parse as base64:
-let json = parse({ base64: base_64_string, format: 'tomkat' });
-// parse as ArrayBuffer (useful when retrieving from Google Drive, for example):
-json = parse({ arrbuf: the_array_buffer, format: 'tomkat' });
-// parse as string (i.e. a CSV):
-json = parse({ str: csv_string, format: 'tomkat' });
-// parse from an already-parsed SheetJS workbook (https://www.npmjs.com/package/xlsx)
-json = parse({ wb: parsed_workbook, format: 'tomkat' });
 ```
 
-Because lab result formats are highly irregular, the CSV conversion may require some hand modifications currently to what is directly produced by a lab:
-
-1. Make sure the result data headers are on row 1! If not, just drag or cut/paste that row up to the first row.
-2. Add the word `COMMENT` to any column of a row that you want to ignore from parsing. Do this to pretty much any non lab-result rows.
-3. Add the word `UNITS` to any column of a row that contains unit information for the corresponding column header. This will override any unit information used by default for lab result elements.
-4. The lab results require a column containing the word 'date' in some form.
-
-With these simple modifications, most CSV files can be coerced into modus format without too much effort.
+## Types
+-molecularWeights: Conversion between milliequivalents and ppm use `molecularWeights` automatically, but it is exported for your convenience.
 
 ## Development
 

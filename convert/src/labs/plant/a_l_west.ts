@@ -23,27 +23,27 @@ const mappings : LabConfig["mappings"] = {
 
 const analytes : LabConfig["analytes"] = {
   'N': {
-    ValueUnit: 'meq/100g',
+    ValueUnit: '%',
     Element: 'N',
   },
   'P': {
-    ValueUnit: 'ppm',
+    ValueUnit: '%',
     Element: 'Phosphorus',
   },
   'K': {
-    ValueUnit: 'ppm',
+    ValueUnit: '%',
     Element: 'K',
   },
   'MG': {
-    ValueUnit: 'ppm',
+    ValueUnit: '%',
     Element: 'Mg',
   },
   'CA': {
-    ValueUnit: 'ppm',
+    ValueUnit: '%',
     Element: 'Ca',
   },
   'NA': {
-    ValueUnit: 'ppm',
+    ValueUnit: '%',
     Element: 'Na',
   },
   'NO3_N': {
@@ -51,7 +51,7 @@ const analytes : LabConfig["analytes"] = {
     Element: 'NO3-N',
   },
   'S': {
-    ValueUnit: 'ppm',
+    ValueUnit: '%',
     Element: 'S',
   },
   'ZN': {
@@ -75,7 +75,7 @@ const analytes : LabConfig["analytes"] = {
     Element: 'B',
   },
   'CL': {
-    ValueUnit: 'ppm',
+    ValueUnit: '%',
     Element: 'Cl',
   },
   'MO': {

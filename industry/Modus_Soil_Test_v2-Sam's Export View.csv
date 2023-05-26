@@ -1,5 +1,4 @@
 ﻿modus_test_id,modus_test_id_prev,Soil_Item,UCUM Unit String (from Unit_of_Measurement_Default) 2,Extraction_Method,Extraction_Regent_Formulation,Extraction_Ratio,Extraction_Basis,Extraction_Time,Measurement_Method,Aggregation_Method,Unit_of_Measurement_Default,Unit_of_Measurement_Alt,acceptance,status,organization,citation
-not in modus V2,"S-Al-MMOR-OT,S-B-MMOR-OT,S-Fe-MMOR-OT,S-AS-SI-OT,S-CO2-RESP-4DAY-T-OT,S-CO2-RESP-4DAY-GC-OT,S-CO3-AR-C-OT,S-CO2-RESP-4DAY-C-OT,S-EA-EA-PN-S-OT,S-MOIST-0.1BMT-PP-OT,S-TEXTURE-SS-TA-USDA-OT",,,,,,,,,,,,,,,
 L_MODV2_SOIL_ACIDT_002,S-Acidity.19,Acidity,mg/kg,,,,,,Calculation,Measured,mg/kg,,Experimental,DEPRECATED,,
 L_MODV2_SOIL_ASAR_001,S-SARJ-SP.00,adjusted sodium adsorption ratio,,Saturated Paste,"""Soil saturated with DI water, subsequent extraction and retained for analysis""",Saturated paste,m/m,4 hrs,ICP-OES / AAS,Calculation,Ratio,,Official,ACTIVE,USDA,"US Salinity Staff, 1954. L.A Richards (ed.) Diagnosis and improvement of
   saline alkali soils. 160 p.  USDA
