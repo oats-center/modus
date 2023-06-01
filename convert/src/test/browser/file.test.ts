@@ -4,10 +4,10 @@ import { Buffer } from 'buffer/';
 import type * as MainLib from '../../browser/index.js';
 import chalk from 'chalk'; // have to import it this way on browser
 
-import tomkat_json from '@modusjs/examples/dist/tomkat-historic/tomkat_source_data2015_RMN0-10cm_1_json.js';
-import ward_csv from '@modusjs/examples/dist/tomkat-historic/TOKA2021-22A_RMN_Ward_csv.js';
-import tomkat_source_xlsx from '@modusjs/examples/dist/tomkat-historic/tomkat_source_data_xlsx.js';
-import hand_modus_xml from '@modusjs/examples/dist/enyart-east50-a_l_labs/hand-modus_xml.js';
+import tomkat_json from '@modusjs/examples/dist/tomkat-historic/soil/tomkat_source_data2015_RMN0-10cm_1_json.js';
+import ward_csv from '@modusjs/examples/dist/tomkat-historic/soil/TOKA2021-22A_RMN_Ward_csv.js';
+import tomkat_source_xlsx from '@modusjs/examples/dist/tomkat-historic/soil/tomkat_source_data_xlsx.js';
+import hand_modus_xml from '@modusjs/examples/dist/enyart-east50-a_l_labs/soil/hand-modus_xml.js';
 
 const trace = debug('@modusjs/convert#test-browser/file:trace');
 const info = debug('@modusjs/convert#test-browser/file:info');

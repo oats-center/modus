@@ -1,9 +1,9 @@
 import debug from 'debug';
-import type { LabConfig } from '../index.js';
+import type { LocalLabConfig } from '../index.js';
 const warn = debug('@modusjs/convert#labs-tomkat:warn');
 //const error = debug('@modusjs/convert#labs-tomkat:error');
 
-const mappings : LabConfig["mappings"] = {
+const mappings : LocalLabConfig["mappings"] = {
   'Kind Of Sample': undefined, //'EventType',
   'Lab No': 'LabID',
   'Cust No': 'AccountNumber',
@@ -25,7 +25,7 @@ const mappings : LabConfig["mappings"] = {
   'Past Crop': undefined,
 }
 
-let analytes : LabConfig["analytes"] = {
+let analytes : LocalLabConfig["analytes"] = {
   '1:1 Soil pH': {
     Element: 'pH',
     ModusTestID: 'S-PH-1:1.02.07',
@@ -39,12 +39,12 @@ let analytes : LabConfig["analytes"] = {
   '1:1 S Salts': {
     ValueUnit: 'mmho/cm',
     ModusTestID: 'S-SS.19',
-    Element: 'SS',
+    Element: 'Soluble Salts',
   },
   '1:1 S Salts mmho/cm': {
     ValueUnit: 'mmho/cm',
     ModusTestID: 'S-SS.19',
-    Element: 'SS',
+    Element: 'Soluble Salts',
   },
   'Excess Lime': {
     Element: 'Excess-Lime',
@@ -216,7 +216,7 @@ let analytes : LabConfig["analytes"] = {
   },
   'Paste EC mmho/cm': {
     ValueUnit: 'mmho/cm',
-    Element: 'EC',
+    Element: 'Electrical Conductivity',
     ModusTestID: 'S-EC-SP.03', // only paste method
   },
   'Paste HCO3 ppm': {
@@ -871,7 +871,7 @@ analytes = Object.fromEntries(Object.entries(analytes).map(([key, val]) =>
 
 // Make this as generic as possible so as to work on other labs
 const depthInfo = function(row: any) {
-  let obj: LabConfig["depthInfo"] = {};
+  let obj: LocalLabConfig["depthInfo"] = {};
   // if we do this match, it'll allow someone to append units afterward
   // and generically find it and attempt this
   let match = Object.keys(row).find(k => /^Depth/.test(k));
@@ -891,19 +891,14 @@ const depthInfo = function(row: any) {
   return obj;
 }
 
-const units : LabConfig["units"] = Object.fromEntries(
-  Object.entries(analytes).map(([key, val]) => ([key, val?.ValueUnit]))
-);
-
-const config : LabConfig = {
-  name: 'TomKat Ranch Labs',
-  units,
+const config : LocalLabConfig = {
+  name: 'TomKat Ranch',
+  type: 'Soil',
   mappings,
   analytes,
   headers: [...Object.keys(analytes), ...Object.keys(mappings)],
   examplesKey: 'tomkat_historic',
   depthInfo,
-  type: 'Soil',
 };
 
 export default config;

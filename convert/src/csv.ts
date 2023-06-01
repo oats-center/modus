@@ -203,9 +203,9 @@ export function getOrAutodetectLab({
 
 type DateGroupedRows = Record<string, any[]>;
 
-function groupRows(rows: any[], datecol: string) {
+function groupRows(rows: any[], datecol: string | undefined) {
   return rows.reduce((groups: DateGroupedRows, r: any) => {
-    let date = r[datecol!]?.toString();
+    let date = r[datecol!]?.toString() || 'Unknown Date';
     if (date.match(/[0-9]{8}/)) {
       // YYYYMMDD
       date = dayjs(date, 'YYYYMMDD').format('YYYY-MM-DD');
@@ -292,13 +292,9 @@ function convert({
     );
 
     // Determine a "date" column for this dataset
-    // Let some "known" candidates for date column name take precedence over others:
-    let datecol = 'EventDate' in rows[0] ? 'EventDate' : modusKeyToHeader('EventDate', labConfig);
+    let datecol = 'EventDate' in rows[0] ? 'EventDate' : modusKeyToHeader('EventDate', labConfig) ?? colnames.find((name) => name.toUpperCase().match(/DATE/));
     if (!datecol) {
       error('No date column in sheet', sheetname, ', columns are:', colnames);
-      throw new Error(
-        `Could not find a column containing 'date' in the name to use as the date in sheet ${sheetname}.  A date is required.`
-      );
     }
 
     // Loop through all the rows and group them by that date.  This group will
@@ -311,7 +307,7 @@ function convert({
       // Start to build the modus output, this is one "Event"
       //TODO: Soil labtype isn't the best default because its really the only "different" one.
       //      We could also use existence of depth info to determine if its soil.
-      const type : LabType = (typeof labConfig?.type === 'function' ? labConfig?.type(g_rows?.[0]) : labConfig?.type) || modusKeyToValue(g_rows[0], 'EventType', labConfig) || 'Soil';
+      const type : LabType = labConfig?.type || modusKeyToValue(g_rows[0], 'EventType', labConfig) || 'Soil';
       const sampleType = `${type}Samples`;//Should be Sample according to modus
       const output: ModusResult | any = {
         Events: [
@@ -497,7 +493,7 @@ function setNutrientResultUnits({
     const header = Object.values(headers).find(h => h.original === nr.CsvHeader);
     const override = header?.original ? unitOverrides?.[header?.original] : undefined;
     const headerUnit = header?.units;
-    const labConfigUnit = header ? labConfig?.units[header.original] : undefined;
+    const labConfigUnit = header ? labConfig?.units?.[header.original] : undefined;
 
     trace(`Ordered unit prioritization of ${nr.Element}: Override:[${override}] `
       + `> Header:[${headerUnit}] > LabConfig:[${labConfigUnit}]`);

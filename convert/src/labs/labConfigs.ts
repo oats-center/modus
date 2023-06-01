@@ -3,65 +3,77 @@ import debug from 'debug';
 import * as industry from '@modusjs/industry';
 import jp from 'jsonpath';
 
-import { default as a_l_west } from './soil/a_l_west.js';
+import { default as a_l_west_soil } from './soil/a_l_west.js';
+import { default as agrimanagement_soil} from './soil/agrimanagement.js';
+import { default as tomkat_soil} from './soil/tomkat.js';
 import { default as a_l_west_plant } from './plant/a_l_west.js';
-import { default as tomkat} from './soil/tomkat.js';
 
 //const info = debug('@modusjs/convert#labs-automated:info');
 //const trace = debug('@modusjs/convert#labs-automated:trace');
 const warn = debug('@modusjs/convert#labConfigs:warn');
 //const error = debug('@modusjs/convert#labs-automated:error');
 
-export let labConfigs : Record<string, Record<string, LabConfig>> = {
-  [a_l_west.name]: {
-    'Soil': a_l_west,
-    'Plant': a_l_west_plant,
-  },
-  [tomkat.name]: {
-    'Soil': tomkat
-  }
-}
+export let localLabConfigs : LocalLabConfig[] = [
+  a_l_west_soil,
+  a_l_west_plant,
+  tomkat_soil,
+  agrimanagement_soil
+]
 
-// Override labconfigs with industry data.
-const lCs = industry.labConfigs as unknown as Record<string, Record<string, LabConfig>>;
-labConfigs = Object.fromEntries(Object.entries(labConfigs)
-  .map(([k, lab]: [string, Record<string, LabConfig>]) => (
-    [k, Object.fromEntries(Object.entries(lab)
-      .map(([labType, obj]: [string, LabConfig]) => {
-        if (lCs[obj.name]) {
-          obj.analytes = {
-            ...obj.analytes,
-            ...lCs[obj.name]?.[labType]?.analytes,
-          }
-        }
-        return [labType, obj]
+const industryLabConfigs = industry.labConfigs as unknown as Record<string, Record<string, IndustryLabConfig>>;
+export const labConfigs = Object.fromEntries(Object.entries(industryLabConfigs)
+  // Merge the industry config data with local lab configs
+  .map(([labName, lab]) => (
+    [labName, Object.fromEntries(Object.entries(lab)
+      .map(([labType, industryLabConf]) => {
+        const localLabConf = localLabConfigs.find((llc) => llc.name === labName && llc.type === labType);
+        return [labType, composeLabConfig(localLabConf, industryLabConf)]
       })
     )]
   ))
-)
+);
+// Now add in local configs that do not exist in industry list
+localLabConfigs
+  .filter((llc) => !industryLabConfigs[llc.name]?.[llc.type])
+  .forEach(llc => {
+    labConfigs[llc.name] = labConfigs[llc.name] ?? {};
+    labConfigs[llc.name]![llc.type] = composeLabConfig(llc)
+  })
 
-export let allLabConfigs = {
-  ...industry.labConfigs,
-  ...labConfigs,
+function composeLabConfig(a: LocalLabConfig | undefined, b?: IndustryLabConfig): LabConfig {
+  if (!a && !b) throw new Error('At least one of local or industry lab config must be supplied');
+  let combined = {
+    ...b,
+    ...a,
+    // Make sure these keys exist and merge favoring local.
+    mappings: {
+      ...b?.mappings,
+      ...a?.mappings,
+    },
+    analytes: {
+      ...b?.analytes,
+      ...a?.analytes
+    }
+  };
+  // @ts-expect-error name will exist if the code reaches here
+  return {
+    ...combined,
+    units: Object.fromEntries(
+      Object.entries(combined.analytes).map(([k, val]) => ([k, val?.ValueUnit]))
+    ),
+    headers: [
+      ...Object.keys(combined.analytes),
+      ...Object.keys(combined.mappings || {}),
+    ],
+  }
 }
 
-/*
-export const labConfigs: Record<string, LabConfig> = Object.fromEntries(
-  Object.entries(industry.labConfigs).map(([labName, labTypes]) =>
-  )
-
-)};
-*/
-
-/*
-let allConfigs = Object.values(labConfigs).map(o => {
-  let confs = Object.values(o).map(obj => [`${obj.name}-${obj.type}`, obj]);
-  return confs;
-  }).flat(1)
-  */
 export const labConfigsMap = new Map<string, LabConfig>(
-  Object.values(labConfigs).map(o =>
-    Object.values(o).map(obj => [`${obj.name}-${obj.type === undefined ? '' : obj.type}`, obj as LabConfig])
+  Object.values(labConfigs).map(lab =>
+    Object.values(lab).map((labConf, i) => [
+      `${labConf.name}-${labConf.type ?? i}`,
+      labConf
+    ])
   ).flat(1) as Array<[string, LabConfig]>
 )
 
@@ -81,18 +93,35 @@ export type Analyte = {
 export type LabType = 'Soil' | 'Plant'; // | 'Nematode' | 'Water' | 'Residue' others to be added later
 
 export type LabConfig = {
-  units: Units;
   name: string;
-  headers: string[];
+  type: string;//LabType;//| ((row: any) => LabType);
   analytes: Record<string, Analyte>;
-  //Mappings can point to undefined so the config lists all known headers
   mappings: Record<string, keyof typeof toModusJsonPath | undefined | Array<keyof typeof toModusJsonPath>>;
-  //mappings: Record<string, keyof typeof toModusJsonPath | keyof typeof toModusJsonPath[] | undefined>;
-  //examplesKey?: keyof typeof examples;
+  headers: string[];
+  units: Units;
   examplesKey?: string;
   depthInfo?: Depth | ((row: any) => Depth | undefined);
   packageName?: string | ((row: any) => string);
-  type?: LabType | ((row: any) => LabType);
+}
+
+export type LocalLabConfig = {
+  units?: Units;
+  name: string;
+  headers?: string[];
+  analytes?: Record<string, Analyte>;
+  mappings: Record<string, keyof typeof toModusJsonPath | undefined | Array<keyof typeof toModusJsonPath>>;
+  examplesKey?: string;
+  depthInfo?: Depth | ((row: any) => Depth | undefined);
+  packageName?: string | ((row: any) => string);
+  type: string; //LabType; //| ((row: any) => LabType);
+}
+
+export type IndustryLabConfig = {
+  name: string;
+  analytes: Record<string, Analyte>;
+  mappings?: Record<string, keyof typeof toModusJsonPath | undefined | Array<keyof typeof toModusJsonPath>>;
+//  packageName?: string | ((row: any) => string);
+  type: string; //LabType; //| ((row: any) => LabType);
 }
 
 type Depth = {

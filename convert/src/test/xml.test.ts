@@ -4,9 +4,9 @@ import { deepdiff } from './util.js';
 // Only import the type here: use the lib passed to you from node or browser in run()
 import type * as MainLib from '../index.js';
 
-import xml_sample1 from '@modusjs/examples/dist/enyart-east50-a_l_labs/hand-modus_xml.js';
-import json_sample1 from '@modusjs/examples/dist/enyart-east50-a_l_labs/hand-modus_json.js';
-import xml_sample2 from '@modusjs/examples/dist/enyart-east50-a_l_labs/lab-modus_xml.js';
+import xml_sample1 from '@modusjs/examples/dist/enyart-east50-a_l_labs/soil/hand-modus_xml.js';
+import json_sample1 from '@modusjs/examples/dist/enyart-east50-a_l_labs/soil/hand-modus_json.js';
+import xml_sample2 from '@modusjs/examples/dist/enyart-east50-a_l_labs/soil/lab-modus_xml.js';
 
 const trace = debug('@modusjs/convert#test-xml:trace');
 const info = debug('@modusjs/convert#test-xml:info');

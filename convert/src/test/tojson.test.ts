@@ -5,9 +5,9 @@ import { deepdiff } from './util.js';
 // Only import the type here: use the lib passed to you from node or browser in run()
 import type * as MainLib from '../index.js';
 
-import xlsx_sample1 from '@modusjs/examples/dist/tomkat-historic/tomkat_source_data_xlsx.js';
-import xml_sample1 from '@modusjs/examples/dist/enyart-east50-a_l_labs/hand-modus_xml.js';
-import json_sample1 from '@modusjs/examples/dist/enyart-east50-a_l_labs/hand-modus_json.js';
+import xlsx_sample1 from '@modusjs/examples/dist/tomkat-historic/soil/tomkat_source_data_xlsx.js';
+import xml_sample1 from '@modusjs/examples/dist/enyart-east50-a_l_labs/soil/hand-modus_xml.js';
+import json_sample1 from '@modusjs/examples/dist/enyart-east50-a_l_labs/soil/hand-modus_json.js';
 import { all as examples } from '@modusjs/examples/dist';
 
 
@@ -27,16 +27,18 @@ export default async function run(lib: typeof MainLib) {
   });
 
   test('Parsing all the examples with toJson()...');
-  for await (const [lab, list] of Object.entries(examples)) {
-    for await (const example of list) {
-      //let thing = await import(`../../../examples/dist/${example.importpath}.js`)
-      let data = (await import(`../../../examples/dist/${example.path}/${example.js.split('.')[0]}.js`)).default;
-      let exampleType = example.iscsv || example.isjson ? 'str' : 'base64';
-      await lib.json.toJson({
-        [exampleType]: data,
-        format: 'generic',
-        filename: example.filename,
-     })
+  for await (const [lab, types] of Object.entries(examples)) {
+    for await (const [type, list] of Object.entries(types)) {
+      for await (const example of list) {
+        //let thing = await import(`../../../examples/dist/${example.importpath}.js`)
+        let data = (await import(`../../../examples/dist/${example.path}/${example.js.split('.')[0]}.js`)).default;
+        let exampleType = example.iscsv || example.isjson ? 'str' : 'base64';
+        await lib.json.toJson({
+          [exampleType]: data,
+          format: 'generic',
+          filename: example.filename,
+       })
+      }
     }
   }
 

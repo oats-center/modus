@@ -1,6 +1,6 @@
-import type { LabConfig } from '../index.js';
+import type { LocalLabConfig } from '../index.js';
 
-const mappings : LabConfig["mappings"] = {
+const mappings : LocalLabConfig["mappings"] = {
   // ID numbers
   'SAMPLEID': 'SampleNumber',
   'LABNUM': 'SampleContainerID',
@@ -21,7 +21,7 @@ const mappings : LabConfig["mappings"] = {
   'TYPE': undefined,
 }
 
-const analytes : LabConfig["analytes"] = {
+const analytes : LocalLabConfig["analytes"] = {
   'N': {
     ValueUnit: '%',
     Element: 'N',
@@ -100,30 +100,12 @@ const analytes : LabConfig["analytes"] = {
   },
 }
 
-const units = Object.fromEntries(
-  Object.entries(analytes).map(([k, val]) => ([k, val?.ValueUnit]))
-);
-
-const config : LabConfig = {
+const config : LocalLabConfig = {
   name: 'A&L Western Agricultural Labs - Modesto, CA',
-  units,
+  type: 'Plant',
   mappings,
   analytes,
-  headers: [...Object.keys(analytes), ...Object.keys(mappings)],
   examplesKey: 'a_l_west',
-  type: 'Plant',
-/*
-  type: (row: any) => {
-    switch(row.TYPE) {
-      case 4:
-        return 'Plant';
-      case 5:
-        return 'Soil';
-      default:
-        return 'Soil';
-    }
-  },
-  */
 };
 
 export default config;

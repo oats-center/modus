@@ -4,7 +4,7 @@ import chalk from 'chalk';
 import type * as MainLib from '../index.js';
 import type ModusResult from '@oada/types/modus/v1/modus-result.js'
 
-import csv_sample1 from '@modusjs/examples/dist/a_l_west/sample1_csv.js';
+import csv_sample1 from '@modusjs/examples/dist/a_l_west/plant/sample1_csv.js';
 //import xlsx_sample1 from '@modusjs/examples/dist/tomkat-historic/tomkat_source_data_xlsx.js';
 
 const trace = debug('@modusjs/convert#test-csv:trace');

@@ -57,7 +57,11 @@ function main(rows, mtid_rows) {
     if (!Element) continue;
 
     configs[lab_name] = configs[lab_name] || {};
-    configs[lab_name][Lab_Type] = configs[lab_name][Lab_Type] || { analytes: {} };
+    configs[lab_name][Lab_Type] = configs[lab_name][Lab_Type] || {
+      name: lab_name,
+      type: Lab_Type,
+      analytes: {}
+    };
     labCounters[lab_name] = labCounters[lab_name] || {};
     labCounters[lab_name][Element] = labCounters[lab_name][Element] ? labCounters[lab_name][Element]+1 : 1;
 

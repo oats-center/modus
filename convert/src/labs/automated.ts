@@ -1,6 +1,6 @@
 import debug from 'debug';
 import type { LabConfig } from './labConfigs.js';
-import { labConfigs, parseMappingValue, toModusJsonPath } from './labConfigs.js';
+import { labConfigs, labConfigsMap, parseMappingValue, toModusJsonPath } from './labConfigs.js';
 
 const info = debug('@modusjs/convert#labs-automated:info');
 const trace = debug('@modusjs/convert#labs-automated:trace');
@@ -14,21 +14,19 @@ const error = debug('@modusjs/convert#labs-automated:error');
 //   but others are more ambiguous (e.g., "MG") and while we recognize the
 //   element, we shouldn't assume units or ModusTestIds
 //
-export function cobbleLabConfig(headers: string[], localLabConfigs?: LabConfig[]) {
-  const list = localLabConfigs || Object.values(labConfigs);
+export function cobbleLabConfig(headers: string[], userLabConfigs?: LabConfig[]) {
+  const list = userLabConfigs || Array.from(labConfigsMap.values());
   warn(`Attempting to identify header matches individually.`);
   //1. Find modus mappings (non-analytes)
   let lcMappings = list
-    .map(lab => Object.values(lab)
-      .map(lc => Object.fromEntries(Object.entries(lc.mappings).map(([k, v]) => (
-        [keysToUpperNoSpacesDashesOrUnderscores(k), v]
-      ))))
-    ).flat(1)
+    .map(lc => Object.fromEntries(Object.entries(lc.mappings).map(([k, v]) => (
+      [keysToUpperNoSpacesDashesOrUnderscores(k), v]
+    ))))
   let mappings: LabConfig['mappings'] = {};
   headers.forEach((h) => {
     //Find potential matches
     const copy = keysToUpperNoSpacesDashesOrUnderscores(h);
-    let lcMatch = lcMappings.find(lc => lc?.[copy])
+    let lcMatch = lcMappings.find(lc => lc[copy])
     if (lcMatch !== undefined) mappings![h] = lcMatch[h]!;
   })
   let remaining = headers.filter(h => !mappings[h]);
@@ -55,11 +53,9 @@ export function cobbleLabConfig(headers: string[], localLabConfigs?: LabConfig[]
   //remaining = remaining.filter(h => h !== )
 
   let lcAnalytes = list
-    .map(lab => Object.values(lab)
-      .map(lc => Object.fromEntries(Object.entries(lc.analytes).map(([_, v]: [unknown, any]) => (
-        [keysToUpperNoSpacesDashesOrUnderscores(v.CsvHeader || v.Element), v]
-      ))))
-    ).flat(1)
+    .map(lc => Object.fromEntries(Object.entries(lc.analytes).map(([_, v]) => (
+      [keysToUpperNoSpacesDashesOrUnderscores(v.CsvHeader || v.Element), v]
+    )))).flat(1)
   let analytes: LabConfig['analytes'] = {};
   remaining.forEach((h) => {
     //Find potential matches
@@ -73,14 +69,14 @@ export function cobbleLabConfig(headers: string[], localLabConfigs?: LabConfig[]
     Object.entries(analytes).map(([key, val]) => ([key, val?.ValueUnit]))
   );
 
-
   if (remaining.length > 0) trace(`Remaining unrecognized headers:`, remaining)
 
   return {
     units,
     analytes,
     headers,
-    name: 'automated',
+    name: 'Automated',
+    type: 'Automated',
     mappings,
   };
 }
@@ -106,15 +102,15 @@ export function getDateColumn(headers: string[]): string {
 export function autodetectLabConfig({
   headers,
   sheetname,
-  labConfigs: localLabConfigs,
+  labConfigs: userLabConfigs,
 }: {
   headers: string[],
   sheetname?: string,
   labConfigs?: LabConfig[],
 }) : LabConfig | undefined {
-  let match = (localLabConfigs || Object.values(labConfigs).map(o => Object.values(o)).flat(1))
-    .filter(labConfig => labConfig.headers)
-    .find(lab => labMatches({lab, headers}));
+  let match = ((
+    userLabConfigs || Array.from(labConfigsMap.values())
+  ) as LabConfig[]).find(labMatches);
   if (match) {
     info(`Recognized sheet ${sheetname !== undefined ? `[${sheetname}] ` : '' }as lab: ${match!.name}`);
     return match;
@@ -124,14 +120,8 @@ export function autodetectLabConfig({
   }
 }
 
-function labMatches({
-  lab,
-  headers,
-} : {
-  lab: LabConfig
-  headers: string[],
-}) : boolean {
-  return headers.every((header: string) => {
+function labMatches(lab: LabConfig) : boolean {
+  return lab.headers.every((header: string) => {
     if (lab.headers.indexOf(header) <= -1)
       trace(`Header string "${header}" not in ${lab.name} LabConfig`);
     return lab.headers.indexOf(header) > -1

@@ -1,7 +1,7 @@
 import debug from 'debug';
 import chalk from 'chalk';
 // Only import the type here: use the lib passed to you from node or browser in run()
-import type * as MainLib from '../index.js';
+import * as MainLib from '../index.js';
 
 //import tomkat from '@modusjs/examples/dist/tomkat-historic/tomkat_source_data2015_RMN0-10cm_1_json.js';
 import { labConfigsMap } from '../labs/index.js';
@@ -16,10 +16,10 @@ const error = debug('@modusjs/convert#test-labConfigs:error');
 const { green } = chalk;
 const test = (msg: string) => info(green(msg));
 
-const SKIPS = [{
+const SKIPS : any[] = []; /*{
   path: 'a_l_west', //its a tissue sample...
   filename: 'sample1.csv',
-}]
+}]*/
 
 export default async function run(lib: typeof MainLib) {
   test('Testing LabConfigs');
@@ -35,11 +35,11 @@ export default async function run(lib: typeof MainLib) {
 
     // @ts-ignore
     let exes = labConf.examplesKey ? examples[labConf.examplesKey] : undefined;
-    const examps = !exes?.all ? [] : exes?.all
+    const examps = (exes?.[labConf.type]?.all ?? [])
       .filter((obj: any) => obj.iscsv || obj.isxslx)
-    test(`All examples for LabConfig [${labConf.name}] should pass some tests:`)
+    test(`All examples for LabConfig [${labConf.name}-${labConf.type}] should pass some tests:`)
     for (const exa of examps) {
-      if (SKIPS.some(v => v.path ===  exa.path && v.filename === exa.filename)) {
+      if (SKIPS.find(v => v.path ===  exa.path && v.filename === exa.filename)) {
         info(`Skipping example ${exa.filename} of lab ${exa.path}`);
         continue;
       }
@@ -63,3 +63,4 @@ export default async function run(lib: typeof MainLib) {
     }
   }
 }
+run(MainLib);
