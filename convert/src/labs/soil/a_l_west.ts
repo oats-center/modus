@@ -13,7 +13,7 @@ const mappings : LocalLabConfig["mappings"] = {
   'DATESUB': 'EventDate',
   'CLIENT': 'AccountNumber',
   'GROWER': 'Grower',
-  'PERSON': 'Name',
+  'PERSON': 'AccountName',
 
   // I don't think these map to anything in modus:
   'TIMESUB': undefined,

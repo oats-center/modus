@@ -26,9 +26,8 @@ export type State = {
 
 // Get LabConfigs from LocalStorage
 
-//console.log(labConfigs, csv.labs.allLabConfigs);
 const list = Object.fromEntries(
-  Object.entries(csv.labs.allLabConfigs).map(([labName, labTypes]) =>
+  Object.entries(csv.labs.labConfigs).map(([labName, labTypes]) =>
     Object.entries(labTypes).map(([type, conf]) =>
       ([`${labName} - ${type === 'undefined' ? 'Soil' : type}`, conf])
     )

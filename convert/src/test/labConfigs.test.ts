@@ -63,4 +63,4 @@ export default async function run(lib: typeof MainLib) {
     }
   }
 }
-run(MainLib);
+run(MainLib) ;

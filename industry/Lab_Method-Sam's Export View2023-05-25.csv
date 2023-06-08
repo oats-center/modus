@@ -108,8 +108,8 @@ C:N ratio,Soil,,,,C:N Ratio,C:N Ratio,,,,,none,none,,,,,,,,,Need more info from 
 Ca,Soil,CA,S-CA-NH4AC.05,L_MODV2_SOIL_CA_003,Calcium,Calcium,,Ammonium Acetate,,ICP-OES / AAS,ppm,ppm,,ppm,mg/kg,mg/kg,,[ppm],S-CA-NH4AC.05,,,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA",S-CA-NH4AC.05,L_MODV2_SOIL_CA_003,,L_MODV2_SOIL_CA_003,
 CA_PCT,Soil,CA_PCT,S-BS-CA.19,L_MODV2_SOIL_MGBS_001,Base Saturation - Mg,Base Saturation - Mg,Calculation,Calculation,ICP-OES / AAS,ICP-OES / AAS,%,%,,%,%,%,,%,S-BS-MG.19,,,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA",S-BS-CA.19,L_MODV2_SOIL_MGBS_001,,L_MODV2_SOIL_CABS_001,
 CA_SAT,Soil,CA_SAT,S-BS-CA.19,L_MODV2_SOIL_MGBS_001,Base Saturation - Mg,Base Saturation - Mg,Calculation,Calculation,ICP-OES / AAS,ICP-OES / AAS,meq/100 g,meq/100 g,,%,%,%,,%,S-BS-MG.19,,,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA",S-BS-CA.19,L_MODV2_SOIL_MGBS_001,,L_MODV2_SOIL_CABS_001,
-CEC,Soil,CEC,,,Cation Exchange Capacity,Cation Exchange Capacity,,,,,meq/100 g,meq/100 g,,,,,,,,"S-CEC.19 
-//or S-CEC-NH4N.05 
+CEC,Soil,CEC,,,Cation Exchange Capacity,Cation Exchange Capacity,,,,,meq/100 g,meq/100 g,,,,,,,,"S-CEC.19
+//or S-CEC-NH4N.05
 //or S-CEC-AA.23",Need more info from lab,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA",,,,,
 Chlorine,Soil,CL,S-CL-SP.01,L_MODV2_SOIL_CL_013,Chloride,Chloride,,Saturated Paste,,Spectrophotometric,ppm,ppm,,"mg/L, meq/L, ppm, lb/ac, kg/ha",mg/L,mg/L,,"mg/L, meq/L, [ppm], [lb_av]/[acr_us], kg/har",S-CL-SP.01,,,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA",S-CL-SP.01,L_MODV2_SOIL_CL_013,,L_MODV2_SOIL_CL_013,
 CO3,Soil,CO3,S-CO3-SP.12,L_MODV2_SOIL_CO3_004,Carbonate,Carbonate,,Saturated Paste,,Titration,,meq/L,,"meq/L, mg/L, ppm",meq/L,meq/L,,"meq/L, mg/L, [ppm]",S-CO3-SP.12,,,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA",S-CO3-SP.12,L_MODV2_SOIL_CO3_004,,L_MODV2_SOIL_CO3_004,
@@ -186,7 +186,7 @@ Mo,Soil,,,,,,,,,,,,,,,,,,,,Need more info from lab,"""Ag Test LLC - Kittitas, WA
 Moisture,Soil,,,,,,,,,,,,,,,,,,,Mass percent of a soil that is water when sampled,Need more info from lab,"""Ag Test LLC - Kittitas, WA""","Ag Test LLC - Kittitas, WA",,,,,
 Na,Soil,,,,,,,,,,,,,,,,,,,,Need more info from lab,"""Ag Test LLC - Kittitas, WA""","Ag Test LLC - Kittitas, WA",,,,,
 NH4-N,Soil,,,,,,,,,,,,,,,,,,,"Method:
-ppm Ammonium(NH4-N) 
+ppm Ammonium(NH4-N)
 2N KCl",Not in MODUS,"""Ag Test LLC - Kittitas, WA""","Ag Test LLC - Kittitas, WA",,,,,
 NO3-N,Soil,,,,,,,,,,,,,,,,,,,,Need more info from lab,"""Ag Test LLC - Kittitas, WA""","Ag Test LLC - Kittitas, WA",,,,,
 OM (Organic Matter),Soil,,S-SOM-LOI.15,L_MODV2_SOIL_OM_004,Organic Matter,Organic Matter,Loss on Ignition (LOI),Loss on Ignition (LOI),Gravimetric,Gravimetric,%,%,,"%, g/kg",%,%,,"%, g/kg",S-SOM-LOI.15,,Need more info from lab,"""Ag Test LLC - Kittitas, WA""","Ag Test LLC - Kittitas, WA",S-SOM-LOI.15,L_MODV2_SOIL_OM_004,,L_MODV2_SOIL_OM_004,
@@ -313,7 +313,7 @@ NO32,Soil,NO32,,,nitrate,nitrate,,,,,,,,,,,,,,,,Agrimanagement Inc.,Agrimanageme
 Olsen P,Soil,Olsen P,,,Phosphorus,Phosphorus,,,,,,,,,,,,,,,,Agrimanagement Inc.,Agrimanagement Inc.,,,,,
 OM,Soil,OM,,,Organic Matter,Organic Matter,,,,,,,,,,,,,,,,Agrimanagement Inc.,Agrimanagement Inc.,,,,,
 OTHER P,Soil,OTHER P,,,,,,,,,,,,,,,,,,,,Agrimanagement Inc.,Agrimanagement Inc.,,,,,
-P2O5 REC,Soil,P2O5 REC,,,phosphate,phosphate,,,,,,,,,,,,,,,,Agrimanagement Inc.,Agrimanagement Inc.,,,,,
+P2O5 REC,Soil,P2O5 REC,,,,,,,,,,,,,,,,,,,,Agrimanagement Inc.,Agrimanagement Inc.,,,,,
 PERCA,Soil,PERCA,,,Base Saturation - Ca,Base Saturation - Ca,,,,,,,,,,,,,,,,Agrimanagement Inc.,Agrimanagement Inc.,,,,,
 PERH,Soil,PERH,,,Base Saturation - H,Base Saturation - H,,,,,,,,,,,,,,,,Agrimanagement Inc.,Agrimanagement Inc.,,,,,
 PERK,Soil,PERK,,,Base Saturation - K,Base Saturation - K,,,,,,,,,,,,,,,,Agrimanagement Inc.,Agrimanagement Inc.,,,,,

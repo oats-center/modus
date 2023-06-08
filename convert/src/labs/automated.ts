@@ -110,7 +110,7 @@ export function autodetectLabConfig({
 }) : LabConfig | undefined {
   let match = ((
     userLabConfigs || Array.from(labConfigsMap.values())
-  ) as LabConfig[]).find(labMatches);
+  ) as LabConfig[]).find((labConfig) => labMatches(headers, labConfig));
   if (match) {
     info(`Recognized sheet ${sheetname !== undefined ? `[${sheetname}] ` : '' }as lab: ${match!.name}`);
     return match;
@@ -120,8 +120,8 @@ export function autodetectLabConfig({
   }
 }
 
-function labMatches(lab: LabConfig) : boolean {
-  return lab.headers.every((header: string) => {
+function labMatches(headers: string[], lab: LabConfig) : boolean {
+  return headers.every((header: string) => {
     if (lab.headers.indexOf(header) <= -1)
       trace(`Header string "${header}" not in ${lab.name} LabConfig`);
     return lab.headers.indexOf(header) > -1
@@ -140,18 +140,21 @@ export function keysToUpperNoSpacesDashesOrUnderscores(obj: any) {
   return ret;
 }
 
-export function modusKeyToHeader(item: string, labConfig?: LabConfig) : string | undefined {
+export function modusKeyToHeader(item: string, colnames: string[], labConfig?: LabConfig) : string | undefined {
   if (!labConfig) return undefined;
-  let match = Object.entries(labConfig.mappings).find(([_, v]) =>
-    Array.isArray(v) ? v.some(k => k === item) : v === item
+  let match = Object.entries(labConfig.mappings).find(([k, v]) =>
+    (Array.isArray(v) ? v.some(k => k === item) : v === item) &&
+    colnames.includes(k)
   );
   return match?.[0];
 }
 
 // Get a header from the labconfig
 export function modusKeyToValue(row: any, item: string, labConfig?: LabConfig) {
-  if (item in row) return row[item];
-  let match = modusKeyToHeader(item, labConfig);
+  // Handle undefined metasheet
+  if (!row) return
+  if (item in row) return row[item]; // Handle the universal CSV
+  let match = modusKeyToHeader(item, Object.keys(row), labConfig);
   if (match) {
     let mapping = toModusJsonPath[item as keyof typeof toModusJsonPath];
     return parseMappingValue(row[match], mapping);

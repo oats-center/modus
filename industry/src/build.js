@@ -36,7 +36,7 @@ function main(rows, mtid_rows) {
     } = row;
     */
 
-    const {
+    let {
       lab_csv_header,
       'f-Analyte': Element,
       'f-Extraction_Method': ExtractionMethod,
@@ -53,8 +53,9 @@ function main(rows, mtid_rows) {
 
     let Lab_Type = row.lab_type ?? 'Soil';
 
-    if (!lab_name) continue;
-    if (!Element) continue;
+    if (!lab_name || lab_name === '_For Testing') continue;
+    Element = Element || lab_csv_header;
+   // if (!Element) continue;
 
     configs[lab_name] = configs[lab_name] || {};
     configs[lab_name][Lab_Type] = configs[lab_name][Lab_Type] || {

@@ -7,7 +7,7 @@ const mappings : LocalLabConfig["mappings"] = {
   'Kind Of Sample': undefined, //'EventType',
   'Lab No': 'LabID',
   'Cust No': 'AccountNumber',
-  'Name': 'Name',
+  'Name': 'AccountName',
   'Company': 'Company',
   'Address 1': 'Address1',
   'Address 2': 'Address2',
@@ -23,6 +23,13 @@ const mappings : LocalLabConfig["mappings"] = {
   'E Depth': 'EndingDepth',
   // I don't think these map to anything in modus:
   'Past Crop': undefined,
+  'Point ID': 'SampleNumber',
+  'CollectDate': ['EventDate', 'ReceivedDate'],
+  'Depth': 'StartingDepth',
+  'Depth (cm)': 'StartingDepth',
+  'Collect Date 1 (RMN metrics)': ['EventDate', 'ReceivedDate'],
+  'CollectDate (Appx)': ['EventDate', 'ReceivedDate'],
+  'Ecosystem Type': 'SubField',
 }
 
 let analytes : LocalLabConfig["analytes"] = {
@@ -35,6 +42,14 @@ let analytes : LocalLabConfig["analytes"] = {
     Element: 'B-pH',
     ValueUnit: 'none',
     ModusTestID: 'S-BPH-WB.02', // assume this is not the modified woodruff
+  },
+  'pH': {
+    Element: 'pH',
+    ValueUnit: 'none',
+  },
+  'Soil pH': {
+    Element: 'pH',
+    ValueUnit: 'none',
   },
   '1:1 S Salts': {
     ValueUnit: 'mmho/cm',
@@ -58,7 +73,15 @@ let analytes : LocalLabConfig["analytes"] = {
     Element: 'OM',
     ModusTestID: 'S-SOM-LOI.15',
   },
+  'Organic Matter': {
+    ValueUnit: '%',
+    Element: 'OM',
+  },
   'Nitrate-N ppm N': {
+    ValueUnit: 'ppm',
+    Element: 'NO3-N',
+  },
+  'Nitrate': {
     ValueUnit: 'ppm',
     Element: 'NO3-N',
   },
@@ -76,8 +99,17 @@ let analytes : LocalLabConfig["analytes"] = {
     Element: 'P (Olsen)',
     ModusTestID: 'S-P-BIC.04',
   },
+    'Olsen P': {
+    ValueUnit: 'ppm',
+    Element: 'P (Olsen)',
+    ModusTestID: 'S-P-BIC.04',
+  },
   'Potassium ppm K': {
     ValueUnit: 'ppm',
+    Element: 'K',
+  },
+  'Potassium': {
+    ValueUnit: 'cmol/kg',
     Element: 'K',
   },
   'Sulfate-S ppm S': {
@@ -89,6 +121,10 @@ let analytes : LocalLabConfig["analytes"] = {
     Element: 'Zn',
   },
   'Iron ppm Fe': {
+    ValueUnit: 'ppm',
+    Element: 'Fe',
+  },
+  'Iron': {
     ValueUnit: 'ppm',
     Element: 'Fe',
   },
@@ -104,12 +140,24 @@ let analytes : LocalLabConfig["analytes"] = {
     ValueUnit: 'ppm',
     Element: 'Ca',
   },
+  'Calcium': {
+    ValueUnit: 'cmol/kg',
+    Element: 'Ca',
+  },
   'Magnesium ppm Mg': {
     ValueUnit: 'ppm',
     Element: 'Mg',
   },
+  'Magnesium': {
+    ValueUnit: 'cmol/kg',
+    Element: 'Mg',
+  },
   'Sodium ppm Na': {
     ValueUnit: 'ppm',
+    Element: 'Na',
+  },
+  'Sodium': {
+    ValueUnit: 'cmol/kg',
     Element: 'Na',
   },
   'Boron ppm B': {
@@ -118,6 +166,14 @@ let analytes : LocalLabConfig["analytes"] = {
   },
   'CEC/Sum of Cations me/100g': {
     ValueUnit: 'meq/100g',
+    Element: 'CEC',
+  },
+  'CEC': {
+    ValueUnit: 'cmol/kg',
+    Element: 'CEC',
+  },
+  'CEC (Estimated)': {
+    ValueUnit: 'cmol/kg',
     Element: 'CEC',
   },
   '2N KCl NO3-N ppm N': {
@@ -130,6 +186,10 @@ let analytes : LocalLabConfig["analytes"] = {
     Element: 'NH4-N',
   },
   'Aluminum ppm Al': {
+    ValueUnit: 'ppm',
+    Element: 'Al',
+  },
+  'Aluminum': {
     ValueUnit: 'ppm',
     Element: 'Al',
   },
@@ -166,7 +226,19 @@ let analytes : LocalLabConfig["analytes"] = {
     Element: 'OM',
     // 4 different Walkley-Black methods exist
   },
+  'Total Nitrogen': {
+    ValueUnit: '%',
+    Element: 'TN',
+  },
+  'Total Nitrogen^': {
+    ValueUnit: '%',
+    Element: 'TN',
+  },
   'Total N ppm': {
+    ValueUnit: 'ppm',
+    Element: 'TN',
+  },
+  'Water Extractable Total N': {
     ValueUnit: 'ppm',
     Element: 'TN',
   },
@@ -179,6 +251,10 @@ let analytes : LocalLabConfig["analytes"] = {
     ValueUnit: 'ppm',
     Element: 'TP',
   },
+  'Total Phosphorus': {
+    ValueUnit: 'ppm',
+    Element: 'TP',
+  },
   'Total Zn ppm': {
     ValueUnit: 'ppm',
     Element: 'TZn',
@@ -187,6 +263,18 @@ let analytes : LocalLabConfig["analytes"] = {
     ValueUnit: 'ppm',
     Element: 'NO2-N',
     ModusTestID: 'S-NO2-KCL.01', // only method for nitrite
+  },
+  'Sand': {
+    ValueUnit: '%',
+    Element: 'Sand',
+  },
+  'Silt': {
+    ValueUnit: '%',
+    Element: 'Silt',
+  },
+  'Clay': {
+    ValueUnit: '%',
+    Element: 'Clay',
   },
   '% Sand': {
     ValueUnit: '%',
@@ -201,6 +289,10 @@ let analytes : LocalLabConfig["analytes"] = {
     Element: 'Clay',
   },
   'Texture': {
+    ValueUnit: 'none',
+    Element: 'Texture',
+  },
+  'Texture*': {
     ValueUnit: 'none',
     Element: 'Texture',
   },
@@ -413,6 +505,18 @@ let analytes : LocalLabConfig["analytes"] = {
     ValueUnit: '%',
     Element: 'OC',
   },
+  'Total Organic Carbon': {
+    ValueUnit: '%',
+    Element: 'TOC',
+  },
+  'Total Org Carbon': {
+    ValueUnit: '%',
+    Element: 'TOC',
+  },
+  'Water Extractable Organic C': {
+    ValueUnit: '%',
+    Element: 'OC',
+  },
   'Water Soluble K': { // 3 different water extraction methods exist
     Element: 'K',
   },
@@ -526,6 +630,10 @@ let analytes : LocalLabConfig["analytes"] = {
     ValueUnit: 'lb/ac',
     Element: 'NH4-N',
   },
+  'Ammonium': {
+    ValueUnit: 'ppm',
+    Element: 'NH4-N',
+  },
   'Aluminium M3 ICAP ppm Al': {
     ValueUnit: 'ppm',
     Element: 'Al',
@@ -559,6 +667,7 @@ let analytes : LocalLabConfig["analytes"] = {
     // modus lists two sikora buffer ph methods
   },
   'Bulk Density': {
+    ValueUnit: 'g/cm3',
     Element: 'Bulk-Density',
   },
   '2:1 Soil pH': {
@@ -802,6 +911,11 @@ let analytes : LocalLabConfig["analytes"] = {
   'CO2 Soil Respiration': {
     Element: 'CO2 Respiration',
     ModusTestID: 'S-CO2-RESP.01',
+  },
+
+  'Water Infiltration': {
+    ValueUnit: 'min',
+    Element: 'Permeability',
   },
 
 

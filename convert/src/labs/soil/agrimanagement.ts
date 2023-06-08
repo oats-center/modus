@@ -5,7 +5,7 @@ const warn = debug('@modusjs/convert#labs-agrimanagement:warn');
 const mappings : LocalLabConfig["mappings"] = {
   'id code': 'SampleNumber',
   'grower name': 'Grower',
-  'account name': 'AccountNumber',
+  'account name': 'AccountName',
   'Field ID': 'Field',
   'Grid': undefined,
   'Lab Number': 'SampleContainerID',
@@ -13,7 +13,8 @@ const mappings : LocalLabConfig["mappings"] = {
   'Date Tested': ['EventDate', 'ReceivedDate'],
   'Crop': undefined,
   'YLDGOAL': undefined,
-  'depth range': 'StartingDepth'
+  'depth range': 'StartingDepth',
+  'OTHER ID#': undefined,
 }
 
 // Make this as generic as possible so as to work on other labs

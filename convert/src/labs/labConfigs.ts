@@ -187,8 +187,8 @@ export const toModusJsonPath = {
   },
   'SubField': {
     type: 'event',
-    path: '$.FMISMetaData.FMISProfile.Sub-Field',
-    fullpath: '$.Events.*.FMISMetaData.FMISProfile.Sub-Field',
+    path: `$.FMISMetaData.FMISProfile["Sub-Field"]`,
+    fullpath: '$.Events.*.FMISMetaData.FMISProfile["Sub-Field"]',
     description: 'Sub-Field name assigned by the FMIS that submitted the samples',
   },
 
@@ -219,7 +219,7 @@ export const toModusJsonPath = {
     parse: 'date',
     description: 'Date samples received by the lab',
   },
-  'Name': {
+  'AccountName': {
     type: 'event',
     path: '$.LabMetaData.ClientAccount.Name',
     fullpath: '$.Events.*.LabMetaData.ClientAccount.Name',
@@ -282,6 +282,7 @@ export const toModusJsonPath = {
     type: 'sample',
     path: '$.SampleMetaData.SampleNumber',
     fullpath: '$.Events.*.EventSamples.Soil.SoilSamples.*.SampleMetaData.SampleNumber',
+    parse: 'string',
     description: 'Sample number as numbered by the lab',
   },
   'SampleContainerID': {
@@ -361,6 +362,7 @@ export function parseMappingValue(val: any, mapping: ModusMapping) {
     case 'number':
       return +val;
     case 'date':
+      if (val === 'NA') return false;
       return val ? parseDate(val).toISOString().split('T')[0] : val;
     case 'string':
       return ''+val;
@@ -373,6 +375,7 @@ export function setMappings(modusPiece: any, type: string, row: any, labConfig?:
   if (labConfig?.mappings === undefined) return modusPiece;
   toDetailedMappings(labConfig.mappings)
   .filter(({ mm }) => mm !== undefined && mm.type === type)
+  .filter(({ key } ) => key in row)
   .forEach(({key, mm}) => {
     let val: any = parseMappingValue(row[key], mm)
     jp.value(modusPiece, mm.path, val);

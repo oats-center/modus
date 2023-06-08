@@ -19,7 +19,7 @@
     "test:browser": "live-server --port=8080 --host=localhost --wait=100 --watch=examples,test --open=test/browser.html",
     "test:node": "nodemon --enable-source-maps --config nodemon.config.json test/node.js",
     "test": "concurrently \"yarn run test:browser\" \"yarn run test:node\"",
-    "clean": "rm -rf build dist"
+    "clean": "rm -rf build dist && rm tsconfig.buildinfo"
   },
   "author": "Aaron Ault <aultac@gmail.com>",
   "license": "Apache-2.0",
