@@ -4,9 +4,10 @@ import * as industry from '@modusjs/industry';
 import jp from 'jsonpath';
 
 import { default as a_l_west_soil } from './soil/a_l_west.js';
-import { default as agrimanagement_soil} from './soil/agrimanagement.js';
+import { default as soiltest_soil} from './soil/soiltestfarmconsultants.js';
 import { default as tomkat_soil} from './soil/tomkat.js';
 import { default as a_l_west_plant } from './plant/a_l_west.js';
+import { default as brookside_soil } from './soil/brookside.js';
 
 //const info = debug('@modusjs/convert#labs-automated:info');
 //const trace = debug('@modusjs/convert#labs-automated:trace');
@@ -16,8 +17,9 @@ const warn = debug('@modusjs/convert#labConfigs:warn');
 export let localLabConfigs : LocalLabConfig[] = [
   a_l_west_soil,
   a_l_west_plant,
+  brookside_soil,
   tomkat_soil,
-  agrimanagement_soil
+  soiltest_soil,
 ]
 
 const industryLabConfigs = industry.labConfigs as unknown as Record<string, Record<string, IndustryLabConfig>>;

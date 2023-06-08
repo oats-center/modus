@@ -3,9 +3,9 @@ import debug from 'debug';
 import type * as MainLib from '../../browser/index.js';
 import chalk from 'chalk';
 
-import tomkat from '@modusjs/examples/dist/tomkat-historic/soil/tomkat_source_data2015_RMN0-10cm_1_json.js';
+//import tomkat from '@modusjs/examples/dist/tomkat-historic/soil/tomkat_source_data2015_RMN0-10cm_1_json.js';
 
-import type ModusResult from '@oada/types/modus/v1/modus-result.js';
+//import type ModusResult from '@oada/types/modus/v1/modus-result.js';
 
 const trace = debug('@modusjs/convert#test-browser/html:trace');
 const info = debug('@modusjs/convert#test-browser/html:info');

@@ -7,7 +7,7 @@ const warn = debug('@modusjs/industry:warn');
 const info = debug('@modusjs/industry:info');
 const trace = debug('@modusjs/industry:trace');
 
-const LAB_EXPORT= `./Lab_Method-Sam's Export View2023-05-25.csv`;
+const LAB_EXPORT= `./Lab_Method-Sam's Export View.csv`;
 const UNITS_EXPORT= `./Modus_Soil_Test_v2-Sam's Export View.csv`;
 const LABCONFIG = './gen/labConfigs.js';
 const UNITS = './gen/standardUnits.js';
@@ -45,7 +45,7 @@ function main(rows, mtid_rows) {
       'f-Unit_of_Measurement_Default': AlternativeValueUnit,
       'f-UCUM_Unit_String_Default': UCUM_ValueUnit,
       'f-UCUM_Unit_String_Alt': AlternativeUCUM_ValueUnit,
-      'lu-lab_name-r-Lab': lab_name,
+      'lu-lab_name r-Lab': lab_name,
       'r-Modus_Soil_Test_v2': Modus_Soil_Test_v2,
       'r-Modus_Soil_Test_v1': Modus_Soil_Test_v1,
     } = row;

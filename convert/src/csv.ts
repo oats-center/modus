@@ -137,7 +137,9 @@ export function partitionSheets(wb: xlsx.WorkBook) : {
     trace('metadatasheet:', metadatasheet.sheetname);
   }
 
-  const datasheets = wb.SheetNames
+  let sheetnames = wb.SheetNames.length > 1 && wb.SheetNames.some(name => name.toLowerCase().includes("raw")) ?
+    wb.SheetNames.filter(name => name.toLocaleLowerCase().includes("raw")) : wb.SheetNames;
+  const datasheets = sheetnames
     .filter(sh => !isPointMetadataSheetname(sh))
     .map(sheetname => {
 

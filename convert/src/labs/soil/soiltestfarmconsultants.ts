@@ -1,6 +1,6 @@
 import debug from 'debug';
 import type { LocalLabConfig } from '../index.js';
-const warn = debug('@modusjs/convert#labs-agrimanagement:warn');
+const warn = debug('@modusjs/convert#labs:warn');
 
 const mappings : LocalLabConfig["mappings"] = {
   'id code': 'SampleNumber',
@@ -40,11 +40,11 @@ const depthInfo = function(row: any) {
 }
 
 const config : LocalLabConfig = {
-  name: 'Agrimanagement Inc.',
+  name: 'Soiltest Farm Consultants, Inc.',
   type: 'Soil',
   mappings,
   depthInfo,
-  examplesKey: 'agrimanagement'
+  examplesKey: 'soiltestfarmconsultants'
 };
 
 export default config;
