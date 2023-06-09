@@ -7,6 +7,7 @@ import { default as a_l_west_soil } from './soil/a_l_west.js';
 import { default as soiltest_soil} from './soil/soiltestfarmconsultants.js';
 import { default as tomkat_soil} from './soil/tomkat.js';
 import { default as a_l_west_plant } from './plant/a_l_west.js';
+import { default as kuo_soil} from './soil/kuo.js';
 import { default as brookside_soil } from './soil/brookside.js';
 
 //const info = debug('@modusjs/convert#labs-automated:info');
@@ -20,6 +21,7 @@ export let localLabConfigs : LocalLabConfig[] = [
   brookside_soil,
   tomkat_soil,
   soiltest_soil,
+  kuo_soil,
 ]
 
 const industryLabConfigs = industry.labConfigs as unknown as Record<string, Record<string, IndustryLabConfig>>;
@@ -276,6 +278,7 @@ export const toModusJsonPath = {
     type: 'report',
     path: '$.LabMetaData.Reports.*.LabReportID',
     fullpath: '$.Events.*.LabMetaData.Reports.*.LabReportID',
+    parse: 'string',
     description: 'ID of the Lab Report',
   },
 

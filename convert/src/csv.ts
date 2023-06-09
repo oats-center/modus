@@ -766,14 +766,14 @@ function parseDepth(row: any, headers: Record<string, ColumnHeader>, labConfig?:
   if (!depVal) {
     [' to ', ' - '].some((pattern) =>
       [startVal, endVal, depVal].some((val) => {
-        if (val?.match(pattern)) {
+        if (typeof val === 'string' && val?.match(pattern)) {
           const pieces = val.split(pattern);
-          depth.StartingDepth = parseInt(pieces[0]) || 0;
-          depth.EndingDepth = parseInt(pieces[1]) || 0;
+          depth.StartingDepth = parseInt(pieces[0]!) || 0;
+          depth.EndingDepth = parseInt(pieces[1]!) || 0;
           depth.ColumnDepth = depth.EndingDepth - depth.StartingDepth;
-          if (pieces[1].includes('cm')) valDepthUnit = 'cm';
-          if (pieces[1].includes('mm')) valDepthUnit = 'mm';
-          if (pieces[1].includes('in')) valDepthUnit = 'in';
+          if (pieces[1]?.includes('cm')) valDepthUnit = 'cm';
+          if (pieces[1]?.includes('mm')) valDepthUnit = 'mm';
+          if (pieces[1]?.includes('in')) valDepthUnit = 'in';
         }
       })
     )
