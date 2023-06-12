@@ -1,71 +1,82 @@
 {
   "Events": [
     {
-      "LabMetaData": {
-        "Reports": [
-          {
-            "ReportID": "1",
-            "FileDescription": "2016_Intern Project 10-40cm_1"
-          }
-        ]
-      },
       "EventMetaData": {
-        "EventDate": "2016-08-09",
+        "EventDate": "2016-08-10",
         "EventType": {
           "Soil": true
         }
       },
       "EventSamples": {
         "Soil": {
-          "DepthRefs": [
-            {
-              "DepthUnit": "cm",
-              "StartingDepth": 10,
-              "EndingDepth": 40,
-              "Name": "10 to 40",
-              "ColumnDepth": 30,
-              "DepthID": 1
-            }
-          ],
-          "SoilSamples": [
+          "SoilSample": [
             {
               "SampleMetaData": {
-                "SampleNumber": "0",
-                "ReportID": "1",
-                "FMISSampleID": "FRONT FIELD"
+                "ReportID": 1,
+                "SampleNumber": "FRONT FIELD"
               },
               "Depths": [
                 {
                   "DepthID": "1",
                   "NutrientResults": [
                     {
-                      "Element": "OM",
+                      "Element": "pH",
+                      "ValueUnit": "none",
+                      "Value": 5.9
+                    },
+                    {
                       "ValueUnit": "%",
+                      "Element": "OM",
                       "Value": 6.5
                     },
                     {
-                      "Element": "TN (W)",
+                      "ValueUnit": "%",
+                      "Element": "TOC",
+                      "Value": 3.779069767441861
+                    },
+                    {
                       "ValueUnit": "ppm",
+                      "Element": "TN",
                       "Value": 28
                     },
                     {
-                      "Element": "NO3-N",
                       "ValueUnit": "ppm",
+                      "Element": "OC",
+                      "Value": 282
+                    },
+                    {
+                      "ValueUnit": "ppm",
+                      "Element": "NO3-N",
                       "Value": 2.1
                     },
                     {
-                      "Element": "K",
                       "ValueUnit": "ppm",
+                      "Element": "NH4-N",
+                      "Value": 2.3
+                    },
+                    {
+                      "ValueUnit": "ppm",
+                      "Element": "TP",
+                      "Value": 29
+                    },
+                    {
+                      "ValueUnit": "ppm",
+                      "Element": "K",
                       "Value": 109
                     },
                     {
-                      "Element": "Ca",
                       "ValueUnit": "ppm",
+                      "Element": "Ca",
                       "Value": 418
                     },
                     {
-                      "Element": "Fe",
                       "ValueUnit": "ppm",
+                      "Element": "Al",
+                      "Value": 762.9
+                    },
+                    {
+                      "ValueUnit": "ppm",
+                      "Element": "Fe",
                       "Value": 546.1
                     }
                   ]
@@ -74,9 +85,8 @@
             },
             {
               "SampleMetaData": {
-                "SampleNumber": "1",
-                "ReportID": "1",
-                "FMISSampleID": "TOKA-022",
+                "ReportID": 1,
+                "SampleNumber": "TOKA-022",
                 "Geometry": {
                   "wkt": "POINT(-122.3665960 37.2669748)"
                 }
@@ -86,33 +96,63 @@
                   "DepthID": "1",
                   "NutrientResults": [
                     {
-                      "Element": "OM",
+                      "Element": "pH",
+                      "ValueUnit": "none",
+                      "Value": 6.2
+                    },
+                    {
                       "ValueUnit": "%",
+                      "Element": "OM",
                       "Value": 5.5
                     },
                     {
-                      "Element": "TN (W)",
+                      "ValueUnit": "%",
+                      "Element": "TOC",
+                      "Value": 3.197674418604651
+                    },
+                    {
                       "ValueUnit": "ppm",
+                      "Element": "TN",
                       "Value": 23.7
                     },
                     {
-                      "Element": "NO3-N",
                       "ValueUnit": "ppm",
+                      "Element": "OC",
+                      "Value": 293
+                    },
+                    {
+                      "ValueUnit": "ppm",
+                      "Element": "NO3-N",
                       "Value": 0.8
                     },
                     {
-                      "Element": "K",
                       "ValueUnit": "ppm",
+                      "Element": "NH4-N",
+                      "Value": 1.7
+                    },
+                    {
+                      "ValueUnit": "ppm",
+                      "Element": "TP",
+                      "Value": 15
+                    },
+                    {
+                      "ValueUnit": "ppm",
+                      "Element": "K",
                       "Value": 79
                     },
                     {
-                      "Element": "Ca",
                       "ValueUnit": "ppm",
+                      "Element": "Ca",
                       "Value": 163
                     },
                     {
-                      "Element": "Fe",
                       "ValueUnit": "ppm",
+                      "Element": "Al",
+                      "Value": 796
+                    },
+                    {
+                      "ValueUnit": "ppm",
+                      "Element": "Fe",
                       "Value": 401.6
                     }
                   ]
@@ -121,9 +161,8 @@
             },
             {
               "SampleMetaData": {
-                "SampleNumber": "2",
-                "ReportID": "1",
-                "FMISSampleID": "TOKA-104",
+                "ReportID": 1,
+                "SampleNumber": "TOKA-104",
                 "Geometry": {
                   "wkt": "POINT(-122.3801294 37.2670464)"
                 }
@@ -133,34 +172,64 @@
                   "DepthID": "1",
                   "NutrientResults": [
                     {
-                      "Element": "OM",
+                      "Element": "pH",
+                      "ValueUnit": "none",
+                      "Value": 5.4
+                    },
+                    {
                       "ValueUnit": "%",
+                      "Element": "OM",
                       "Value": 3.2
                     },
                     {
-                      "Element": "TN (W)",
+                      "ValueUnit": "%",
+                      "Element": "TOC",
+                      "Value": 1.86046511627907
+                    },
+                    {
                       "ValueUnit": "ppm",
+                      "Element": "TN",
                       "Value": 12.4
                     },
                     {
-                      "Element": "NO3-N",
                       "ValueUnit": "ppm",
+                      "Element": "OC",
+                      "Value": 166
+                    },
+                    {
+                      "ValueUnit": "ppm",
+                      "Element": "NO3-N",
                       "Value": 0.5
                     },
                     {
-                      "Element": "K",
                       "ValueUnit": "ppm",
+                      "Element": "NH4-N",
+                      "Value": 2.5
+                    },
+                    {
+                      "ValueUnit": "ppm",
+                      "Element": "TP",
+                      "Value": 9
+                    },
+                    {
+                      "ValueUnit": "ppm",
+                      "Element": "K",
                       "Value": 37
                     },
                     {
-                      "Element": "Ca",
                       "ValueUnit": "ppm",
+                      "Element": "Ca",
                       "Value": 105
                     },
                     {
-                      "Element": "Fe",
                       "ValueUnit": "ppm",
-                      "Value": 254.2
+                      "Element": "Al",
+                      "Value": 309
+                    },
+                    {
+                      "ValueUnit": "ppm",
+                      "Element": "Fe",
+                      "Value": 254.20000000000002
                     }
                   ]
                 }
@@ -168,9 +237,8 @@
             },
             {
               "SampleMetaData": {
-                "SampleNumber": "3",
-                "ReportID": "1",
-                "FMISSampleID": "TOKA-007",
+                "ReportID": 1,
+                "SampleNumber": "TOKA-007",
                 "Geometry": {
                   "wkt": "POINT(-122.3801146 37.2688491)"
                 }
@@ -180,34 +248,64 @@
                   "DepthID": "1",
                   "NutrientResults": [
                     {
-                      "Element": "OM",
+                      "Element": "pH",
+                      "ValueUnit": "none",
+                      "Value": 5.5
+                    },
+                    {
                       "ValueUnit": "%",
+                      "Element": "OM",
                       "Value": 2.6
                     },
                     {
-                      "Element": "TN (W)",
+                      "ValueUnit": "%",
+                      "Element": "TOC",
+                      "Value": 1.5116279069767442
+                    },
+                    {
                       "ValueUnit": "ppm",
+                      "Element": "TN",
                       "Value": 15.3
                     },
                     {
-                      "Element": "NO3-N",
                       "ValueUnit": "ppm",
+                      "Element": "OC",
+                      "Value": 212
+                    },
+                    {
+                      "ValueUnit": "ppm",
+                      "Element": "NO3-N",
                       "Value": 0.3
                     },
                     {
-                      "Element": "K",
                       "ValueUnit": "ppm",
+                      "Element": "NH4-N",
+                      "Value": 0.9
+                    },
+                    {
+                      "ValueUnit": "ppm",
+                      "Element": "TP",
+                      "Value": 8
+                    },
+                    {
+                      "ValueUnit": "ppm",
+                      "Element": "K",
                       "Value": 81
                     },
                     {
-                      "Element": "Ca",
                       "ValueUnit": "ppm",
+                      "Element": "Ca",
                       "Value": 89
                     },
                     {
-                      "Element": "Fe",
                       "ValueUnit": "ppm",
-                      "Value": 501
+                      "Element": "Al",
+                      "Value": 767.9
+                    },
+                    {
+                      "ValueUnit": "ppm",
+                      "Element": "Fe",
+                      "Value": 500.99999999999994
                     }
                   ]
                 }
@@ -215,9 +313,8 @@
             },
             {
               "SampleMetaData": {
-                "SampleNumber": "4",
-                "ReportID": "1",
-                "FMISSampleID": "TOKA-060",
+                "ReportID": 1,
+                "SampleNumber": "TOKA-060",
                 "Geometry": {
                   "wkt": "POINT(-122.3552566 37.2741247)"
                 }
@@ -227,33 +324,63 @@
                   "DepthID": "1",
                   "NutrientResults": [
                     {
-                      "Element": "OM",
+                      "Element": "pH",
+                      "ValueUnit": "none",
+                      "Value": 5.7
+                    },
+                    {
                       "ValueUnit": "%",
+                      "Element": "OM",
                       "Value": 4.9
                     },
                     {
-                      "Element": "TN (W)",
+                      "ValueUnit": "%",
+                      "Element": "TOC",
+                      "Value": 2.8488372093023258
+                    },
+                    {
                       "ValueUnit": "ppm",
+                      "Element": "TN",
                       "Value": 19.3
                     },
                     {
-                      "Element": "NO3-N",
                       "ValueUnit": "ppm",
+                      "Element": "OC",
+                      "Value": 230
+                    },
+                    {
+                      "ValueUnit": "ppm",
+                      "Element": "NO3-N",
                       "Value": 1
                     },
                     {
-                      "Element": "K",
                       "ValueUnit": "ppm",
+                      "Element": "NH4-N",
+                      "Value": 1.4
+                    },
+                    {
+                      "ValueUnit": "ppm",
+                      "Element": "TP",
+                      "Value": 10
+                    },
+                    {
+                      "ValueUnit": "ppm",
+                      "Element": "K",
                       "Value": 82
                     },
                     {
-                      "Element": "Ca",
                       "ValueUnit": "ppm",
+                      "Element": "Ca",
                       "Value": 279
                     },
                     {
-                      "Element": "Fe",
                       "ValueUnit": "ppm",
+                      "Element": "Al",
+                      "Value": 488.4
+                    },
+                    {
+                      "ValueUnit": "ppm",
+                      "Element": "Fe",
                       "Value": 263.7
                     }
                   ]
@@ -262,9 +389,8 @@
             },
             {
               "SampleMetaData": {
-                "SampleNumber": "5",
-                "ReportID": "1",
-                "FMISSampleID": "TOKA-064",
+                "ReportID": 1,
+                "SampleNumber": "TOKA-064",
                 "Geometry": {
                   "wkt": "POINT(-122.3530163 37.2723097)"
                 }
@@ -274,33 +400,63 @@
                   "DepthID": "1",
                   "NutrientResults": [
                     {
-                      "Element": "OM",
-                      "ValueUnit": "%",
+                      "Element": "pH",
+                      "ValueUnit": "none",
                       "Value": 5.9
                     },
                     {
-                      "Element": "TN (W)",
+                      "ValueUnit": "%",
+                      "Element": "OM",
+                      "Value": 5.9
+                    },
+                    {
+                      "ValueUnit": "%",
+                      "Element": "TOC",
+                      "Value": 3.4302325581395348
+                    },
+                    {
                       "ValueUnit": "ppm",
+                      "Element": "TN",
                       "Value": 26.9
                     },
                     {
-                      "Element": "NO3-N",
                       "ValueUnit": "ppm",
+                      "Element": "OC",
+                      "Value": 252.99999999999997
+                    },
+                    {
+                      "ValueUnit": "ppm",
+                      "Element": "NO3-N",
                       "Value": 2.2
                     },
                     {
-                      "Element": "K",
                       "ValueUnit": "ppm",
+                      "Element": "NH4-N",
+                      "Value": 1.5
+                    },
+                    {
+                      "ValueUnit": "ppm",
+                      "Element": "TP",
+                      "Value": 19
+                    },
+                    {
+                      "ValueUnit": "ppm",
+                      "Element": "K",
                       "Value": 131
                     },
                     {
-                      "Element": "Ca",
                       "ValueUnit": "ppm",
+                      "Element": "Ca",
                       "Value": 256
                     },
                     {
-                      "Element": "Fe",
                       "ValueUnit": "ppm",
+                      "Element": "Al",
+                      "Value": 949.8
+                    },
+                    {
+                      "ValueUnit": "ppm",
+                      "Element": "Fe",
                       "Value": 530.9
                     }
                   ]
@@ -309,9 +465,8 @@
             },
             {
               "SampleMetaData": {
-                "SampleNumber": "6",
-                "ReportID": "1",
-                "FMISSampleID": "TOKA-068",
+                "ReportID": 1,
+                "SampleNumber": "TOKA-068",
                 "Geometry": {
                   "wkt": "POINT(-122.3531397 37.2578881)"
                 }
@@ -321,33 +476,63 @@
                   "DepthID": "1",
                   "NutrientResults": [
                     {
-                      "Element": "OM",
+                      "Element": "pH",
+                      "ValueUnit": "none",
+                      "Value": 5.6
+                    },
+                    {
                       "ValueUnit": "%",
+                      "Element": "OM",
                       "Value": 4.7
                     },
                     {
-                      "Element": "TN (W)",
+                      "ValueUnit": "%",
+                      "Element": "TOC",
+                      "Value": 2.7325581395348837
+                    },
+                    {
                       "ValueUnit": "ppm",
+                      "Element": "TN",
                       "Value": 18.3
                     },
                     {
-                      "Element": "NO3-N",
                       "ValueUnit": "ppm",
+                      "Element": "OC",
+                      "Value": 218
+                    },
+                    {
+                      "ValueUnit": "ppm",
+                      "Element": "NO3-N",
                       "Value": 1
                     },
                     {
-                      "Element": "K",
                       "ValueUnit": "ppm",
+                      "Element": "NH4-N",
+                      "Value": 1.4
+                    },
+                    {
+                      "ValueUnit": "ppm",
+                      "Element": "TP",
+                      "Value": 15
+                    },
+                    {
+                      "ValueUnit": "ppm",
+                      "Element": "K",
                       "Value": 61
                     },
                     {
-                      "Element": "Ca",
                       "ValueUnit": "ppm",
+                      "Element": "Ca",
                       "Value": 283
                     },
                     {
-                      "Element": "Fe",
                       "ValueUnit": "ppm",
+                      "Element": "Al",
+                      "Value": 698.8
+                    },
+                    {
+                      "ValueUnit": "ppm",
+                      "Element": "Fe",
                       "Value": 419.7
                     }
                   ]
@@ -356,49 +541,117 @@
             },
             {
               "SampleMetaData": {
-                "SampleNumber": "7",
-                "ReportID": "1",
-                "FMISSampleID": "PRB0"
+                "ReportID": 1,
+                "SampleNumber": "PRB0"
               },
               "Depths": [
                 {
                   "DepthID": "1",
                   "NutrientResults": [
                     {
-                      "Element": "OM",
+                      "Element": "pH",
+                      "ValueUnit": "none",
+                      "Value": 5.9
+                    },
+                    {
                       "ValueUnit": "%",
+                      "Element": "OM",
                       "Value": 4.9
                     },
                     {
-                      "Element": "TN (W)",
+                      "ValueUnit": "%",
+                      "Element": "TOC",
+                      "Value": 2.8488372093023258
+                    },
+                    {
                       "ValueUnit": "ppm",
+                      "Element": "TN",
                       "Value": 27.6
                     },
                     {
-                      "Element": "NO3-N",
                       "ValueUnit": "ppm",
+                      "Element": "OC",
+                      "Value": 252.99999999999997
+                    },
+                    {
+                      "ValueUnit": "ppm",
+                      "Element": "NO3-N",
                       "Value": 2.5
                     },
                     {
-                      "Element": "K",
                       "ValueUnit": "ppm",
+                      "Element": "NH4-N",
+                      "Value": 2.2
+                    },
+                    {
+                      "ValueUnit": "ppm",
+                      "Element": "TP",
+                      "Value": 18
+                    },
+                    {
+                      "ValueUnit": "ppm",
+                      "Element": "K",
                       "Value": 129
                     },
                     {
-                      "Element": "Ca",
                       "ValueUnit": "ppm",
+                      "Element": "Ca",
                       "Value": 317
                     },
                     {
-                      "Element": "Fe",
                       "ValueUnit": "ppm",
+                      "Element": "Al",
+                      "Value": 724.4
+                    },
+                    {
+                      "ValueUnit": "ppm",
+                      "Element": "Fe",
                       "Value": 443.9
                     }
                   ]
                 }
               ]
             }
+          ],
+          "DepthRefs": [
+            {
+              "StartingDepth": 10,
+              "EndingDepth": 40,
+              "ColumnDepth": 30,
+              "DepthUnit": "cm",
+              "Name": "10 to 40 cm",
+              "DepthID": 1
+            }
           ]
+        }
+      },
+      "LabMetaData": {
+        "LabName": "TomKat Ranch",
+        "LabEventID": "Unknown Lab Event ID",
+        "ProcessedDate": "2016-08-10",
+        "ReceivedDate": "2016-08-10",
+        "Reports": [
+          {
+            "LabReportID": "Report 1",
+            "ReportID": 1,
+            "FileDescription": "2016_Intern Project 10-40cm_1"
+          }
+        ],
+        "ClientAccount": {
+          "AccountNumber": "Unknown Client Account",
+          "Company": "Unknown Client Company",
+          "Name": "Unknown Client Name",
+          "City": "Unknown Client City",
+          "State": "Unknown Client State",
+          "Zip": "Unknown Client Zip"
+        }
+      },
+      "FMISMetaData": {
+        "FMISProfile": {
+          "Grower": "Unknown Grower",
+          "Farm": "Unknown Farm",
+          "Field": "Unknown Field",
+          "Sub-Field": "Unknown Sub-Field"
         }
       }
     }

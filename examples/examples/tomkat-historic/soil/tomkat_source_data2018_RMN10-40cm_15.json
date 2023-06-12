@@ -1,38 +1,19 @@
 {
   "Events": [
     {
-      "LabMetaData": {
-        "Reports": [
-          {
-            "ReportID": "1",
-            "FileDescription": "2018_RMN 10-40cm_15"
-          }
-        ]
-      },
       "EventMetaData": {
-        "EventDate": "2018-02-14",
+        "EventDate": "2018-02-15",
         "EventType": {
           "Soil": true
         }
       },
       "EventSamples": {
         "Soil": {
-          "DepthRefs": [
-            {
-              "DepthUnit": "cm",
-              "StartingDepth": 10,
-              "EndingDepth": 40,
-              "Name": "10 to 40",
-              "ColumnDepth": 30,
-              "DepthID": 1
-            }
-          ],
-          "SoilSamples": [
+          "SoilSample": [
             {
               "SampleMetaData": {
-                "SampleNumber": "0",
-                "ReportID": "1",
-                "FMISSampleID": "TOKA-115",
+                "ReportID": 1,
+                "SampleNumber": "TOKA-115",
                 "Geometry": {
                   "wkt": "POINT(-122.3688365 37.2687895)"
                 }
@@ -42,23 +23,24 @@
                   "DepthID": "1",
                   "NutrientResults": [
                     {
-                      "Element": "P",
                       "ValueUnit": "ug/g",
+                      "Element": "P (Olsen)",
+                      "ModusTestID": "S-P-BIC.04",
                       "Value": 4.8
                     },
                     {
-                      "Element": "Sand",
                       "ValueUnit": "%",
+                      "Element": "Sand",
                       "Value": 37.5
                     },
                     {
-                      "Element": "Silt",
                       "ValueUnit": "%",
+                      "Element": "Silt",
                       "Value": 30
                     },
                     {
-                      "Element": "Clay",
                       "ValueUnit": "%",
+                      "Element": "Clay",
                       "Value": 32.5
                     },
                     {
@@ -67,40 +49,79 @@
                       "Value": 5.9
                     },
                     {
-                      "Element": "CEC",
                       "ValueUnit": "cmol(+)/kg",
-                      "Value": 26.9
+                      "Element": "CEC",
+                      "Value": 26.899999999999995
                     },
                     {
-                      "Element": "Ca",
                       "ValueUnit": "cmol(+)/kg",
+                      "Element": "Ca",
                       "Value": 7.42
                     },
                     {
-                      "Element": "Mg",
                       "ValueUnit": "cmol(+)/kg",
+                      "Element": "Mg",
                       "Value": 8.85
                     },
                     {
-                      "Element": "K",
                       "ValueUnit": "cmol(+)/kg",
+                      "Element": "K",
                       "Value": 0.6205128205128205
                     },
                     {
-                      "Element": "Na",
                       "ValueUnit": "cmol(+)/kg",
+                      "Element": "Na",
                       "Value": 0.3739130434782609
                     },
                     {
-                      "Element": "TOC",
                       "ValueUnit": "%",
-                      "Value": 1.7
+                      "Element": "TOC",
+                      "Value": 1.7000000000000002
                     }
                   ]
                 }
               ]
             }
+          ],
+          "DepthRefs": [
+            {
+              "StartingDepth": 10,
+              "EndingDepth": 40,
+              "ColumnDepth": 30,
+              "DepthUnit": "cm",
+              "Name": "10 to 40 cm",
+              "DepthID": 1
+            }
           ]
+        }
+      },
+      "LabMetaData": {
+        "LabName": "TomKat Ranch",
+        "LabEventID": "Unknown Lab Event ID",
+        "ProcessedDate": "2018-02-15",
+        "ReceivedDate": "2018-02-15",
+        "Reports": [
+          {
+            "LabReportID": "Report 1",
+            "ReportID": 1,
+            "FileDescription": "2018_RMN 10-40cm_15"
+          }
+        ],
+        "ClientAccount": {
+          "AccountNumber": "Unknown Client Account",
+          "Company": "Unknown Client Company",
+          "Name": "Unknown Client Name",
+          "City": "Unknown Client City",
+          "State": "Unknown Client State",
+          "Zip": "Unknown Client Zip"
+        }
+      },
+      "FMISMetaData": {
+        "FMISProfile": {
+          "Grower": "Unknown Grower",
+          "Farm": "Unknown Farm",
+          "Field": "Unknown Field",
+          "Sub-Field": "Unknown Sub-Field"
         }
       }
     }

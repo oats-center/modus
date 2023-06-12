@@ -1,38 +1,19 @@
 {
   "Events": [
     {
-      "LabMetaData": {
-        "Reports": [
-          {
-            "ReportID": "1",
-            "FileDescription": "2018_RMN 0-10cm_7"
-          }
-        ]
-      },
       "EventMetaData": {
-        "EventDate": "2018-01-21",
+        "EventDate": "2018-01-22",
         "EventType": {
           "Soil": true
         }
       },
       "EventSamples": {
         "Soil": {
-          "DepthRefs": [
-            {
-              "DepthUnit": "cm",
-              "StartingDepth": 0,
-              "EndingDepth": 10,
-              "Name": "0 to 10",
-              "ColumnDepth": 10,
-              "DepthID": 1
-            }
-          ],
-          "SoilSamples": [
+          "SoilSample": [
             {
               "SampleMetaData": {
-                "SampleNumber": "0",
-                "ReportID": "1",
-                "FMISSampleID": "TOKA-035",
+                "ReportID": 1,
+                "SampleNumber": "TOKA-035",
                 "Geometry": {
                   "wkt": "POINT(-122.3619935 37.2777667)"
                 }
@@ -42,15 +23,59 @@
                   "DepthID": "1",
                   "NutrientResults": [
                     {
-                      "Element": "TOC",
+                      "ValueUnit": "min",
+                      "Element": "Permeability",
+                      "Value": 0.213333333333333
+                    },
+                    {
                       "ValueUnit": "%",
+                      "Element": "TOC",
                       "Value": 4.1
                     }
                   ]
                 }
               ]
             }
+          ],
+          "DepthRefs": [
+            {
+              "StartingDepth": 0,
+              "EndingDepth": 10,
+              "ColumnDepth": 10,
+              "DepthUnit": "cm",
+              "Name": "0 to 10 cm",
+              "DepthID": 1
+            }
           ]
+        }
+      },
+      "LabMetaData": {
+        "LabName": "TomKat Ranch",
+        "LabEventID": "Unknown Lab Event ID",
+        "ProcessedDate": "2018-01-22",
+        "ReceivedDate": "2018-01-22",
+        "Reports": [
+          {
+            "LabReportID": "Report 1",
+            "ReportID": 1,
+            "FileDescription": "2018_RMN 0-10cm_7"
+          }
+        ],
+        "ClientAccount": {
+          "AccountNumber": "Unknown Client Account",
+          "Company": "Unknown Client Company",
+          "Name": "Unknown Client Name",
+          "City": "Unknown Client City",
+          "State": "Unknown Client State",
+          "Zip": "Unknown Client Zip"
+        }
+      },
+      "FMISMetaData": {
+        "FMISProfile": {
+          "Grower": "Unknown Grower",
+          "Farm": "Unknown Farm",
+          "Field": "Unknown Field",
+          "Sub-Field": "Unknown Sub-Field"
         }
       }
     }

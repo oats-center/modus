@@ -65,7 +65,7 @@
   },
   "dependencies": {
     "@lhncbc/ucum-lhc": "^4.1.6",
-    "@oada/types": "^3.4.3",
+    "@oada/types": "^3.5.1",
     "@overleaf/o-error": "^3.4.0",
     "chalk": "^4.0.0",
     "cheerio": "^1.0.0-rc.12",

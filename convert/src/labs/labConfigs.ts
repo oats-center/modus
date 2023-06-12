@@ -9,6 +9,7 @@ import { default as tomkat_soil} from './soil/tomkat.js';
 import { default as a_l_west_plant } from './plant/a_l_west.js';
 import { default as kuo_soil} from './soil/kuo.js';
 import { default as brookside_soil } from './soil/brookside.js';
+import { default as cquester_soil } from './soil/cquester.js';
 
 //const info = debug('@modusjs/convert#labs-automated:info');
 //const trace = debug('@modusjs/convert#labs-automated:trace');
@@ -22,6 +23,7 @@ export let localLabConfigs : LocalLabConfig[] = [
   tomkat_soil,
   soiltest_soil,
   kuo_soil,
+  cquester_soil,
 ]
 
 const industryLabConfigs = industry.labConfigs as unknown as Record<string, Record<string, IndustryLabConfig>>;
@@ -286,21 +288,21 @@ export const toModusJsonPath = {
   'SampleNumber': {
     type: 'sample',
     path: '$.SampleMetaData.SampleNumber',
-    fullpath: '$.Events.*.EventSamples.Soil.SoilSamples.*.SampleMetaData.SampleNumber',
+    fullpath: '$.Events.*.EventSamples.Soil.SoilSample.*.SampleMetaData.SampleNumber',
     parse: 'string',
     description: 'Sample number as numbered by the lab',
   },
   'SampleContainerID': {
     type: 'sample',
     path: '$.SampleMetaData.SampleContainerID',
-    fullpath: '$.Events.*.EventSamples.Soil.SoilSamples.*.SampleMetaData.SampleContainerID',
+    fullpath: '$.Events.*.EventSamples.Soil.SoilSample.*.SampleMetaData.SampleContainerID',
     parse: 'string',
     description: 'Sample container ID as submitted by the client',
   },
   'FMISSampleID': {
     type: 'sample',
     path: '$.SampleMetaData.FMISSampleID',
-    fullpath: '$.Events.*.EventSamples.Soil.SoilSamples*.FMISSampleID',
+    fullpath: '$.Events.*.EventSamples.Soil.SoilSample*.FMISSampleID',
     description: 'Sample ID assigned by the FMIS that submitted the samples',
   },
   'StartingDepth': {

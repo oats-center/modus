@@ -1,38 +1,19 @@
 {
   "Events": [
     {
-      "LabMetaData": {
-        "Reports": [
-          {
-            "ReportID": "1",
-            "FileDescription": "2018_RMN 0-10cm_16"
-          }
-        ]
-      },
       "EventMetaData": {
-        "EventDate": "2018-01-23",
+        "EventDate": "2018-01-24",
         "EventType": {
           "Soil": true
         }
       },
       "EventSamples": {
         "Soil": {
-          "DepthRefs": [
-            {
-              "DepthUnit": "cm",
-              "StartingDepth": 0,
-              "EndingDepth": 10,
-              "Name": "0 to 10",
-              "ColumnDepth": 10,
-              "DepthID": 1
-            }
-          ],
-          "SoilSamples": [
+          "SoilSample": [
             {
               "SampleMetaData": {
-                "SampleNumber": "0",
-                "ReportID": "1",
-                "FMISSampleID": "TOKA-122",
+                "ReportID": 1,
+                "SampleNumber": "TOKA-122",
                 "Geometry": {
                   "wkt": "POINT(-122.3643707 37.2633573)"
                 }
@@ -42,20 +23,64 @@
                   "DepthID": "1",
                   "NutrientResults": [
                     {
-                      "Element": "Bulk Density",
                       "ValueUnit": "g/cm3",
+                      "Element": "Bulk-Density",
                       "Value": 1.01545871264845
                     },
                     {
-                      "Element": "TOC",
+                      "ValueUnit": "min",
+                      "Element": "Permeability",
+                      "Value": 2.7733333333333303
+                    },
+                    {
                       "ValueUnit": "%",
-                      "Value": 3.3
+                      "Element": "TOC",
+                      "Value": 3.3000000000000003
                     }
                   ]
                 }
               ]
             }
+          ],
+          "DepthRefs": [
+            {
+              "StartingDepth": 0,
+              "EndingDepth": 10,
+              "ColumnDepth": 10,
+              "DepthUnit": "cm",
+              "Name": "0 to 10 cm",
+              "DepthID": 1
+            }
           ]
+        }
+      },
+      "LabMetaData": {
+        "LabName": "TomKat Ranch",
+        "LabEventID": "Unknown Lab Event ID",
+        "ProcessedDate": "2018-01-24",
+        "ReceivedDate": "2018-01-24",
+        "Reports": [
+          {
+            "LabReportID": "Report 1",
+            "ReportID": 1,
+            "FileDescription": "2018_RMN 0-10cm_16"
+          }
+        ],
+        "ClientAccount": {
+          "AccountNumber": "Unknown Client Account",
+          "Company": "Unknown Client Company",
+          "Name": "Unknown Client Name",
+          "City": "Unknown Client City",
+          "State": "Unknown Client State",
+          "Zip": "Unknown Client Zip"
+        }
+      },
+      "FMISMetaData": {
+        "FMISProfile": {
+          "Grower": "Unknown Grower",
+          "Farm": "Unknown Farm",
+          "Field": "Unknown Field",
+          "Sub-Field": "Unknown Sub-Field"
         }
       }
     }

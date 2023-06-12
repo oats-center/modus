@@ -982,7 +982,7 @@ analytes = Object.fromEntries(Object.entries(analytes).map(([key, val]) =>
     }
   ]
 ))
-
+/*
 // Make this as generic as possible so as to work on other labs
 const depthInfo = function(row: any) {
   let obj: LocalLabConfig["depthInfo"] = {};
@@ -1004,15 +1004,16 @@ const depthInfo = function(row: any) {
   }
   return obj;
 }
+*/
 
 const config : LocalLabConfig = {
   name: 'TomKat Ranch',
   type: 'Soil',
   mappings,
   analytes,
-  headers: [...Object.keys(analytes), ...Object.keys(mappings)],
+  //headers: [...Object.keys(analytes), ...Object.keys(mappings)],
   examplesKey: 'tomkat_historic',
-  depthInfo,
+  //depthInfo,
 };
 
 export default config;

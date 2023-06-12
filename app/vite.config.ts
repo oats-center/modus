@@ -5,6 +5,7 @@ const target = 'es2020';
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  assetsInclude: ['**/*.zip'],
   base: '/modus/',
   plugins: [react()],
   build: {

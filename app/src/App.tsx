@@ -6,8 +6,9 @@ import './App.css';
 import { connect } from '@oada/client';
 import { tree } from './trellisTree';
 import { observer } from 'mobx-react-lite';
-import { Tab, Tabs } from '@mui/material';
+import { IconButton, Tab, Tabs } from '@mui/material';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
+import { FolderZip } from '@mui/icons-material';
 import { context } from './state';
 import { toModus2QuickHack } from './toModus2'
 // @ts-ignore
@@ -15,6 +16,7 @@ import { file as convertFile, units, ModusResult } from '@modusjs/convert/dist-b
 import type { json } from '@modusjs/convert';
 import Messages from './Messages';
 import LabConfig from './LabConfig';
+import bigdemo from '../public/bigdemo.zip';
 
 //localStorage.debug = '*';
 
@@ -124,7 +126,7 @@ export default observer(function App() {
 
       <hr />
 
-
+{/*
       <TabContext
         value={state.tab}>
         <TabList
@@ -135,6 +137,7 @@ export default observer(function App() {
       </TabList>
       <TabPanel value="2"><LabConfig/></TabPanel>
       <TabPanel value="1">
+  */}
         <div className="output">
           <Messages />
           <div className="tagline">
@@ -214,8 +217,9 @@ export default observer(function App() {
         output to your own Trellis. Your original and
         converted data never leave your computer.
       </div>
+      {/*
       </TabPanel>
-      </TabContext>
+        </TabContext>*/}
 
       <hr />
       <div className="footer">
@@ -235,6 +239,13 @@ export default observer(function App() {
                2022 "Fixing the Soil Health Tech Stack" Hackathon.
             </a>
         </div>
+        <a href={bigdemo} download="BigDemo.zip" target='_blank'>
+          <IconButton
+            color="primary"
+            aria-label="download">
+            <FolderZip />
+          </IconButton>
+        </a>
       </div>
     </div>
   );

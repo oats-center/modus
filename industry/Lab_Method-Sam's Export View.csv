@@ -1,4 +1,4 @@
-﻿lab_method_name,lab_type,lab_csv_header,r-Modus_Soil_Test_v1,r-Modus_Soil_Test_v2,r-Analyte,f-Analyte,r-Extraction_Method,f-Extraction_Method,r-Measurement_Method,f-Measurement_Method,r-Unit_of_Measurement,f-Unit_of_Measurement_Default,r-Unit_of_Measurement_Alt,f-Unit_of_Measurement_Alt,r-UCUM_Unit_String-Unit_of_Measurement_Default,f-UCUM_Unit_String_Default,r-UCUM_Unit_String-Unit_of_Measurement_Alt,f-UCUM_Unit_String_Alt,lu-Modus_Soil_Test_v1 r-Modus_Soil_Test_v2,notes,internal_status,r-Lab,lu-lab_name r-Lab,lu-modus_id r-Modus_Soil_Test_v1,lu-modus_id r-Modus_Soil_Test_v2,lu-unit_of_measurement_name-r-Unit_of_Measurement_Alt,lu-Modus_Soil_Test_v2-r-Modus_Soil_Test_v1,example_test_result,modus_status
+lab_method_name,lab_type,lab_csv_header,r-Modus_Soil_Test_v1,r-Modus_Soil_Test_v2,r-Analyte,f-Analyte,r-Extraction_Method,f-Extraction_Method,r-Measurement_Method,f-Measurement_Method,r-Unit_of_Measurement,f-Unit_of_Measurement_Default,r-Unit_of_Measurement_Alt,f-Unit_of_Measurement_Alt,r-UCUM_Unit_String-Unit_of_Measurement_Default,f-UCUM_Unit_String_Default,r-UCUM_Unit_String-Unit_of_Measurement_Alt,f-UCUM_Unit_String_Alt,lu-Modus_Soil_Test_v1 r-Modus_Soil_Test_v2,notes,internal_status,r-Lab,lu-lab_name r-Lab,lu-modus_id r-Modus_Soil_Test_v1,lu-modus_id r-Modus_Soil_Test_v2,lu-unit_of_measurement_name-r-Unit_of_Measurement_Alt,lu-Modus_Soil_Test_v2-r-Modus_Soil_Test_v1,example_test_result,modus_status
 (Alfalfa) P,Soil,,,,,,,,,,,,,,,,,,,,Need more info from lab,"""A.V. Labs, Inc. - Othello, WA""","A.V. Labs, Inc. - Othello, WA",,,,,,
 B,Soil,,,,,,,,,,,,,,,,,,,,Need more info from lab,"""A.V. Labs, Inc. - Othello, WA""","A.V. Labs, Inc. - Othello, WA",,,,,,
 Bulk Density,Soil,,,,,,,,,,,,,,,,,,,Disturbed Soil,Need more info from lab,"""A.V. Labs, Inc. - Othello, WA""","A.V. Labs, Inc. - Othello, WA",,,,,,
@@ -104,8 +104,8 @@ C:N ratio,Soil,,,,C:N Ratio,C:N Ratio,,,,,none,none,,,,,,,,,Need more info from 
 Ca,Soil,CA,S-CA-NH4AC.05,L_MODV2_SOIL_CA_003,Calcium,Calcium,,Ammonium Acetate,,ICP-OES / AAS,ppm,ppm,,ppm,mg/kg,mg/kg,,[ppm],S-CA-NH4AC.05,,,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA",S-CA-NH4AC.05,L_MODV2_SOIL_CA_003,,L_MODV2_SOIL_CA_003,,OpenTEAM - Suggested
 CA_PCT,Soil,CA_PCT,S-BS-CA.19,L_MODV2_SOIL_MGBS_001,Base Saturation - Mg,Base Saturation - Mg,Calculation,Calculation,ICP-OES / AAS,ICP-OES / AAS,%,%,,%,%,%,,%,S-BS-MG.19,,,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA",S-BS-CA.19,L_MODV2_SOIL_MGBS_001,,L_MODV2_SOIL_CABS_001,,OpenTEAM - Suggested
 CA_SAT,Soil,CA_SAT,S-BS-CA.19,L_MODV2_SOIL_MGBS_001,Base Saturation - Mg,Base Saturation - Mg,Calculation,Calculation,ICP-OES / AAS,ICP-OES / AAS,meq/100 g,meq/100 g,,%,%,%,,%,S-BS-MG.19,,,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA",S-BS-CA.19,L_MODV2_SOIL_MGBS_001,,L_MODV2_SOIL_CABS_001,,OpenTEAM - Suggested
-CEC,Soil,CEC,,,Cation Exchange Capacity,Cation Exchange Capacity,,,,,meq/100 g,meq/100 g,,,,,,,,"S-CEC.19 
-//or S-CEC-NH4N.05 
+CEC,Soil,CEC,,,Cation Exchange Capacity,Cation Exchange Capacity,,,,,meq/100 g,meq/100 g,,,,,,,,"S-CEC.19
+//or S-CEC-NH4N.05
 //or S-CEC-AA.23",Need more info from lab,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA",,,,,,
 Chlorine,Soil,CL,S-CL-SP.01,L_MODV2_SOIL_CL_013,Chloride,Chloride,,Saturated Paste,,Spectrophotometric,ppm,ppm,,"mg/L, meq/L, ppm, lb/ac, kg/ha",mg/L,mg/L,,"mg/L, meq/L, [ppm], [lb_av]/[acr_us], kg/har",S-CL-SP.01,,,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA",S-CL-SP.01,L_MODV2_SOIL_CL_013,,L_MODV2_SOIL_CL_013,,OpenTEAM - Suggested
 CO3,Soil,CO3,S-CO3-SP.12,L_MODV2_SOIL_CO3_004,Carbonate,Carbonate,,Saturated Paste,,Titration,,meq/L,,"meq/L, mg/L, ppm",meq/L,meq/L,,"meq/L, mg/L, [ppm]",S-CO3-SP.12,,,"""A&L Western Agricultural Labs - Modesto, CA""","A&L Western Agricultural Labs - Modesto, CA",S-CO3-SP.12,L_MODV2_SOIL_CO3_004,,L_MODV2_SOIL_CO3_004,,OpenTEAM - Suggested
@@ -182,7 +182,7 @@ Mo,Soil,,,,,,,,,,,,,,,,,,,,Need more info from lab,"""Ag Test LLC - Kittitas, WA
 Moisture,Soil,,,,,,,,,,,,,,,,,,,Mass percent of a soil that is water when sampled,Need more info from lab,"""Ag Test LLC - Kittitas, WA""","Ag Test LLC - Kittitas, WA",,,,,,
 Na,Soil,,,,,,,,,,,,,,,,,,,,Need more info from lab,"""Ag Test LLC - Kittitas, WA""","Ag Test LLC - Kittitas, WA",,,,,,
 NH4-N,Soil,,,,,,,,,,,,,,,,,,,"Method:
-ppm Ammonium(NH4-N) 
+ppm Ammonium(NH4-N)
 2N KCl",Not in MODUS,"""Ag Test LLC - Kittitas, WA""","Ag Test LLC - Kittitas, WA",,,,,,
 NO3-N,Soil,,,,,,,,,,,,,,,,,,,,Need more info from lab,"""Ag Test LLC - Kittitas, WA""","Ag Test LLC - Kittitas, WA",,,,,,
 OM (Organic Matter),Soil,,S-SOM-LOI.15,L_MODV2_SOIL_OM_004,Organic Matter,Organic Matter,Loss on Ignition (LOI),Loss on Ignition (LOI),Gravimetric,Gravimetric,%,%,,"%, g/kg",%,%,,"%, g/kg",S-SOM-LOI.15,,Need more info from lab,"""Ag Test LLC - Kittitas, WA""","Ag Test LLC - Kittitas, WA",S-SOM-LOI.15,L_MODV2_SOIL_OM_004,,L_MODV2_SOIL_OM_004,,OpenTEAM - Suggested
@@ -650,6 +650,22 @@ Total Carbon,Soil,Total C,S-TC-COMB.15,L_MODV2_SOIL_TC_001,"""Carbon, Total""","
 Total Carbon:Total Nitrogen,Soil,,S-TC:TN.19,L_MODV2_SOIL_TCTN_001,Total Carbon:Total Nitrogen,Total Carbon:Total Nitrogen,,Dry Combustion,Calculation,Calculation,none,none,,none,,,,,S-TC:TN.19,,,Cornell Soil Health Lab,Cornell Soil Health Lab,S-TC:TN.19,L_MODV2_SOIL_TCTN_001,,L_MODV2_SOIL_TCTN_001,,OpenTEAM - Suggested
 Total Nitrogen,Soil,Total N,S-TN.16,L_MODV2_SOIL_TN_002,"""Nitrogen, Total""","""Nitrogen, Total""",Combustion,Combustion,Combustion Analyzer,Combustion Analyzer,%,%,,"%, g/kg",%,%,,"%, g/kg",S-TN.16,,,Cornell Soil Health Lab,Cornell Soil Health Lab,S-TN.16,L_MODV2_SOIL_TN_002,,L_MODV2_SOIL_TN_002,,OpenTEAM - Suggested
 Wet Aggregate Stability - Slaking,Soil,"Aggregate Stability,wet aggregate stability",S-AS-S-DW-G-OT,,,Aggregate Stability,,Slaking,,Gravimetric,,%,,,%,%,,,,,submitted to AgGateway,Cornell Soil Health Lab,Cornell Soil Health Lab,S-AS-S-DW-G-OT,,,,,Automation - Not Enough Information
+Bulk Density,Soil,Bulk density (corrected for coarse material),,,Bulk Density,Bulk Density,,,,,g/cm3,g/cm3,,,,,,,,,,Cquester Analytics,Cquester Analytics,,,,,,
+Inorganic carbon,Soil,Inorganic carbon,,,,,,,,,%,%,,,,,,,,,,Cquester Analytics,Cquester Analytics,,,,,,
+Organic carbon,Soil,Organic carbon,,,Organic Carbon,Organic Carbon,,,,,%,%,,,,,,,,,,Cquester Analytics,Cquester Analytics,,,,,,
+Total nitrogen,Soil,Total nitrogen,,,"""Nitrogen, Total""","""Nitrogen, Total""",,,,,%,%,,,,,,,,,,Cquester Analytics,Cquester Analytics,,,,,,
+pH,Soil,pH,,,pH,pH,,,,,standard pH unit,standard pH unit,,,,,,,,,,Cquester Analytics,Cquester Analytics,,,,,,
+Sand content,Soil,Sand content,,,Sand,Sand,,,,,%,%,,,,,,,,,,Cquester Analytics,Cquester Analytics,,,,,,
+Silt content,Soil,Silt content,,,Silt,Silt,,,,,%,%,,,,,,,,,,Cquester Analytics,Cquester Analytics,,,,,,
+Clay content,Soil,Clay content,,,Clay,Clay,,,,,%,%,,,,,,,,,,Cquester Analytics,Cquester Analytics,,,,,,
+Dissolved organic matter mass,Soil,Dissolved organic matter mass,,,,,,,,,%,%,,,,,,,,,,Cquester Analytics,Cquester Analytics,,,,,,
+Dissolved organic matter carbon,Soil,Dissolved organic matter carbon,,,,,,,,,%,%,,,,,,,,,,Cquester Analytics,Cquester Analytics,,,,,,
+Light particulate organic matter mass,Soil,Light particulate organic matter mass,,,,,,,,,%,%,,,,,,,,,,Cquester Analytics,Cquester Analytics,,,,,,
+Light particulate organic matter carbon,Soil,Light particulate organic matter carbon,,,,,,,,,%,%,,,,,,,,,,Cquester Analytics,Cquester Analytics,,,,,,
+Heavy particulate organic matter mass,Soil,Heavy particulate organic matter mass,,,,,,,,,%,%,,,,,,,,,,Cquester Analytics,Cquester Analytics,,,,,,
+Heavy particulate organic matter carbon,Soil,Heavy particulate organic matter carbon,,,,,,,,,%,%,,,,,,,,,,Cquester Analytics,Cquester Analytics,,,,,,
+Mineral associated organic matter mass,Soil,Mineral associated organic matter mass,,,,,,,,,%,%,,,,,,,,,,Cquester Analytics,Cquester Analytics,,,,,,
+Mineral associated organic matter carbon,Soil,Mineral associated organic matter carbon,,,,,,,,,%,%,,,,,,,,,,Cquester Analytics,Cquester Analytics,,,,,,
 Demo pH,Soil,pH,,L_MODV2_SOIL_PH_004,pH,pH,Calcium Chloride,Calcium Chloride,H+ ISE,H+ ISE,standard pH unit,standard pH unit,,,,,,,S-PH-1:2.02.08,,,Demo Lab,Demo Lab,,L_MODV2_SOIL_PH_004,,,,Lab - Confirmed
 Al_DTPA,Soil,Al_DTPA,,L_MODV2_SOIL_AL_006,,Aluminum,,DTPA-Sorbitol,,ICP-OES,,mg/kg,,ppm,,mg/kg,,[ppm],S-AL-DTPA-SORB.05,,,Kuo Testing Laboratories,Kuo Testing Laboratories,,L_MODV2_SOIL_AL_006,,,,
 AlMeh,Soil,AlMeh,,L_MODV2_SOIL_AL_012,,Aluminum,,Mehlich 3 ,,ICP-OES / AAS,,mg/kg,,ppm,,mg/kg,,[ppm],S-AL-M3.05,,,Kuo Testing Laboratories,Kuo Testing Laboratories,,L_MODV2_SOIL_AL_012,,,,

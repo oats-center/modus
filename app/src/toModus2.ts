@@ -17,10 +17,10 @@ export function toModus2QuickHack(m1: ModusResult): ModusResult {
     throw new Error('Events is null');
   }
   for (const event of ret.Events) {
-    if  (!event.EventSamples?.Soil?.SoilSamples) {
+    if  (!event.EventSamples?.Soil?.SoilSample) {
       throw new Error('No soil samples for this event');
     }
-    for (const sample of event.EventSamples.Soil.SoilSamples) {
+    for (const sample of event.EventSamples.Soil.SoilSample) {
       if (!sample.Depths) {
         throw new Error('No Depths for this samle');
       }
@@ -41,4 +41,3 @@ export function toModus2QuickHack(m1: ModusResult): ModusResult {
   }
   return ret;
 }
-

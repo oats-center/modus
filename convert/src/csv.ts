@@ -215,7 +215,7 @@ function groupRows(rows: any[], datecol: string | undefined) {
   return rows.reduce((groups: DateGroupedRows, r: any) => {
     let date = datecol ? ((r[datecol] === 'NA' ? new Date(0) : r[datecol]) || 'Unknown Date') : 'Unknown Date'
     date = date instanceof Date ? date.toISOString().split('T')[0] : date;
-    if (date.match(/[0-9]{8}/)) {
+    if (date+''.match(/[0-9]{8}/)) {
       // YYYYMMDD
       date = dayjs(date, 'YYYYMMDD').format('YYYY-MM-DD');
     } else if (+date < 100000 && +date > 100) {
@@ -311,13 +311,14 @@ function convert({
     const grouped_rows = groupRows(rows, datecol);
     // Now we can loop through all the groups and actually make the darn Modus
     // file:
-    let groupcount = 1
+    let groupcount = 0;
     for (const [date, g_rows] of Object.entries(grouped_rows)) {
+      groupcount++;
       // Start to build the modus output, this is one "Event"
       //TODO: Soil labtype isn't the best default because its really the only "different" one.
       //      We could also use existence of depth info to determine if its soil.
       const type : LabType = labConfig?.type || modusKeyToValue(g_rows[0], 'EventType', labConfig) || 'Soil';
-      const sampleType = `${type}Samples`;//Should be Sample according to modus
+      const sampleType = `${type}Sample`;//Should be Sample according to modus
       const output: ModusResult | any = {
         Events: [
           {
@@ -409,7 +410,7 @@ function convert({
         // Get the ReportID integer from the LabReportID string after ensuring
         // a Reports entry exists for it.
         const labReportId = modusKeyToValue(row, 'LabReportID', labConfig);
-        const fileDescription = `${sheetname}_${groupcount++}`;
+        const fileDescription = `${sheetname}_${groupcount}`;
         const ReportID = ensureLabReportId(event.LabMetaData.Reports, labReportId, fileDescription);
 
         let sample: any = {
@@ -876,7 +877,7 @@ export function toCsvObject(input: ModusResult, separateMetadata?: boolean) {
       let allReports = toReportsObj(event.LabMetaData!.Reports);
 
       let allDepthRefs = toDepthRefsObj(event.EventSamples?.Soil?.DepthRefs);
-      let samplesType = `${type}Samples`;
+      let samplesType = `${type}Sample`;
 
       // @ts-expect-error make union type later
       return event.EventSamples![type]![samplesType]!.map((sample) => {

@@ -35,7 +35,7 @@
               "DepthID": 2
             }
           ],
-          "SoilSamples": [
+          "SoilSample": [
             {
               "SampleMetaData": {
                 "SampleNumber": "0",
