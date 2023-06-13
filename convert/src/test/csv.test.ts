@@ -4,8 +4,9 @@ import chalk from 'chalk';
 import type * as MainLib from '../index.js';
 import type ModusResult from '@oada/types/modus/v1/modus-result.js'
 
+//@ts-ignore
 import csv_sample1 from '@modusjs/examples/dist/a_l_west/plant/sample1_csv.js';
-//import xlsx_sample1 from '@modusjs/examples/dist/tomkat-historic/tomkat_source_data_xlsx.js';
+//import xlsx_sample1 from '@modusjs/examples/dist/tomkat-historic/soil/tomkat_source_data_xlsx.js';
 
 const trace = debug('@modusjs/convert#test-csv:trace');
 const info = debug('@modusjs/convert#test-csv:info');
@@ -191,7 +192,7 @@ export default async function run(lib: typeof MainLib) {
     }
   });
   let result = lib.csv.parse({base64: csv_sample2, format: 'tomkat'});
-  let samples = result[0]!.Events?.[0]?.EventSamples?.Soil?.SoilSample?.[0]?.Depths?.[0]?.NutrientResults;
+  let samples = result[0]!.Events?.[0]?.EventSamples?.Soil?.SoilSamples?.[0]?.Depths?.[0]?.NutrientResults;
   let om = (samples || []).filter(nr => nr.Element === 'OM');
   if (om?.[0]?.ValueUnit !== 'TEST UNITS') {
     throw new Error(`Units were not recognized from the csv headers. OM Element should have units == 'TEST UNITS'`);

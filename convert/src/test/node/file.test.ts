@@ -18,19 +18,19 @@ export default async function run(lib: typeof MainLib) {
   await fs.mkdir(dir, { recursive: true });
   const files = [
     {
-      src: '../examples/examples/tomkat-historic/tomkat_source_data2015_RMN0-10cm_1.json',
+      src: '../examples/examples/tomkat-historic/soil/tomkat_source_data2015_RMN0-10cm_1.json',
       dst: `${dir}/tomkat2015_1.json`,
     },
     {
-      src: '../examples/examples/tomkat-historic/TOKA2021-22A_RMN_Ward.csv',
+      src: '../examples/examples/tomkat-historic/soil/TOKA2021-22A_RMN_Ward.csv',
       dst: `${dir}/ward.csv`,
     },
     {
-      src: '../examples/examples/tomkat-historic/tomkat_source_data.xlsx',
+      src: '../examples/examples/tomkat-historic/soil/tomkat_source_data.xlsx',
       dst: `${dir}/tomkat_source_data.xlsx`,
     },
     {
-      src: '../examples/examples/enyart-east50-a_l_labs/hand-modus.xml',
+      src: '../examples/examples/enyart-east50-a_l_labs/soil/hand-modus.xml',
       dst: `${dir}/hand-modus.xml`,
     },
   ];

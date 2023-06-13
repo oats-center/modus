@@ -2,7 +2,7 @@ import debug from 'debug';
 // Only import the type here: use the lib passed to you from node or browser in run()
 import type * as MainLib from '../../browser/index.js';
 import chalk from 'chalk';
-
+//@ts-ignore
 import tomkat from '@modusjs/examples/dist/tomkat-historic/soil/tomkat_source_data2015_RMN0-10cm_1_json.js';
 
 import type ModusResult from '@oada/types/modus/v1/modus-result.js';

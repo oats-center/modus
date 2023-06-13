@@ -318,7 +318,7 @@ function convert({
       //TODO: Soil labtype isn't the best default because its really the only "different" one.
       //      We could also use existence of depth info to determine if its soil.
       const type : LabType = labConfig?.type || modusKeyToValue(g_rows[0], 'EventType', labConfig) || 'Soil';
-      const sampleType = `${type}Sample`;//Should be Sample according to modus
+      const sampleType = `${type}Samples`;
       const output: ModusResult | any = {
         Events: [
           {
@@ -877,7 +877,7 @@ export function toCsvObject(input: ModusResult, separateMetadata?: boolean) {
       let allReports = toReportsObj(event.LabMetaData!.Reports);
 
       let allDepthRefs = toDepthRefsObj(event.EventSamples?.Soil?.DepthRefs);
-      let samplesType = `${type}Sample`;
+      let samplesType = `${type}Samples`;
 
       // @ts-expect-error make union type later
       return event.EventSamples![type]![samplesType]!.map((sample) => {

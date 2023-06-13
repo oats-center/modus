@@ -4,10 +4,13 @@ import { deepdiff } from './util.js';
 
 // Only import the type here: use the lib passed to you from node or browser in run()
 import type * as MainLib from '../index.js';
-
+//@ts-ignore
 import xlsx_sample1 from '@modusjs/examples/dist/tomkat-historic/soil/tomkat_source_data_xlsx.js';
+//@ts-ignore
 import xml_sample1 from '@modusjs/examples/dist/enyart-east50-a_l_labs/soil/hand-modus_xml.js';
+//@ts-ignore
 import json_sample1 from '@modusjs/examples/dist/enyart-east50-a_l_labs/soil/hand-modus_json.js';
+//@ts-ignore
 import { all as examples } from '@modusjs/examples/dist';
 
 
@@ -27,8 +30,11 @@ export default async function run(lib: typeof MainLib) {
   });
 
   test('Parsing all the examples with toJson()...');
+//@ts-ignore
   for await (const [lab, types] of Object.entries(examples)) {
+//@ts-ignore
     for await (const [type, list] of Object.entries(types)) {
+//@ts-ignore
       for await (const example of list) {
         //let thing = await import(`../../../examples/dist/${example.importpath}.js`)
         let data = (await import(`../../../examples/dist/${example.path}/${example.js.split('.')[0]}.js`)).default;

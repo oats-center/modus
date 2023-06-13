@@ -7,6 +7,7 @@ import * as MainLib from '../index.js';
 import { labConfigsMap } from '../labs/index.js';
 import { validateUnits } from '@modusjs/units';
 import type { NutrientResult } from '@modusjs/units';
+//@ts-ignore
 import * as examples from '@modusjs/examples';
 
 //const trace = debug('@modusjs/convert#test-labConfigs:trace');

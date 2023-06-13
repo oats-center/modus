@@ -9,7 +9,7 @@
       },
       "EventSamples": {
         "Soil": {
-          "SoilSample": [
+          "SoilSamples": [
             {
               "SampleMetaData": {
                 "ReportID": 1,

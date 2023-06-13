@@ -288,21 +288,21 @@ export const toModusJsonPath = {
   'SampleNumber': {
     type: 'sample',
     path: '$.SampleMetaData.SampleNumber',
-    fullpath: '$.Events.*.EventSamples.Soil.SoilSample.*.SampleMetaData.SampleNumber',
+    fullpath: '$.Events.*.EventSamples.Soil.SoilSamples.*.SampleMetaData.SampleNumber',
     parse: 'string',
     description: 'Sample number as numbered by the lab',
   },
   'SampleContainerID': {
     type: 'sample',
     path: '$.SampleMetaData.SampleContainerID',
-    fullpath: '$.Events.*.EventSamples.Soil.SoilSample.*.SampleMetaData.SampleContainerID',
+    fullpath: '$.Events.*.EventSamples.Soil.SoilSamples.*.SampleMetaData.SampleContainerID',
     parse: 'string',
     description: 'Sample container ID as submitted by the client',
   },
   'FMISSampleID': {
     type: 'sample',
     path: '$.SampleMetaData.FMISSampleID',
-    fullpath: '$.Events.*.EventSamples.Soil.SoilSample*.FMISSampleID',
+    fullpath: '$.Events.*.EventSamples.Soil.SoilSamples*.FMISSampleID',
     description: 'Sample ID assigned by the FMIS that submitted the samples',
   },
   'StartingDepth': {

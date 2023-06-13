@@ -16,7 +16,7 @@ import { file as convertFile, units, ModusResult } from '@modusjs/convert/dist-b
 import type { json } from '@modusjs/convert';
 import Messages from './Messages';
 import LabConfig from './LabConfig';
-import bigdemo from '../public/bigdemo.zip';
+import bigdemo from '../bigdemo.zip';
 
 //localStorage.debug = '*';
 

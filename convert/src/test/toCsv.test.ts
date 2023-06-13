@@ -5,6 +5,7 @@ import type * as MainLib from '../index.js';
 
 //import tomkat from '@modusjs/examples/dist/tomkat-historic/soil/tomkat_source_data2015_RMN0-10cm_1_json.js';
 //import alwest from '@modusjs/examples/dist/a_l_west/soil/sample2.csv';
+//@ts-ignore
 import * as examples from '@modusjs/examples';
 import * as xlsx from 'xlsx';
 

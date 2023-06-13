@@ -54,7 +54,7 @@
               "DepthUnit": "in"
             }
           ],
-          "SoilSample": [
+          "SoilSamples": [
             {
               "SampleMetaData": {
                 "ReportID": 1,
