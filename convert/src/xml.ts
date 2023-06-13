@@ -332,7 +332,11 @@ export function parse(xmlstring: string): any {
         Depths: { type: 'array' },
         SoilSample: {
           type: 'accumulateArray',
-          finalKeynameForArrayInParent: 'SoilSample',
+          finalKeynameForArrayInParent: 'SoilSamples',
+        },
+        PlantSample: {
+          type: 'accumulateArray',
+          finalKeynameForArrayInParent: 'PlantSamples',
         },
         NutrientResults: { type: 'array' },
         EventType: { type: 'emptyTagsBecomeTrue' },
@@ -353,15 +357,15 @@ export function parse(xmlstring: string): any {
         Variables: { type: 'array' },
         NematodeSample: {
           type: 'accumulateArray',
-          finalKeynameForArrayInParent: 'NematodeSample',
+          finalKeynameForArrayInParent: 'NematodeSamples',
         },
         WaterSample: {
           type: 'accumulateArray',
-          finalKeynameForArrayInParent: 'WaterSample',
+          finalKeynameForArrayInParent: 'WaterSamples',
         },
         ResidueSample: {
           type: 'accumulateArray',
-          finalKeynameForArrayInParent: 'ResidueSample',
+          finalKeynameForArrayInParent: 'ResidueSamples',
         },
         Warnings: { type: 'array' },
       },

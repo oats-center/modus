@@ -291,7 +291,7 @@ export function setModusNRUnits(modus: ModusResult, units?: NutrientResult[]): M
   let evts = (modus.Events || []).map((evt) => {
     let evtSamples = Object.fromEntries(
       Object.entries(evt.EventSamples || {}).map(([key, value]: [string, any]) => {
-        let samplesKey = `${key}Sample`;
+        let samplesKey = `${key}Samples`;
         if (key === 'Soil') {
           value[samplesKey] = value[samplesKey].map((sample:any) => ({
             ...sample,
