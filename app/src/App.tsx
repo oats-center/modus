@@ -17,6 +17,7 @@ import type { json } from '@modusjs/convert';
 import Messages from './Messages';
 import LabConfig from './LabConfig';
 import bigdemo from '../bigdemo.zip';
+import curateddemo from '../curateddemo.zip';
 
 //localStorage.debug = '*';
 
@@ -118,10 +119,19 @@ export default observer(function App() {
           <h1 className="header-title">
             <img className="header-logo" src="fixingsoil-logo.png" />
             <div>Modus Lab Results Converter</div>
+
           </h1>
         </div>
         <div style={{ flexGrow: 1 }}></div>
-        <div>{/* Icons here  */}</div>
+        <div>
+          <a href={curateddemo} download="curateddemo.zip" target='_blank'>
+              <IconButton
+                color="primary"
+                aria-label="download">
+                <FolderZip />
+              </IconButton>
+            </a>
+          </div>
       </div>
 
       <hr />
@@ -239,7 +249,7 @@ export default observer(function App() {
                2022 "Fixing the Soil Health Tech Stack" Hackathon.
             </a>
         </div>
-        <a href={bigdemo} download="BigDemo.zip" target='_blank'>
+        <a href={bigdemo} download="bigdemo.zip" target='_blank'>
           <IconButton
             color="primary"
             aria-label="download">

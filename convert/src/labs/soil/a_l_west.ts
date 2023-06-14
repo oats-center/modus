@@ -10,7 +10,7 @@ const mappings : LocalLabConfig["mappings"] = {
   // DATESAMPL might map to something, but its all empty strings in our samples
   // so it won't convert to a valid date...
   'DATESAMPL': undefined,
-  'DATESUB': 'EventDate',
+  'DATESUB': ['EventDate', 'ReceivedDate'],
   'CLIENT': 'AccountNumber',
   'GROWER': 'Grower',
   'PERSON': 'AccountName',
@@ -237,8 +237,8 @@ const analytes : LocalLabConfig["analytes"] = {
 const config : LocalLabConfig = {
   name: 'A&L Western Agricultural Labs - Modesto, CA',
   mappings,
-  analytes,
-  headers: [...Object.keys(analytes), ...Object.keys(mappings)],
+  //analytes,
+  //headers: [...Object.keys(analytes), ...Object.keys(mappings)],
   examplesKey: 'a_l_west',
   type: 'Soil',
 }
