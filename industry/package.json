@@ -16,7 +16,7 @@
     "build": "node src/build.js && tsc -b",
     "dev:node": "tsc -b -w",
     "test:node": "nodemon --enable-source-maps --config nodemon.config.json test/node.js",
-    "clean": "rm -rf dist gen"
+    "clean": "rm -rf dist gen *.tsbuildinfo"
   },
   "author": "Sam Noel <noel.samuel.a@gmail.com>",
   "license": "Apache-2.0",

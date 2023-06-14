@@ -28,7 +28,7 @@
     "test:browser": "live-server --port=8080 --host=localhost --wait=1000 --watch=dist-browser --open=src/test/index.html",
     "test:node": "DEBUG=\"@modusjs*,${DEBUG}\" nodemon --enable-source-maps --config nodemon.config.json dist/test/node/index.js",
     "test": "concurrently \"yarn run test:browser\" \"yarn run test:node\"",
-    "clean": "rm -rf dist dist-browser"
+    "clean": "rm -rf dist dist-browser *.tsbuildinfo"
   },
   "publishConfig": {
     "access": "public"

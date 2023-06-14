@@ -155,9 +155,10 @@ function clean(labConfigs) {
 async function createOutputs(labConfigs, units, modusTests) {
   const outputs /*: string[] */ = [];
 
-  await fs.writeFile(LABCONFIG, `export default ${JSON.stringify(labConfigs, null, 2)}`, {recursive: true});
-  await fs.writeFile(UNITS, `export default ${JSON.stringify(units, null, 2)}`, {recursive: true});
-  await fs.writeFile(TESTS, `export default ${JSON.stringify(modusTests, null, 2)}`, {recursive: true});
+  await fs.mkdir('./gen', { recursive: true });
+  await fs.writeFile(LABCONFIG, `export default ${JSON.stringify(labConfigs, null, 2)}`);
+  await fs.writeFile(UNITS, `export default ${JSON.stringify(units, null, 2)}`);
+  await fs.writeFile(TESTS, `export default ${JSON.stringify(modusTests, null, 2)}`);
   outputs.push(`export { default as labConfigs } from './labConfigs.js'`);
   outputs.push(`export { default as standardUnits } from './standardUnits.js'`);
   outputs.push(`export { default as modusTests } from './modusTests.js'`);
