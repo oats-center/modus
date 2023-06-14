@@ -18,11 +18,11 @@ import fs from 'fs/promises';
   let global_all = {};
 
   for (const labdir of example_dirs) {
+    const labdirstat = await fs.stat('./examples/'+labdir);
+    if (!labdirstat.isDirectory()) continue;
     const typedirs = await fs.readdir(`./examples/${labdir}`);
     const lab_path = `./build/${labdir}`;
     let lab_index = '';
-    const labdirstat = await fs.stat('./examples/'+labdir);
-    if (!labdirstat.isDirectory()) continue;
     let lab_all = {};
     for (const typedir of typedirs) {
       const dir = `${labdir}/${typedir}`;
