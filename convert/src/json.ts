@@ -14,6 +14,8 @@ import { modusTests } from '@modusjs/industry';
 import type { NutrientResult } from '@modusjs/units';
 import type { LabConfig } from './labs/index.js';
 
+export * as slim from './slim.js'
+
 const error = debug('@modusjs/convert#tojson:error');
 const warn = debug('@modusjs/convert#tojson:error');
 const info = debug('@modusjs/convert#tojson:info');

@@ -40,7 +40,7 @@
     "@modusjs/examples": "workspace:^",
     "@modusjs/industry": "workspace:^",
     "@modusjs/units": "workspace:^",
-    "@oada/formats": "^3.4.1",
+    "@oada/formats": "^3.5.3",
     "@rollup/plugin-commonjs": "^23.0.0",
     "@rollup/plugin-dynamic-import-vars": "^2.0.1",
     "@rollup/plugin-json": "^5.0.0",
@@ -48,6 +48,7 @@
     "@tsconfig/node16": "^1.0.3",
     "@types/debug": "^4.1.7",
     "@types/isomorphic-form-data": "^2.0.1",
+    "@types/json-pointer": "^1.0.31",
     "@types/jsonpath": "^0.2.0",
     "@types/md5": "^2",
     "@types/node": "^18.11.2",
@@ -61,12 +62,14 @@
     "rollup-plugin-pnp-resolve": "^2.0.0",
     "rollup-plugin-terser": "^7.0.2",
     "rollup-plugin-typescript2": "^0.34.1",
+    "ts-node": "^10.9.1",
     "typescript": "^4.7.4"
   },
   "dependencies": {
     "@lhncbc/ucum-lhc": "^4.1.6",
-    "@oada/types": "^3.5.2",
+    "@oada/types": "^3.5.3",
     "@overleaf/o-error": "^3.4.0",
+    "@types/geojson": "^7946.0.10",
     "chalk": "^4.0.0",
     "cheerio": "^1.0.0-rc.12",
     "date-fns": "^2.29.3",
@@ -78,6 +81,7 @@
     "formdata-node": "^5.0.0",
     "htmlparser2": "^8.0.1",
     "isomorphic-form-data": "^2.0.0",
+    "json-pointer": "^0.6.2",
     "jsonpath": "^1.1.1",
     "jszip": "^3.10.1",
     "md5": "^2.3.0",
@@ -85,6 +89,7 @@
     "prompts": "^2.4.2",
     "save-file": "^2.3.1",
     "tslib": "^2.4.0",
+    "wicket": "^1.3.8",
     "xlsx": "^0.18.5"
   }
 }

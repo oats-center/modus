@@ -38,7 +38,7 @@
   "devDependencies": {
     "@modusjs/examples": "workspace:^",
     "@modusjs/industry": "workspace:^",
-    "@oada/formats": "^3.3.0",
+    "@oada/formats": "^3.5.3",
     "@rollup/plugin-commonjs": "^23.0.0",
     "@rollup/plugin-json": "^5.0.0",
     "@rollup/plugin-node-resolve": "^15.0.0",
@@ -62,7 +62,7 @@
   },
   "dependencies": {
     "@lhncbc/ucum-lhc": "^4.1.6",
-    "@oada/types": "^3.3.0",
+    "@oada/types": "^3.5.3",
     "@overleaf/o-error": "^3.4.0",
     "chalk": "^4.0.0",
     "cheerio": "^1.0.0-rc.12",

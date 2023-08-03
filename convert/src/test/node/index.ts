@@ -13,6 +13,8 @@ import fileTest from './file.test.js';
 import toCsvTests from '../toCsv.test.js';
 import csvTests from '../csv.test.js';
 import labConfigs from '../labConfigs.test.js';
+import { toGeoJson } from '../../geojson.js';
+import toSlimTests  from '../toslim.test.js';
 
 const info = debug('@modusjs/xml#test-node:info');
 const { red } = chalk;
@@ -36,11 +38,18 @@ const { red } = chalk;
 
     info('testing csv');
     await csvTests(mainlib);
-    */
+
     info('testing toCsv');
     await toCsvTests(mainlib);
 
+    */
+    info('testing toSlim');
+    await toSlimTests(mainlib);
+
     /*
+    info('testing toGeoJson');
+    await toGeoJsonTests(mainlib);
+
     info('testing tojson');
     await toJsonTests(mainlib);
 
@@ -49,12 +58,12 @@ const { red } = chalk;
 
     info('testing node file');
     await fileTest(mainlib);
-    */
 
     info('testing labconfigs');
     await labConfigs(mainlib);
 
     info('All tests passed!');
+    */
   } catch (e: any) {
     info(
       red(`ERROR: tests threw exception: `),

@@ -35,7 +35,7 @@
     "@modusjs/convert": "workspace:^",
     "@modusjs/examples": "workspace:^",
     "@modusjs/units": "workspace:^",
-    "@oada/types": "^3.3.0",
+    "@oada/types": "^3.5.3",
     "tslib": "^2.4.0"
   }
 }
