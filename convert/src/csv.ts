@@ -7,6 +7,7 @@ import type { NutrientResult, Units } from '@modusjs/units';
 import type { InputFile, SupportedFileType } from './json.js';
 import { jsonFilenameFromOriginalFilename, supportedFileTypes, typeFromFilename, zipParse } from './json.js';
 import * as units from '@modusjs/units';
+import { parseDate } from './labs/index.js';
 import ModusResult, {
   assert as assertModusResult,
 } from '@oada/types/modus/v1/modus-result.js';
@@ -213,15 +214,10 @@ type DateGroupedRows = Record<string, any[]>;
 
 function groupRows(rows: any[], datecol: string | undefined) {
   return rows.reduce((groups: DateGroupedRows, r: any) => {
-    let date = datecol ? ((r[datecol] === 'NA' ? new Date(0) : r[datecol]) || 'Unknown Date') : 'Unknown Date'
+    let date = datecol ? r[datecol] : 'Unknown Date'
+    if (date === 'NA') date = 'Unknown Date'
+    if (date !== 'Unknown Date') date = parseDate(date);
     date = date instanceof Date ? date.toISOString().split('T')[0] : date;
-    if (date+''.match(/[0-9]{8}/)) {
-      // YYYYMMDD
-      date = dayjs(date, 'YYYYMMDD').format('YYYY-MM-DD');
-    } else if (+date < 100000 && +date > 100) {
-      // this is an excel date (# days since 1/1/1900), parse it out
-      date = dayjs(getJsDateFromExcel(date)).format('YYYY-MM-DD');
-    }
     trace('Determined row date from column', datecol, 'as', date);
 
     if (!date) {
@@ -366,7 +362,7 @@ function convert({
           ClientAccount: {
             AccountNumber: modusKeyToValue(row, 'AccountNumber', labConfig) || 'Unknown Client Account',
             Company: modusKeyToValue(row, 'Company', labConfig) || 'Unknown Client Company',
-            Name: modusKeyToValue(row, 'Name', labConfig) || 'Unknown Client Name',
+            Name: modusKeyToValue(row, 'AccountName', labConfig) || 'Unknown Client Name',
             City: modusKeyToValue(row, 'City', labConfig) || 'Unknown Client City',
             State: modusKeyToValue(row, 'State', labConfig) || 'Unknown Client State',
             Zip: modusKeyToValue(row, 'Zip', labConfig) || 'Unknown Client Zip',
@@ -434,7 +430,7 @@ function convert({
         // Parse locations: either in the sample itself or in the meta.  Sample takes precedence over meta.
         let wkt = parseWKTFromPointMetaOrRow(meta) || parseWKTFromPointMetaOrRow(row);
         if (wkt) {
-          sample.SampleMetaData.Geometry = { wkt };
+          sample.SampleMetaData.Geometry = wkt;
         }
         samples.push(sample);
 
@@ -642,7 +638,7 @@ function extractBefore(str: string, startChars: string | string[]): string {
 type ColumnHeader = {
   original: string;
   element: string;
-  modifier?: string;
+  modusid?: string;
   units?: string;
   nutrientResult: NutrientResult;
   unitsOverride?: string;
@@ -654,13 +650,13 @@ export function parseColumnHeaderName(original: string, labConfig?: LabConfig): 
     .replace(/\n/g, ' ')
     .replace(/ +/g, ' ');
   const element = extractBefore(original, ['(', '[']).trim() || original;
-  const modifier = extractBetween(original, '(', ')')?.trim();
+  const modusid = extractBetween(original, '(', ')')?.trim();
   const units = extractBetween(original, '[', ']')?.trim();
   const nutrientResult = labConfig?.analytes[element] || { Element: element };
   return {
     original,
     element,
-    modifier,
+    modusid,
     units,
     nutrientResult,
   };
@@ -669,6 +665,9 @@ export function parseColumnHeaderName(original: string, labConfig?: LabConfig): 
 // TODO: 'strict' means exclude all elements unknown to modus
 // This function also filters all duplicate base saturation elements in the event that
 // percent and meq/100g units are provided.
+//TODO: Handling the standardized CSV output is challenging here (no labconfig). We are limited to
+// deciphering nutrient results from columns that have units or a modus id. This can be decieving as
+// some analytes may not have that info and other columns such as depth can have units.
 function parseNutrientResults({
   row,
   headers,
@@ -679,44 +678,48 @@ function parseNutrientResults({
   headers: Record<string, ColumnHeader>,
   labConfig?: LabConfig,
   //strict?: boolean
-}): NutrientResult[] {
-  //TODO: Handling the standardized CSV output is challenging here (no labconfig). The only real way we are
-  // deciphering nutrient results is those columns having either units or a modus id. This can be decieving as
-  // some nutrient results may not have that info and other columns such as starting/ending depth can have
-  // units.
-  let nutrientResults : any = Object.keys(row)
-    .filter(key => labConfig?.analytes === undefined ? true : Object.keys(labConfig?.analytes).includes(key))
-    .filter((key: any) => !isNaN(row[key]) && row[key] !== '')
-    .filter((key: any) => !(labConfig?.analytes?.[key] === undefined && (
-      headers?.[key]?.units === undefined && headers?.[key]?.modifier === undefined)))
-    // Handle the only other things that have units that we know about, but are not nutrient results
-    .filter((key: any) => !(labConfig?.analytes?.[key] === undefined &&
-      ['StartingDepth', 'EndingDepth', 'ColumnDepth'].includes(headers?.[key]!.element)))
-    .map((key: any) => {
-      if (labConfig?.analytes?.[key] !== undefined) {
+}): Array<NutrientResult> {
+
+  let nutrientResults : Array<NutrientResult> = Object.keys(row).filter(key => {
+    // Rows outside of the labconfig one way or another
+    if (!labConfig?.analytes[key]) {
+      // Things we know are not analytes: depth values (may have units);
+      if (key.toLowerCase().includes('depth'))
+        return false;
+      // Standardized CSV output information
+      if (headers?.[key]?.units || headers?.[key]?.modusid)
+        return true;
+      return false;
+    } else {
+//       if (!isNaN(+(row[key].replace('>', '').replace('<', ''))) && row[key] !== '')
+      if (typeof row[key] === 'string' || typeof row[key] === 'number')
+        return true;
+
+      return false
+      // Filter things that fail the else statement below, i.e., headers[key] does not exist
+
+    }}).map((key: any) => {
+      let Value = !isNaN(+row[key]) ? +row[key] : row[key];
+      if (labConfig?.analytes?.[key]) {
         return {
-          ...labConfig?.analytes?.[key],
-          Value: +row[key]
+          ...labConfig.analytes[key],
+          Value,
         }
       } else {
         return {
-          Element: headers?.[key]?.element,
+          Element: headers[key]!.element,
           ValueUnit: headers?.[key]?.units,
-          ModusTestID: headers?.[key]?.modifier,
+          ModusTestID: headers?.[key]?.modusid,
           CsvHeader: headers?.[key]?.original,
-          Value: +row[key],
+          Value,
         }
       }
-    })
+    }) as Array<NutrientResult>
 
   // Now eliminate duplicate Base Saturation entries
-  // @ts-ignore
-  return nutrientResults.filter((v, i) => !nutrientResults.some(
-    //@ts-ignore
+  return nutrientResults.filter((v: NutrientResult, i: number) => !nutrientResults.some(
       (item, j) => (
-        // @ts-ignore
         v.Element === item.Element && i !== j && BASEPAT.test(v.Element) &&
-        // @ts-ignore
           BASEPAT.test(item.Element) && v.ValueUnit !== '%'
     ))
   )
@@ -921,7 +924,7 @@ function toSampleMetaObj(sampleMeta: any, allReports: any) {
     SampleContainerID: sampleMeta.SampleContainerID,
     ReportID: sampleMeta.ReportID,
   };
-  let ll = sampleMeta?.Geometry?.wkt
+  let ll = sampleMeta?.Geometry
     ?.replace('POINT(', '')
     .replace(')', '')
     .trim()

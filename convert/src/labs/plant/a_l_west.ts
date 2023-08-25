@@ -4,7 +4,7 @@ const mappings : LocalLabConfig["mappings"] = {
   // ID numbers
   'SAMPLEID': 'SampleNumber',
   'LABNUM': 'SampleContainerID',
-  'REPORTNUM': 'LabEventID',
+  'REPORTNUM': ['LabEventID', 'LabReportID'],
 
   //Other metadata
   // DATESAMPL might map to something, but its all empty strings in our samples
@@ -18,7 +18,11 @@ const mappings : LocalLabConfig["mappings"] = {
   // I don't think these map to anything in modus:
   'TIMESUB': undefined,
   'CROP': 'Crop',
+  'PLANTPART': 'PlantPart',
   'TYPE': undefined,
+  'TEST_A': undefined,
+  'TEST_B': undefined,
+  'TEST_C': undefined,
 }
 
 const analytes : LocalLabConfig["analytes"] = {

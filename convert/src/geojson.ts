@@ -1,6 +1,3 @@
-// Functions to auto-detect types and convert a batch of files into an array of Modus JSON's,
-// with suggested output filenames.  Just give each input file a filename whose extension
-// reflects its type, and
 import debug from 'debug';
 import jszip from 'jszip';
 import { parse as csvParse, supportedFormats, SupportedFormats } from './csv.js';
@@ -9,11 +6,13 @@ import { convertUnits } from '@modusjs/units';
 import { simpleConvert } from '@modusjs/units/dist/index.js';
 import { modusTests } from '@modusjs/industry';
 import type ModusResult from '@oada/types/modus/v1/modus-result.js';
-// @ts-ignore
+// @ts-expect-error need to make types for wicket...
 import wicket from 'wicket';
 import type { NutrientResult } from '@modusjs/units';
 import type { LabConfig } from './labs/index.js';
 import type { GeoJSON } from 'geojson';
+import { flatten, toSlim } from './slim.js';
+import type Slim from '@oada/types/modus/slim/v1/0.js';
 
 const error = debug('@modusjs/convert#togeojson:error');
 const warn = debug('@modusjs/convert#togeojson:error');
@@ -43,28 +42,19 @@ export type InputFile = {
 };
 
 // This function will attempt to convert all the input files into an array of Modus JSON files
-export async function toGeoJson(
-  input: ModusResult
-): Promise<GeoJSON> {
+export function toGeoJson(
+  input: ModusResult | Slim
+): GeoJSON {
   let results: GeoJSON = {
     type: 'FeatureCollection',
     features: []
   };
-  for (const event of input.Events || []) {
-    for (const [type, eventSamples] of Object.entries(event.EventSamples!) as [string, any]) {
-      const sampleName = `${type}Samples`;
-      for (const samples of eventSamples[sampleName]) {
-        const nutrientResults = type === 'Soil' ?
-          //TODO: Map Element names into something like Depth + Element Name
-          samples.Depths.map((d: any) => d.NutrientResults).flat(1)
-          : samples.NutrientResults;
-        if (!samples.Geometry.wkt) continue;
-        const feat = wkt.read(samples.Geometry.wkt).toJson();
-        for (const nr of nutrientResults) {
 
-        }
-      }
-    }
+  let slim = (input.Events ? toSlim(input as ModusResult) : input) as Slim;
+  const flat = flatten(slim);
+
+  for (const [key, sample] of Object.entries(flat.samples)) {
+
   }
   return results;
 }

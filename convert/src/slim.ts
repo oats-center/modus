@@ -211,3 +211,10 @@ export function flatten(input: Slim) {
     samples,
   }
 }
+/*
+export function objectArray(input: Slim): Array<any> {
+  let output = [];
+  return output;
+}
+*/
+

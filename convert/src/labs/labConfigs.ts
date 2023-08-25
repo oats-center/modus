@@ -1,6 +1,9 @@
 import type { Units } from '@modusjs/units';
 import debug from 'debug';
 import * as industry from '@modusjs/industry';
+import moment from 'moment';
+import { getJsDateFromExcel } from 'excel-date-to-js';
+import dayjs from 'dayjs';
 import jp from 'jsonpath';
 
 import { default as a_l_west_soil } from './soil/a_l_west.js';
@@ -202,6 +205,7 @@ export const toModusJsonPath = {
     type: 'event',
     path: '$.LabMetaData.LabEventID',
     fullpath: '$.Events.*.LabMetaData.LabEventID',
+    parse: 'string',
     description: 'The ID of the sample processing event as assigned by the lab',
   },
   'LabID': {
@@ -352,15 +356,29 @@ export function toDetailedMappings(mm: LabConfig['mappings']): Array<DetailedMap
     */
 }
 
-function parseDate(date: any) {
+export function parseDate(date: any) {
+  // Date object
   if (date instanceof Date) return date
+  // 8-digit date
   if ((''+date).length === 8 && parseInt(''+date)) {
     date = ''+date;
     return new Date(`${date.substring(0,4)}-${date.substring(4,6)}-${date.substring(6)}`);
+  } else if (+date < 100000 && +date > 100) {
+    // this is an excel date (# days since 1/1/1900), parse it out
+    return new Date(dayjs(getJsDateFromExcel(date)).format('YYYY-MM-DD'));
   } else if (new Date(''+date).toString() !== 'Invalid Date') {
+    // Various parseable string formats
     return new Date(''+date)
-  } else {
+  } else if (moment(''+date, 'DD-MM-YYYY').toString() !== 'Invalid Date') {
+    // DD-MM-YYYY format which cannot be parsed automagically elsewhere
+    return new Date(moment(''+date, 'DD-MM-YYYY').toString());
+  } else if (new Date(date).toString() !== 'Invalid Date') {
+    // Timestamp or other non-string, parsable thing.
     return new Date(date);
+  } else {
+    // Just return whatever came back in instead of an Invalid Date object
+    return new Date(date);
+    //return date;
   }
 }
 

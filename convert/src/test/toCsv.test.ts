@@ -19,10 +19,8 @@ const { green } = chalk;
 const test = (msg: string) => info(green(msg));
 
 export default async function run(lib: typeof MainLib) {
-  //@ts-ignore
   let result = lib.csv.parse({str: examples.a_l_west.plant.sample1_csv});
   //let result = lib.csv.parse({str: examples.a_l_west.soil.sample2_csv});
-  //@ts-ignore
   let { wb } = lib.csv.toCsv(result[0] as ModusResult)
 //  let { wb } = lib.csv.toCsv(tomkat as ModusResult);
 
