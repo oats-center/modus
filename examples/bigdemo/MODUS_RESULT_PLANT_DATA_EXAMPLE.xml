@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ModusResult xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="modus_result.xsd" Version="String">
+<Event>
+<EventMetaData>
+<EventCode></EventCode>
+<EventDate>2076-07-08</EventDate>
+<EventType>
+<Plant>
+<PlantPart>Leaf</PlantPart>
+<Crop>
+<Name>Corn</Name>
+<ClientID></ClientID>
+<GrowthStage>
+<Name>V10 - 10th Leaf</Name>
+<ClientID></ClientID>
+</GrowthStage>
+</Crop>
+</Plant>
+</EventType>
+<EventExpirationDate>2077-07-09</EventExpirationDate>
+</EventMetaData>
+<FMISMetaData>
+<FMISEventID></FMISEventID>
+<FMISProfile>
+<Grower ID="EXAMPLE REPORT"/>
+<Farm ID=""/>
+<Field ID="HOME"/>
+<Sub-Field></Sub-Field>
+</FMISProfile>
+</FMISMetaData>
+<LabMetaData>
+<LabName>A &amp; L Great Lakes Laboratories</LabName>
+<LabID>993ea57e-9364-4477-8ebc-45e1b2464a60</LabID>
+<LabEventID>F76001-5000</LabEventID>
+<Contact>
+<Name>A &amp; L Great Lakes Laboratories</Name>
+<PhoneNumber>260-483-4759</PhoneNumber>
+<Address>3505 Conestoga Drive, Fort Wayne, IN  46808-4413</Address>
+</Contact>
+<TestPackageRefs>
+<TestPackageRef TestPackageID="1"><Name>P2</Name></TestPackageRef>
+</TestPackageRefs>
+<ReceivedDate>2076-07-08T12:00:00</ReceivedDate>
+<ProcessedDate>2076-07-09T12:00:00</ProcessedDate>
+<ClientAccount>
+<AccountNumber>54321</AccountNumber>
+<Name></Name>
+<Company>CUSTOMER NAME</Company>
+<City>CITY NAME</City>
+<State>ST</State>
+</ClientAccount>
+<Reports>
+<Report ReportID="1">
+<LabReportID>F76001-5000</LabReportID>
+<FileDescription>PlantReport</FileDescription>
+<File>
+<URL>
+<FileName>F76001-5000.pdf</FileName>
+<Path>http://docs.algreatlakes.com/files/54321/F76001-5000/F76001-5000.pdf</Path>
+</URL>
+</File>
+</Report>
+</Reports>
+</LabMetaData>
+<EventSamples>
+<Plant>
+<PlantSample>
+<SampleMetaData>
+<SampleNumber>GOOD</SampleNumber>
+<FMISSampleID></FMISSampleID>
+<SampleContainerID></SampleContainerID>
+<ReportID>191329</ReportID>
+</SampleMetaData>
+<NutrientResults>
+<NutrientResult><Element>N</Element><Value>3.09</Value><ValueUnit>%</ValueUnit><ModusTestID>B-TN.03.01</ModusTestID><ValueType>Measured</ValueType><ValueDesc>O</ValueDesc></NutrientResult>
+<NutrientResult><Element>P</Element><Value>0.30</Value><ValueUnit>%</ValueUnit><ModusTestID>B-TP.05.04</ModusTestID><ValueType>Measured</ValueType><ValueDesc>O</ValueDesc></NutrientResult>
+<NutrientResult><Element>K</Element><Value>2.45</Value><ValueUnit>%</ValueUnit><ModusTestID>B-K.05.04</ModusTestID><ValueType>Measured</ValueType><ValueDesc>O</ValueDesc></NutrientResult>
+<NutrientResult><Element>Mg</Element><Value>0.25</Value><ValueUnit>%</ValueUnit><ModusTestID>B-Mg.05.04</ModusTestID><ValueType>Measured</ValueType><ValueDesc>O</ValueDesc></NutrientResult>
+<NutrientResult><Element>Ca</Element><Value>0.40</Value><ValueUnit>%</ValueUnit><ModusTestID>B-Ca.05.04</ModusTestID><ValueType>Measured</ValueType><ValueDesc>O</ValueDesc></NutrientResult>
+<NutrientResult><Element>Na</Element><Value>0.01</Value><ValueUnit>%</ValueUnit><ModusTestID>B-Na.05.04</ModusTestID><ValueType>Measured</ValueType><ValueDesc>O</ValueDesc></NutrientResult>
+<NutrientResult><Element>S</Element><Value>0.18</Value><ValueUnit>%</ValueUnit><ModusTestID>B-TS.05.04</ModusTestID><ValueType>Measured</ValueType><ValueDesc>O</ValueDesc></NutrientResult>
+<NutrientResult><Element>Zn</Element><Value>0</Value><ValueUnit>ppm</ValueUnit><ModusTestID>B-Zn.05.04</ModusTestID><ValueType>Measured</ValueType><ValueDesc>O</ValueDesc></NutrientResult>
+<NutrientResult><Element>Mn</Element><Value>75</Value><ValueUnit>ppm</ValueUnit><ModusTestID>B-Mn.05.04</ModusTestID><ValueType>Measured</ValueType><ValueDesc>O</ValueDesc></NutrientResult>
+<NutrientResult><Element>Fe</Element><Value>149</Value><ValueUnit>ppm</ValueUnit><ModusTestID>B-Fe.05.04</ModusTestID><ValueType>Measured</ValueType><ValueDesc>O</ValueDesc></NutrientResult>
+<NutrientResult><Element>Cu</Element><Value>9</Value><ValueUnit>ppm</ValueUnit><ModusTestID>B-Cu.05.04</ModusTestID><ValueType>Measured</ValueType><ValueDesc>O</ValueDesc></NutrientResult>
+<NutrientResult><Element>B</Element><Value>23</Value><ValueUnit>ppm</ValueUnit><ModusTestID>B-B.05.04</ModusTestID><ValueType>Measured</ValueType><ValueDesc>O</ValueDesc></NutrientResult>
+<NutrientResult><Element>Al</Element><Value>50</Value><ValueUnit>ppm</ValueUnit><ModusTestID>B-Al.05.04</ModusTestID><ValueType>Measured</ValueType><ValueDesc>O</ValueDesc></NutrientResult>
+</NutrientResults>
+</PlantSample>
+<PlantSample>
+<SampleMetaData>
+<SampleNumber>BAD</SampleNumber>
+<FMISSampleID></FMISSampleID>
+<SampleContainerID></SampleContainerID>
+<ReportID>191330</ReportID>
+</SampleMetaData>
+<NutrientResults>
+<NutrientResult><Element>N</Element><Value>3.45</Value><ValueUnit>%</ValueUnit><ModusTestID>B-TN.03.01</ModusTestID><ValueType>Measured</ValueType><ValueDesc>O</ValueDesc></NutrientResult>
+<NutrientResult><Element>P</Element><Value>0.41</Value><ValueUnit>%</ValueUnit><ModusTestID>B-TP.05.04</ModusTestID><ValueType>Measured</ValueType><ValueDesc>O</ValueDesc></NutrientResult>
+<NutrientResult><Element>K</Element><Value>3.18</Value><ValueUnit>%</ValueUnit><ModusTestID>B-K.05.04</ModusTestID><ValueType>Measured</ValueType><ValueDesc>H</ValueDesc></NutrientResult>
+<NutrientResult><Element>Mg</Element><Value>0.07</Value><ValueUnit>%</ValueUnit><ModusTestID>B-Mg.05.04</ModusTestID><ValueType>Measured</ValueType><ValueDesc>VL</ValueDesc></NutrientResult>
+<NutrientResult><Element>Ca</Element><Value>0.16</Value><ValueUnit>%</ValueUnit><ModusTestID>B-Ca.05.04</ModusTestID><ValueType>Measured</ValueType><ValueDesc>VL</ValueDesc></NutrientResult>
+<NutrientResult><Element>Na</Element><Value>0.01</Value><ValueUnit>%</ValueUnit><ModusTestID>B-Na.05.04</ModusTestID><ValueType>Measured</ValueType><ValueDesc>O</ValueDesc></NutrientResult>
+<NutrientResult><Element>S</Element><Value>0.14</Value><ValueUnit>%</ValueUnit><ModusTestID>B-TS.05.04</ModusTestID><ValueType>Measured</ValueType><ValueDesc>L</ValueDesc></NutrientResult>
+<NutrientResult><Element>Zn</Element><Value>0</Value><ValueUnit>ppm</ValueUnit><ModusTestID>B-Zn.05.04</ModusTestID><ValueType>Measured</ValueType><ValueDesc>O</ValueDesc></NutrientResult>
+<NutrientResult><Element>Mn</Element><Value>470</Value><ValueUnit>ppm</ValueUnit><ModusTestID>B-Mn.05.04</ModusTestID><ValueType>Measured</ValueType><ValueDesc>H</ValueDesc></NutrientResult>
+<NutrientResult><Element>Fe</Element><Value>145</Value><ValueUnit>ppm</ValueUnit><ModusTestID>B-Fe.05.04</ModusTestID><ValueType>Measured</ValueType><ValueDesc>O</ValueDesc></NutrientResult>
+<NutrientResult><Element>Cu</Element><Value>8</Value><ValueUnit>ppm</ValueUnit><ModusTestID>B-Cu.05.04</ModusTestID><ValueType>Measured</ValueType><ValueDesc>O</ValueDesc></NutrientResult>
+<NutrientResult><Element>B</Element><Value>15</Value><ValueUnit>ppm</ValueUnit><ModusTestID>B-B.05.04</ModusTestID><ValueType>Measured</ValueType><ValueDesc>O</ValueDesc></NutrientResult>
+<NutrientResult><Element>Al</Element><Value>108</Value><ValueUnit>ppm</ValueUnit><ModusTestID>B-Al.05.04</ModusTestID><ValueType>Measured</ValueType><ValueDesc>O</ValueDesc></NutrientResult>
+</NutrientResults>
+</PlantSample>
+</Plant>
+</EventSamples>
+</Event>
+</ModusResult>

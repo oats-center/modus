@@ -1,0 +1,129 @@
+{
+  "Events": [
+    {
+      "EventMetaData": {
+        "EventDate": "2018-02-12",
+        "EventType": {
+          "Soil": true
+        }
+      },
+      "EventSamples": {
+        "Soil": {
+          "SoilSamples": [
+            {
+              "SampleMetaData": {
+                "ReportID": 1,
+                "SampleNumber": "TOKA-111",
+                "Geometry": {
+                  "wkt": "POINT(-122.3733627 37.2670108)"
+                }
+              },
+              "Depths": [
+                {
+                  "DepthID": "1",
+                  "NutrientResults": [
+                    {
+                      "ValueUnit": "ug/g",
+                      "Element": "P (Olsen)",
+                      "ModusTestID": "S-P-BIC.04",
+                      "Value": 4.2
+                    },
+                    {
+                      "ValueUnit": "%",
+                      "Element": "Sand",
+                      "Value": 50
+                    },
+                    {
+                      "ValueUnit": "%",
+                      "Element": "Silt",
+                      "Value": 26.2
+                    },
+                    {
+                      "ValueUnit": "%",
+                      "Element": "Clay",
+                      "Value": 23.8
+                    },
+                    {
+                      "Element": "pH",
+                      "ValueUnit": "none",
+                      "Value": 6
+                    },
+                    {
+                      "ValueUnit": "cmol(+)/kg",
+                      "Element": "CEC",
+                      "Value": 22.8
+                    },
+                    {
+                      "ValueUnit": "cmol(+)/kg",
+                      "Element": "Ca",
+                      "Value": 5.53
+                    },
+                    {
+                      "ValueUnit": "cmol(+)/kg",
+                      "Element": "Mg",
+                      "Value": 7.65
+                    },
+                    {
+                      "ValueUnit": "cmol(+)/kg",
+                      "Element": "K",
+                      "Value": 0.382051282051282
+                    },
+                    {
+                      "ValueUnit": "cmol(+)/kg",
+                      "Element": "Na",
+                      "Value": 0.30869565217391304
+                    },
+                    {
+                      "ValueUnit": "%",
+                      "Element": "TOC",
+                      "Value": 1.6
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "DepthRefs": [
+            {
+              "StartingDepth": 10,
+              "EndingDepth": 40,
+              "ColumnDepth": 30,
+              "DepthUnit": "cm",
+              "Name": "10 to 40 cm",
+              "DepthID": 1
+            }
+          ]
+        }
+      },
+      "LabMetaData": {
+        "LabName": "TomKat Ranch",
+        "LabEventID": "Unknown Lab Event ID",
+        "ProcessedDate": "2018-02-12",
+        "ReceivedDate": "2018-02-12",
+        "Reports": [
+          {
+            "LabReportID": "Report 1",
+            "ReportID": 1,
+            "FileDescription": "2018_RMN 10-40cm_14"
+          }
+        ],
+        "ClientAccount": {
+          "AccountNumber": "Unknown Client Account",
+          "Company": "Unknown Client Company",
+          "Name": "Unknown Client Name",
+          "City": "Unknown Client City",
+          "State": "Unknown Client State",
+          "Zip": "Unknown Client Zip"
+        }
+      },
+      "FMISMetaData": {
+        "FMISProfile": {
+          "Grower": "Unknown Grower",
+          "Farm": "Unknown Farm",
+          "Field": "Unknown Field",
+          "Sub-Field": "Unknown Sub-Field"
+        }
+      }
+    }
+  ]
+}

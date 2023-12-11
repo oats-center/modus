@@ -1,17 +1,15 @@
 import debug from 'debug';
 import chalk from 'chalk';
 import { deepdiff } from './util.js';
+import { fromModusV1 } from '../slim.js';
 
 // Only import the type here: use the lib passed to you from node or browser in run()
 import type * as MainLib from '../index.js';
-//@ts-ignore
 import xlsx_sample1 from '@modusjs/examples/dist/tomkat-historic/soil/tomkat_source_data_xlsx.js';
-//@ts-ignore
-import xml_sample1 from '@modusjs/examples/dist/enyart-east50-a_l_labs/soil/hand-modus_xml.js';
-//@ts-ignore
-import json_sample1 from '@modusjs/examples/dist/enyart-east50-a_l_labs/soil/hand-modus_json.js';
-//@ts-ignore
+import xml_sample1 from '@modusjs/examples/dist/enyart-east50-a_l_labs/soil/hand_modus_xml.js';
+import json_sample1 from '@modusjs/examples/dist/enyart-east50-a_l_labs/soil/hand_modus_json.js';
 import { all as examples } from '@modusjs/examples/dist';
+import type ModusResultSchema from '@oada/types/modus/v1/modus-result.js';
 
 
 const trace = debug('@modusjs/convert#test-tojson:trace');
@@ -29,6 +27,21 @@ export default async function run(lib: typeof MainLib) {
     filename: 'tomkat_source_data.xlsx',
   });
 
+  test('Have greater than zero results from parsing tomkat historic data');
+  if (results.length < 0) {
+    throw new Error(`No results from parse`);
+  }
+  const xlsx_num_results = results.length; // used below to check multi-file conversion
+
+  // Is this now necessary under slim as the canonical model?
+  test('First result has LabMetaData.Reports[0].FileName');
+  if (
+    !results?.[0]?.modus?.lab?.files?.[0]?.name
+    //!results[0]!.modus.Events?.[0]?.LabMetaData?.Reports?.[0]?.FileDescription
+  ) {
+    throw new Error('First result did not have a report with FileName');
+  }
+
   test('Parsing all the examples with toJson()...');
 //@ts-ignore
   for await (const [lab, types] of Object.entries(examples)) {
@@ -36,8 +49,8 @@ export default async function run(lib: typeof MainLib) {
     for await (const [type, list] of Object.entries(types)) {
 //@ts-ignore
       for await (const example of list) {
-        //let thing = await import(`../../../examples/dist/${example.importpath}.js`)
-        let data = (await import(`../../../examples/dist/${example.path}/${example.js.split('.')[0]}.js`)).default;
+// Note: this dynamic import does not seem to like slashes within template string placeholders (${})
+        let data = (await import(`../../../examples/dist/${example.lab}/${example.type}/${example.js.split('.')[0]}.js`)).default;
         let exampleType = example.iscsv || example.isjson ? 'str' : 'base64';
         await lib.json.toJson({
           [exampleType]: data,
@@ -48,23 +61,12 @@ export default async function run(lib: typeof MainLib) {
     }
   }
 
-  test('Have greater than zero results from parsing tomkat historic data');
-  if (results.length < 0) {
-    throw new Error(`No results from parse`);
-  }
-  const xlsx_num_results = results.length; // used below to check multi-file conversion
 
-  test('First result has LabMetaData.Reports[0].FileDescription');
-  if (
-    !results[0]!.modus.Events?.[0]?.LabMetaData?.Reports?.[0]?.FileDescription
-  ) {
-    throw new Error('First result did not have a report with FileDescription');
-  }
 
   test('toJson xml sample 1');
   results = await lib.json.toJson({
     str: xml_sample1,
-    filename: 'hand-modus.xml',
+    filename: 'hand_modus.xml',
   });
   if (results.length !== 1) {
     throw new Error(
@@ -77,9 +79,9 @@ export default async function run(lib: typeof MainLib) {
   test('toJson json sample 1');
   results = await lib.json.toJson({
     str: JSON.stringify(json_sample1),
-    filename: 'hand-modus.json',
+    filename: 'hand_modus.json',
   });
-  const differences = deepdiff(results[0]?.modus, json_sample1);
+  const differences = deepdiff(results[0]?.modus, fromModusV1(json_sample1 as ModusResultSchema));
   if (differences.length > 0) {
     info(
       'toJson for a json file failed.  result is different than original.  Differences are:',
@@ -91,8 +93,8 @@ export default async function run(lib: typeof MainLib) {
   test('toJson three input files: xlsx, xml and json');
   results = await lib.json.toJson([
     { base64: xlsx_sample1, filename: 'tomkat_source_data.xlsx' },
-    { str: xml_sample1, filename: 'hand-modus.xml' },
-    { str: JSON.stringify(json_sample1), filename: 'hand-modus.json' },
+    { str: xml_sample1, filename: 'hand_modus.xml' },
+    { str: JSON.stringify(json_sample1), filename: 'hand_modus.json' },
   ]);
   if (results.length !== xlsx_num_results + 2) {
     throw new Error(

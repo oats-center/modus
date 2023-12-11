@@ -154,7 +154,7 @@ export function appendStandardUnits(from: NutrientResult[], to: NutrientResult[]
 
 // Some unit 'conversions' are in name only; Their values are equivalent.
 // Also prepare the units for use in UCUM.
-// For converting from UCUM back to the alias, order matters as the first alias
+// As a secondary means for converting from UCUM back to the alias, order matters as the first alias
 // will always be taken.
 export const aliases : Record<string, string | undefined> = {
   'g/cc': 'g/cm3',
@@ -162,6 +162,7 @@ export const aliases : Record<string, string | undefined> = {
   'Sum of Cation me/100g': 'meq/(100.g)',
   'cmol(+)/kg': 'cmol/kg',
   'ppm': '[ppm]',
+  'ppb': '[ppb]',
   'mmhos/cm': 'mmho/cm',
   //'mg/kg': '[ppm]',
   'lb': '[lb_av]',
@@ -178,11 +179,12 @@ export const aliases : Record<string, string | undefined> = {
   'kg/ac/day': 'kg/[acr_us]/d',
   'in/ft': '[in_i]/[ft_i]',
   'tons/ac': '[ston_av]/[acr_us]',
-  'standard unit': undefined,
-  'standard pH unit': undefined,
-  's.u.': undefined,
+  'standard unit': 'none',
+  'standard pH unit': 'none',
+  's.u.': 'none',
   'in': '[in_i]',
   'ft': '[ft_i]',
+  'Ratio': 'none',
 
 /* Others from MODUS that are unclear:
   none
@@ -191,10 +193,6 @@ export const aliases : Record<string, string | undefined> = {
   'in/depth'
   'million lb/ac depth': '(1000000.[lb_av])/[acr_us]',
 */
-}
-
-export function aliasToUcum(from : keyof typeof aliases): string | undefined {
-  return aliases[from];
 }
 
 // This one should not be used often. The conversion back will generally use the
@@ -225,11 +223,11 @@ export function validateUnits(nrs: NutrientResult[], strict?: boolean): Nutrient
       }
     }
     //1. Check for aliases
-    if (aliasToUcum(nr.ValueUnit)) {
-      trace(`Using alias units "${aliasToUcum(nr.ValueUnit)}" instead of "${nr.ValueUnit}" for element [${nr.Element}] in order to satisfy the conversion library.`)
+    if (aliases[nr.ValueUnit]) {
+      trace(`Using alias units "${aliases[nr.ValueUnit]}" instead of "${nr.ValueUnit}" for element [${nr.Element}] in order to satisfy the conversion library.`)
       return {
         ...nr,
-        UCUM_ValueUnit: aliasToUcum(nr.ValueUnit),
+        UCUM_ValueUnit: aliases[nr.ValueUnit],
       }
     } else {
     //2. Validate against UCUM
@@ -286,6 +284,11 @@ export const molecularWeights: Record<string, any> = {
     'molecularWeight': 35.45,
     charge: -1,
     adjusted: 35.45
+  },
+  'CO3': {
+    'molecularWeight': 60.01,
+    charge: -2,
+    adjusted: 2/60.01,
   },
   'Cu': {
     'molecularWeight': 63.556,

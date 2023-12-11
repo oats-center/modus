@@ -13,6 +13,7 @@ import { default as a_l_west_plant } from './plant/a_l_west.js';
 import { default as kuo_soil} from './soil/kuo.js';
 import { default as brookside_soil } from './soil/brookside.js';
 import { default as cquester_soil } from './soil/cquester.js';
+import { default as uga } from './soil/uga.js';
 
 //const info = debug('@modusjs/convert#labs-automated:info');
 //const trace = debug('@modusjs/convert#labs-automated:trace');
@@ -27,6 +28,7 @@ export let localLabConfigs : LocalLabConfig[] = [
   soiltest_soil,
   kuo_soil,
   cquester_soil,
+  uga,
 ]
 
 const industryLabConfigs = industry.labConfigs as unknown as Record<string, Record<string, IndustryLabConfig>>;
@@ -118,7 +120,8 @@ export type LocalLabConfig = {
   name: string;
   headers?: string[];
   analytes?: Record<string, Analyte>;
-  mappings: Record<string, keyof typeof toModusJsonPath | undefined | Array<keyof typeof toModusJsonPath>>;
+  //mappings: Record<string, keyof typeof toModusJsonPath | undefined | Array<keyof typeof toModusJsonPath>>;
+  mappings: Record<string, string | undefined | string[]>;
   examplesKey?: string;
   depthInfo?: Depth | ((row: any) => Depth | undefined);
   packageName?: string | ((row: any) => string);
@@ -128,7 +131,8 @@ export type LocalLabConfig = {
 export type IndustryLabConfig = {
   name: string;
   analytes: Record<string, Analyte>;
-  mappings?: Record<string, keyof typeof toModusJsonPath | undefined | Array<keyof typeof toModusJsonPath>>;
+  //mappings?: Record<string, keyof typeof toModusJsonPath | undefined | Array<keyof typeof toModusJsonPath>>;
+  mappings?: Record<string, string | undefined | string[]>;
 //  packageName?: string | ((row: any) => string);
   type: string; //LabType; //| ((row: any) => LabType);
 }
@@ -151,54 +155,71 @@ type ModusMapping = {
 
 export const toModusJsonPath = {
   //Per-event basis
-  'EventDate': {
+  'ReportDate': {
     type: 'event',
     path: '$.EventMetaData.EventDate',
     fullpath: '$.Events.*.EventMetaData.EventDate',
     parse: 'date',
     description: 'Top-level date assigned to this MODUS event',
+    slim: '/date',
   },
-  'EventCode': {
+  'ReportID': {
     type: 'event',
     path: '$.EventMetaData.EventCode',
     fullpath: '$.Events.*.EventMetaData.EventCode',
     description: 'Top-level code assigned to this MODUS event',
+    slim: '/id',
+
   },
+  'ReportType': {
+    type: 'event',
+    path: '$.EventMetaData.EventType',
+    fullpath: '$.Events.*.EventMetaData.EventCode',
+    description: 'Top-level code assigned to this MODUS event',
+    slim: '/id',
+  },
+
   'Crop': {
     //type: 'event',
     path: '$.EventMetaData.EventType.Plant.Crop',
     fullpath: '$.Events.*.EventMetaData.EventType.Plant.Crop',
     description: 'Crop name of the plant tissue sample submitted',
+    slim: `/crop`
   },
   'PlantPart': {
     type: 'event',
     path: '$.EventType.Plant.PlantPart',
     fullpath: '$.Events.*.EventMetaData.EventType.Plant.PlantPart',
     description: 'Plant part name of the plant tissue sample submitted',
+    slim: `/plantPart`
   },
   'Grower': {
     type: 'event',
     path: '$.FMISMetaData.FMISProfile.Grower',
     fullpath: '$.Events.*.FMISMetaData.FMISProfile.Grower',
     description: 'Grower name assigned by the FMIS that submitted the samples',
+    slim: `/source/grower`
   },
   'Farm': {
     type: 'event',
     path: '$.FMISMetaData.FMISProfile.Farm',
     fullpath: '$.Events.*.FMISMetaData.FMISProfile.Farm',
     description: 'Farm name assigned by the FMIS that submitted the samples',
+    slim: `/source/farm`
   },
   'Field': {
     type: 'event',
     path: '$.FMISMetaData.FMISProfile.Field',
     fullpath: '$.Events.*.FMISMetaData.FMISProfile.Field',
     description: 'Field name assigned by the FMIS that submitted the samples',
+    slim: `/source/field`
   },
   'SubField': {
     type: 'event',
     path: `$.FMISMetaData.FMISProfile["Sub-Field"]`,
     fullpath: '$.Events.*.FMISMetaData.FMISProfile["Sub-Field"]',
-    description: 'Sub-Field name assigned by the FMIS that submitted the samples',
+    description: 'Subfield name assigned by the FMIS that submitted the samples',
+    slim: `/source/subfield`
   },
 
   'LabEventID': {
@@ -207,6 +228,7 @@ export const toModusJsonPath = {
     fullpath: '$.Events.*.LabMetaData.LabEventID',
     parse: 'string',
     description: 'The ID of the sample processing event as assigned by the lab',
+    slim: `/lab/report/id`
   },
   'LabID': {
     type: 'event',
@@ -214,69 +236,97 @@ export const toModusJsonPath = {
     fullpath: '$.Events.*.LabMetaData.LabID',
     parse: 'string',
     description: 'The ID of the lab that performed the analysis.',
+    slim: '/lab/id',
   },
-  'ProcessedDate': {
+  'DateProcessed': {
     type: 'event',
     path: '$.LabMetaData.ProcessedDate',
     fullpath: '$.Events.*.LabMetaData.ProcessedDate',
     parse: 'date',
     description: 'Date samples processed by the lab',
+    slim: '/lab/dateProcessed',
   },
-  'ReceivedDate': {
+  'DateReceived': {
     type: 'event',
     path: '$.LabMetaData.ReceivedDate',
     fullpath: '$.Events.*.LabMetaData.ReceivedDate',
     parse: 'date',
     description: 'Date samples received by the lab',
+    slim: '/lab/dateReceived',
   },
-  'AccountName': {
+
+  'LabContactName': {
+    type: 'event',
+    path: '$.LabMetaData.Contact.Name',
+    fullpath: '$.Events.*.LabMetaData.Contact.Name',
+    description: 'The name of the lab contact that submitted the samples.',
+    slim: '/lab/contact/name',
+  },
+  'LabContactAddress': {
+    type: 'event',
+    path: `$.LabMetaData.ClientAccount['Address 1']`,
+    fullpath: `$.Events.*.LabMetaData.ClientAccount['Address 1']`,
+    description: 'The street address of the lab client that submitted the samples.',
+    slim: '/lab/contact/address',
+  },
+  'LabContactAddress2': {
+    type: 'event',
+    path: `$.LabMetaData.ClientAccount['Address 2']`,
+    fullpath: `$.Events.*.LabMetaData.ClientAccount['Address 2']`,
+    description: 'The street address (line 2) of the lab client that submitted the samples.',
+    slim: '/lab/contact/address',
+  },
+  'LabContactPhone': {
+    type: 'event',
+    path: `$.LabMetaData.ClientAccount.Phone`,
+    fullpath: `$.Events.*.LabMetaData.ClientAccount.Phone]`,
+    description: 'The phone number of the lab contact.',
+    slim: '/lab/contact/phone',
+  },
+
+  'ClientName': {
     type: 'event',
     path: '$.LabMetaData.ClientAccount.Name',
     fullpath: '$.Events.*.LabMetaData.ClientAccount.Name',
+    parse: 'string',
     description: 'The name of the lab client that submitted the samples.',
+    slim: `/lab/clientAccount/name`
   },
-  'AccountNumber': {
+  'ClientAccountNumber': {
     type: 'event',
     path: '$.LabMetaData.ClientAccount.AccountNumber',
     fullpath: '$.Events.*.LabMetaData.ClientAccount.AccountNumber',
     parse: 'string',
     description: 'The account number of the lab client that submitted the samples.',
+    slim: `/lab/clientAccount/accountNumber`
   },
-  'Address1': {
-    type: 'event',
-    path: `$.LabMetaData.ClientAccount['Address 1']`,
-    fullpath: `$.Events.*.LabMetaData.ClientAccount['Address 1']`,
-    description: 'The street address of the lab client that submitted the samples.',
-  },
-  'Address2': {
-    type: 'event',
-    path: `$.LabMetaData.ClientAccount['Address 2']`,
-    fullpath: `$.Events.*.LabMetaData.ClientAccount['Address 2']`,
-    description: 'The street address (line 2) of the lab client that submitted the samples.',
-  },
-  'Zip': {
+  'ClientZip': {
     type: 'event',
     path: '$.LabMetaData.ClientAccount.Zip',
     fullpath: '$.Events.*.LabMetaData.ClientAccount.Zip',
     description: 'The zip code of the lab client that submitted the samples.',
+    slim: `/lab/clientAccount/zip`
   },
-  'State': {
+  'ClientState': {
     type: 'event',
     path: '$.LabMetaData.ClientAccount.State',
     fullpath: '$.Events.*.LabMetaData.ClientAccount.State',
     description: 'The state of the lab client that submitted the samples.',
+    slim: `/lab/clientAccount/state`
   },
-  'City': {
+  'ClientCity': {
     type: 'event',
     path: '$.LabMetaData.ClientAccount.City',
     fullpath: '$.Events.*.LabMetaData.ClientAccount.City',
     description: 'The city of the lab client that submitted the samples.',
+    slim: `/lab/clientAccount/city`
   },
-  'Company': {
+  'ClientCompany': {
     type: 'event',
     path: '$.LabMetaData.ClientAccount.Company',
     fullpath: '$.Events.*.LabMetaData.ClientAccount.Company',
     description: 'The company name of the lab client that submitted the samples.',
+    slim: `/lab/clientAccount/company`
   },
 
   // Per-event and per-report
@@ -286,6 +336,7 @@ export const toModusJsonPath = {
     fullpath: '$.Events.*.LabMetaData.Reports.*.LabReportID',
     parse: 'string',
     description: 'ID of the Lab Report',
+    slim: `/lab/report/id`
   },
 
   // Per-event and per-row
@@ -295,6 +346,7 @@ export const toModusJsonPath = {
     fullpath: '$.Events.*.EventSamples.Soil.SoilSamples.*.SampleMetaData.SampleNumber',
     parse: 'string',
     description: 'Sample number as numbered by the lab',
+    slim: '/lab/samplid',
   },
   'SampleContainerID': {
     type: 'sample',
@@ -302,12 +354,14 @@ export const toModusJsonPath = {
     fullpath: '$.Events.*.EventSamples.Soil.SoilSamples.*.SampleMetaData.SampleContainerID',
     parse: 'string',
     description: 'Sample container ID as submitted by the client',
+    slim: '/source/alternateid',
   },
   'FMISSampleID': {
     type: 'sample',
     path: '$.SampleMetaData.FMISSampleID',
     fullpath: '$.Events.*.EventSamples.Soil.SoilSamples*.FMISSampleID',
     description: 'Sample ID assigned by the FMIS that submitted the samples',
+    slim: '/source/samplid',
   },
   'StartingDepth': {
     type: 'depth',
@@ -315,18 +369,21 @@ export const toModusJsonPath = {
     fullpath: '$.Events.*.EventSamples.Soil.DepthRefs.*.StartingDepth',
     parse: 'number',
     description: 'Starting depth (top) of the soil sample',
+    slim: '/depth/top'
   },
   'EndingDepth': {
     type: 'depth',
     path: '$.EndingDepth',
     fullpath: '$.Events.*.EventSamples.Soil.DepthRefs.*.EndingDepth',
     description: 'Ending depth (bottom) of the soil sample',
+    slim: '/depth/bottom'
   },
   'ColumnDepth': {
     type: 'depth',
     path: '$.EndingDepth',
     fullpath: '$.Events.*.EventSamples.Soil.DepthRefs.*.EndingDepth',
     description: 'Column depth (top to bottom) of the soil sample',
+//    slim: '/depth/column'
   },
 }
 

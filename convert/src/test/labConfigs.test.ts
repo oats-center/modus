@@ -45,7 +45,7 @@ export default async function run(lib: typeof MainLib) {
         continue;
       }
       const ex = exa.js.replace(/\.js$/, '');
-      const wb = lib.csv.getWorkbookFromData({str: exes[ex]});
+      const wb = lib.csv.parseWorkbook({str: exes[ex]});
       const { datasheets } = lib.csv.partitionSheets(wb);
       test(`Example ${exa.js} should be auto-recognized.`)
       let labConfig = lib.csv.getOrAutodetectLab({datasheets});

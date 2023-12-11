@@ -4,13 +4,13 @@ import type { LocalLabConfig } from '../index.js';
 const mappings : LocalLabConfig["mappings"] = {
   IncKey: 'SampleNumber', //Incoming Key?
   RequestIncKey: undefined, // Request Incoming Key? Same as RptNo
-  Client: 'AccountName',
+  Client: 'ClientCompany',
   Grower: 'Grower',
   Sampler: undefined,
   LabNo: 'SampleContainerID',
   RptNo: 'LabReportID',
-  Date: 'ReceivedDate',
-  SampleDate: 'EventDate',
+  Date: 'DateReceived',
+  SampleDate: 'ReportDate',
   Field: 'Field',
   SampleID: undefined, //was blank and we already have lab-assigned and sampler-assigned ids,
   Crop: 'Crop',
@@ -20,7 +20,7 @@ const mappings : LocalLabConfig["mappings"] = {
   ProjectId: undefined,
   ProjectNumber: undefined,
   ProjectName: undefined,
-  MODUSEvent: 'EventCode'
+  MODUSEvent: 'ReportID'
 }
 
 // Make this as generic as possible so as to work on other labs

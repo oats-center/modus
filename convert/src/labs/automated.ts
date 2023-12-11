@@ -32,9 +32,9 @@ export function cobbleLabConfig(headers: string[], userLabConfigs?: LabConfig[])
   let remaining = headers.filter(h => !mappings[h]);
 
   //2. Look for date column
-  if (!Object.values(mappings).find(v => v === 'EventDate')) {
+  if (!Object.values(mappings).find(v => v === 'ReportDate')) {
     let datecol = getDateColumn(headers);
-    mappings[datecol] = "EventDate";
+    mappings[datecol] = "ReportDate";
     remaining = remaining.filter(h => h !== datecol)
   }
 

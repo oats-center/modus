@@ -45,12 +45,13 @@ import fs from 'fs/promises';
           continue;
         }
         // turn ./build/dir/hand-modus.xml into ./build/dir/hand-modus_xml.js
-        const output_filename = f.replace(/\.(xml|json|csv|xlsx)$/, '_$1.ts');
+        const output_filename = f
+        .replace(/\.(xml|json|csv|xlsx)$/, '_$1.ts')
+        .replaceAll('-', '_');
         const output_filepath = `${output_path}/${output_filename}`;
         // The export will have name like hand_modus_xml from hand-modus.xml
         const output_varname = output_filename
           .replace(/\.ts$/, '')
-          .replaceAll('-', '_');
 
         const isxml = !!f.match(/\.xml/);
         const iscsv = !!f.match(/\.csv/);
@@ -88,6 +89,8 @@ import fs from 'fs/promises';
           // dynamic imports must have a file extension in the static parts of the import, so get rid of it here
           importpath: `${dir}/${output_js_filename.replace(/\.js$/, '')}`,
           path: dir,
+          type: typedir,
+          lab: labdir,
           filename: f,
           isxml,
           iscsv,
@@ -95,6 +98,7 @@ import fs from 'fs/promises';
           isxlsx
         });
       }
+      console.log(`EXPORTING ${JSON.stringify(local_all)};\n`);
       local_index += `export const all = ${JSON.stringify(local_all)};\n`;
       lab_all[typedir] = local_all;
       global_all[labdir] = global_all[labdir] || {};

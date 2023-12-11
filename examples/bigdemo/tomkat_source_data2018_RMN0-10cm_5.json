@@ -1,0 +1,273 @@
+{
+  "Events": [
+    {
+      "EventMetaData": {
+        "EventDate": "2018-02-05",
+        "EventType": {
+          "Soil": true
+        }
+      },
+      "EventSamples": {
+        "Soil": {
+          "SoilSamples": [
+            {
+              "SampleMetaData": {
+                "ReportID": 1,
+                "SampleNumber": "TOKA-022",
+                "Geometry": {
+                  "wkt": "POINT(-122.3665960 37.2669748)"
+                }
+              },
+              "Depths": [
+                {
+                  "DepthID": "1",
+                  "NutrientResults": [
+                    {
+                      "ValueUnit": "g/cm3",
+                      "Element": "Bulk-Density",
+                      "Value": 1.04923490083137
+                    },
+                    {
+                      "ValueUnit": "min",
+                      "Element": "Permeability",
+                      "Value": 3.52666666666667
+                    },
+                    {
+                      "ValueUnit": "ug/g",
+                      "Element": "P (Olsen)",
+                      "ModusTestID": "S-P-BIC.04",
+                      "Value": 42.7
+                    },
+                    {
+                      "Element": "pH",
+                      "ValueUnit": "none",
+                      "Value": 6.6
+                    },
+                    {
+                      "ValueUnit": "cmol(+)/kg",
+                      "Element": "CEC",
+                      "Value": 28
+                    },
+                    {
+                      "ValueUnit": "cmol(+)/kg",
+                      "Element": "Ca",
+                      "Value": 14.240000000000002
+                    },
+                    {
+                      "ValueUnit": "cmol(+)/kg",
+                      "Element": "Mg",
+                      "Value": 12.208333333333334
+                    },
+                    {
+                      "ValueUnit": "cmol(+)/kg",
+                      "Element": "K",
+                      "Value": 1.158974358974359
+                    },
+                    {
+                      "ValueUnit": "cmol(+)/kg",
+                      "Element": "Na",
+                      "Value": 0.3782608695652174
+                    },
+                    {
+                      "ValueUnit": "%",
+                      "Element": "TOC",
+                      "Value": 3.6000000000000005
+                    },
+                    {
+                      "ValueUnit": "%",
+                      "Element": "TN",
+                      "Value": 0.34716
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "SampleMetaData": {
+                "ReportID": 1,
+                "SampleNumber": "TOKA-030",
+                "Geometry": {
+                  "wkt": "POINT(-122.3643404 37.2669627)"
+                }
+              },
+              "Depths": [
+                {
+                  "DepthID": "1",
+                  "NutrientResults": [
+                    {
+                      "ValueUnit": "g/cm3",
+                      "Element": "Bulk-Density",
+                      "Value": 1.15670133086231
+                    },
+                    {
+                      "ValueUnit": "min",
+                      "Element": "Permeability",
+                      "Value": 2.50333333333333
+                    },
+                    {
+                      "ValueUnit": "ug/g",
+                      "Element": "P (Olsen)",
+                      "ModusTestID": "S-P-BIC.04",
+                      "Value": 14.8
+                    },
+                    {
+                      "Element": "pH",
+                      "ValueUnit": "none",
+                      "Value": 5.9
+                    },
+                    {
+                      "ValueUnit": "cmol(+)/kg",
+                      "Element": "CEC",
+                      "Value": 23.2
+                    },
+                    {
+                      "ValueUnit": "cmol(+)/kg",
+                      "Element": "Ca",
+                      "Value": 7.075
+                    },
+                    {
+                      "ValueUnit": "cmol(+)/kg",
+                      "Element": "Mg",
+                      "Value": 5.916666666666667
+                    },
+                    {
+                      "ValueUnit": "cmol(+)/kg",
+                      "Element": "K",
+                      "Value": 0.8794871794871795
+                    },
+                    {
+                      "ValueUnit": "cmol(+)/kg",
+                      "Element": "Na",
+                      "Value": 0.24782608695652175
+                    },
+                    {
+                      "ValueUnit": "%",
+                      "Element": "TOC",
+                      "Value": 4.1
+                    },
+                    {
+                      "ValueUnit": "%",
+                      "Element": "TN",
+                      "Value": 0.34823
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "SampleMetaData": {
+                "ReportID": 1,
+                "SampleNumber": "TOKA-119",
+                "Geometry": {
+                  "wkt": "POINT(-122.3642949 37.2723708)"
+                }
+              },
+              "Depths": [
+                {
+                  "DepthID": "1",
+                  "NutrientResults": [
+                    {
+                      "ValueUnit": "g/cm3",
+                      "Element": "Bulk-Density",
+                      "Value": 1.2078724088104
+                    },
+                    {
+                      "ValueUnit": "min",
+                      "Element": "Permeability",
+                      "Value": 0.59
+                    },
+                    {
+                      "ValueUnit": "ug/g",
+                      "Element": "P (Olsen)",
+                      "ModusTestID": "S-P-BIC.04",
+                      "Value": 10.7
+                    },
+                    {
+                      "Element": "pH",
+                      "ValueUnit": "none",
+                      "Value": 6
+                    },
+                    {
+                      "ValueUnit": "cmol(+)/kg",
+                      "Element": "CEC",
+                      "Value": 27.7
+                    },
+                    {
+                      "ValueUnit": "cmol(+)/kg",
+                      "Element": "Ca",
+                      "Value": 9.24
+                    },
+                    {
+                      "ValueUnit": "cmol(+)/kg",
+                      "Element": "Mg",
+                      "Value": 9.133333333333333
+                    },
+                    {
+                      "ValueUnit": "cmol(+)/kg",
+                      "Element": "K",
+                      "Value": 0.8282051282051284
+                    },
+                    {
+                      "ValueUnit": "cmol(+)/kg",
+                      "Element": "Na",
+                      "Value": 0.27391304347826084
+                    },
+                    {
+                      "ValueUnit": "%",
+                      "Element": "TOC",
+                      "Value": 2.8
+                    },
+                    {
+                      "ValueUnit": "%",
+                      "Element": "TN",
+                      "Value": 0.26066
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "DepthRefs": [
+            {
+              "StartingDepth": 0,
+              "EndingDepth": 10,
+              "ColumnDepth": 10,
+              "DepthUnit": "cm",
+              "Name": "0 to 10 cm",
+              "DepthID": 1
+            }
+          ]
+        }
+      },
+      "LabMetaData": {
+        "LabName": "TomKat Ranch",
+        "LabEventID": "Unknown Lab Event ID",
+        "ProcessedDate": "2018-02-05",
+        "ReceivedDate": "2018-02-05",
+        "Reports": [
+          {
+            "LabReportID": "Report 1",
+            "ReportID": 1,
+            "FileDescription": "2018_RMN 0-10cm_5"
+          }
+        ],
+        "ClientAccount": {
+          "AccountNumber": "Unknown Client Account",
+          "Company": "Unknown Client Company",
+          "Name": "Unknown Client Name",
+          "City": "Unknown Client City",
+          "State": "Unknown Client State",
+          "Zip": "Unknown Client Zip"
+        }
+      },
+      "FMISMetaData": {
+        "FMISProfile": {
+          "Grower": "Unknown Grower",
+          "Farm": "Unknown Farm",
+          "Field": "Unknown Field",
+          "Sub-Field": "Unknown Sub-Field"
+        }
+      }
+    }
+  ]
+}

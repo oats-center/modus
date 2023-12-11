@@ -30,8 +30,8 @@ export default async function run(lib: typeof MainLib) {
       dst: `${dir}/tomkat_source_data.xlsx`,
     },
     {
-      src: '../examples/examples/enyart-east50-a_l_labs/soil/hand-modus.xml',
-      dst: `${dir}/hand-modus.xml`,
+      src: '../examples/examples/enyart-east50-a_l_labs/soil/hand_modus.xml',
+      dst: `${dir}/hand_modus.xml`,
     },
   ];
   await Promise.all(files.map((f) => fs.cp(f.src, f.dst)));

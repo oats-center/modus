@@ -1,0 +1,258 @@
+<ModusSubmit Version='1.0' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:noNamespaceSchemaLocation='modus_submit.xsd'>
+<Event>
+<SubmissionAttributes>
+<SubmittedBy>Field Rep Name</SubmittedBy>
+<SubmittedFor>Company Name</SubmittedFor>
+</SubmissionAttributes>
+<FMISMetaData>
+<FMISEventID>fa052c19-e98e-4903-a649-4bd632fe74f4</FMISEventID>
+<FMISProfile>
+<Grower>GROWER NAME</Grower>
+<Farm>FARM NAME</Farm>
+<Field>FIELD NAME</Field>
+<Sub-Field></Sub-Field>
+</FMISProfile>
+</FMISMetaData>
+<EventMetaData>
+<EventCode>fa052c19-e98e-4903-a649-4bd632fe74f4</EventCode>
+<EventType>
+<Soil></Soil>
+</EventType>
+<EventDate>2076-07-01</EventDate>
+</EventMetaData>
+<Comments></Comments>
+<LabMetaData>
+<LabID>993ea57e-9364-4477-8ebc-45e1b2464a60</LabID>
+<LabName>A&amp;L Great Lakes</LabName>
+<ClientAccount>
+<AccountNumber>88141</AccountNumber>
+</ClientAccount>
+<TestPackageRefs>
+<TestPackageRef TestPackageID='1'>
+<Name>S1</Name>
+</TestPackageRef>
+<TestPackageRef TestPackageID='2'>
+<Name>S3</Name>
+</TestPackageRef>
+</TestPackageRefs>
+</LabMetaData>
+<EventSamples>
+<Soil>
+<DepthRefs>
+<DepthRef DepthID='1'>
+<Name>0 - 8 in</Name>
+<StartingDepth>0</StartingDepth>
+<EndingDepth>8</EndingDepth>
+<ColumnDepth>8</ColumnDepth>
+<DepthUnit>in</DepthUnit>
+</DepthRef>
+</DepthRefs>
+<SoilSample>
+<Comments></Comments>
+<SampleMetaData>
+<SampleNumber>1</SampleNumber>
+<FMISSampleID>1fe5773d-d371-4925-97ab-9cab526a83e8</FMISSampleID>
+<Geometry epsg='4326'>POINT (-88.0366758840411 44.206276266517875)</Geometry>
+<TestPackages>
+<TestPackage TestPackageID="1"/>
+<TestPackage TestPackageID="2"/>
+</TestPackages>
+</SampleMetaData>
+<Depths>
+<Depth DepthID='1'></Depth>
+</Depths>
+</SoilSample>
+<SoilSample>
+<Comments></Comments>
+<SampleMetaData>
+<SampleNumber>2</SampleNumber>
+<FMISSampleID>80bf1de1-deba-41bb-983f-7733ad76604a</FMISSampleID>
+<Geometry epsg='4326'>POINT (-88.03672644589187 44.205445237002806)</Geometry>
+<TestPackages>
+<TestPackage TestPackageID="1"/>
+<TestPackage TestPackageID="2"/>
+</TestPackages>
+</SampleMetaData>
+<Depths>
+<Depth DepthID='1'></Depth>
+</Depths>
+</SoilSample>
+<SoilSample>
+<Comments></Comments>
+<SampleMetaData>
+<SampleNumber>3</SampleNumber>
+<FMISSampleID>327b8081-a1e9-4146-bb38-3439ba3141db</FMISSampleID>
+<Geometry epsg='4326'>POINT (-88.03671088839934 44.204520557954346)</Geometry>
+<TestPackages>
+<TestPackage TestPackageID="1"/>
+</TestPackages>
+</SampleMetaData>
+<Depths>
+<Depth DepthID='1'></Depth>
+</Depths>
+</SoilSample>
+<SoilSample>
+<Comments></Comments>
+<SampleMetaData>
+<SampleNumber>4</SampleNumber>
+<FMISSampleID>00aeff28-def9-4b17-beab-f6cba4afce8f</FMISSampleID>
+<Geometry epsg='4326'>POINT (-88.03676922899636 44.203707063683616)</Geometry>
+<TestPackages>
+<TestPackage TestPackageID="1"/>
+</TestPackages>
+</SampleMetaData>
+<Depths>
+<Depth DepthID='1'></Depth>
+</Depths>
+</SoilSample>
+<SoilSample>
+<Comments></Comments>
+<SampleMetaData>
+<SampleNumber>5</SampleNumber>
+<FMISSampleID>feaf66eb-7e50-4c70-87f7-95744f32bc56</FMISSampleID>
+<Geometry epsg='4326'>POINT (-88.0377281398768 44.203640886109795)</Geometry>
+<TestPackages>
+<TestPackage TestPackageID="1"/>
+<TestPackage TestPackageID="2"/>
+</TestPackages>
+</SampleMetaData>
+<Depths>
+<Depth DepthID='1'></Depth>
+</Depths>
+</SoilSample>
+<SoilSample>
+<Comments></Comments>
+<SampleMetaData>
+<SampleNumber>6</SampleNumber>
+<FMISSampleID>45500fd5-e31c-463a-be5d-d0b04aeb12cf</FMISSampleID>
+<Geometry epsg='4326'>POINT (-88.03771315544492 44.20454654832747)</Geometry>
+<TestPackages>
+<TestPackage TestPackageID="1"/>
+</TestPackages>
+</SampleMetaData>
+<Depths>
+<Depth DepthID='1'></Depth>
+</Depths>
+</SoilSample>
+<SoilSample>
+<Comments></Comments>
+<SampleMetaData>
+<SampleNumber>7</SampleNumber>
+<FMISSampleID>cb6c9636-3856-45e6-a43f-3fcf632e1fd4</FMISSampleID>
+<Geometry epsg='4326'>POINT (-88.037698171013 44.205452198010946)</Geometry>
+<TestPackages>
+<TestPackage TestPackageID="1"/>
+<TestPackage TestPackageID="2"/>
+</TestPackages>
+</SampleMetaData>
+<Depths>
+<Depth DepthID='1'></Depth>
+</Depths>
+</SoilSample>
+<SoilSample>
+<Comments></Comments>
+<SampleMetaData>
+<SampleNumber>8</SampleNumber>
+<FMISSampleID>431b4032-d2d9-48fb-b147-e2b0a06468b6</FMISSampleID>
+<Geometry epsg='4326'>POINT (-88.0376831865811 44.206357835160155)</Geometry>
+<TestPackages>
+<TestPackage TestPackageID="1"/>
+</TestPackages>
+</SampleMetaData>
+<Depths>
+<Depth DepthID='1'></Depth>
+</Depths>
+</SoilSample>
+<SoilSample>
+<Comments></Comments>
+<SampleMetaData>
+<SampleNumber>9</SampleNumber>
+<FMISSampleID>3955a049-2c49-4813-8131-f8140e20b3f7</FMISSampleID>
+<Geometry epsg='4326'>POINT (-88.03888693597841 44.20636910857233)</Geometry>
+<TestPackages>
+<TestPackage TestPackageID="1"/>
+<TestPackage TestPackageID="2"/>
+</TestPackages>
+</SampleMetaData>
+<Depths>
+<Depth DepthID='1'></Depth>
+</Depths>
+</SoilSample>
+<SoilSample>
+<Comments></Comments>
+<SampleMetaData>
+<SampleNumber>10</SampleNumber>
+<FMISSampleID>b8f4f266-b3b7-4ef6-9566-c47ac3c0c42f</FMISSampleID>
+<Geometry epsg='4326'>POINT (-88.03890192041031 44.20546347157915)</Geometry>
+<TestPackages>
+<TestPackage TestPackageID="1"/>
+<TestPackage TestPackageID="2"/>
+</TestPackages>
+</SampleMetaData>
+<Depths>
+<Depth DepthID='1'></Depth>
+</Depths>
+</SoilSample>
+<SoilSample>
+<Comments></Comments>
+<SampleMetaData>
+<SampleNumber>11</SampleNumber>
+<FMISSampleID>cfb5ce3c-3fa4-4bbc-b3f4-7ceaa626cd22</FMISSampleID>
+<Geometry epsg='4326'>POINT (-88.03891690484222 44.20455782205171)</Geometry>
+<TestPackages>
+<TestPackage TestPackageID="1"/>
+<TestPackage TestPackageID="2"/>
+</TestPackages>
+</SampleMetaData>
+<Depths>
+<Depth DepthID='1'></Depth>
+</Depths>
+</SoilSample>
+<SoilSample>
+<Comments></Comments>
+<SampleMetaData>
+<SampleNumber>12</SampleNumber>
+<FMISSampleID>35cd2330-1feb-4e61-8938-7f1a3eba2977</FMISSampleID>
+<Geometry epsg='4326'>POINT (-88.03893188927412 44.20365215999006)</Geometry>
+<TestPackages>
+<TestPackage TestPackageID='1'></TestPackage>
+</TestPackages>
+</SampleMetaData>
+<Depths>
+<Depth DepthID='1'></Depth>
+</Depths>
+</SoilSample>
+<SoilSample>
+<Comments></Comments>
+<SampleMetaData>
+<SampleNumber>13</SampleNumber>
+<FMISSampleID>90ecf4e2-d673-4a21-bb69-f52c7bdc8278</FMISSampleID>
+<Geometry epsg='4326'>POINT (-88.04000907681882 44.203715842452745)</Geometry>
+<TestPackages>
+<TestPackage TestPackageID="1"/>
+<TestPackage TestPackageID="2"/>
+</TestPackages>
+</SampleMetaData>
+<Depths>
+<Depth DepthID='1'></Depth>
+</Depths>
+</SoilSample>
+<SoilSample>
+<Comments></Comments>
+<SampleMetaData>
+<SampleNumber>14</SampleNumber>
+<FMISSampleID>4ff7aa79-c6d8-41c6-a214-4f6bae8b2453</FMISSampleID>
+<Geometry epsg='4326'>POINT (-88.0400324130576 44.20447081219209)</Geometry>
+<TestPackages>
+<TestPackage TestPackageID="1"/>
+<TestPackage TestPackageID="2"/>
+</TestPackages>
+</SampleMetaData>
+<Depths>
+<Depth DepthID='1'></Depth>
+</Depths>
+</SoilSample>
+</Soil>
+</EventSamples>
+</Event>
+</ModusSubmit>

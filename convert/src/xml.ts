@@ -17,11 +17,19 @@ import ModusSubmit, {
   assert as assertModusSubmit,
   is as isModusSubmit,
 } from '@oada/types/modus/v1/modus-submit.js';
-import { fixModus } from './json.js';
+import { fromModusV1 } from './slim.js';
+import { fixModus } from './fromCsvToModusV1.js';
+import type Slim from '@oada/types/modus/slim/v1/0.js';
+import ModusSlim, {
+  assert as assertModusSlim,
+  is as isModusSlim,
+} from '@oada/types/modus/slim/v1/0.js';
+
 
 // Re-Export the types for convenience
 export { ModusSubmit, assertModusSubmit, isModusSubmit };
 export { ModusResult, assertModusResult, isModusResult };
+export { ModusSlim, assertModusSlim, isModusSlim };
 
 const error = debug('@modusjs/convert#xml:error');
 const warn = debug('@modusjs/convert#xml:error');
@@ -78,6 +86,12 @@ export function parseModusSubmit(xmlstring: string): ModusSubmit {
 export function parseModusResult(xmlstring: string): ModusResult | null {
   const mr = parse(xmlstring);
   assertModusResult(mr);
+  return mr;
+}
+
+export function parseModusSlim(xmlstring: string): Slim | null {
+  const mr = fromModusV1(parse(xmlstring));
+  assertModusSlim(mr);
   return mr;
 }
 

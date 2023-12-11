@@ -121,7 +121,7 @@ export default async function run(lib: typeof MainLib) {
       let ans = Object.values(analytes).filter(v => v!.ValueUnit !== undefined)
       // @ts-ignore
       for (const { ValueUnit: unit } of ans) {
-        let alias = lib.aliasToUcum(unit) || unit;
+        let alias = lib.aliases[unit] || unit;
         let result = utils.validateUnitString(alias, true);
         if (!result) throw new Error(`Unit ${unit} was unrecognized by units lib`);
       }

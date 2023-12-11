@@ -6,29 +6,30 @@ const warn = debug('@modusjs/convert#labs-tomkat:warn');
 const mappings : LocalLabConfig["mappings"] = {
   'Kind Of Sample': undefined, //'EventType',
   'Lab No': 'LabID',
-  'Cust No': 'AccountNumber',
-  'Name': 'AccountName',
-  'Company': 'Company',
-  'Address 1': 'Address1',
-  'Address 2': 'Address2',
-  'City': 'City',
-  'State': 'State',
-  'Zip': 'Zip',
+  'Cust No': 'ClientAccountNumber',
+  //FIXME: Is this correct or is this really ClientName
+  'Name': 'LabContactName',
+  'Company': 'ClientCompany',
+  'Address 1': 'LabContactAddress',
+  'Address 2': undefined, //'LabContactAddress2',
+  'City': 'ClientCity',
+  'State': 'ClientState',
+  'Zip': 'ClientZip',
   'Grower': 'Grower',
   'Field ID': 'Field',
   'Sample ID': 'SampleNumber',
-  'Date Recd': ['EventDate', 'ReceivedDate'],
-  'Date Rept': 'ProcessedDate',
+  'Date Recd': ['ReportDate', 'DateReceived'],
+  'Date Rept': 'DateProcessed',
   'B Depth': 'StartingDepth',
   'E Depth': 'EndingDepth',
   // I don't think these map to anything in modus:
   'Past Crop': undefined,
   'Point ID': 'SampleNumber',
-  'CollectDate': ['EventDate', 'ReceivedDate'],
+  'CollectDate': ['ReportDate', 'DateReceived'],
   'Depth': 'StartingDepth',
   'Depth (cm)': 'StartingDepth',
-  'Collect Date 1 (RMN metrics)': ['EventDate', 'ReceivedDate'],
-  'CollectDate (Appx)': ['EventDate', 'ReceivedDate'],
+  'Collect Date 1 (RMN metrics)': ['ReportDate', 'DateReceived'],
+  'CollectDate (Appx)': ['ReportDate', 'DateReceived'],
   'Ecosystem Type': 'SubField',
 }
 
@@ -912,12 +913,24 @@ let analytes : LocalLabConfig["analytes"] = {
     Element: 'CO2 Respiration',
     ModusTestID: 'S-CO2-RESP.01',
   },
-
   'Water Infiltration': {
     ValueUnit: 'min',
     Element: 'Permeability',
   },
-
+  //These are troublemakers if not defined here because they contain parenthesis
+  //and parseCsvHeaders will break it up.
+  'Gram (-) Biomass': {
+    ValueUnit: 'ppb',
+    Element: 'Gram (-) Biomass',
+  },
+  'Gram (+) Biomass': {
+    ValueUnit: 'ppb',
+    Element: 'Gram (+) Biomass',
+  },
+  'Gram(+):Gram(-)': {
+    ValueUnit: 'ratio',
+    Element: 'Gram(+):Gram(-) Biomass',
+  },
 
   // Not in modus
   'Ace Protein g/Kg': {

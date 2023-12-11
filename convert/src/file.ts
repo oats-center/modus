@@ -4,7 +4,7 @@
 
 import debug from 'debug';
 import * as xlsx from 'xlsx';
-import { toCsv } from './csv.js';
+import { toCsv } from './slim.js';
 import type { ModusJSONConversionResult } from './json.js';
 import saveFile from 'save-file';
 import jszip from 'jszip';

@@ -32,7 +32,6 @@ const { red } = chalk;
     }
     await fs.mkdir('./test-work', { recursive: true });
 
-    /*
     info('testing xml');
     await xmlTests(mainlib);
 
@@ -42,7 +41,6 @@ const { red } = chalk;
     info('testing toCsv');
     await toCsvTests(mainlib);
 
-    */
     info('testing toSlim');
     await toSlimTests(mainlib);
 
@@ -52,6 +50,7 @@ const { red } = chalk;
 
     info('testing tojson');
     await toJsonTests(mainlib);
+    */
 
     info('testing node HTML');
     await htmlTests(mainlib);
@@ -63,7 +62,6 @@ const { red } = chalk;
     await labConfigs(mainlib);
 
     info('All tests passed!');
-    */
   } catch (e: any) {
     info(
       red(`ERROR: tests threw exception: `),

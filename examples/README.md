@@ -19,7 +19,7 @@ import { xml, csv } from '@modusjs/convert'
 console.log('json is directly usable:', json_as_typed_object);
 console.log('XML can be converted to json and validated:', xml.parseAsModusResult(xml_as_a_string));
 console.log('XLSX can be converted to json:', csv.parse({ base64: xlsx_as_base64, format: 'tomkat' }));
-console.log('CSV can be converted to json:', csv.parse({ str: csv_as_string, format: 'tomkat' });
+console.log('CSV can be converted to json:', csv.parse({ str: csv_as_string, format: 'tomkat' }));
 ```
 
 Each example folder exports a index which contains an array of all the underlying filenames for this example.

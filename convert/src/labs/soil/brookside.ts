@@ -6,9 +6,9 @@ const mappings : LocalLabConfig["mappings"] = {
   'Sample ID1': 'SampleNumber',
   'Sample ID2': undefined,
   'Lab Number': 'SampleContainerID',
-  'Client Number': 'AccountNumber',
-  'Client Name': 'AccountName',
-  'Sample Date': ['EventDate', 'ReceivedDate'],
+  'Client Number': 'ClientAccountNumber',
+  'Client Name': 'LabContactName',
+  'Sample Date': ['ReportDate', 'DateReceived'],
   'Consultant Name': 'Grower'
 }
 

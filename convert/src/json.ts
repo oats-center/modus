@@ -3,16 +3,19 @@
 // reflects its type, and
 import debug from 'debug';
 import jszip from 'jszip';
+import Slim, { assert as assertModusResult } from '@oada/types/modus/slim/v1/0.js';
+/*
 import ModusResult, {
   assert as assertModusResult,
 } from '@oada/types/modus/v1/modus-result.js';
-import { parse as csvParse, supportedFormats, SupportedFormats } from './csv.js';
+*/
+import pointer from 'json-pointer';
+import { supportedFormats, SupportedFormats } from './fromCsvToModusV1.js';
+import { parseCsv as csvParse } from './csv.js';
 import { parseModusResult as xmlParseModusResult } from './xml.js';
-import { convertUnits } from '@modusjs/units';
-import { simpleConvert } from '../../units/dist/index.js';
-import { modusTests } from '@modusjs/industry';
 import type { NutrientResult } from '@modusjs/units';
 import type { LabConfig } from './labs/index.js';
+import { fromModusV1 } from './slim.js';
 
 export * as slim from './slim.js'
 
@@ -20,18 +23,17 @@ const error = debug('@modusjs/convert#tojson:error');
 const warn = debug('@modusjs/convert#tojson:error');
 const info = debug('@modusjs/convert#tojson:info');
 const trace = debug('@modusjs/convert#tojson:trace');
-const DEPTHUNITS = 'cm';
 
 export type SupportedFileType = 'xml' | 'csv' | 'xlsx' | 'json' | 'zip';
 export const supportedFileTypes = ['xml', 'csv', 'xlsx', 'json', 'zip'];
 
-export { ModusResult };
+export { Slim };
 
 export type ModusJSONConversionResult = {
   original_filename: string;
   original_type: SupportedFileType;
   output_filename: string;
-  modus: ModusResult;
+  modus: Slim;
 };
 
 export type InputFile = {
@@ -87,7 +89,7 @@ export async function toJson(
     const type = original_type; // just to make things shorter later in json filename determination
     const filename = file.filename;
     let output_filename = '';
-    let modus: ModusResult | any | null = null;
+    let modus: Slim | any | null = null;
     try {
       switch (original_type) {
         case 'zip':
@@ -96,6 +98,9 @@ export async function toJson(
           break;
         case 'json':
           modus = typeof file.str! === 'string' ? JSON.parse(file.str!) : file.str!;
+          if (modus._type === 'application/vnd.modus.v1.modus-result+json' || modus.Events) {
+            modus = fromModusV1(modus);
+          }
           assertModusResult(modus); // catch below will inform if parsing or assertion failed.
           output_filename = jsonFilenameFromOriginalFilename({
             modus,
@@ -118,15 +123,16 @@ export async function toJson(
         case 'csv':
         case 'xlsx':
           let parseargs;
-          if (original_type === 'csv') parseargs = { str: file.str, format };
+          if (original_type === 'csv') parseargs = { str: file.str, format, filename };
           else {
             if (file.arrbuf)
               parseargs = {
                 arrbuf: file.arrbuf,
                 format,
+                filename,
               };
             // checked for at least one of these above
-            else parseargs = { base64: file.base64, format };
+            else parseargs = { base64: file.base64, format, filename };
           }
           const all_modus = csvParse({...parseargs, labConfigs});
           for (const [index, modus] of all_modus.entries()) {
@@ -160,7 +166,7 @@ export async function toJson(
 // If index is defined, it will name the file with the index
 // If type is csv or xlsx, it will try to grab the FileDescription from the report to include the sheetname as part of the filename
 export type FilenameArgs = {
-  modus: ModusResult;
+  modus: Slim;
   index?: number;
   filename: string;
   type: SupportedFileType;
@@ -177,8 +183,7 @@ export function jsonFilenameFromOriginalFilename({
   );
   let output_filename = output_filename_base;
   // xslx and csv store the sheetname + group number in FileDescription, we can name things by that
-  const filedescription =
-    modus?.Events?.[0]?.LabMetaData?.Reports?.[0]?.FileDescription;
+  const filedescription = pointer.has(modus, '/lab/files/0/name') ? pointer.get(modus, '/lab/files/0/name') : undefined;
   if (
     (type === 'xlsx' || type === 'csv' || type === 'zip') &&
     filedescription
@@ -256,64 +261,3 @@ export async function zipParse(file: ZipFile) {
   return toJson(all_convert_inputs);
 }
 
-export function fixModus(modus: ModusResult): ModusResult {
-  //Fix Non-Standard (not specified by modus) Depth Units
-  modus = fixDepthUnits(modus);
-
-  //Fix Non-Standard Nutrient Results (lookup modus id and append everything else)
-  modus = setModusNRUnits(modus);
-  return modus;
-}
-
-export function fixDepthUnits(modus: ModusResult): ModusResult {
-  let evts = (modus.Events || []).map((evt) => {
-    if (evt.EventSamples?.Soil) {
-      evt.EventSamples.Soil.DepthRefs = evt.EventSamples.Soil.DepthRefs?.map((dr) => {
-        const StartingDepth = simpleConvert(dr.StartingDepth!, dr.DepthUnit!, DEPTHUNITS);
-        const EndingDepth = simpleConvert(dr.EndingDepth!, dr.DepthUnit!, DEPTHUNITS);
-        const ColumnDepth = simpleConvert(dr.ColumnDepth!, dr.DepthUnit!, DEPTHUNITS);
-        if (StartingDepth?.status === 'failed' || EndingDepth?.status === 'failed' || ColumnDepth?.status === 'failed') {
-          warn(`Standardizing soil depth units failed. Falling back to input.`);
-          return dr;
-        }
-        return {
-          ...dr,
-          StartingDepth: Math.round(StartingDepth.toVal),
-          EndingDepth: Math.round(EndingDepth.toVal),
-          ColumnDepth: Math.round(ColumnDepth.toVal),
-          DepthUnit: DEPTHUNITS
-        }
-      })
-    }
-    return evt
-  })
-  return { ...modus, Events: evts};
-}
-export function setModusNRUnits(modus: ModusResult, units?: NutrientResult[]): ModusResult {
-  let evts = (modus.Events || []).map((evt) => {
-    let evtSamples = Object.fromEntries(
-      Object.entries(evt.EventSamples || {}).map(([key, value]: [string, any]) => {
-        let samplesKey = `${key}Samples`;
-        if (key === 'Soil') {
-          value[samplesKey] = value[samplesKey].map((sample:any) => ({
-            ...sample,
-            Depths: sample.Depths.map((dep:any) => ({
-              ...dep,
-              //Will convert to standard units or else
-              NutrientResults: convertUnits(dep.NutrientResults.map((nr: NutrientResult) => ({
-                ...nr,
-                Element: modusTests[nr.ModusTestID as keyof typeof modusTests]?.Element || nr.Element,
-                ModusTestIDv2: modusTests[nr.ModusTestID as keyof typeof modusTests]?.ModusTestIDv2 || nr.ModusTestIDv2,
-              })), units)
-            }))
-          }))
-        }
-        return [key, value]
-      })
-    )
-    return {
-      ...evt, EventSamples: evtSamples
-    }
-  })
-  return { ...modus, Events: evts};
-}

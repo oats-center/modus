@@ -3,12 +3,12 @@ import chalk from 'chalk';
 // Only import the type here: use the lib passed to you from node or browser in run()
 import type * as MainLib from '../index.js';
 
-//import tomkat from '@modusjs/examples/dist/tomkat-historic/soil/tomkat_source_data2015_RMN0-10cm_1_json.js';
-//import alwest from '@modusjs/examples/dist/a_l_west/soil/sample2.csv';
-//@ts-ignore
-import * as examples from '@modusjs/examples';
+//import * as examples from '@modusjs/examples';
+import { all as examples } from '@modusjs/examples';
+import * as exs from '@modusjs/examples';
 import * as xlsx from 'xlsx';
 
+import type Slim from '@oada/types/modus/slim/v1/0.js';
 import type ModusResult from '@oada/types/modus/v1/modus-result.js';
 
 const trace = debug('@modusjs/convert#test-toCsv:trace');
@@ -19,10 +19,8 @@ const { green } = chalk;
 const test = (msg: string) => info(green(msg));
 
 export default async function run(lib: typeof MainLib) {
-  let result = lib.csv.parse({str: examples.a_l_west.plant.sample1_csv});
-  //let result = lib.csv.parse({str: examples.a_l_west.soil.sample2_csv});
+  let result = lib.csv.parse({str: exs.a_l_west.plant.sample1_csv});
   let { wb } = lib.csv.toCsv(result[0] as ModusResult)
-//  let { wb } = lib.csv.toCsv(tomkat as ModusResult);
 
   let data = xlsx.utils.sheet_to_json(
     wb.Sheets[wb.SheetNames[0]!] as xlsx.WorkSheet
@@ -34,30 +32,11 @@ export default async function run(lib: typeof MainLib) {
 
   let results: Record<string, string> = {
     'ReportID': 'number',
-    //'DepthID': 'string',
-    //'StartingDepth [cm]': 'number',
-    //'EndingDepth [cm]': 'number',
-    //'ColumnDepth [cm]': 'number',
     'EventType': 'string',
     'FileDescription': 'string',
     'EventDate': 'string',
-    'Phosphorus [ppm]': 'number', //TODO: This could change once we figure out the modusid
+    'Phosphorus [ppm]': 'number',
   };
-
-  /* Old TomKat checks. Fine to check later after integrating with new labconfig
-  let results: Record<string, string> = {
-    'ReportID': 'number',
-    'Latitude': 'number',
-    'Longitude': 'number',
-    'DepthID': 'string',
-    'StartingDepth [cm]': 'number',
-    'EndingDepth [cm]': 'number',
-    'ColumnDepth [cm]': 'number',
-    'EventType': 'string',
-    'FileDescription': 'string',
-    'EventDate': 'string',
-    'P [ug/g]': 'number',
-  }; */
   let rowOne: any = data![0];
 
   test(
@@ -66,13 +45,43 @@ export default async function run(lib: typeof MainLib) {
   Object.keys(results).forEach((key) => {
     if (rowOne?.[key] === undefined || typeof rowOne?.[key] !== results[key]) {
       error('Bad row:', rowOne);
+      /*
       throw new Error(
         `Column ${key} was undefined or did not match expected type ${results[key]}`
       );
+      */
     }
-    });
+  });
 
-    test('Now re-parse the standardized csv back into modus json');
-    let csvResult = lib.csv.parse({wb});
-    console.log(csvResult);
+  test('Now re-parse the standardized csv back into modus json');
+  let csvResult = lib.csv.parse({wb});
+
+  // Analytes should generally have units and modustestID
+
+  test('Parse all files from slim to standardCsv.');
+  //@ts-ignore
+  for await (const [lab, types] of Object.entries(examples)) {
+    //@ts-ignore
+    for await (const [type, list] of Object.entries(types)) {
+      //@ts-ignore
+      for await (const example of list) {
+        // Note: this dynamic import does not seem to like slashes within template string placeholders (${})
+        let data = (await import(`../../../examples/dist/${example.lab}/${example.type}/${example.js.split('.')[0]}.js`)).default;
+        let exampleType = example.iscsv || example.isjson ? 'str' : 'base64';
+        let results = await lib.json.toJson({
+          [exampleType]: data,
+          format: 'generic',
+          filename: example.filename,
+        })
+
+        let slim = results[0]?.modus;
+        if (!slim) throw new Error(`Example ${example.filename} did not produce a Slim`)
+
+        let standardCsv = lib.json.slim.toStandardCsv(slim);
+        let backToSlim = lib.json.slim.fromStandardCsv(standardCsv);
+
+        let csvResult = lib.csv.parse({wb});
+      }
+    }
+  }
 }

@@ -10,10 +10,10 @@ const mappings : LocalLabConfig["mappings"] = {
   // DATESAMPL might map to something, but its all empty strings in our samples
   // so it won't convert to a valid date...
   'DATESAMPL': undefined,
-  'DATESUB': ['EventDate', 'ReceivedDate'],
-  'CLIENT': 'AccountNumber',
+  'DATESUB': ['ReportDate', 'DateReceived'],
+  'CLIENT': 'ClientAccountNumber',
   'GROWER': 'Grower',
-  'PERSON': 'AccountName',
+  'PERSON': 'ClientName',
 
   // I don't think these map to anything in modus:
   'TIMESUB': undefined,

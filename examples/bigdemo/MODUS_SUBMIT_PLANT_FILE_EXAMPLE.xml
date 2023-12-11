@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ModusSubmit Version="1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="modus_submit.xsd">
+<Event>
+<FMISMetaData>
+<FMISEventID></FMISEventID>
+<FMISProfile>
+<Grower>Grower Name</Grower>
+<Farm>Farm Name</Farm>
+<Field>Field Name</Field>
+</FMISProfile>
+</FMISMetaData>
+<EventMetaData>
+<EventCode>Event-Code</EventCode>
+<EventType>
+<Plant>
+<PlantPart>Leaf</PlantPart>
+<Crop>
+<Name>Corn</Name>
+<ClientID></ClientID>
+<GrowthStage>
+<Name>V10 - 10th Leaf</Name>
+<ClientID></ClientID>
+</GrowthStage>
+<SubGrowthStage>
+<Name></Name>
+<ClientID></ClientID>
+</SubGrowthStage>
+</Crop>
+</Plant>
+</EventType>
+<EventDate>2076-07-01</EventDate>
+</EventMetaData>
+<LabMetaData>
+<LabID>993ea57e-9364-4477-8ebc-45e1b2464a60</LabID>
+<LabEventID/>
+<LabName>A&amp;L Great Lakes</LabName>
+<TestPackageRefs>
+<TestPackageRef TestPackageID="1">
+<Name>PT2</Name>
+</TestPackageRef>
+</TestPackageRefs>
+<ClientAccount>
+<AccountNumber>54321</AccountNumber>
+</ClientAccount>
+</LabMetaData>
+<SubmissionAttributes>
+<SubmittedBy>Rep Name</SubmittedBy>
+</SubmissionAttributes>
+<EventSamples>
+<Plant>
+<PlantSample>
+<SampleMetaData>
+<SampleNumber>1</SampleNumber>
+<FMISSampleID></FMISSampleID>
+<Geometry>POINT (-88.82280409426 44.29374769253)</Geometry>
+</SampleMetaData>
+</PlantSample>
+</Plant>
+</EventSamples>
+</Event>
+</ModusSubmit>
