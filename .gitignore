@@ -24,9 +24,9 @@ dist/
 !/.yarn/versions/
 .pnp.*
 
-./Soil Lab Data
-./Soil Analysis Nomenclature Modus.xlsx
-./Modus 2 Soil Methods.xlsx
-./ALWestExamples
-./bigquery
-./Modus 2.0 Plant Analysis DRAFT.xlsx
+Soil Lab Data
+Soil Analysis Nomenclature Modus.xlsx
+Modus 2 Soil Methods.xlsx
+ALWestExamples
+bigquery
+Modus 2.0 Plant Analysis DRAFT.xlsx
