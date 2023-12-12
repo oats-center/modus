@@ -200,12 +200,21 @@ export default observer(function App() {
           <div className="partnerlogo"><a href="https://mixingbowlhub.com/"><img style={{maxHeight: '50px' }} src="logo-mixingbowlhub.png" /></a></div>
           <div className="partnerlogo"><a href="https://aggateway.org"><img style={{maxHeight: '50px' }} src="logo-aggateway.jpg" /></a></div>
           <div className="partnerlogo"><a href="https://semios.com"><img style={{maxHeight: '50px' }} src="logo-semios.png" /></a></div>
+          <div className="partnerlogo"><a href="https://agdatacoop.org"><img style={{maxHeight: '50px' }} src="logo-usda-nifa.jpg" /></a></div>
         </div>
         <div style={{paddingTop: '10px'}}>
-          and all participants in the
+          and all participants in the&nbsp;
             <a href="https://farmfoundation.swoogo.com/soilhealthtech">
               2022 "Fixing the Soil Health Tech Stack" Hackathon.
             </a>
+        </div>
+        <div style={{paddingTop: '30px', width: '50%', textAlign: 'center' }}>
+          In addition to the partners above, this work was funded in part by USDA AFRI
+          grant&nbsp;<a href="https://portal.nifa.usda.gov/web/crisprojectpages/1027697-national-ag-producer-data-cooperative-a-strategic-framework-for-innovation.html">2021-77039-35992</a>
+          <br/>
+          through the&nbsp;<a href="https://agdatacoop.org">NAPDC</a> from the&nbsp;<a href="https://unl.edu">University of Nebraska-Lincoln</a>&nbsp;
+          <br/>
+          to the&nbsp;<a href="https://oatscenter.org">Open Ag Technology and Systems (OATS) Center</a> at&nbsp;<a href="https://purdue.edu">Purdue University</a>.
         </div>
       </div>
     </div>
