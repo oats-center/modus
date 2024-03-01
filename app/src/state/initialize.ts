@@ -8,9 +8,9 @@ import { headless } from './actions';
 const info = debug('@modusjs/app#initialize:info');
 
 
-export function initialize() {
+export async function initialize() {
   // Put anything here that needs to run when the app starts up
-  
+
   // If you pass ?headless=true&domain=your.domain in the URL, then this code will enable you
   // to send it stuff to convert via cross-document messaging from your domain
   if (!isHeadless()) {
@@ -22,7 +22,7 @@ export function initialize() {
     const domain = params.get('domain');
     window.addEventListener("message", async ({data, origin, source}) => {
       info('Received message: ', data, ' from origin: ', origin);
-     
+
       if (!source) {
         info('ERROR: source is null, it should be a reference to the calling window.');
         return;
@@ -36,7 +36,7 @@ export function initialize() {
 
       switch(data.request) {
 
-        case "toJSON": 
+        case "toJSON":
           const conversions = await file.fromFileBrowser({ file: data.file });
           info('Conversion successful, posting result back to caller:', conversions);
           source.postMessage({ ...data, result: conversions });
@@ -45,8 +45,6 @@ export function initialize() {
       }
 
     });
-
-
   }
 }
 

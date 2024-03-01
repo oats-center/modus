@@ -1,4 +1,4 @@
-import { observable } from 'mobx';
+import { observable, computed } from 'mobx';
 import debug from 'debug';
 //import { labConfigs } from '@modusjs/industry';
 import { csv } from '@modusjs/convert';
@@ -22,13 +22,16 @@ export type State = {
   trellis: { domain: string, token: string },
   inzone: boolean,
   headless: boolean,
+  table: {
+    selected: any[],
+  }
 };
 
 // Get LabConfigs from LocalStorage
 
 const list = Object.fromEntries(
   Object.entries(csv.labs.labConfigs).map(([labName, labTypes]) =>
-    Object.entries(labTypes).map(([type, conf]) =>
+    Object.entries(labTypes || {}).map(([type, conf]) =>
       ([`${labName} - ${type === 'undefined' ? 'Soil' : type}`, conf])
     )
   ).flat(1)
@@ -38,8 +41,8 @@ const list = Object.fromEntries(
 export const state = observable<State>({
   tab: "1",
   messages: [],
-  output: 'json',
-  trellis: { domain: '', token: '' },
+  output: 'trellis',
+  trellis: { domain: 'https://localhost', token: 'god' },
   inzone: false,
   headless: false,
   labConfig: {
@@ -63,6 +66,28 @@ export const state = observable<State>({
       }
     },*/
     list,
+  },
+  files: {},
+  table: {
+    order: 'asc',
+    orderBy: 'filename',
+    selected: [],
+    page: 0,
+    dense: true,
+    rowsPerPage: 25,
+    files: {},
+    //files: computed(() => {
+    //  return {
+    //    abc123: {
+    //      filename: 'testfile.csv',
+    //      lab: 'A & L Western Laboratories - Modesto, CA',
+    //      date: '2024-08-20',
+    //      sampleCount: 18,
+    //      field: 'Back40',
+    //      farm: 'Home',
+    //    },
+    //    return {}
+    //}).get()
   },
 });
 
