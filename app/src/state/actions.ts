@@ -1,6 +1,7 @@
 //process.env.NODE_TLS_REJECT_UNAUTHORIZED='0';
+import axios from 'axios';
 import md5 from 'md5';
-import { action } from 'mobx';
+import { action, runInAction } from 'mobx';
 import { connect } from '@oada/client';
 import { OADAClient } from '@oada/client';
 import { state, State, Message } from './state';
@@ -157,20 +158,25 @@ export const fetchTrellisData = action('fetchTrellisData', async () => {
   });
   let types = Object.keys(typesObj).filter(key => !key.startsWith('_'))
   for await (const type of types) {
+    await new Promise(resolve => setTimeout(resolve, 50));
     let { data: datesObj } = await CONN.get({
       path: `/bookmarks/lab-results/${type}/event-date-index/`
     });
     let dates = Object.keys(datesObj).filter(key => !key.startsWith('_'))
     for await (const date of dates) {
+      await new Promise(resolve => setTimeout(resolve, 50));
       let { data: dateObj } = await CONN.get({
         path: `/bookmarks/lab-results/${type}/event-date-index/${date}/md5-index`
       })
       let keys = Object.keys(dateObj).filter(key => !key.startsWith('_'))
       for await (const key of keys) {
+        await new Promise(resolve => setTimeout(resolve, 50));
         let { data } = await CONN.get({
           path: `/bookmarks/lab-results/${type}/event-date-index/${date}/md5-index/${key}`
         })
-        state.files[key] = data;
+        runInAction(() => {
+          state.files[key] = data;
+        })
       }
     }
   }
@@ -180,7 +186,7 @@ export const trellisConnect = action('trellisConnect', async () => {
   const { domain, token } = state.trellis;
   const conn = await connect({domain, token});
   setConnection(conn);
-  state.trellis.conn = true;
+  runInAction(() => state.trellis.conn = true)
   message(`Connected to your Trellis at ${domain}`);
   fetchTrellisData();
 })
@@ -200,17 +206,35 @@ export const toTrellis = action('putDoc', async (results: ModusResult[]) => {
       if (date && hash) {
         info(`Putting to path: ${path}`);
         console.log(`Putting to path: ${path}`);
+        /*
         await CONN.put({
           path,
           data,
           //FIXME: this needs to be a tree PUT
           //tree,
         })
+        */
+        await axios({
+          method: 'put',
+          url: `https://localhost${path}`,
+          data,
+          headers: {
+            Authorization: `Bearer ${state.trellis.token}`,
+            'Content-Type': 'application/json',
+          },
+        })
+        runInAction(() => {
+          state.files[hash] = results;
+        })
+
+        info('waiting');
+        console.log('waiting')
+        await new Promise(resolve => setTimeout(resolve, 250));
       }
     }
     message(`Successfully saved ${results.length} result${results.length === 1 ? '' : 's'} to your Trellis.`);
     info('Successfully wrote results to trellis');
-    fetchTrellisData();
+    runInAction(fetchTrellisData());
   } catch(err) {
     console.error(`toTrellis Errored: ${err}`);
     error(`toTrellis Errored: ${err}`);
@@ -255,10 +279,13 @@ export const deleteSelected = action('deleteSelected', async() => {
     message(`Removing modus result ${key} from Trellis.`);
     info(`Putting to path: ${path}`);
     await CONN.delete({ path });
+    await new Promise(resolve => setTimeout(resolve, 250));
+    runInAction(() => {
     state.files = Object.fromEntries(
       Object.entries(state.files).filter(([k, file]) => key !== k)
     )
     state.table.selected = state.table.selected.filter((k:any) => key !== k);
+    })
 
   }
   //fetchTrellisData();

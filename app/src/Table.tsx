@@ -342,6 +342,7 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
 
 export default observer(function App() {
   const { state, actions } = React.useContext(context);
+  //@ts-ignore
   const rows : Data[] = Object.entries(state.files).map(([key, slim]: [string, Slim]) => ({
     id: key,
     sampleCount: Object.keys(slim.samples).length,
@@ -355,7 +356,6 @@ export default observer(function App() {
       ]))
     )
   }));
-  //const rows : Data[] = Object.entries(state.table.files).map(([id, row]) => ({id, ...row}));
   const {order, orderBy, selected, page, dense, rowsPerPage } = state.table;
   const setTable = actions.setTable;
 
@@ -415,14 +415,15 @@ export default observer(function App() {
     const emptyRows =
       page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
-    const visibleRows = React.useMemo(
-      () =>
+    const visibleRows = //React.useMemo(
+      //() =>
+      //@ts-ignore
         stableSort(rows, getComparator(order, orderBy)).slice(
           page * rowsPerPage,
           page * rowsPerPage + rowsPerPage,
-        ),
-      [order, orderBy, page, rowsPerPage],
-    );
+        )
+      //[order, orderBy, page, rowsPerPage],
+    //);
 
   return (
     <div className="tab">
@@ -445,7 +446,7 @@ export default observer(function App() {
                  rowCount={rows.length}
                />
                <TableBody>
-                 {rows.map((row:any, index:number) => {
+                 {visibleRows.map((row:any, index:number) => {
                    const isItemSelected = isSelected(row.id);
                    const labelId = `enhanced-table-checkbox-${index}`;
                    return (
