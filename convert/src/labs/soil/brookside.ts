@@ -3,11 +3,11 @@ import type { LocalLabConfig } from '../index.js';
 
 const mappings : LocalLabConfig["mappings"] = {
   'Sample Location': 'Field',
-  'Sample ID1': 'SampleNumber',
+  'Sample ID1': 'FMISSampleID',
   'Sample ID2': undefined,
-  'Lab Number': 'SampleContainerID',
+  'Lab Number': 'SampleNumber',
   'Client Number': 'ClientAccountNumber',
-  'Client Name': 'LabContactName',
+  'Client Name': 'ClientAccountName',
   'Sample Date': ['ReportDate', 'DateReceived'],
   'Consultant Name': 'Grower'
 }

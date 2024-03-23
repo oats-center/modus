@@ -5,9 +5,7 @@ import fs from 'fs/promises';
 import * as mainlib from '../../node/index.js';
 
 import xmlTests from '../xml.test.js';
-/*
 import toJsonTests from '../tojson.test.js';
-*/
 import htmlTests from './html.test.js';
 import fileTest from './file.test.js';
 import toCsvTests from '../toCsv.test.js';
@@ -48,9 +46,9 @@ const { red } = chalk;
     info('testing toGeoJson');
     await toGeoJsonTests(mainlib);
 
+    */
     info('testing tojson');
     await toJsonTests(mainlib);
-    */
 
     info('testing node HTML');
     await htmlTests(mainlib);

@@ -4,6 +4,7 @@ const warn = debug('@modusjs/convert#labs-tomkat:warn');
 //const error = debug('@modusjs/convert#labs-tomkat:error');
 
 const mappings : LocalLabConfig["mappings"] = {
+  /*
   'Kind Of Sample': undefined, //'EventType',
   'Lab No': 'LabID',
   'Cust No': 'ClientAccountNumber',
@@ -22,6 +23,7 @@ const mappings : LocalLabConfig["mappings"] = {
   'Date Rept': 'DateProcessed',
   'B Depth': 'StartingDepth',
   'E Depth': 'EndingDepth',
+  */
   // I don't think these map to anything in modus:
   'Past Crop': undefined,
   'Point ID': 'SampleNumber',
@@ -374,6 +376,7 @@ let analytes : LocalLabConfig["analytes"] = {
   },
   //TODO: Fix this after addressing duplicate header bug in examples.
   // Without these Rec_1, Rec_2, etc, autorecognition cannot occur
+  /*
   'Nitrogen Rec_1': {
     ValueUnit: 'lb/ac',
     Element: 'N-Rec',
@@ -382,10 +385,12 @@ let analytes : LocalLabConfig["analytes"] = {
     ValueUnit: 'lb/ac',
     Element: 'N-Rec',
   },
+  */
   'P2O5 Rec': {
     ValueUnit: 'lb/ac',
     Element: 'P2O5-Rec',
   },
+  /*
   'P2O5 Rec_1': {
     ValueUnit: 'lb/ac',
     Element: 'P2O5-Rec',
@@ -394,10 +399,12 @@ let analytes : LocalLabConfig["analytes"] = {
     ValueUnit: 'lb/ac',
     Element: 'P2O5-Rec',
   },
+  */
   'K2O Rec': {
     ValueUnit: 'lb/ac',
     Element: 'K2O-Rec',
   },
+  /*
   'K2O Rec_1': {
     ValueUnit: 'lb/ac',
     Element: 'K2O-Rec',
@@ -406,10 +413,12 @@ let analytes : LocalLabConfig["analytes"] = {
     ValueUnit: 'lb/ac',
     Element: 'K2O-Rec',
   },
+  */
   'Sulfur Rec': {
     ValueUnit: 'lb/ac',
     Element: 'S-Rec',
   },
+  /*
   'Sulfur Rec_1': {
     ValueUnit: 'lb/ac',
     Element: 'S-Rec',
@@ -418,10 +427,12 @@ let analytes : LocalLabConfig["analytes"] = {
     ValueUnit: 'lb/ac',
     Element: 'S-Rec',
   },
+  */
   'Zinc Rec': {
     ValueUnit: 'lb/ac',
     Element: 'Zn-Rec',
   },
+  /*
   'Zinc Rec_1': {
     ValueUnit: 'lb/ac',
     Element: 'Zn-Rec',
@@ -430,10 +441,12 @@ let analytes : LocalLabConfig["analytes"] = {
     ValueUnit: 'lb/ac',
     Element: 'Zn-Rec',
   },
+  */
   'Magnesium Rec': {
     ValueUnit: 'lb/ac',
     Element: 'Mg-Rec',
   },
+  /*
   'Magnesium Rec_1': {
     ValueUnit: 'lb/ac',
     Element: 'Mg-Rec',
@@ -442,10 +455,12 @@ let analytes : LocalLabConfig["analytes"] = {
     ValueUnit: 'lb/ac',
     Element: 'Mg-Rec',
   },
+  */
   'Iron Rec': {
     ValueUnit: 'lb/ac',
     Element: 'Fe-Rec',
   },
+  /*
   'Iron Rec_1': {
     ValueUnit: 'lb/ac',
     Element: 'Fe-Rec',
@@ -454,10 +469,12 @@ let analytes : LocalLabConfig["analytes"] = {
     ValueUnit: 'lb/ac',
     Element: 'Fe-Rec',
   },
+  */
   'Manganese Rec': {
     ValueUnit: 'lb/ac',
     Element: 'Mn-Rec',
   },
+  /*
   'Manganese Rec_1': {
     ValueUnit: 'lb/ac',
     Element: 'Mn-Rec',
@@ -466,10 +483,12 @@ let analytes : LocalLabConfig["analytes"] = {
     ValueUnit: 'lb/ac',
     Element: 'Mn-Rec',
   },
+  */
   'Copper Rec': {
     ValueUnit: 'lb/ac',
     Element: 'Cu-Rec',
   },
+  /*
   'Copper Rec_1': {
     ValueUnit: 'lb/ac',
     Element: 'Cu-Rec',
@@ -478,10 +497,12 @@ let analytes : LocalLabConfig["analytes"] = {
     ValueUnit: 'lb/ac',
     Element: 'Cu-Rec',
   },
+  */
   'Boron Rec': {
     ValueUnit: 'lb/ac',
     Element: 'B-Rec',
   },
+  /*
   'Boron Rec_1': {
     ValueUnit: 'lb/ac',
     Element: 'B-Rec',
@@ -490,10 +511,12 @@ let analytes : LocalLabConfig["analytes"] = {
     ValueUnit: 'lb/ac',
     Element: 'B-Rec',
   },
+  */
   'Lime Rec': {
     ValueUnit: 'lb/ac',
     Element: 'Lime-Rec',
   },
+  /*
   'Lime Rec_1': {
     ValueUnit: 'lb/ac',
     Element: 'Lime-Rec',
@@ -502,6 +525,7 @@ let analytes : LocalLabConfig["analytes"] = {
     ValueUnit: 'lb/ac',
     Element: 'Lime-Rec',
   },
+  */
   'Organic Carbon %': {
     ValueUnit: '%',
     Element: 'OC',

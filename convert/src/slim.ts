@@ -17,6 +17,7 @@ import jp from 'json-pointer';
 // @ts-expect-error no types
 import wicket from 'wicket';
 import { parseColumnHeaderName } from './csv.js';
+import { count } from 'console';
 
 const error = debug('@modusjs/convert#slim:error');
 const warn = debug('@modusjs/convert#slim:error');
@@ -45,11 +46,11 @@ export function fromModusV1(
     setPath(event, `/EventMetaData/EventDate`, result, `/date`);
 
     setPath(event, `/EventMetaData/EventType`, result, `/type`, (v) => Object.keys(v)[0]!.toLowerCase())
-    if (result.type === 'plant') result.type === 'plant-tissue';
+    if (result.type === 'plant') result.type = 'plant-tissue';
 
     //Lab
-    setPath(event, `/LabMetaData/LabEventID`, result, `/lab/id/value`);
-    setPath(event, `/LabMetaData/LabEventID`, result, `/lab/id/source`, () => 'local');
+    setPath(event, `/LabMetaData/LabID`, result, `/lab/id/value`);
+    setPath(event, `/LabMetaData/LabID`, result, `/lab/id/source`, () => 'local');
     setPath(event, `/LabMetaData/LabName`, result, `/lab/name`);
 
     setPath(event, `/LabMetaData/Contact/Name`, result, `/lab/contact/name`);
@@ -91,12 +92,14 @@ export function fromModusV1(
     setPath(event, `/LabMetaData/Reports`, result, `/lab/files`, (reports) =>
       reports.map((r: any) => {
         const file: any = {};
-        setPath(r, `/File/ReportID`, file, `/id`);
-        setPath(r, `/File/FileData`, file, `/base64`);
+        //FIXME: I believe ReportID is just an internal pointer to tie samples to Reports
+        setPath(r, `/ReportID`, file, `/id`);
+        setPath(r, `/LabReportID`, file, `/id`);
+        setPath(r, `/FileDescription`, file, `/description`);
         setPath(r, `/File/URL/Path`, file, `/uri`);
         setPath(r, `/File/URL/FileName`, file, `/name`);
         setPath(r, `/File/FileData/FileName`, file, `/name`);
-        setPath(r, `/File/FileDescription`, file, `/description`);
+        setPath(r, `/File/FileData/FileData`, file, `/name`);
         return file;
       })
     );
@@ -111,13 +114,22 @@ export function fromModusV1(
         bottom: dr.EndingDepth,
         units: dr.DepthUnit
       })) : undefined;
-      if (depths.length === 1) result.depth = depths[0];
+      if (depths && depths.length === 1) result.depth = depths[0];
+
 
       const sampleName = `${type}Samples`;
 
       // Samples
       for (const eventSample of eventSamples[sampleName]) {
         const sample: any = {};
+        let sampleid = jp.has(eventSample, '/SampleMetaData/FMISSampleID') ?
+          jp.get(eventSample, '/SampleMetaData/FMISSampleID')
+          : jp.has(eventSample, '/SampleMetaData/SampleNumber') ?
+            jp.get(eventSample, '/SampleMetaData/SampleNumber')
+            : jp.has(eventSample, '/SampleMetaData/SampleContainerID') ?
+            jp.get(eventSample, '/SampleMetaData/SampleContainerID')
+            : undefined;
+
         setPath(eventSample, `/SampleMetaData/SampleNumber`, sample, `/lab/sampleid`);
         setPath(eventSample, `/SampleMetaData/SampleContainerID`, sample, `/source/sampleid`);
 
@@ -125,18 +137,17 @@ export function fromModusV1(
         const nutrientResults = type === 'Soil' ?
           eventSample.Depths.map((d: any) => d.NutrientResults).flat(1)
           : eventSample.NutrientResults;
-        sample.nutrientResult = Object.fromEntries(nutrientResults.map((d: any) => {
+        sample.results = Object.fromEntries(nutrientResults.map((d: any) => {
           const nr = {};
           setPath(d, `/ModusTestID`, nr, `/analyte`, (v) => v.split('_')[3])
           setPath(d, `/Element`, nr, `/analyte`);
-          setPath(d, `/Value`, nr, `/value`);
-          setPath(d, `/ValueUnit`, nr, `/units`);
           setPath(d, `/ModusTestID`, nr, `/modusTestID`);
+          setPath(d, `/ValueUnit`, nr, `/units`);
+          setPath(d, `/Value`, nr, `/value`);
           // d.ValueDesc???
           // d.ValueType???
           // TODO: Some other
-          const nrid = md5(JSON.stringify(nr));
-          return [nrid, nr];
+          return [`${sampleid}-${md5(JSON.stringify(nr))}`, nr];
         }))
 
         //Geolocation
@@ -153,7 +164,17 @@ export function fromModusV1(
           }
         })
 
-        const sampleid = md5(JSON.stringify(sample));
+        //Plant
+        if (type === 'Plant') {
+          setPath(event, `/EventMetaData/EventType/Plant/Crop/Name`, result, `/crop/name`);
+          // Modus V1 only allows top-level, but this could go down into the samples, too
+          setPath(event, `/EventMetaData/EventType/Plant/PlantPart`, result, `/plantPart`);
+          setPath(event, `/EventMetaData/EventType/Plant/Crop/GrowthStage/Name`, result, `/crop/growthStage`);
+          setPath(event, `/EventMetaData/EventType/Plant/Crop/SubGrowthStage/Name`, result, `/crop/subGrowthStage`);
+        }
+
+        // Shouldn't need this; xml shouldn't be missing every form of ID
+        sampleid = sampleid || md5(JSON.stringify(sample));
         result.samples = result.samples || {};
         result.samples[sampleid] = sample;
       }
@@ -279,69 +300,18 @@ export type StandardCsvObject = {
 
 }[];
 
-//export function toStandardCsv(input: Slim, separateMetadata?: boolean): StandardCsvObject {
 export function toStandardCsv(input: Slim, separateMetadata?: boolean) {
-  const flat = flatten(input);
+  const flat = flatten(JSON.parse(JSON.stringify(input)));
   const type = input.type;
 
   return Object.entries(flat.samples || {}).map(([sampleid, sample]: [string, any]) => {
-    /*
-    let source = {
-      SourceReportID: sample.source?.report?.id,
-      GrowerName: sample.source?.grower?.name,
-      GrowerID: sample.source?.grower?.id,
-      FarmName: sample.source?.farm?.name,
-      FarmID: sample.source?.farm?.id,
-      FieldName: sample.source?.field?.name,
-      FieldID: sample.source?.field?.id,
-      SubFieldName: sample.source?.subfield?.name,
-      SubFieldID: sample.source?.subfield?.id,
-    }
-    */
+    // get all of the top-level things
+    let dict = Object.fromEntries(Object.entries(jp.dict(sample) || {})
+      .filter(([key,_]) => !key.includes('/results'))
+      .map(([key, val]: [string, any]) => ([key.replace(/^\//, '').replace(/\//g, '.'), val]))
+    );
 
-    let dict = Object.fromEntries(Object.entries(jp.dict(input))
-      .filter(([key,_]) => !key.startsWith('/results'))
-    ).map(([key, val]: [string, any]) => ([key.replace(/^\//, '').replace('/', '.'), val]));
-
-    /*
-    let lab = {
-      LabName: sample.lab?.name,
-      LabID: sample.lab?.id,
-      LabReportID: sample.lab?.report?.id,
-      LabSampleID: sample.lab?.sampleid,
-      DateReceived: sample.lab?.dateReceived,
-      DateProcessed: sample.lab?.dateProcessed,
-      ClientAccountNumber: sample.lab?.clientAccount?.accountNumber,
-      ClientName: sample.lab?.clientAccount?.name,
-      ClientCompany: sample.lab?.clientAccount?.company,
-      ClientCity: sample.lab?.clientAccount?.city,
-      ClientState: sample.lab?.clientAccount?.state,
-      ClientZip: sample.lab?.clientAccount?.zip,
-      LabContactName: sample.lab?.contact?.name,
-      LabContactPhone: sample.lab?.contact?.phone,
-      LabContactAddress: sample.lab?.contact?.address,
-    }
-    */
-
-    let nutrients = toNutrientResultsObj(sample.results);
-
-    /*
-    let plant : any = type === 'plant-tissue' ? {
-      CropName: sample.crop?.name,
-      CropID: sample.crop?.id,
-      GrowthStage: sample.growthStage,
-      SubGrowthStage: sample.subGrowthStage,
-      PlantPart: sample.plantPart,
-    } : {};
-    */
-
-    /*
-    let soil : any = type === 'soil' ? {
-      DepthTop: sample.depth.top,
-      DepthBottom: sample.depth.bottom,
-      DepthUnits: sample.depth.units,
-    } : {};
-    */
+    let nutrients = convertNutrientResults(sample.results);
 
     return {
     //  ...source,
@@ -357,13 +327,14 @@ export function toStandardCsv(input: Slim, separateMetadata?: boolean) {
 export function fromStandardCsv(input: Record<string,any>[]): Slim {
   let slim: Slim = {
     id: '',
-    type: 'soil',
+    type: 'soil', // have to pick something here
     date: '',
     samples: {},
   };
 
   slim.samples = Object.fromEntries(input.map((row) => {
     // Parse analytes
+    // FIXME can we recognize an analyte if we have no brackets or parenthesis?
     let results = Object.fromEntries(Object.entries(row || {})
       .filter(([key, _]: [string, any]) =>
         (key.includes('[') && key.includes(']')) || (key.includes('(') && key.includes(')'))
@@ -372,14 +343,15 @@ export function fromStandardCsv(input: Record<string,any>[]): Slim {
 
     // Parse other data which have headesr that are json pointers
     const dict = Object.fromEntries(Object.entries(row || {})
-      .filter(([key, _]: [string, any]) => !results[key])
+      .filter(([key, _]: [string, any]) => !(key in results))
       .map(([path, val]: [string, any]) =>
-        (['/'+path.replace('.', '/'), val])
+        (['/'+path.replace(/\./g, '/'), val])
       )
     );
 
-    const samplid = dict['/samplid'];
+    const sampleid = dict['/lab/sampleid'] || dict['/source/sampleid'];
     let sample = {};
+
     Object.entries(dict).forEach(([path, val]) => {
       jp.set(sample, path, val)
     })
@@ -387,20 +359,19 @@ export function fromStandardCsv(input: Record<string,any>[]): Slim {
     results = Object.fromEntries(Object.entries(results || {})
       .map(([key, val]: [string, any]) => {
         let { modusid, element, units } = parseColumnHeaderName(key);
-        let result = {
-          analyte: element,
-          modusTestID: modusid,
-          units,
-          value: val
-        }
-        let resultid = `${samplid}-${md5(JSON.stringify(result))}`
+        let result:any = {};
+        if (element) result.analyte = element;
+        if (modusid) result.modusTestID = modusid;
+        if (units) result.units = units;
+        if (val || val === 0) result.value = val;
+        let resultid = `${sampleid}-${md5(JSON.stringify(result))}`
         return [resultid, result];
       })
     );
 
-    return [samplid, {
+    return [sampleid, {
       ...sample,
-      ...results,
+      results,
     }];
 
   }));
@@ -409,13 +380,13 @@ export function fromStandardCsv(input: Record<string,any>[]): Slim {
 }
 
 // TODO: Handle ModusTestIDv2???
-function toNutrientResultsObj(sampleDepth: any) {
+function convertNutrientResults(sample: any) {
   return Object.fromEntries(
-    sampleDepth.NutrientResults.map((nr: NutrientResult) => [
-      `${nr.Element}${nr.ModusTestID ? ` (${nr.ModusTestID})` : ''} [${nr.ValueUnit}]`,
-      nr.Value,
+    Object.values(sample).map((nr: any) => ([
+      `${nr.analyte}${nr.modusTestID ? ` (${nr.modusTestID})` : ''} [${nr.units ? nr.units : ''}]`,
+      nr.value,
     ])
-  );
+  ));
 }
 
 export function toCsv(input: Slim | Slim[]) {
@@ -506,8 +477,51 @@ export function unflatten(slim: Slim): Slim {
   // Skip results
   delete sample.results;
   const dict = jp.dict(sample);
+  delete dict['/lab/sampleid'];
+  delete dict['/lab/containerid'];
+  delete dict['/source/sampleid'];
+
+  // Create object of {<path>: mostFrequent value}
+  const modeDict = Object.fromEntries(Object.entries(dict).map(([path, val]: [string, any]) => ([
+    path,
+    mostFrequent(
+      Object.values(slim.samples || {})
+        .map((sample) => jp.has(sample, path) ? jp.get(sample, path) : undefined)
+    )
+  ])))
+
+  // FIXME: Do we limit this process to certain parts of the samples?
+  // Apply the most-common items to the top-level
+  Object.entries(modeDict).forEach(([path, val]) => {
+    jp.set(slim, path, val);
+  })
+  let sampleEntries = Object.fromEntries(
+    Object.entries(slim.samples || {}).map(([key, sample]) => {
+      for (const [path, val] of Object.entries(modeDict)) {
+        if (fde(val, jp.has(sample, path) ? jp.get(sample, path) : undefined)) {
+          // Remove the path from samples
+          jp.remove(sample, path);
+          // eliminate empty objects after removing stuff
+        }
+      }
+      let cleared = clearEmpties(sample);
+      return [key, cleared];
+    })
+  )
+  slim.samples = sampleEntries;
+  return slim;
+}
+
+export function unflatten2(slim: Slim): Slim {
+  let sample = JSON.parse(JSON.stringify(Object.values(slim.samples || {})[0]));
+  if (!sample) return slim;
+  // Skip results
+  delete sample.results;
+  const dict = jp.dict(sample);
   let sampleEntries = Object.entries(slim.samples || {});
+
   for (const [path, val] of Object.entries(dict)) {
+    // Every item must match to pull it up to the top
     if (sampleEntries.every(([k, item]) => fde(val, jp.has(item, path) ? jp.get(item, path) : undefined))) {
       // Put the value up higher in the slim doc
       jp.set(slim, path, val);
@@ -519,6 +533,27 @@ export function unflatten(slim: Slim): Slim {
   }
   slim.samples = Object.fromEntries(sampleEntries);
   return slim;
+}
+
+
+function mostFrequent(arr:any[]) {
+  let countArr: any[] = [];
+  let maxCount: number = 0;
+  let val: any;
+  for (const item of arr) {
+    let idx = countArr.findIndex(({value, count}) => item === value);
+    let newCount = 1;
+    if (idx >= 0) {
+      newCount = countArr[idx].count+1;
+      countArr[idx].count = newCount;
+    } else {
+      countArr.push({value: item, count: newCount});
+    }
+    if (newCount > maxCount) {
+      val = item;
+    }
+  }
+  return val;
 }
 
 function clearEmpties(o: any) {
@@ -533,7 +568,7 @@ function clearEmpties(o: any) {
       delete o[k]; // The object had no properties, so delete that property
     }
   }
-    return o;
+  return o;
 }
 
 /*

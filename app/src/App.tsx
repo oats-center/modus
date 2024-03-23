@@ -227,6 +227,7 @@ export default observer(function App() {
           <div className="partnerlogo"><a href="https://mixingbowlhub.com/"><img style={{maxHeight: '50px' }} src="logo-mixingbowlhub.png" /></a></div>
           <div className="partnerlogo"><a href="https://aggateway.org"><img style={{maxHeight: '50px' }} src="logo-aggateway.jpg" /></a></div>
           <div className="partnerlogo"><a href="https://semios.com"><img style={{maxHeight: '50px' }} src="logo-semios.png" /></a></div>
+          <div className="partnerlogo"><a href="https://openteam.community"><img style={{maxHeight: '50px' }} src="logo-openteam.png" /></a></div>
         </div>
         <div style={{paddingTop: '10px'}}>
           and all participants in the

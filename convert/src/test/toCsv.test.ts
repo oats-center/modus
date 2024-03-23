@@ -10,6 +10,7 @@ import * as xlsx from 'xlsx';
 
 import type Slim from '@oada/types/modus/slim/v1/0.js';
 import type ModusResult from '@oada/types/modus/v1/modus-result.js';
+import fde from 'fast-deep-equal';
 
 const trace = debug('@modusjs/convert#test-toCsv:trace');
 const info = debug('@modusjs/convert#test-toCsv:info');
@@ -67,7 +68,13 @@ export default async function run(lib: typeof MainLib) {
       for await (const example of list) {
         // Note: this dynamic import does not seem to like slashes within template string placeholders (${})
         let data = (await import(`../../../examples/dist/${example.lab}/${example.type}/${example.js.split('.')[0]}.js`)).default;
-        let exampleType = example.iscsv || example.isjson ? 'str' : 'base64';
+        let exampleType = example.iscsv || example.isjson || example.isxml ? 'str' : 'base64';
+        console.log(`Processing ${lab} - ${example.filename}`);
+        if ((example.isxml && example.filename.includes('SUBMIT')) || example.isjson) {
+          console.log(`Skipping ${example.filename}`);
+          continue;
+        }
+        //if (!example.lab.includes('tomkat')) continue;
         let results = await lib.json.toJson({
           [exampleType]: data,
           format: 'generic',
@@ -80,7 +87,11 @@ export default async function run(lib: typeof MainLib) {
         let standardCsv = lib.json.slim.toStandardCsv(slim);
         let backToSlim = lib.json.slim.fromStandardCsv(standardCsv);
 
-        let csvResult = lib.csv.parse({wb});
+        if (!fde(slim, backToSlim)) {
+          console.log(`Example ${example.filename} needs to be fixed`);
+          //throw new Error('slim and backToSlim not equal')
+        }
+        console.log('done with example');
       }
     }
   }

@@ -3,13 +3,13 @@ import type { LocalLabConfig } from '../index.js';
 const warn = debug('@modusjs/convert#labs:warn');
 
 const mappings : LocalLabConfig["mappings"] = {
-  'id code': 'SampleNumber',
-  'grower name': 'Grower',
+  'id code': 'LabReportID', // Not really sure what this is
+  'grower name': 'Grower', // despite the header, the values appear to be IDs e.g. B500...
   'account name': 'ClientCompany',
   'Field ID': 'Field',
   'Grid': undefined,
-  'Lab Number': 'SampleContainerID',
-  'Field Desc': undefined,
+  'Lab Number': 'SampleNumber',
+  'Field Desc': 'FieldName',
   'Date Tested': ['ReportDate', 'DateReceived'],
   'Crop': undefined,
   'YLDGOAL': undefined,
@@ -40,10 +40,10 @@ const depthInfo = function(row: any) {
 }
 
 const config : LocalLabConfig = {
-  name: 'Soiltest Farm Consultants, Inc.',
+  name: 'Soiltest Farm Consultants, Inc. - Moses Lake, WA',
   type: 'Soil',
   mappings,
-  depthInfo,
+  //depthInfo,
   examplesKey: 'soiltestfarmconsultants'
 };
 

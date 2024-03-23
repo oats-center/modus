@@ -2,9 +2,9 @@ import type { LocalLabConfig } from '../index.js';
 
 const mappings : LocalLabConfig["mappings"] = {
   // ID numbers
-  'SAMPLEID': 'FMISSampleID',
-  'LABNUM': 'SampleNumber',
-  'REPORTNUM': ['LabEventID', 'LabReportID'],
+  'SAMPLEID': 'SampleNumber',
+  'LABNUM': 'SampleContainerID',
+  'REPORTNUM': 'LabEventID',
 
   //Other metadata
   // DATESAMPL might map to something, but its all empty strings in our samples
@@ -235,11 +235,11 @@ const analytes : LocalLabConfig["analytes"] = {
 }
 
 const config : LocalLabConfig = {
-  name: 'A&L Western Agricultural Labs - Modesto, CA',
+  name: 'A&L Great Lakes Laboratory - Fort Wayne, IN',
   mappings,
   //analytes,
   //headers: [...Object.keys(analytes), ...Object.keys(mappings)],
-  examplesKey: 'a_l_west',
+  examplesKey: 'a_l_ftwayne',
   type: 'Soil',
 }
 

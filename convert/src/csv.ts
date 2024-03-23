@@ -328,10 +328,9 @@ function convert({
         continue;
       }
       groupcount++;
-      const output: Slim | any = {
+      let output: Slim | any = {
         date,
         lab: {},
-        source: {},
         samples: {},
       };
       setPath(output, '/type', (labConfig?.type || modusKeyToValue(g_rows[0], 'LabType', labConfig) || 'Soil').toLowerCase());
@@ -342,8 +341,8 @@ function convert({
         setPath(output, `/lab/name`, modusKeyToValue(row, 'LabName', labConfig) || labConfig?.name);
         //FIXME: Which should be used here? Lab Event or Lab Report??
         setPath(output, `/lab/report/id`, modusKeyToValue(row, 'LabReportID', labConfig));
-        setPath(output, `/id`, modusKeyToValue(row, 'LabReportID', labConfig) || modusKeyToValue(row, 'LabEventtID', labConfig));
-        setPath(output, `/lab/dateProcessed`, modusKeyToValue(row, 'ProcessedDate', labConfig) || date);
+        setPath(output, `/id`, modusKeyToValue(row, 'ReportID', labConfig) || modusKeyToValue(row, 'LabEventtID', labConfig));
+        setPath(output, `/lab/dateProcessed`, modusKeyToValue(row, 'DateProcessed', labConfig) || date);
         if (output.lab.dateProcessed && !output.lab.dateProcessed.includes('T'))
           output.lab.dateProcessed += 'T00:00:00+00:00';
         setPath(output, `/lab/dateReceived`, modusKeyToValue(row, 'DateReceived', labConfig) || date);
@@ -356,6 +355,8 @@ function convert({
         setPath(output, `/lab/clientAccount/name`, modusKeyToValue(row, 'ClientName', labConfig));
         setPath(output, `/lab/clientAccount/company`, modusKeyToValue(row, 'ClientCompany', labConfig))
         //setPath(output, `/lab/clientAccount/contact/name`, modusKeyToValue(row, 'ClientContactName', labConfig))
+        setPath(output, `/lab/clientAccount/address`, modusKeyToValue(row, 'ClientAddress', labConfig));
+        //setPath(output, `/lab/clientAccount/address2`, modusKeyToValue(row, 'ClientAddress2', labConfig));
         setPath(output, `/lab/clientAccount/city`, modusKeyToValue(row, 'ClientCity', labConfig));
         setPath(output, `/lab/clientAccount/state`, modusKeyToValue(row, 'ClientState', labConfig));
         setPath(output, `/lab/clientAccount/zip`, modusKeyToValue(row, 'ClientZip', labConfig));
@@ -367,17 +368,27 @@ function convert({
           //base64: ?
         }]);
 
-        const id = modusKeyToValue(row, 'SampleNumber', labConfig);
+        // Ensure the IDs are different
+        let id = ''+modusKeyToValue(row, 'SampleContainerID', labConfig)
+          || ''+modusKeyToValue(row, 'SampleNumber', labConfig)
+          || ''+modusKeyToValue(row, 'FMISSampleID', labConfig);
+        let counter = 1;
+        let counterId = id;
+        while(jp.has(output, `/samples/${counterId}`)) {
+          counter++;
+          counterId = `${id}-${counter}`;
+        }
+        id = counterId;
         const meta = pointMeta?.[id];
 
-        setPath(output, `/source/grower/name`, modusValFromRowOrMeta(row, 'Grower', labConfig, meta));
-        setPath(output, `/source/grower/id`, modusValFromRowOrMeta(row, 'GrowerID', labConfig, meta));
-        setPath(output, `/source/farm/name`, modusValFromRowOrMeta(row, 'Farm', labConfig, meta));
-        setPath(output, `/source/farm/id`, modusValFromRowOrMeta(row, 'FarmID', labConfig, meta));
-        setPath(output, `/source/field/name`, modusValFromRowOrMeta(row, 'Field', labConfig, meta));
-        setPath(output, `/source/field/id`, modusValFromRowOrMeta(row, 'FieldID', labConfig, meta));
-        setPath(output, `/source/subfield/name`, modusValFromRowOrMeta(row, 'SubField', labConfig, meta));
-        setPath(output, `/source/subfield/id`, modusValFromRowOrMeta(row, 'SubFieldID', labConfig, meta));
+        setPath(output, `/source/grower/name`, modusValFromRowOrMeta(row, 'GrowerName', labConfig, meta));
+        setPath(output, `/source/grower/id`, modusValFromRowOrMeta(row, 'Grower', labConfig, meta));
+        setPath(output, `/source/farm/name`, modusValFromRowOrMeta(row, 'FarmName', labConfig, meta));
+        setPath(output, `/source/farm/id`, modusValFromRowOrMeta(row, 'Farm', labConfig, meta));
+        setPath(output, `/source/field/name`, modusValFromRowOrMeta(row, 'FieldName', labConfig, meta));
+        setPath(output, `/source/field/id`, modusValFromRowOrMeta(row, 'Field', labConfig, meta));
+        setPath(output, `/source/subfield/name`, modusValFromRowOrMeta(row, 'SubFieldName', labConfig, meta));
+        setPath(output, `/source/subfield/id`, modusValFromRowOrMeta(row, 'SubField', labConfig, meta));
 
         let nutrientResults = parseNutrientResults({
           row,
@@ -393,23 +404,36 @@ function convert({
           headers,
         })
         nutrientResults = units.convertUnits(nutrientResults);
+        // Why did this thing need ''+modusValFromRowOrMeta(...)?? Its no good if it becomes 'undefined'
+        //setPath(output, `/samples/${id}/source/sampleid`, ''+modusValFromRowOrMeta(row, 'FMISSampleID', labConfig, meta));
+        setPath(output, `/samples/${id}/source/sampleid`, modusValFromRowOrMeta(row, 'FMISSampleID', labConfig, meta));
+        setPath(output, `/samples/${id}/lab/containerid`, modusKeyToValue(row, 'SampleContainerID', labConfig));
+        setPath(output, `/samples/${id}/lab/sampleid`, modusKeyToValue(row, 'SampleNumber', labConfig));
         setPath(output, `/samples/${id}/results`,
           Object.fromEntries(nutrientResults.map(nr => {
             const out : any = {};
             //TODO: Spec out all of these things in slim
             //      Decide on modus test id handling v1 vs v2
-            if (nr.Value) out.value = nr.Value;
-            if (nr.ValueUnit) out.units= nr.ValueUnit;
-            if (nr.UCUM_ValueUnit) out.ucumUnits= nr.UCUM_ValueUnit;
-            if (nr.CsvHeader) out.csvHeader = nr.CsvHeader;
             if (nr.Element) out.analyte = nr.Element;
+            if (nr.CsvHeader) out.csvHeader = nr.CsvHeader;
             if (nr.ModusTestID) out.modusTestID = nr.ModusTestID;
             if (nr.ModusTestIDv2) out.modusTestID = nr.ModusTestIDv2;
+            if (nr.UCUM_ValueUnit) out.ucumUnits = nr.UCUM_ValueUnit;
+            if (nr.ValueUnit) out.units = nr.ValueUnit;
+            if (nr.Value || nr.Value === 0) out.value = nr.Value;
             if (nr.ValueDesc) out.valueDescription = nr.ValueDesc;
             if (nr.ValueType) out.valueType = nr.ValueType;
-            return [ md5(JSON.stringify(out)), out ];
+            return [`${id}-${md5(JSON.stringify(out))}`, out ];
           }))
         );
+
+        //TODO: make extra unmapped columns of the CSV into additional properties of the sample
+        let additionalCols = Object.entries(labConfig?.mappings || {})
+          .filter(([key, val]) => val === undefined)
+          .map(([key, val]) => key)
+          .forEach(([key, val]) => {
+            //setPath(output, `/samples/${id}/${key}`, row[key]);
+          })
 
         if (output.type === 'soil') {
           setPath(output, `/samples/${id}/depth`, parseDepth(row, headers, labConfig));
@@ -419,7 +443,7 @@ function convert({
           setPath(output, `/source/crop`, modusValFromRowOrMeta(row, 'Crop', labConfig, meta));
           setPath(output, `/source/growthStage`, modusValFromRowOrMeta(row, 'GrowthStage', labConfig, meta));
           setPath(output, `/source/subGrowthStage`, modusValFromRowOrMeta(row, 'SubGrowthStage', labConfig, meta));
-          setPath(output, `/source/plantPath`, modusValFromRowOrMeta(row, 'PlantPart', labConfig, meta));
+          setPath(output, `/source/plantPart`, modusValFromRowOrMeta(row, 'PlantPart', labConfig, meta));
         }
 
         // FIXME: Implement this?
@@ -436,6 +460,11 @@ function convert({
       if (!output.id) {
         output.id = md5(JSON.stringify(output));
       }
+
+      //Collapse everything up into the templates
+      //output = flatten(output);
+
+      //FIXME: remove top-level keys if they are empty
 
       try {
         assertSlim(output);
@@ -526,7 +555,9 @@ function extractUnitOverrides(rows: any[]) {
 }
 
 function modusValFromRowOrMeta(row: any, item: string, labConfig?: LabConfig, meta?: any) {
-  return modusKeyToValue(row, item, labConfig) || modusKeyToValue(meta, item, labConfig);
+  let val = modusKeyToValue(row, item, labConfig) || modusKeyToValue(meta, item, labConfig);
+  if (val === undefined) return val;
+  return ''+val;
 }
 
 // A row is a "data row" if it is not a COMMENT row or a UNIT row
@@ -605,10 +636,12 @@ function extractBetween(str: string, startChar: string, endChar: string): string
 function extractBefore(str: string, startChars: string | string[]): string {
   let chars = Array.isArray(startChars) ? startChars : [startChars];
 
-  const first = chars.find(key => str.indexOf(key) >= 0);
-  if (!first) return str; // start char not found
-  const start = str.indexOf(first);
-  return str.slice(0,start);
+  const firsts = chars
+    .map(char => str.indexOf(char))
+    .filter(idx => idx > -1);
+  if (firsts.length === 0) return str; // start char not found
+  const start = Math.min(...firsts);
+  return str.slice(0, start);
 }
 
 // This is the implementation allowing for association of column headers to
@@ -630,8 +663,9 @@ export function parseColumnHeaderName(original: string, labConfig?: LabConfig): 
     .replace(/\n/g, ' ')
     .replace(/ +/g, ' ');
   const element = extractBefore(original, ['(', '[']).trim() || original;
-  const modusid = extractBetween(original, '(', ')')?.trim();
   const units = extractBetween(original, '[', ']')?.trim();
+  original = original.replace(`${units}`, '');
+  const modusid = extractBetween(original, '(', ')')?.trim();
   const nutrientResult = labConfig?.analytes[element] || { Element: element };
   return {
     original,
@@ -659,7 +693,7 @@ function parseNutrientResults({
   labConfig?: LabConfig,
   //strict?: boolean
 }): Array<NutrientResult> {
-
+  // How is Object.keys(row) different from headers?
   let nutrientResults : Array<NutrientResult> = Object.keys(row).filter(key => {
     // Rows outside of the labconfig one way or another
     if (!labConfig?.analytes[key]) {
@@ -672,12 +706,9 @@ function parseNutrientResults({
       return false;
     } else {
 //       if (!isNaN(+(row[key].replace('>', '').replace('<', ''))) && row[key] !== '')
-      if (typeof row[key] === 'string' || typeof row[key] === 'number')
+      if ((typeof row[key] === 'string'  && row[key] !== '') || typeof row[key] === 'number')
         return true;
-
       return false
-      // Filter things that fail the else statement below, i.e., headers[key] does not exist
-
     }}).map((key: any) => {
       let Value = !isNaN(+row[key]) ? +row[key] : row[key];
       if (labConfig?.analytes?.[key]) {
@@ -705,7 +736,7 @@ function parseNutrientResults({
   )
 }
 
-function parseDepth(row: any, headers: Record<string, ColumnHeader>, labConfig?: LabConfig): Depth {
+function parseDepth(row: any, headers: Record<string, ColumnHeader>, labConfig?: LabConfig): Depth | undefined {
   let depthInfo: any =
     typeof labConfig?.depthInfo !== 'function'
       ? // @ts-ignore
@@ -757,16 +788,19 @@ function parseDepth(row: any, headers: Record<string, ColumnHeader>, labConfig?:
     )
   }
 
+  if (depth.bottom === 0) return undefined
+
   const depthUnit = startOverride || endOverride || depOverride;
   depth.units = depthUnit || valDepthUnit || modusKeyToValue(row, 'DepthUnit', labConfig) ||
-    depthInfo?.DepthUnit || 'cm';
+    depthInfo?.DepthUnit;// || 'cm'; // We have to have units so default to cm?
+  if (!depth.units) delete depth.units;
 
   depth.name =
     modusKeyToValue(row, 'DepthName', labConfig) ||
     depthInfo?.Name ||
     depth.bottom === 0
       ? 'Unknown Depth'
-      : `${depth.top} to ${depth.bottom} ${depth.units}`;
+      : `${depth.top} to ${depth.bottom}${depth.units ? ' '+depth.units : ''}`;
 
 
 
@@ -903,9 +937,14 @@ export function setPath(
   data: any,
   condition?: boolean
 ) {
-  const outNewVal = jp.has(output, outPath) ? jp.get(output, outPath) : undefined;
-  const newVal = outNewVal ?? data;
-  if ((Array.isArray(newVal) && newVal.length > 0) || (newVal || newVal === 0)) {
+  const curVal = jp.has(output, outPath) ? jp.get(output, outPath) : undefined;
+  const newVal = curVal ?? data;
+  if (newVal === undefined) {
+    return;
+  }
+  // FIXME: Revisit these rules
+  // don't set empty arrays or certain falsy values
+  if ((Array.isArray(newVal) && newVal.length > 0) || (newVal || newVal === 0 || newVal === false)) {
     jp.set(output, outPath, newVal);
   }
   return

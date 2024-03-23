@@ -55,7 +55,7 @@ function main(rows, mtid_rows) {
 
     if (!lab_name || lab_name === '_For Testing') continue;
     Element = Element || lab_csv_header;
-   // if (!Element) continue;
+    if (!Element) continue;
 
     configs[lab_name] = configs[lab_name] || {};
     configs[lab_name][Lab_Type] = configs[lab_name][Lab_Type] || {
@@ -64,6 +64,7 @@ function main(rows, mtid_rows) {
       analytes: {}
     };
     labCounters[lab_name] = labCounters[lab_name] || {};
+    //FIXME: this code allows '"Nitrogen, Total"2' to occur;
     labCounters[lab_name][Element] = labCounters[lab_name][Element] ? labCounters[lab_name][Element]+1 : 1;
 
     // These Elements won't really be usable in a lab config until they have CSV

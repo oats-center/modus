@@ -117,6 +117,9 @@ export async function toJson(
             filename,
           });
           if (modus) {
+            if (modus._type === 'application/vnd.modus.v1.modus-result+json' || modus.Events) {
+              modus = fromModusV1(modus);
+            }
             results.push({ modus, output_filename, ...base }); // just one
           }
           break;
@@ -183,7 +186,7 @@ export function jsonFilenameFromOriginalFilename({
   );
   let output_filename = output_filename_base;
   // xslx and csv store the sheetname + group number in FileDescription, we can name things by that
-  const filedescription = pointer.has(modus, '/lab/files/0/name') ? pointer.get(modus, '/lab/files/0/name') : undefined;
+  const filedescription = pointer.has(modus, '/lab/files/0/description') ? pointer.get(modus, '/lab/files/0/description') : '';
   if (
     (type === 'xlsx' || type === 'csv' || type === 'zip') &&
     filedescription

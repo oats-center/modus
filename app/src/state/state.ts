@@ -41,7 +41,7 @@ const list = Object.fromEntries(
 export const state = observable<State>({
   tab: "1",
   messages: [],
-  output: 'trellis',
+  output: 'modusjson2',
   trellis: { domain: 'https://localhost', token: 'god' },
   inzone: false,
   headless: false,

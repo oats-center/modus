@@ -8,7 +8,7 @@ import type * as MainLib from '../index.js';
 import xlsx_sample1 from '@modusjs/examples/dist/tomkat-historic/soil/tomkat_source_data_xlsx.js';
 import xml_sample1 from '@modusjs/examples/dist/enyart-east50-a_l_labs/soil/hand_modus_xml.js';
 import json_sample1 from '@modusjs/examples/dist/enyart-east50-a_l_labs/soil/hand_modus_json.js';
-import { all as examples } from '@modusjs/examples/dist';
+import { all as examples } from '@modusjs/examples/dist/index.js';
 import type ModusResultSchema from '@oada/types/modus/v1/modus-result.js';
 
 

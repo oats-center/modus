@@ -6,7 +6,9 @@ import { getJsDateFromExcel } from 'excel-date-to-js';
 import dayjs from 'dayjs';
 import jp from 'jsonpath';
 
+import { default as a_l_ftwayne_soil} from './soil/a_l_ftwayne.js';
 import { default as a_l_west_soil } from './soil/a_l_west.js';
+import { default as a_l_wisc_soil} from './soil/a_l_wisc.js';
 import { default as soiltest_soil} from './soil/soiltestfarmconsultants.js';
 import { default as tomkat_soil} from './soil/tomkat.js';
 import { default as a_l_west_plant } from './plant/a_l_west.js';
@@ -14,6 +16,7 @@ import { default as kuo_soil} from './soil/kuo.js';
 import { default as brookside_soil } from './soil/brookside.js';
 import { default as cquester_soil } from './soil/cquester.js';
 import { default as uga } from './soil/uga.js';
+import { default as ward_soil } from './soil/ward.js';
 
 //const info = debug('@modusjs/convert#labs-automated:info');
 //const trace = debug('@modusjs/convert#labs-automated:trace');
@@ -21,7 +24,9 @@ const warn = debug('@modusjs/convert#labConfigs:warn');
 //const error = debug('@modusjs/convert#labs-automated:error');
 
 export let localLabConfigs : LocalLabConfig[] = [
+  a_l_ftwayne_soil,
   a_l_west_soil,
+  a_l_wisc_soil,
   a_l_west_plant,
   brookside_soil,
   tomkat_soil,
@@ -29,6 +34,7 @@ export let localLabConfigs : LocalLabConfig[] = [
   kuo_soil,
   cquester_soil,
   uga,
+  ward_soil,
 ]
 
 const industryLabConfigs = industry.labConfigs as unknown as Record<string, Record<string, IndustryLabConfig>>;
@@ -198,28 +204,56 @@ export const toModusJsonPath = {
     path: '$.FMISMetaData.FMISProfile.Grower',
     fullpath: '$.Events.*.FMISMetaData.FMISProfile.Grower',
     description: 'Grower name assigned by the FMIS that submitted the samples',
-    slim: `/source/grower`
+    slim: `/source/grower/id`
+  },
+  'GrowerName': {
+    type: 'event',
+    path: '$.FMISMetaData.FMISProfile.Grower',
+    fullpath: '$.Events.*.FMISMetaData.FMISProfile.Grower',
+    description: 'Grower name assigned by the FMIS that submitted the samples',
+    slim: `/source/grower/name`
+  },
+  'FarmName': {
+    type: 'event',
+    path: '$.FMISMetaData.FMISProfile.Farm',
+    fullpath: '$.Events.*.FMISMetaData.FMISProfile.Farm',
+    description: 'Farm name assigned by the FMIS that submitted the samples',
+    slim: `/source/farm/name`
   },
   'Farm': {
     type: 'event',
     path: '$.FMISMetaData.FMISProfile.Farm',
     fullpath: '$.Events.*.FMISMetaData.FMISProfile.Farm',
     description: 'Farm name assigned by the FMIS that submitted the samples',
-    slim: `/source/farm`
+    slim: `/source/farm/id`
   },
   'Field': {
     type: 'event',
     path: '$.FMISMetaData.FMISProfile.Field',
     fullpath: '$.Events.*.FMISMetaData.FMISProfile.Field',
     description: 'Field name assigned by the FMIS that submitted the samples',
-    slim: `/source/field`
+    slim: `/source/field/id`
+  },
+  'FieldName': {
+    type: 'event',
+    path: '$.FMISMetaData.FMISProfile.Field',
+    fullpath: '$.Events.*.FMISMetaData.FMISProfile.Field',
+    description: 'Field name assigned by the FMIS that submitted the samples',
+    slim: `/source/field/name`
   },
   'SubField': {
     type: 'event',
     path: `$.FMISMetaData.FMISProfile["Sub-Field"]`,
     fullpath: '$.Events.*.FMISMetaData.FMISProfile["Sub-Field"]',
     description: 'Subfield name assigned by the FMIS that submitted the samples',
-    slim: `/source/subfield`
+    slim: `/source/subfield/id`
+  },
+  'SubFieldName': {
+    type: 'event',
+    path: `$.FMISMetaData.FMISProfile["Sub-Field"]`,
+    fullpath: '$.Events.*.FMISMetaData.FMISProfile["Sub-Field"]',
+    description: 'Subfield name assigned by the FMIS that submitted the samples',
+    slim: `/source/subfield/name`
   },
 
   'LabEventID': {
@@ -264,26 +298,33 @@ export const toModusJsonPath = {
   },
   'LabContactAddress': {
     type: 'event',
-    path: `$.LabMetaData.ClientAccount['Address 1']`,
-    fullpath: `$.Events.*.LabMetaData.ClientAccount['Address 1']`,
+    path: `$.LabMetaData.Contact.Address`,
+    fullpath: `$.Events.*.LabMetaData.Contact.Address`,
     description: 'The street address of the lab client that submitted the samples.',
-    slim: '/lab/contact/address',
-  },
-  'LabContactAddress2': {
-    type: 'event',
-    path: `$.LabMetaData.ClientAccount['Address 2']`,
-    fullpath: `$.Events.*.LabMetaData.ClientAccount['Address 2']`,
-    description: 'The street address (line 2) of the lab client that submitted the samples.',
     slim: '/lab/contact/address',
   },
   'LabContactPhone': {
     type: 'event',
-    path: `$.LabMetaData.ClientAccount.Phone`,
-    fullpath: `$.Events.*.LabMetaData.ClientAccount.Phone]`,
+    path: `$.LabMetaData.Contact.Phone`,
+    fullpath: `$.Events.*.LabMetaData.Contact.Phone]`,
     description: 'The phone number of the lab contact.',
     slim: '/lab/contact/phone',
   },
 
+  'ClientAddress': {
+    type: 'event',
+    path: `$.LabMetaData.ClientAccount['Address 1']`,
+    fullpath: `$.Events.*.LabMetaData.ClientAccount['Address 1']`,
+    description: 'The street address of the lab client that submitted the samples.',
+    slim: '/lab/clientAccount/address',
+  },
+  'ClientAddress2': {
+    type: 'event',
+    path: `$.LabMetaData.ClientAccount['Address 2']`,
+    fullpath: `$.Events.*.LabMetaData.ClientAccount['Address 2']`,
+    description: 'The street address (line 2) of the lab client that submitted the samples.',
+//    slim: '/lab/contact/address',
+  },
   'ClientName': {
     type: 'event',
     path: '$.LabMetaData.ClientAccount.Name',
@@ -328,6 +369,13 @@ export const toModusJsonPath = {
     description: 'The company name of the lab client that submitted the samples.',
     slim: `/lab/clientAccount/company`
   },
+  'ClientPhone': {
+    type: 'event',
+    path: `$.LabMetaData.ClientAccount.Phone`,
+    fullpath: `$.Events.*.LabMetaData.ClientAccount.Phone]`,
+    description: 'The phone number of the lab contact.',
+    slim: '/lab/clientAccount/phone',
+  },
 
   // Per-event and per-report
   'LabReportID': {
@@ -346,7 +394,7 @@ export const toModusJsonPath = {
     fullpath: '$.Events.*.EventSamples.Soil.SoilSamples.*.SampleMetaData.SampleNumber',
     parse: 'string',
     description: 'Sample number as numbered by the lab',
-    slim: '/lab/samplid',
+    slim: '/lab/sampleid',
   },
   'SampleContainerID': {
     type: 'sample',
@@ -354,14 +402,14 @@ export const toModusJsonPath = {
     fullpath: '$.Events.*.EventSamples.Soil.SoilSamples.*.SampleMetaData.SampleContainerID',
     parse: 'string',
     description: 'Sample container ID as submitted by the client',
-    slim: '/source/alternateid',
+    slim: '/source/containerid',
   },
   'FMISSampleID': {
     type: 'sample',
     path: '$.SampleMetaData.FMISSampleID',
     fullpath: '$.Events.*.EventSamples.Soil.SoilSamples*.FMISSampleID',
     description: 'Sample ID assigned by the FMIS that submitted the samples',
-    slim: '/source/samplid',
+    slim: '/source/sampleid',
   },
   'StartingDepth': {
     type: 'depth',

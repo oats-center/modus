@@ -378,10 +378,10 @@ function convert({
 
         event.FMISMetaData = {
           FMISProfile: {
-            Grower: modusKeyToValue(row, 'Grower', labConfig) || modusKeyToValue(meta, 'Grower', labConfig) || 'Unknown Grower',
-            Farm: modusKeyToValue(row, 'Farm', labConfig) || modusKeyToValue(meta, 'Farm', labConfig) || 'Unknown Farm',
-            Field: modusKeyToValue(row, 'Field', labConfig) || modusKeyToValue(meta, 'Field', labConfig) || 'Unknown Field',
-            'Sub-Field': modusKeyToValue(row, 'SubField', labConfig) || modusKeyToValue(meta, 'SubField', labConfig) || 'Unknown Sub-Field',
+            Grower: modusKeyToValue(row, 'GrowerName', labConfig) || modusKeyToValue(meta, 'Grower', labConfig) || 'Unknown Grower',
+            Farm: modusKeyToValue(row, 'FarmName', labConfig) || modusKeyToValue(meta, 'Farm', labConfig) || 'Unknown Farm',
+            Field: modusKeyToValue(row, 'FieldName', labConfig) || modusKeyToValue(meta, 'Field', labConfig) || 'Unknown Field',
+            'Sub-Field': modusKeyToValue(row, 'SubFieldName', labConfig) || modusKeyToValue(meta, 'SubField', labConfig) || 'Unknown Sub-Field',
           }
         }
 

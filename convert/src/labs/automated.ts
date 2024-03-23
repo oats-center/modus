@@ -122,8 +122,16 @@ export function autodetectLabConfig({
 
 function labMatches(headers: string[], lab: LabConfig) : boolean {
   return headers.every((header: string) => {
-    if (lab.headers.indexOf(header) <= -1)
+    if (lab.headers.indexOf(header) <= -1) {
+      // If the same header appears twice in a csv, the library results in
+      // <header>_<n> where n is 1,2,3...for each repeat;
+      let reg = /[_\d]+$/;
+      if (reg.test(header)) {
+        const h = header.replace(reg, '');
+        if (lab.headers.indexOf(h) > -1) return true;
+      }
       trace(`Header string "${header}" not in ${lab.name} LabConfig`);
+    }
     return lab.headers.indexOf(header) > -1
   })
 }
@@ -140,6 +148,7 @@ export function keysToUpperNoSpacesDashesOrUnderscores(obj: any) {
   return ret;
 }
 
+//
 export function modusKeyToHeader(item: string, colnames: string[], labConfig?: LabConfig) : string | undefined {
   if (!labConfig) return undefined;
   let match = Object.entries(labConfig.mappings).find(([k, v]) =>
@@ -153,7 +162,8 @@ export function modusKeyToHeader(item: string, colnames: string[], labConfig?: L
 export function modusKeyToValue(row: any, item: string, labConfig?: LabConfig) {
   // Handle undefined metasheet
   if (!row) return
-  if (item in row) return row[item]; // Handle the universal CSV
+  // The standard CSV no longer uses the same set of headers as used in 'item' strings; it instead uses jsonpaths
+  //if (item in row) return row[item]; // Handle the universal CSV
   let match = modusKeyToHeader(item, Object.keys(row), labConfig);
   if (match) {
     let mapping = toModusJsonPath[item as keyof typeof toModusJsonPath];

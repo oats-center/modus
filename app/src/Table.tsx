@@ -54,15 +54,16 @@ export type Data = {
   date: string, //Date,
   sampleCount: number,
   field: string,
+  grower: string,
   farm: string,
 }
 
 export const paths = {
   'Sample Type': '$.type',
   Date: '$.date',
-  Grower: '$.source.grower.name',
-  Farm: '$.source.farm.name',
-  Field: '$.source.field.name',
+  'Grower Name': '$.source.grower.id',
+  'Farm Name': '$.source.farm.id',
+  'Field Name': '$.source.field.id',
   'Source Filename(s)': '$.lab.files[*].name',
   Lab: '$.lab.name',
 }
@@ -145,6 +146,12 @@ const headCells: readonly HeadCell[] = [
     numeric: true,
     disablePadding: false,
     label: '# of Samples',
+  },
+  {
+    id: 'grower',
+    numeric: false,
+    disablePadding: false,
+    label: 'Grower Name',
   },
   {
     id: 'farm',
@@ -481,6 +488,7 @@ export default observer(function App() {
                        <TableCell align="right">{row.date}</TableCell>
                        <TableCell align="right">{row.lab}</TableCell>
                        <TableCell align="right">{row.sampleCount}</TableCell>
+                       <TableCell align="right">{row.grower}</TableCell>
                        <TableCell align="right">{row.farm}</TableCell>
                        <TableCell align="right">{row.field}</TableCell>
                      </TableRow>

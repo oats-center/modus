@@ -24,11 +24,14 @@
   "author": "Aaron Ault <aultac@gmail.com>",
   "license": "Apache-2.0",
   "devDependencies": {
+    "@types/json-pointer": "^1.0.31",
     "concurrently": "^7.4.0",
     "live-server": "^1.2.2",
     "nodemon": "^2.0.20"
   },
   "dependencies": {
+    "@modusjs/convert": "workspace:^",
+    "json-pointer": "^0.6.2",
     "typescript": "^4.7.4"
   }
 }

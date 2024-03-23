@@ -46,7 +46,7 @@ export function computeSaveFilename(args: SaveArgs): string {
     // json can have lots of files to save
     filename = filename || `modus_conversion.${outputtype}`;
   } else {
-    filename = filename || modus[0]!.output_filename;
+    filename = filename || modus[0]!.output_filename || 'modus_results.json';
   }
   if (!filename.match(/^\//) && haveoutdir) filename = `${outdir}/${filename}`;
   return filename;
@@ -90,17 +90,20 @@ export async function save(args: SaveArgs): Promise<void> {
 
     case 'zip':
       const zip = new jszip();
+      // TODO: name something other than modus_conversion when gathering json results
+      //       downloaded from trellis
       const folder = zip.folder('modus_conversion');
       if (!folder) {
         throw new Error(
           'Failed to create zip folder when building zip file for download.'
         );
       }
+      let i = 0;
       for (const mjr of modus) {
         const str = compact
           ? JSON.stringify(mjr.modus)
           : JSON.stringify(mjr.modus, null, '  ');
-        folder.file(mjr.output_filename, str);
+        folder.file(mjr.output_filename || `modus_result${i++ === 0 ? '' : ` (${i-1})`}.json`, str);
       }
       const arrbuf = await zip.generateAsync({ type: 'arraybuffer' });
       trace('zip array buffer has', arrbuf.byteLength, 'bytes');

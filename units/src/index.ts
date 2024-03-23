@@ -211,6 +211,7 @@ export function aliasFromUcum(ucumStr: typeof aliases[keyof typeof aliases]): st
 // If undefined or empty string, just keep those units; They'll be kept later.
 export function validateUnits(nrs: NutrientResult[], strict?: boolean): NutrientResult[] {
   return nrs?.map((nr) => {
+    info(nr);
     if (nr.ValueUnit === 'none') {
       nr.UCUM_ValueUnit = nr.ValueUnit;
       return nr;

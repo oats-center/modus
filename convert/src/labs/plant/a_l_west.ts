@@ -2,8 +2,8 @@ import type { LocalLabConfig } from '../index.js';
 
 const mappings : LocalLabConfig["mappings"] = {
   // ID numbers
-  'SAMPLEID': 'SampleNumber',
-  'LABNUM': 'SampleContainerID',
+  'SAMPLEID': 'FMISSampleID',
+  'LABNUM': 'SampleNumber',
   'REPORTNUM': ['LabEventID', 'LabReportID'],
 
   //Other metadata
@@ -108,7 +108,7 @@ const config : LocalLabConfig = {
   name: 'A&L Western Agricultural Labs - Modesto, CA',
   type: 'Plant',
   mappings,
-  //analytes,
+  analytes,
   examplesKey: 'a_l_west',
 };
 

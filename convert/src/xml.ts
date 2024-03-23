@@ -9,6 +9,8 @@ import {
   CheerioAPI,
 } from 'cheerio/lib/slim';
 import { isTag } from 'domhandler';
+import { fixModus } from './fromCsvToModusV1.js';
+import jp from 'json-pointer';
 import ModusResult, {
   assert as assertModusResult,
   is as isModusResult,
@@ -18,7 +20,6 @@ import ModusSubmit, {
   is as isModusSubmit,
 } from '@oada/types/modus/v1/modus-submit.js';
 import { fromModusV1 } from './slim.js';
-import { fixModus } from './fromCsvToModusV1.js';
 import type Slim from '@oada/types/modus/slim/v1/0.js';
 import ModusSlim, {
   assert as assertModusSlim,
@@ -85,6 +86,25 @@ export function parseModusSubmit(xmlstring: string): ModusSubmit {
 // Throws if unable to parse a ModusSubmit from the xmlstring
 export function parseModusResult(xmlstring: string): ModusResult | null {
   const mr = parse(xmlstring);
+
+  //Handle broken implementations of modus
+  if (jp.has(mr, '/Events/0/EventSamples/Soil/SoilSamples')) {
+    let samples = jp.get(mr, '/Events/0/EventSamples/Soil/SoilSamples')
+    samples = samples.map((sample: any) => {
+      if (sample.NutrientRecommendations) {
+        sample.NutrientRecommendations = sample.NutrientRecommendations.map((nr: any) => {
+          if (!Array.isArray(nr)) nr = [nr];
+          return nr.map((nr: any) => ({
+            ...nr,
+            RecID: ''+nr.RecID
+          }));
+        })
+      }
+      return sample;
+    })
+    jp.set(mr, '/Events/0/EventSamples/Soil/SoilSamples', samples);
+  }
+
   assertModusResult(mr);
   return mr;
 }
@@ -226,7 +246,7 @@ export function parse(xmlstring: string): any {
     // <Report ReportID="2">bar<Report>
     // =>
     // { "1": foo, "2": bar }
-    const ret: any = {};
+    let ret: any = {};
     for (const child of xml.children) {
       if (!isTag(child)) continue;
       const id = child.attribs[id_attrib];
@@ -248,6 +268,7 @@ export function parse(xmlstring: string): any {
       }
       ret[id] = parseObject({ xml: child, opts, path: `${path}/${id}` });
     }
+
     return ret;
   }
 

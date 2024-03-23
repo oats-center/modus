@@ -224,7 +224,7 @@ export const toTrellis = action('putDoc', async (results: ModusResult[]) => {
           },
         })
         runInAction(() => {
-          state.files[hash] = results;
+          state.files[hash] = data;
         })
 
         info('waiting');
@@ -297,14 +297,17 @@ export const downloadAsSlim = action('downloadAsSlim', async() => {
       modus: state.files[key],
     }))
   await convertFile.save({ modus: modusResults, outputtype: 'json', });
+  runInAction(() => state.table.selected = [])
   info('File successfully saved');
   message('Conversion result saved.');
+
 })
 
 export const downloadAsCsv = action('downloadAsCsv', async() => {
   let modusResults = state.table.selected
     .map((key: string) => ({ modus: state.files[key] }))
   await convertFile.save({ modus: modusResults, outputtype: 'csv'});
+  runInAction(() => state.table.selected = [])
   info('File successfully saved');
   message('Conversion result saved.');
 })

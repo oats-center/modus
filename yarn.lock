@@ -333,6 +333,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/runtime@npm:^7.23.9":
+  version: 7.23.9
+  resolution: "@babel/runtime@npm:7.23.9"
+  dependencies:
+    regenerator-runtime: ^0.14.0
+  checksum: 6bbebe8d27c0c2dd275d1ac197fc1a6c00e18dab68cc7aaff0adc3195b45862bae9c4cc58975629004b0213955b2ed91e99eccb3d9b39cabea246c657323d667
+  languageName: node
+  linkType: hard
+
 "@babel/template@npm:^7.20.7":
   version: 7.20.7
   resolution: "@babel/template@npm:7.20.7"
@@ -845,7 +854,6 @@ __metadata:
     live-server: ^1.2.2
     md5: ^2.3.0
     moment: ^2.29.4
-    momentjs: ^2.0.0
     node-fetch: ^3.2.10
     nodemon: ^2.0.20
     prompts: ^2.4.2
@@ -867,7 +875,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@modusjs/examples@workspace:examples"
   dependencies:
+    "@modusjs/convert": "workspace:^"
+    "@types/json-pointer": ^1.0.31
     concurrently: ^7.4.0
+    json-pointer: ^0.6.2
     live-server: ^1.2.2
     nodemon: ^2.0.20
     typescript: ^4.7.4
@@ -1141,6 +1152,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@mui/utils@npm:^5.15.11":
+  version: 5.15.11
+  resolution: "@mui/utils@npm:5.15.11"
+  dependencies:
+    "@babel/runtime": ^7.23.9
+    "@types/prop-types": ^15.7.11
+    prop-types: ^15.8.1
+    react-is: ^18.2.0
+  peerDependencies:
+    "@types/react": ^17.0.0 || ^18.0.0
+    react: ^17.0.0 || ^18.0.0
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+  checksum: 7824d1aff2dbbac90ab7e2a6c7ad99c9dcf111d9966822dd71da52050f6a42c2d4b8094bacbbd062796bba5feb8d7c8426c1c4d71875a1dc4f325f3742c45bb8
+  languageName: node
+  linkType: hard
+
 "@nodelib/fs.scandir@npm:2.1.5":
   version: 2.1.5
   resolution: "@nodelib/fs.scandir@npm:2.1.5"
@@ -1233,6 +1262,29 @@ __metadata:
     glob-promise: ^6.0.2
     tslib: ^2.5.0
   checksum: 2657ace15f816f5df67c59c582565f1cd885abd4e1a38084393c2d444fa1303fa49b3736ac42bdbdc18acf28dcab659a2f5eb768d0af7de933d20534f6996bf4
+  languageName: node
+  linkType: hard
+
+"@oada/list-lib@npm:^4.3.0":
+  version: 4.3.0
+  resolution: "@oada/list-lib@npm:4.3.0"
+  dependencies:
+    "@oada/types": ^3.5.3
+    abort-controller: ^3.0.0
+    debug: ^4.3.4
+    eventemitter3: ^5.0.1
+    isomorphic-timers-promises: ^1.0.1
+    json-ptr: ^3.1.1
+    jsonpath-plus: ^8.0.0
+    object-assign-deep: ^0.4.0
+    tslib: ^2.6.2
+    xksuid: "https://github.com/g12i/xksuid.git#fix-crypto-polyfill"
+  peerDependencies:
+    "@oada/client": ^4.5.5
+  peerDependenciesMeta:
+    "@oada/client":
+      optional: true
+  checksum: 383add1e1f46df4d709b427bf4f400f2c63a14dc27bd4074157184528362d30ae38661fff56a913a30ad219bed3a97018352e0bfd196dc753bc0fec8ca39ec8a
   languageName: node
   linkType: hard
 
@@ -1698,12 +1750,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-dom@npm:^18.0.6":
-  version: 18.0.11
-  resolution: "@types/react-dom@npm:18.0.11"
+"@types/prop-types@npm:^15.7.11":
+  version: 15.7.11
+  resolution: "@types/prop-types@npm:15.7.11"
+  checksum: 7519ff11d06fbf6b275029fe03fff9ec377b4cb6e864cac34d87d7146c7f5a7560fd164bdc1d2dbe00b60c43713631251af1fd3d34d46c69cd354602bc0c7c54
+  languageName: node
+  linkType: hard
+
+"@types/react-dom@npm:latest":
+  version: 18.2.19
+  resolution: "@types/react-dom@npm:18.2.19"
   dependencies:
     "@types/react": "*"
-  checksum: 579691e4d5ec09688087568037c35edf8cfb1ab3e07f6c60029280733ee7b5c06d66df6fcc90786702c93ac8cb13bc7ff16c79ddfc75d082938fbaa36e1cdbf4
+  checksum: 087a19d8e4c1c0900ec4ac5ddb749a811a38274b25683d233c11755d2895cc6e475e8bf9bea3dee36519769298e078d4c2feab9ab4bd13b26bc2a6170716437e
   languageName: node
   linkType: hard
 
@@ -1725,7 +1784,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:*, @types/react@npm:^18.0.21":
+"@types/react@npm:*":
   version: 18.0.28
   resolution: "@types/react@npm:18.0.28"
   dependencies:
@@ -1744,6 +1803,17 @@ __metadata:
     "@types/scheduler": "*"
     csstype: ^3.0.2
   checksum: 4eaf32b86c43f388c681e34a00921c508dd88a1d1022aebfadc5fe802b7c5bed863de1a17eed31e43ca2d65222952dfe79a022055a0e6e4e1ad89fc5a42ec05e
+  languageName: node
+  linkType: hard
+
+"@types/react@npm:latest":
+  version: 18.2.60
+  resolution: "@types/react@npm:18.2.60"
+  dependencies:
+    "@types/prop-types": "*"
+    "@types/scheduler": "*"
+    csstype: ^3.0.2
+  checksum: 4cd2000c4c5d93aec92bca9fce3a6050a6a20c5827409099a4cc9e68a259a937b2acc77aecbcea555eb99e295373903da17bc833e3f711442eec20e3c6cc5895
   languageName: node
   linkType: hard
 
@@ -2137,13 +2207,16 @@ __metadata:
     "@mui/icons-material": ^5.11.16
     "@mui/lab": ^5.0.0-alpha.128
     "@mui/material": ^5.12.2
+    "@mui/utils": ^5.15.11
     "@oada/client": ^4.4.1
+    "@oada/list-lib": ^4.3.0
     "@types/debug": ^4.1.7
     "@types/md5": ^2
-    "@types/react": ^18.0.21
-    "@types/react-dom": ^18.0.6
+    "@types/react": latest
+    "@types/react-dom": latest
     "@types/sha.js": ^2
     "@vitejs/plugin-react": ^2.1.0
+    axios: ^1.6.7
     debug: ^4.3.4
     gh-pages: ^4.0.0
     md5: ^2.3.0
@@ -2309,6 +2382,17 @@ __metadata:
     form-data: ^4.0.0
     proxy-from-env: ^1.1.0
   checksum: 7fb6a4313bae7f45e89d62c70a800913c303df653f19eafec88e56cea2e3821066b8409bc68be1930ecca80e861c52aa787659df0ffec6ad4d451c7816b9386b
+  languageName: node
+  linkType: hard
+
+"axios@npm:^1.6.7":
+  version: 1.6.7
+  resolution: "axios@npm:1.6.7"
+  dependencies:
+    follow-redirects: ^1.15.4
+    form-data: ^4.0.0
+    proxy-from-env: ^1.1.0
+  checksum: 87d4d429927d09942771f3b3a6c13580c183e31d7be0ee12f09be6d5655304996bb033d85e54be81606f4e89684df43be7bf52d14becb73a12727bf33298a082
   languageName: node
   linkType: hard
 
@@ -3896,6 +3980,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"eventemitter3@npm:^5.0.1":
+  version: 5.0.1
+  resolution: "eventemitter3@npm:5.0.1"
+  checksum: 543d6c858ab699303c3c32e0f0f47fc64d360bf73c3daf0ac0b5079710e340d6fe9f15487f94e66c629f5f82cd1a8678d692f3dbb6f6fcd1190e1b97fcad36f8
+  languageName: node
+  linkType: hard
+
 "events@npm:^3.3.0":
   version: 3.3.0
   resolution: "events@npm:3.3.0"
@@ -4184,6 +4275,16 @@ __metadata:
     debug:
       optional: true
   checksum: faa66059b66358ba65c234c2f2a37fcec029dc22775f35d9ad6abac56003268baf41e55f9ee645957b32c7d9f62baf1f0b906e68267276f54ec4b4c597c2b190
+  languageName: node
+  linkType: hard
+
+"follow-redirects@npm:^1.15.4":
+  version: 1.15.5
+  resolution: "follow-redirects@npm:1.15.5"
+  peerDependenciesMeta:
+    debug:
+      optional: true
+  checksum: 5ca49b5ce6f44338cbfc3546823357e7a70813cecc9b7b768158a1d32c1e62e7407c944402a918ea8c38ae2e78266312d617dc68783fac502cbb55e1047b34ec
   languageName: node
   linkType: hard
 
@@ -5397,6 +5498,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"json-ptr@npm:^3.1.1":
+  version: 3.1.1
+  resolution: "json-ptr@npm:3.1.1"
+  checksum: 58da208d842647e8c2681452508eb4af4bb29a9470bebccf0040ad4d6c49eb0a4f1ae726a62918a22b3e5b13765f36642e2c23670cba152f4eb03676449dba6c
+  languageName: node
+  linkType: hard
+
 "json-schema-traverse@npm:^1.0.0":
   version: 1.0.0
   resolution: "json-schema-traverse@npm:1.0.0"
@@ -5447,6 +5555,13 @@ __metadata:
     graceful-fs:
       optional: true
   checksum: 7af3b8e1ac8fe7f1eccc6263c6ca14e1966fcbc74b618d3c78a0a2075579487547b94f72b7a1114e844a1e15bb00d440e5d1720bfc4612d790a6f285d5ea8354
+  languageName: node
+  linkType: hard
+
+"jsonpath-plus@npm:^8.0.0":
+  version: 8.0.0
+  resolution: "jsonpath-plus@npm:8.0.0"
+  checksum: fe5e7224eae382aa3a96f8a9c36bed3234c5323e224f87184617cd278933fff0e63cf14478d0ee748a0838de4cfc8db3f179caf65680df60132dcf58af17097d
   languageName: node
   linkType: hard
 
@@ -6020,13 +6135,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"momentjs@npm:^2.0.0":
-  version: 2.0.0
-  resolution: "momentjs@npm:2.0.0"
-  checksum: 797a481a8566f8b2fdd18cdd77678ec1db410df2faef71d24e63cadfc21fe775cb05f4994ebe918646318fdbc9f20a66989a9c25b9464dc69efdb47cc1d512d6
-  languageName: node
-  linkType: hard
-
 "moo@npm:^0.5.0":
   version: 0.5.1
   resolution: "moo@npm:0.5.1"
@@ -6312,6 +6420,13 @@ __metadata:
   dependencies:
     boolbase: ^1.0.0
   checksum: 5afc3dafcd1573b08877ca8e6148c52abd565f1d06b1eb08caf982e3fa289a82f2cae697ffb55b5021e146d60443f1590a5d6b944844e944714a5b549675bcd3
+  languageName: node
+  linkType: hard
+
+"object-assign-deep@npm:^0.4.0":
+  version: 0.4.0
+  resolution: "object-assign-deep@npm:0.4.0"
+  checksum: 3c31920ca887e507253b71fe5d38ce752b47e8cbcd2cd9dc6e5909ae6ce05a31dbc64ba7bb46037c4f5ff449ec0199db247bd9d8d768574876ed7a79fa5810ab
   languageName: node
   linkType: hard
 
@@ -7023,6 +7138,13 @@ __metadata:
   version: 0.13.11
   resolution: "regenerator-runtime@npm:0.13.11"
   checksum: 27481628d22a1c4e3ff551096a683b424242a216fee44685467307f14d58020af1e19660bf2e26064de946bad7eff28950eae9f8209d55723e2d9351e632bbb4
+  languageName: node
+  linkType: hard
+
+"regenerator-runtime@npm:^0.14.0":
+  version: 0.14.1
+  resolution: "regenerator-runtime@npm:0.14.1"
+  checksum: 9f57c93277b5585d3c83b0cf76be47b473ae8c6d9142a46ce8b0291a04bb2cf902059f0f8445dcabb3fb7378e5fe4bb4ea1e008876343d42e46d3b484534ce38
   languageName: node
   linkType: hard
 
@@ -8195,6 +8317,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"tslib@npm:^2.6.2":
+  version: 2.6.2
+  resolution: "tslib@npm:2.6.2"
+  checksum: 329ea56123005922f39642318e3d1f0f8265d1e7fcb92c633e0809521da75eeaca28d2cf96d7248229deb40e5c19adf408259f4b9640afd20d13aecc1430f3ad
+  languageName: node
+  linkType: hard
+
 "tunnel@npm:^0.0.6":
   version: 0.0.6
   resolution: "tunnel@npm:0.0.6"
@@ -8638,6 +8767,13 @@ __metadata:
     utf-8-validate:
       optional: true
   checksum: 97301c1c4d838fc81bd413f370f75c12aabe44527b31323b761eab3043a9ecb7e32ffd668548382c9a6a5ad3a1c3a9249608e8338e6b939f2f9540f1e21970b5
+  languageName: node
+  linkType: hard
+
+"xksuid@https://github.com/g12i/xksuid.git#fix-crypto-polyfill":
+  version: 0.0.3
+  resolution: "xksuid@https://github.com/g12i/xksuid.git#commit=22a21eb01331191feb62ea0a4e67d96d2e80f396"
+  checksum: 68c9ef072192b9ab7850da373036447de847b87828dec8b554a26200b0120c78c4be668e16eb52c21bdba6566bf66b5396a0a0e79c0fe265ffef1b22ed812327
   languageName: node
   linkType: hard
 

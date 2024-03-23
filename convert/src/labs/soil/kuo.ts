@@ -2,12 +2,12 @@ import debug from 'debug';
 import type { LocalLabConfig } from '../index.js';
 
 const mappings : LocalLabConfig["mappings"] = {
-  IncKey: 'SampleNumber', //Incoming Key?
+  IncKey: 'FMISSampleID', //Incoming Key?
   RequestIncKey: undefined, // Request Incoming Key? Same as RptNo
   Client: 'ClientCompany',
   Grower: 'Grower',
   Sampler: undefined,
-  LabNo: 'SampleContainerID',
+  LabNo: 'SampleNumber',
   RptNo: 'LabReportID',
   Date: 'DateReceived',
   SampleDate: 'ReportDate',
@@ -24,7 +24,6 @@ const mappings : LocalLabConfig["mappings"] = {
 }
 
 // Make this as generic as possible so as to work on other labs
-
 const config : LocalLabConfig = {
   name: 'Kuo Testing Laboratories',
   type: 'Soil',
