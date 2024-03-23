@@ -3,7 +3,8 @@
 // reflects its type, and
 import debug from 'debug';
 import jszip from 'jszip';
-import Slim, { assert as assertModusResult } from '@oada/types/modus/slim/v1/0.js';
+import Slim, { assert as assertSlim }  from '@oada/types/modus/slim/v1/0.js';
+import ModusResult, { assert as assertModusResult } from '@oada/types/modus/v1/modus-result.js';
 /*
 import ModusResult, {
   assert as assertModusResult,
@@ -28,6 +29,7 @@ export type SupportedFileType = 'xml' | 'csv' | 'xlsx' | 'json' | 'zip';
 export const supportedFileTypes = ['xml', 'csv', 'xlsx', 'json', 'zip'];
 
 export { Slim };
+export { ModusResult, assertModusResult };
 
 export type ModusJSONConversionResult = {
   original_filename: string;
@@ -101,7 +103,7 @@ export async function toJson(
           if (modus._type === 'application/vnd.modus.v1.modus-result+json' || modus.Events) {
             modus = fromModusV1(modus);
           }
-          assertModusResult(modus); // catch below will inform if parsing or assertion failed.
+          assertSlim(modus); // catch below will inform if parsing or assertion failed.
           output_filename = jsonFilenameFromOriginalFilename({
             modus,
             type,
@@ -263,4 +265,3 @@ export async function zipParse(file: ZipFile) {
   }
   return toJson(all_convert_inputs);
 }
-
