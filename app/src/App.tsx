@@ -4,12 +4,11 @@ import debug from 'debug';
 import md5 from 'md5';
 import './App.css';
 import { connect } from '@oada/client';
-import { tree } from './trellisTree';
 import { observer } from 'mobx-react-lite';
 import { context } from './state';
 import { toModus2QuickHack } from './toModus2'
 // @ts-ignore
-import { file as convertFile, units, ModusResult } from '@modusjs/convert/dist-browser/bundle.mjs';
+import { file as convertFile, tree, units, ModusResult } from '@modusjs/convert/dist-browser/bundle.mjs';
 import type { json } from '@modusjs/convert';
 import Messages from './Messages';
 
@@ -23,7 +22,7 @@ const error = debug('@modusjs/app#App:error');
 const warn = debug('@modusjs/app#App:warn');
 
 export default observer(function App() {
-  const { state, actions } = useContext(context); 
+  const { state, actions } = useContext(context);
 
   async function toTrellis ({ domain, token, results } :
     { domain: string, token: string, results: ModusResult[] }): Promise<void> {
@@ -166,7 +165,7 @@ export default observer(function App() {
         &nbsp;
       </div>
       </div>}
-      
+
       <Messages />
 
       <div className="dropzone-container">
