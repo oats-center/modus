@@ -1,7 +1,7 @@
 {
   "name": "@modusjs/convert",
   "packageManager": "yarn@3.2.1",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Universal library for interacting with Modus XML files",
   "type": "module",
   "comment1": "dist/node/index.js is normal output of tsc, used for node",
