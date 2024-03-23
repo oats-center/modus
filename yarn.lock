@@ -875,7 +875,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@modusjs/examples@workspace:examples"
   dependencies:
-    "@modusjs/convert": "workspace:^"
     "@types/json-pointer": ^1.0.31
     concurrently: ^7.4.0
     json-pointer: ^0.6.2

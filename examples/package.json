@@ -1,7 +1,7 @@
 {
   "name": "@modusjs/examples",
   "packageManager": "yarn@3.2.1",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Directly import-able examples of soil tests, centered around Modus",
   "type": "module",
   "comment1": "Import files from the examples folder directly",
@@ -30,7 +30,6 @@
     "nodemon": "^2.0.20"
   },
   "dependencies": {
-    "@modusjs/convert": "workspace:^",
     "json-pointer": "^0.6.2",
     "typescript": "^4.7.4"
   }
