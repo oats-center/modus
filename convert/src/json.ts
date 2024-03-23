@@ -17,7 +17,7 @@ const trace = debug('@modusjs/convert#tojson:trace');
 export type SupportedFileType = 'xml' | 'csv' | 'xlsx' | 'json' | 'zip';
 export const supportedFileTypes = ['xml', 'csv', 'xlsx', 'json', 'zip'];
 
-export { ModusResult };
+export { ModusResult, assertModusResult };
 
 export type ModusJSONConversionResult = {
   original_filename: string;
@@ -246,4 +246,3 @@ export async function zipParse(file: ZipFile) {
   }
   return toJson(all_convert_inputs);
 }
-
