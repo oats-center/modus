@@ -8,8 +8,7 @@ import { state, State, Message } from './state';
 import { modusTests } from '@modusjs/industry';
 import debug from 'debug';
 import type { ModusResult } from '@modusjs/convert';
-import tree from '../trellisTree';
-import { file as convertFile } from '@modusjs/convert/dist-browser/bundle.mjs';
+import { file as convertFile } from '@modusjs/convert';
 
 let CONN: OADAClient | undefined;
 

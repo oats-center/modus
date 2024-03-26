@@ -2,18 +2,15 @@
 import { useContext, DragEventHandler } from 'react';
 import debug from 'debug';
 import './App.css';
-import { connect } from '@oada/client';
 import { observer } from 'mobx-react-lite';
-import { Button, IconButton, Tab, Tabs } from '@mui/material';
-import { TabContext, TabList, TabPanel } from '@mui/lab';
+import { Button, IconButton } from '@mui/material';
 import { FolderZip } from '@mui/icons-material';
 import { context } from './state';
-import { toModus2QuickHack } from './toModus2'
 // @ts-ignore
-import { file as convertFile } from '@modusjs/convert/dist-browser/bundle.mjs';
+import { file as convertFile } from '@modusjs/convert';
+//import { file as convertFile } from '@modusjs/convert/dist-browser/bundle.mjs';
 import Messages from './Messages';
 import Table from './Table';
-import LabConfig from './LabConfig';
 import bigdemo from '../bigdemo.zip';
 import curateddemo from '../curateddemo.zip';
 
@@ -21,10 +18,10 @@ import curateddemo from '../curateddemo.zip';
 
 type Output = 'modusjson2' | 'json' | 'csv' | 'trellis';
 
-const trace = debug('@modusjs/app#App:trace');
+//const trace = debug('@modusjs/app#App:trace');
 const info = debug('@modusjs/app#App:info');
-const error = debug('@modusjs/app#App:error');
-const warn = debug('@modusjs/app#App:warn');
+//const error = debug('@modusjs/app#App:error');
+//const warn = debug('@modusjs/app#App:warn');
 
 export default observer(function App() {
   const { state, actions } = useContext(context);

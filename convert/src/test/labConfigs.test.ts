@@ -53,7 +53,7 @@ export default async function run(lib: typeof MainLib) {
         error(`Example ${ex} did not auto-recognize lab config as ${labConf.name}.`);
         error(`LabConfig headers: ${labConf.headers}`);
         error(`Example headers (first datasheet): ${datasheets[0]?.colnames}`);
-        const missing = datasheets[0]?.colnames.filter(v => !(labConf?.headers.includes(v)));
+        const missing = datasheets[0]?.colnames.filter((v: any) => !(labConf?.headers.includes(v)));
         error(`Example headers (first datasheet) missing from labconfig: ${missing}`);
         throw new Error(`Example ${ex} did not auto-recognize lab config as ${labConf.name}.`);
       }

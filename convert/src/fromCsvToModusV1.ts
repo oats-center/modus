@@ -1,14 +1,12 @@
 import debug from 'debug';
 import * as xlsx from 'xlsx';
 import oerror from '@overleaf/o-error';
-import { getJsDateFromExcel } from 'excel-date-to-js';
-import dayjs from 'dayjs';
 import { modusTests } from '@modusjs/industry';
-import { simpleConvert } from '../../units/dist/index.js';
+import { simpleConvert } from '@modusjs/units';
 import { convertUnits } from '@modusjs/units';
 import type { NutrientResult, Units } from '@modusjs/units';
 import type { InputFile, SupportedFileType } from './json.js';
-import { jsonFilenameFromOriginalFilename, supportedFileTypes, typeFromFilename, zipParse } from './json.js';
+import { supportedFileTypes, typeFromFilename } from './json.js';
 import * as units from '@modusjs/units';
 import { parseDate } from './labs/index.js';
 import ModusResult, {
@@ -1119,14 +1117,18 @@ export function fixDepthUnits(modus: ModusResult): ModusResult {
         const StartingDepth = simpleConvert(dr.StartingDepth!, dr.DepthUnit!, DEPTHUNITS);
         const EndingDepth = simpleConvert(dr.EndingDepth!, dr.DepthUnit!, DEPTHUNITS);
         const ColumnDepth = simpleConvert(dr.ColumnDepth!, dr.DepthUnit!, DEPTHUNITS);
+        //@ts-ignore
         if (StartingDepth?.status === 'failed' || EndingDepth?.status === 'failed' || ColumnDepth?.status === 'failed') {
           warn(`Standardizing soil depth units failed. Falling back to input.`);
           return dr;
         }
         return {
           ...dr,
+          //@ts-ignore
           StartingDepth: Math.round(StartingDepth.toVal),
+          //@ts-ignore
           EndingDepth: Math.round(EndingDepth.toVal),
+          //@ts-ignore
           ColumnDepth: Math.round(ColumnDepth.toVal),
           DepthUnit: DEPTHUNITS
         }

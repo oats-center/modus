@@ -37,7 +37,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
 import jp from 'jsonpath';
 // @ts-ignore
-import { file as convertFile, units, Slim } from '@modusjs/convert/dist-browser/bundle.mjs';
+import { file as convertFile, units, Slim } from '@modusjs/convert';
 
 type Output = 'modusjson2' | 'json' | 'csv' | 'trellis';
 

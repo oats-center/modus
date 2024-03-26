@@ -1,7 +1,7 @@
 {
   "name": "@modusjs/industry",
-  "packageManager": "yarn@3.2.1",
-  "version": "1.0.1",
+  "packageManager": "yarn@4.1.1",
+  "version": "1.0.4",
   "description": "Utilize industry data export as a database behind this tool.",
   "type": "module",
   "publishConfig": {
@@ -30,7 +30,7 @@
   "dependencies": {
     "debug": "^4.3.4",
     "fs": "^0.0.1-security",
-    "typescript": "^4.7.4",
+    "typescript": "^5.4.3",
     "xlsx": "^0.18.5"
   }
 }

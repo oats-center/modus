@@ -1,7 +1,7 @@
 import debug from 'debug';
 
 //@ts-ignore
-import { file } from '@modusjs/convert/dist-browser/bundle.mjs';
+import { file } from '@modusjs/convert';
 
 import { headless } from './actions';
 
@@ -52,6 +52,5 @@ function isHeadless(): boolean {
   const params = new URLSearchParams(window.location.search);
   return !!params.get('headless');
 }
-
 
 

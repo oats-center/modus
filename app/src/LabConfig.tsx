@@ -7,7 +7,7 @@ import './LabConfig.css';
 import { observer } from 'mobx-react-lite';
 import { context } from './state';
 // @ts-ignore
-import { file as convertFile, csv } from '@modusjs/convert/dist-browser/bundle.mjs';
+import { file as convertFile, csv } from '@modusjs/convert';
 import { modusTests } from '@modusjs/industry';
 import Messages from './Messages';
 

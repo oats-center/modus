@@ -33,7 +33,7 @@ function isNodeInputFile(obj: any): obj is NodeInputFile {
       info('Input file format for file', obj.filename, 'must be a string');
       return false;
     }
-    if (!csv.supportedFormats.find((sf) => sf === obj.format)) {
+    if (!csv.supportedFormats.find((sf: any) => sf === obj.format)) {
       info(
         'Input file formt for file',
         obj.filename,

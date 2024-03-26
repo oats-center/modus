@@ -3,21 +3,15 @@
 // reflects its type, and
 import fde from 'fast-deep-equal';
 import debug from 'debug';
-import jszip from 'jszip';
 import md5 from 'md5';
 import moment from 'moment';
 import * as xlsx from 'xlsx';
-import { convertUnits } from '@modusjs/units';
-import { simpleConvert } from '@modusjs/units/dist/index.js';
-import { modusTests } from '@modusjs/industry';
-import type { NutrientResult } from '@modusjs/units';
 import type ModusResult from '@oada/types/modus/v1/modus-result.js';
 import type Slim from '@oada/types/modus/slim/v1/0.js';
 import jp from 'json-pointer';
 // @ts-expect-error no types
 import wicket from 'wicket';
 import { parseColumnHeaderName } from './csv.js';
-import { count } from 'console';
 
 const error = debug('@modusjs/convert#slim:error');
 const warn = debug('@modusjs/convert#slim:error');

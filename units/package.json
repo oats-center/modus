@@ -1,7 +1,7 @@
 {
   "name": "@modusjs/units",
-  "packageManager": "yarn@3.2.1",
-  "version": "1.0.0",
+  "packageManager": "yarn@4.1.1",
+  "version": "1.0.4",
   "description": "Universal library for interacting with Modus XML files",
   "type": "module",
   "comment1": "dist/node/index.js is normal output of tsc, used for node",
@@ -55,8 +55,7 @@
     "rollup-plugin-pnp-resolve": "^2.0.0",
     "rollup-plugin-terser": "^7.0.2",
     "rollup-plugin-typescript2": "^0.34.1",
-    "type-fest": "^3.3.0",
-    "typescript": "^4.7.4"
+    "type-fest": "^3.3.0"
   },
   "dependencies": {
     "@lhncbc/ucum-lhc": "^4.1.6",
@@ -79,6 +78,7 @@
     "node-fetch": "^3.2.10",
     "prompts": "^2.4.2",
     "save-file": "^2.3.1",
-    "tslib": "^2.4.0"
+    "tslib": "^2.4.0",
+    "typescript": "^5.4.3"
   }
 }

@@ -1,7 +1,7 @@
 {
   "name": "app",
   "private": true,
-  "version": "0.1.6",
+  "version": "1.0.4",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -23,6 +23,7 @@
     "@oada/list-lib": "^4.3.0",
     "axios": "^1.6.7",
     "debug": "^4.3.4",
+    "jsonpath": "^1.1.1",
     "md5": "^2.3.0",
     "mobx": "^6.7.0",
     "mobx-react-lite": "^3.4.0",
@@ -31,6 +32,7 @@
   },
   "devDependencies": {
     "@types/debug": "^4.1.7",
+    "@types/jsonpath": "^0.2.0",
     "@types/md5": "^2",
     "@types/react": "latest",
     "@types/react-dom": "latest",
