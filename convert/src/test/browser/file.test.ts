@@ -5,7 +5,7 @@ import type * as MainLib from '../../browser/index.js';
 import chalk from 'chalk'; // have to import it this way on browser
 
 import tomkat_json from '@modusjs/examples/dist/tomkat-historic/soil/tomkat_source_data2015_RMN0_10cm_1_json.js';
-import ward_csv from '@modusjs/examples/dist/tomkat-historic/soil/TOKA2021_22A_RMN_Ward_csv.js';
+import ward_csv from '@modusjs/examples/dist/tomkat-historic/soil/TOKA2021-22A_RMN_Ward_csv.js';
 import tomkat_source_xlsx from '@modusjs/examples/dist/tomkat-historic/soil/tomkat_source_data_xlsx.js';
 import hand_modus_xml from '@modusjs/examples/dist/enyart-east50-a_l_labs/soil/hand_modus_xml.js';
 
