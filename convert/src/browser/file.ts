@@ -45,12 +45,12 @@ function isBrowserInputFile(obj: any): obj is BrowserInputFile {
 }
 
 // Trying to get the universal typings to work even thought the browser/node API is different (and node doesn't have File)
-export async function fromFile(files: any | any[]) {
+export async function fromFile(files: any | any[], labConfigs?: LabConfig[]) {
   if (!Array.isArray(files)) {
     files = [files];
   }
   const browser_files = files.filter(isBrowserInputFile) as BrowserInputFile[];
-  return fromFileBrowser(browser_files);
+  return fromFileBrowser(browser_files, labConfigs);
 }
 
 export async function fromFileBrowser(

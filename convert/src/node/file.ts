@@ -2,6 +2,7 @@ import fs from 'fs/promises';
 import debug from 'debug';
 import { csv, json } from '../index.js';
 import prompts from 'prompts';
+import { LabConfig } from '../labs/index.js';
 
 import {
   save as universalSave,
@@ -46,7 +47,7 @@ function isNodeInputFile(obj: any): obj is NodeInputFile {
   return true;
 }
 
-export async function fromFile(files: any | any[]) {
+export async function fromFile(files: any | any[], labConfigs?: LabConfig[]) {
   if (!Array.isArray(files)) {
     files = [files];
   }
@@ -56,7 +57,8 @@ export async function fromFile(files: any | any[]) {
 }
 
 export async function fromFileNode(
-  files: NodeInputFile | NodeInputFile[]
+  files: NodeInputFile | NodeInputFile[],
+  labConfigs?: LabConfig[]
 ): Promise<json.ModusJSONConversionResult[]> {
   if (!Array.isArray(files)) {
     files = [files];
@@ -100,7 +102,7 @@ export async function fromFileNode(
   );
   // Await all the promises that are reading files, and then filter any nulls (i.e. files skipped)
   const toconvert = await Promise.all(toconvert_promises);
-  return json.toJson(toconvert.filter((f) => !!f) as json.InputFile[]);
+  return json.toJson(toconvert.filter((f) => !!f) as json.InputFile[], labConfigs);
 }
 
 // We'll make a node-specific version of save here that
