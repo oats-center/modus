@@ -1,63 +1,62 @@
 //process.env.NODE_TLS_REJECT_UNAUTHORIZED='0';
-import axios from 'axios';
 import md5 from 'md5';
 import { action, runInAction } from 'mobx';
 import { connect } from '@oada/client';
-import { OADAClient } from '@oada/client';
-import { state, State, Message } from './state';
+import { OADAClient, Json } from '@oada/client';
+import type { State, Message, TrellisFile } from './state';
+import { state } from './state';
 import { modusTests } from '@modusjs/industry';
 import debug from 'debug';
-import type { ModusResult } from '@modusjs/convert';
-import { file as convertFile } from '@modusjs/convert';
-
-let CONN: OADAClient | undefined;
+import { file as modusFile, json as modusJson, tree, assertSlim } from '@modusjs/convert';
 
 const error = debug("@modusjs/app#actions:error");
 const warn = debug("@modusjs/app#actions:warn");
 const info = debug("@modusjs/app#actions:info");
 const Elements = [...new Set(Object.values(modusTests).map(o=>o.Element))];
 
-export const selectLabConfig= action('selectLabConfig', (evt) => {
-  state.labConfig.selected = evt.target.value;
+export const selectLabConfig= action('selectLabConfig', (name: string) => {
+  state.labConfig.selected.name = name;
 })
 export const showLabConfig = action('showLabConfig', () => {
   state.labConfig.show = !state.labConfig.show;
 });
 
-export const changeTab = action('changeTab', (_, newVal) => {
+export const changeTab = action('changeTab', (_: any, newVal: string) => {
   state.tab = newVal;
 });
 
 export const cancelConfig = action('cancelConfig', () => {
-  delete state.labConfig.config;
+  state.labConfig.config = null;
   state.messages = [];
 })
 export const saveConfig = action('saveConfig', () => {
   const conf = JSON.parse(JSON.stringify(state.labConfig.config));
   const key = `${conf.name}-${conf.type}`;
   state.labConfig.list[key] = conf;
-  delete state.labConfig.config;
+  state.labConfig.config = null;
   message(`Configuration successfully saved as '${conf.name}'`)
 })
 
-export const selectLabName = action('selectLabName', (evt) => {
-  state.labConfig.select.name = evt.target.value;
-})
-export const selectLabType = action('selectLabType', (evt) => {
-  state.labConfig.select.type = evt.target.value;
-  const configname = `${state.labConfig.select.name} - ${state.labConfig.select.type}`;
+export const selectLabName = action('selectLabName', (name: string) => {
+  state.labConfig.selected.name = name;
+  const configname = `${state.labConfig.selected.name} - ${state.labConfig.selected.type}`;
   state.labConfig.config = state.labConfig.list[configname];
-  state.labConfig.config.name = state.labConfig.config.name || state.labConfig.select.name;
-  state.labConfig.config.type = state.labConfig.config.type|| state.labConfig.select.type;
-  state.labConfig.select = {};
+})
+export const selectLabType = action('selectLabType', (type: string) => {
+  state.labConfig.selected.type = type;
+  const configname = `${state.labConfig.selected.name} - ${state.labConfig.selected.type}`;
+  state.labConfig.config = state.labConfig.list[configname];
 })
 
 export const cancelAnalyte = action('cancelAnalyte', () => {
-  delete state.labConfig.analyteEditor;
+  state.labConfig.analyteEditor;
 })
+/*
 export const saveAnalyte = action('saveAnalyte', () => {
-  const {CsvHeader} = state.labConfig?.analyteEditor;
-  state.labConfig.config.analytes[CsvHeader] = state.labConfig?.analyteEditor;
+  const {CsvHeader} = state.labConfig?.analyteEditor || '';
+  if (state.labConfig.config?.analytes ) {
+    state.labConfig.config!.analytes[CsvHeader] = state.labConfig.analyteEditor;
+  }
   state.labConfig.config.units[CsvHeader] = state.labConfig?.analyteEditor?.ValueUnit;
   delete state.labConfig.analyteEditor;
 })
@@ -71,7 +70,7 @@ export const addNutrientResult= action('addNutrientResult', () => {
     ModusTestID,
     ValueUnit: 'ppm',
   };
-  */
+  *//*
 });
 
 export const cancelMapping = action('cancelMapping', () => {
@@ -90,7 +89,7 @@ export const addMapping = action('addMapping', () => {
     modus: 'ppm',
     header,
   };
-  */
+  *//*
 });
 
 export const handleLCMappingChange = action('handleLCMappingChange', ({evt, key}) => {
@@ -112,6 +111,7 @@ export const handleLCNameChange = action('handleLCNameChange', (evt) => {
 export const handleLCTypeChange = action('handleLCTypeChange', (evt) => {
   state.labConfig.config.type = evt.target.value;
 });
+*/
 
 export const message = action('message', (msg: Message | string) => {
   if (typeof msg === 'string') {
@@ -133,9 +133,9 @@ export const output = action('output', (output: State['output']) => {
   state.output = output;
 });
 
-export const trellis = action('trellis', async (cfg: { domain?: string, token?: string}) => {
-  if (typeof cfg.domain !== 'undefined') state.trellis.domain = cfg.domain;
-  if (typeof cfg.token !== 'undefined') state.trellis.token = cfg.token;
+export const trellisInfo = action('trellis', async ({domain, token}: { domain?: string, token?: string}) => {
+  if (typeof domain !== 'undefined') state.trellis.domain = domain;
+  if (typeof token !== 'undefined') state.trellis.token = token;
 });
 
 export const inzone = action('inzone', (inzone: State['inzone']) => {
@@ -146,82 +146,74 @@ export const headless = action('headless', (headless: State['headless']) => {
   state.headless = headless;
 });
 
+// Sam: this should explicitly call out the types of things that go in a table
 export const setTable = action('setTable', (key: string, value: any) => {
+  // @ts-ignore
   state.table[key] = value;
 })
 
 export const fetchTrellisData = action('fetchTrellisData', async () => {
   let files = {};
-  let { data: typesObj } = await CONN.get({
+  let oada = await oadaConnection();
+  if (!oada) throw new Error('ERROR: fetchTrellisData: oada was not connected');
+  let { data: typesObj } = await oada.get({
     path: `/bookmarks/lab-results/`
   });
+  if (typeof typesObj !== 'object' || !typesObj) throw new Error('ERROR: failed to retrieve an object form /bookmarks/lab-results');
   let types = Object.keys(typesObj).filter(key => !key.startsWith('_'))
   for await (const type of types) {
     await new Promise(resolve => setTimeout(resolve, 50));
-    let { data: datesObj } = await CONN.get({
+    let { data: datesObj } = await oada.get({
       path: `/bookmarks/lab-results/${type}/event-date-index/`
     });
+    if (typeof datesObj !== 'object' || !datesObj) throw new Error('ERROR: failed to retrieve an object form /bookmarks/lab-results/'+type+'/event-date-index/');
     let dates = Object.keys(datesObj).filter(key => !key.startsWith('_'))
     for await (const date of dates) {
       await new Promise(resolve => setTimeout(resolve, 50));
-      let { data: dateObj } = await CONN.get({
+      let { data: dateObj } = await oada.get({
         path: `/bookmarks/lab-results/${type}/event-date-index/${date}/md5-index`
       })
+      if (typeof dateObj !== 'object' || !dateObj) throw new Error('ERROR: failed to retrieve an object form /bookmarks/lab-results/'+type+'/event-date-index/'+date+'/md5-index');
       let keys = Object.keys(dateObj).filter(key => !key.startsWith('_'))
       for await (const key of keys) {
         await new Promise(resolve => setTimeout(resolve, 50));
-        let { data } = await CONN.get({
-          path: `/bookmarks/lab-results/${type}/event-date-index/${date}/md5-index/${key}`
-        })
-        runInAction(() => {
-          state.files[key] = data;
-        })
+        const path =`/bookmarks/lab-results/${type}/event-date-index/${date}/md5-index/${key}`;
+        try {
+          let { data } = await oada.get({ path });
+          assertSlim(data);
+          runInAction(() => state.files[key] = data);
+        } catch(e: any) {
+          throw new Error('ERROR: file at path '+path+' either failed to be retrieved or was not a valid Modus slim type.  Error was: '+e.message);
+        }
       }
     }
   }
 })
 
-export const trellisConnect = action('trellisConnect', async () => {
+let _oada: OADAClient | null = null;
+export const oadaConnection = action('oadaConnection', async() => {
+  if (_oada) return _oada;
   const { domain, token } = state.trellis;
-  const conn = await connect({domain, token});
-  setConnection(conn);
-  runInAction(() => state.trellis.conn = true)
+  _oada = await connect({domain, token});
+  runInAction(() => state.trellis.connected = true)
   message(`Connected to your Trellis at ${domain}`);
-  fetchTrellisData();
+  return _oada;
 })
 
-function setConnection(conn: OADAClient) {
-  CONN = conn;
-}
 
-export const toTrellis = action('putDoc', async (results: ModusResult[]) => {
+export const toTrellis = action('toTrellis', async (results: modusJson.ModusJSONConversionResult[]) => {
   try {
-    const oada = state.trellis.conn;
-    for await (const {modus: data} of results) {
+    const oada = await oadaConnection();
+    for await (const r of results) {
+      const data = r.modus;
       let hash = md5(serializeJSON(data));
       let { type, date } = data;
+      if (!date) date = 'UNKNOWN';
       let path =
         `/bookmarks/lab-results/${type}/event-date-index/${date}/md5-index/${hash}`;
       if (date && hash) {
         info(`Putting to path: ${path}`);
-        console.log(`Putting to path: ${path}`);
-        /*
-        await CONN.put({
-          path,
-          data,
-          //FIXME: this needs to be a tree PUT
-          //tree,
-        })
-        */
-        await axios({
-          method: 'put',
-          url: `https://localhost${path}`,
-          data,
-          headers: {
-            Authorization: `Bearer ${state.trellis.token}`,
-            'Content-Type': 'application/json',
-          },
-        })
+        await oada.put({path, data: (data as Json), tree});
         runInAction(() => {
           state.files[hash] = data;
         })
@@ -233,7 +225,7 @@ export const toTrellis = action('putDoc', async (results: ModusResult[]) => {
     }
     message(`Successfully saved ${results.length} result${results.length === 1 ? '' : 's'} to your Trellis.`);
     info('Successfully wrote results to trellis');
-    runInAction(fetchTrellisData());
+    fetchTrellisData(); // async
   } catch(err) {
     console.error(`toTrellis Errored: ${err}`);
     error(`toTrellis Errored: ${err}`);
@@ -272,12 +264,13 @@ function serializeJSON(obj: any): string {
 }
 
 export const deleteSelected = action('deleteSelected', async() => {
+  const oada = await oadaConnection();
   for await (const key of state.table.selected) {
     let { date, type } = state.files[key];
     const path = `/bookmarks/lab-results/${type}/event-date-index/${date}/md5-index/${key}`;
     message(`Removing modus result ${key} from Trellis.`);
     info(`Putting to path: ${path}`);
-    await CONN.delete({ path });
+    await oada.delete({ path });
     await new Promise(resolve => setTimeout(resolve, 250));
     runInAction(() => {
     state.files = Object.fromEntries(
@@ -291,11 +284,8 @@ export const deleteSelected = action('deleteSelected', async() => {
 })
 
 export const downloadAsSlim = action('downloadAsSlim', async() => {
-  let modusResults = state.table.selected
-    .map((key: string) => ({
-      modus: state.files[key],
-    }))
-  await convertFile.save({ modus: modusResults, outputtype: 'json', });
+  let modusResults = state.table.selected.map((key: string) => state.files[key]);
+  await modusFile.save({ modus: modusResults, outputtype: 'json', });
   runInAction(() => state.table.selected = [])
   info('File successfully saved');
   message('Conversion result saved.');
@@ -303,9 +293,8 @@ export const downloadAsSlim = action('downloadAsSlim', async() => {
 })
 
 export const downloadAsCsv = action('downloadAsCsv', async() => {
-  let modusResults = state.table.selected
-    .map((key: string) => ({ modus: state.files[key] }))
-  await convertFile.save({ modus: modusResults, outputtype: 'csv'});
+  let modusResults = state.table.selected.map((key: string) => state.files[key]);
+  await modusFile.save({ modus: modusResults, outputtype: 'csv'});
   runInAction(() => state.table.selected = [])
   info('File successfully saved');
   message('Conversion result saved.');

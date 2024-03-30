@@ -11,8 +11,6 @@ import { file as convertFile } from '@modusjs/convert';
 //import { file as convertFile } from '@modusjs/convert/dist-browser/bundle.mjs';
 import Messages from './Messages';
 import Table from './Table';
-import bigdemo from '../bigdemo.zip';
-import curateddemo from '../curateddemo.zip';
 
 //localStorage.debug = '*';
 
@@ -45,7 +43,7 @@ export default observer(function App() {
         const files = [ ...evt.dataTransfer.files ]; // It is dumb that I have to do this
         const all_file_results = await Promise.all(files.map(async f => {
           try {
-            return await convertFile.fromFileBrowser({ file: f}, Object.values(state.labConfig.list) );
+            return await convertFile.fromFile({ file: f}, Object.values(state.labConfig.list) );
           } catch(e: any) {
             info('Failed to convert file: ', f.name, '.  Error was: ', e);
             return [];
@@ -64,7 +62,7 @@ export default observer(function App() {
           }
         }
         */
-        if (state.output === 'trellis') {
+        if (outputtype === 'trellis') {
           actions.toTrellis(modus_results);
         } else {
           await convertFile.save({ modus: modus_results, outputtype });
@@ -87,7 +85,7 @@ export default observer(function App() {
         </div>
         <div style={{ flexGrow: 1 }}></div>
         <div>
-          <a href={curateddemo} download="curateddemo.zip" target='_blank'>
+          <a href="curateddemo.zip" download="curateddemo.zip" target='_blank'>
               <IconButton
                 color="primary"
                 aria-label="download">
@@ -155,7 +153,7 @@ export default observer(function App() {
         <input
           type="text"
           value={state.trellis.domain}
-          onChange={evt => actions.trellis({ domain: evt.target.value })}
+          onChange={evt => actions.trellisInfo({ domain: evt.target.value })}
         />
       </div>
       <div>
@@ -163,9 +161,9 @@ export default observer(function App() {
         <input
           type="password"
           value={state.trellis.token}
-          onChange={evt => actions.trellis({ token: evt.target.value })}
+          onChange={evt => actions.trellisInfo({ token: evt.target.value })}
         />
-        {state.trellis.conn ?
+        {state.trellis.connected ?
           <Button
             variant="text"
             disabled
@@ -173,7 +171,7 @@ export default observer(function App() {
           </Button>
           : <Button
             variant="text"
-            onClick={actions.trellisConnect}
+            onClick={actions.oadaConnection}
             >Connect
           </Button>
         }
@@ -186,7 +184,7 @@ export default observer(function App() {
       <Messages />
 
       <div className="dropzone-container">
-        {state.output !== 'trellis' || state.trellis.conn ? <div
+        {state.output !== 'trellis' || state.trellis.connected ? <div
           className="dropzone"
           onDragOver={handleFile({ type: 'drag' })}
           onDrop={handleFile({ type: 'drop' })}
@@ -233,7 +231,7 @@ export default observer(function App() {
                2022 "Fixing the Soil Health Tech Stack" Hackathon.
             </a>
         </div>
-        <a href={bigdemo} download="bigdemo.zip" target='_blank'>
+        <a href="bigdemo.zip" download="bigdemo.zip" target='_blank'>
           <IconButton
             color="primary"
             aria-label="download">

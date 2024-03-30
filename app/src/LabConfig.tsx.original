@@ -56,6 +56,7 @@ const AutoConfigDrop = observer(function AutoConfigDrop() {
 
       case 'drop':
         info('file dropped, evt = ', evt);
+        /*
         actions.message('Reading file...');
         const files = [ ...evt.dataTransfer.files ]; // It is dumb that I have to do this
         const all_file_results = await Promise.all(files.map(async f => {
@@ -76,6 +77,7 @@ const AutoConfigDrop = observer(function AutoConfigDrop() {
         state.labConfig.config = labconfig_results[0].labConfig;
         console.log(labconfig_results[0]);
         actions.message(`Lab configuration detected: '${state.labConfig?.output?.labConfig?.name}'`);
+        */
         break;
       }
     };
@@ -98,8 +100,8 @@ const AutoConfigDrop = observer(function AutoConfigDrop() {
       <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
         <InputLabel id="labconfig-select-label">Lab Name</InputLabel>
         <Select
-          value={state.labConfig?.select.name || ''}
-          onChange={actions.selectLabName}
+          value={state.labConfig?.selected.name || ''}
+          onChange={evt => actions.selectLabName(evt.target.value)}
           label="Lab Name"
           >
           {[...new Set(Object.keys(state.labConfig.list)
@@ -113,15 +115,15 @@ const AutoConfigDrop = observer(function AutoConfigDrop() {
           )}
         </ Select>
       </ FormControl>
-      <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }} disabled={!state.labConfig?.select?.name}>
+      <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }} disabled={!state.labConfig?.selected?.name}>
         <InputLabel id="labtype-select-bel">Lab Sample Type</InputLabel>
         <Select
           labelId='labconfig-type-select-label'
           id='labconfig-type-select'
-          value={state.labConfig?.select?.type || ''}
-          onChange={actions.selectLabType}>
+          value={state.labConfig?.selected?.type || ''}
+          onChange={evt => actions.selectLabType(evt.target.value)}>
           {Object.keys(state.labConfig.list)
-          .filter(key => key.startsWith(state.labConfig?.select?.name))
+          .filter(key => key.startsWith(state.labConfig?.selected?.name))
           .map(key => key.split(' - ')[key.split(' - ').length -1])
           .map(key =>
             <MenuItem key={`${key}-type-select-item`} value={key}>{key}</MenuItem>
@@ -132,7 +134,7 @@ const AutoConfigDrop = observer(function AutoConfigDrop() {
   )
 });
 
-
+/*
 const LabConfContent = observer(function LabConfContent() {
   const { state, actions } = useContext(context);
 //  const isError = Object.keys(state.labConfig.list).includes(`${state.labConfig?.config?.name} - ${state.labConfig?.config?.type}`)
@@ -141,7 +143,7 @@ const LabConfContent = observer(function LabConfContent() {
     <div className="LabConfigContent">
       <TextField
         value={state.labConfig?.config?.name || ''}
-        onChange={actions.handleLCNameChange}
+        onChange={() => console.log('not implemented') /*actions.handleLCNameChange*/}
         label="Lab Name"
       />
       <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
@@ -150,7 +152,7 @@ const LabConfContent = observer(function LabConfContent() {
           labelId='labconfig-type-select-label'
           id='labconfig-type-select'
           value={state.labConfig?.config?.type || ''}
-          onChange={actions.handleLCTypeChange}>
+          onChange={() => console.log('not implemented')/* actions.handleLCTypeChange*/}>
           <MenuItem value={''}></MenuItem>
           <MenuItem value={'Soil'}>Soil</MenuItem>
           <MenuItem value={'Plant'}>Plant</MenuItem>
@@ -160,7 +162,7 @@ const LabConfContent = observer(function LabConfContent() {
       </ FormControl>
       <Typography sx={{margin: '10px'}} variant="h6">Analytes</Typography>
       <Grid container spacing={2}>
-        {Object.values(state.labConfig.config.analytes || {})
+        {/*Object.values(state.labConfig.config?.analytes || {})
           .sort(({CsvHeader: a},  {CsvHeader: b}) => (a > b ? 1 : (b > a ? -1 : 0)))
           .map((nr) =>
           <Card
@@ -174,18 +176,18 @@ const LabConfContent = observer(function LabConfContent() {
             <div>Modus Test ID: {nr.ModusTestID || ''}</div>
             <div>Units: {nr.ValueUnit}</div>
           </ Card>
-        )}
+        )*/}
         {state.labConfig?.analyteEditor ? <AnalyteEditor /> : null}
          </Grid>
-      {state.labConfig?.analyteEditor ? null : <Button onClick={actions.addNutrientResult}>
+      {state.labConfig?.analyteEditor ? null : <Button onClick={() => console.log('not implemented') /*actions.addNutrientResult*/}>
         + Add
       </Button>}
 
       <Typography sx={{margin: '10px'}} variant="h6">Additional Metadata Attributes</Typography>
       <Grid container spacing={2}>
-        {Object.entries(state.labConfig.config.mappings || {})
-          .filter(([header, value]) => value)
-          .sort(([ha, va], [hb, vb]) => (ha > hb ? 1 : (hb > ha ? -1 : 0)))
+        {Object.entries(state.labConfig.config?.mappings || {})
+          .filter(([_header, value]) => value)
+          .sort(([ha, _va], [hb, _vb]) => (ha > hb ? 1 : (hb > ha ? -1 : 0)))
           .map(([header, value]) =>
           <Card
           className="gridcard"
@@ -194,12 +196,12 @@ const LabConfContent = observer(function LabConfContent() {
           raised
           >
             <div>Column Header: {header}</div>
-            <div>Modus Attribute: {value}</div>
+            <div>Modus Attribute: {/*value*/}</div>
           </Card>
         )}
-        {state.labConfig?.mappingEditor ? <MappingEditor /> : null}
+        {/*state.labConfig?.mappingEditor ? <MappingEditor /> : null*/}
       </Grid>
-      {state.labConfig?.mappingEditor ? null : <Button onClick={actions.addMapping}>
+      {/*state.labConfig?.mappingEditor ? null : <Button onClick={actions.addMapping}>*/}
         + Add
       </Button>}
       <IconButton onClick={actions.saveConfig}>

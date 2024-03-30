@@ -352,7 +352,7 @@ export default observer(function App() {
   //@ts-ignore
   const rows : Data[] = Object.entries(state.files).map(([key, slim]: [string, Slim]) => ({
     id: key,
-    sampleCount: Object.keys(slim.samples).length,
+    sampleCount: Object.keys(slim.samples || []).length,
     ...Object.fromEntries(headCells
         //@ts-ignore
       .filter(hc => paths[hc.label])
