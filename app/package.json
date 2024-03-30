@@ -1,7 +1,7 @@
 {
   "name": "app",
   "private": true,
-  "version": "1.0.4",
+  "version": "1.0.6",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -11,35 +11,35 @@
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
-    "@emotion/react": "^11.10.6",
-    "@emotion/styled": "^11.10.6",
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
     "@modusjs/convert": "workspace:^",
     "@modusjs/industry": "workspace:^",
-    "@mui/icons-material": "^5.11.16",
-    "@mui/lab": "^5.0.0-alpha.128",
-    "@mui/material": "^5.12.2",
-    "@mui/utils": "^5.15.11",
+    "@mui/icons-material": "^5.15.14",
+    "@mui/lab": "^5.0.0-alpha.169",
+    "@mui/material": "^5.15.14",
+    "@mui/utils": "^5.15.14",
     "@oada/client": "^5.0.0",
     "@oada/list-lib": "^5.0.1",
     "debug": "^4.3.4",
     "jsonpath": "^1.1.1",
     "md5": "^2.3.0",
-    "mobx": "^6.7.0",
-    "mobx-react-lite": "^3.4.0",
+    "mobx": "^6.12.3",
+    "mobx-react-lite": "^4.0.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@types/debug": "^4.1.7",
-    "@types/jsonpath": "^0.2.0",
+    "@types/debug": "^4.1.12",
+    "@types/jsonpath": "^0.2.4",
     "@types/md5": "^2",
     "@types/react": "latest",
     "@types/react-dom": "latest",
     "@types/sha.js": "^2",
-    "@vitejs/plugin-react": "^2.1.0",
-    "gh-pages": "^4.0.0",
-    "prettier": "^3.1.0",
-    "typescript": "^4.8.3",
-    "vite": "^3.1.8"
+    "@vitejs/plugin-react": "^4.2.1",
+    "gh-pages": "^6.1.1",
+    "prettier": "^3.2.5",
+    "typescript": "^5.4.3",
+    "vite": "^5.2.7"
   }
 }

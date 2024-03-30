@@ -10,6 +10,10 @@ export default defineConfig({
   plugins: [react()],
   build: {
     target,
+    /*
+    rollupOptions: {
+      external: [ '#file-type', '#fetch', '#event-iterator' ]
+    }*/
   },
   optimizeDeps: {
     esbuildOptions: {
