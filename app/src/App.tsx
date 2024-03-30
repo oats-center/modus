@@ -171,7 +171,7 @@ export default observer(function App() {
           </Button>
           : <Button
             variant="text"
-            onClick={actions.oadaConnection}
+            onClick={actions.fetchTrellisData}
             >Connect
           </Button>
         }
