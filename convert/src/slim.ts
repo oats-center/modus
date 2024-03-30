@@ -8,10 +8,13 @@ import moment from 'moment';
 import * as xlsx from 'xlsx';
 import type ModusResult from '@oada/types/modus/v1/modus-result.js';
 import type Slim from '@oada/types/modus/slim/v1/0.js';
+import { assert as assertSlim } from '@oada/types/modus/slim/v1/0.js';
 import jp from 'json-pointer';
 // @ts-expect-error no types
 import wicket from 'wicket';
 import { parseColumnHeaderName } from './csv.js';
+
+export { Slim, assertSlim };
 
 const error = debug('@modusjs/convert#slim:error');
 const warn = debug('@modusjs/convert#slim:error');
