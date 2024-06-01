@@ -1,6 +1,6 @@
 {
   "name": "@modusjs/convert",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "packageManager": "yarn@4.1.1",
   "description": "Universal library for interacting with Modus XML files",
   "type": "module",
