@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shapefile to GeoJSON Converter</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #dropzone {
+            width: 90%;
+            height: 200px;
+            border: 2px dashed #ccc;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            text-align: center;
+            cursor: pointer;
+        }
+        #dropzone:hover {
+            border-color: #aaa;
+        }
+        #content {
+            width: 90%;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        #map {
+            width: 100%;
+            height: 500px;
+        }
+        #geojson-container {
+            display: flex;
+            flex-direction: column;
+        }
+        #geojson-output {
+            background-color: #f8f8f8;
+            border: 1px solid #ddd;
+            padding: 10px;
+            max-height: 500px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        #buttons {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="dropzone">Drop your shapefile ZIP here</div>
+    <div id="content">
+        <div id="map"></div>
+        <div id="geojson-container">
+            <pre id="geojson-output"></pre>
+            <div id="buttons">
+                <button id="copy-btn" disabled>Copy GeoJSON</button>
+                <button id="download-btn" disabled>Download GeoJSON</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script type="module">
+        import shp from 'https://unpkg.com/shpjs@latest/dist/shp.esm.js';
+
+        const dropzone = document.getElementById('dropzone');
+        const output = document.getElementById('geojson-output');
+        const copyBtn = document.getElementById('copy-btn');
+        const downloadBtn = document.getElementById('download-btn');
+        let geojsonData = null;
+        let filePrefix = '';
+
+        // Initialize map
+        const map = L.map('map').setView([0, 0], 2);
+        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+        }).addTo(map);
+
+        // Drag and drop handling
+        dropzone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropzone.style.borderColor = '#000';
+        });
+
+        dropzone.addEventListener('dragleave', () => {
+            dropzone.style.borderColor = '#ccc';
+        });
+
+        dropzone.addEventListener('drop', async (e) => {
+            e.preventDefault();
+            dropzone.style.borderColor = '#ccc';
+            const file = e.dataTransfer.files[0];
+            if (!file || !file.name.endsWith('.zip')) {
+                alert('Please drop a ZIP file.');
+                return;
+            }
+            filePrefix = file.name.replace('.zip', '');
+            const buffer = await file.arrayBuffer();
+            try {
+                let geojson = await shp(buffer);
+                // If multiple shapefiles, merge into single FeatureCollection
+                if (Array.isArray(geojson)) {
+                    const allFeatures = geojson.flatMap(g => {
+                        if (g && g.features) {
+                            return g.features.map(f => {
+                                if (g.fileName) {
+                                    f.properties = { ...f.properties, sourceFile: g.fileName };
+                                }
+                                return f;
+                            });
+                        }
+                        return [];
+                    });
+                    geojson = {
+                        type: 'FeatureCollection',
+                        features: allFeatures
+                    };
+                }
+                // Display GeoJSON
+                output.textContent = JSON.stringify(geojson, null, 2);
+                geojsonData = geojson;
+                copyBtn.disabled = false;
+                downloadBtn.disabled = false;
+
+                // Add to map
+                map.eachLayer(layer => {
+                    if (layer !== map._layers[Object.keys(map._layers)[0]]) { // Remove previous layers except base
+                        map.removeLayer(layer);
+                    }
+                });
+                const geoJsonLayer = L.geoJSON(geojson, {
+                    onEachFeature: (feature, layer) => {
+                        layer.on('mouseover', (e) => {
+                            const props = feature.properties || {};
+                            const popupContent = Object.entries(props)
+                                .map(([key, value]) => `<b>${key}:</b> ${value}`)
+                                .join('<br>');
+                            layer.bindPopup(popupContent, { autoPan: false }).openPopup();
+                        });
+                        layer.on('mouseout', () => {
+                            layer.closePopup();
+                        });
+                    }
+                }).addTo(map);
+                map.fitBounds(geoJsonLayer.getBounds());
+            } catch (error) {
+                alert('Error processing shapefile: ' + error.message);
+            }
+        });
+
+        // Copy button
+        copyBtn.addEventListener('click', () => {
+            navigator.clipboard.writeText(JSON.stringify(geojsonData, null, 2))
+                .then(() => alert('GeoJSON copied to clipboard!'))
+                .catch(err => alert('Error copying: ' + err));
+        });
+
+        // Download button
+        downloadBtn.addEventListener('click', () => {
+            const blob = new Blob([JSON.stringify(geojsonData, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${filePrefix}.geojson`;
+            a.click();
+            URL.revokeObjectURL(url);
+        });
+    </script>
+</body>
+</html>

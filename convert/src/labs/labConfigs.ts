@@ -17,6 +17,7 @@ import { default as brookside_soil } from './soil/brookside.js';
 import { default as cquester_soil } from './soil/cquester.js';
 import { default as uga } from './soil/uga.js';
 import { default as ward_soil } from './soil/ward.js';
+import { default as vertex_soil } from './soil/vertex.js';
 
 //const info = debug('@modusjs/convert#labs-automated:info');
 //const trace = debug('@modusjs/convert#labs-automated:trace');
@@ -35,6 +36,7 @@ export let localLabConfigs : LocalLabConfig[] = [
   cquester_soil,
   uga,
   ward_soil,
+  vertex_soil,
 ]
 
 const industryLabConfigs = industry.labConfigs as unknown as Record<string, Record<string, IndustryLabConfig>>;

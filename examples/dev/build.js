@@ -35,8 +35,85 @@ import fs from 'fs/promises';
       // For each directory, output a javascript file that exports the files' contents as default
       let local_index = '';
       let local_all = [];
+      // Shapefile support: group sets of files with same basename and known shapefile extensions
+      // Using plain objects instead of Map/Set per preference; excluding shp.xml
+      const shapefileExts = {
+        shp: true, shx: true, dbf: true, prj: true, cpg: true, qix: true,
+        sbn: true, sbx: true, ain: true, aih: true, atx: true, ixs: true,
+        mxs: true, fbn: true, fbx: true, fix: true, qpj: true,
+      };
+      const toLower = (s) => (s || '').toLowerCase();
+      const getBaseAndExt = (filename) => {
+        const m = filename.match(/\.(\w+)$/);
+        if (!m) return null;
+        const ext = toLower(m[1]);
+        const base = filename.slice(0, -(ext.length + 1));
+        return { base, ext };
+      };
+      // Build an index of shapefile groups present in this directory
+      const shpGroups = {}; // { base: { ext: filename } }
+      for (const f of files) {
+        const be = getBaseAndExt(f);
+        if (!be) continue;
+        const { base, ext } = be;
+        if (!shapefileExts[ext]) continue;
+        shpGroups[base] = shpGroups[base] || {};
+        shpGroups[base][ext] = f;
+      }
+      const processedShp = {};
+
       for (const f of files) {
         const input_filepath = `${input_path}/${f}`;
+
+        // If part of a shapefile set, emit exactly once per basename
+        const be = getBaseAndExt(f);
+        if (be && shapefileExts[be.ext]) {
+          const base = be.base;
+          if (!processedShp[base]) {
+            processedShp[base] = true;
+            const group = shpGroups[base] || {};
+            // Create object mapping ext -> base64
+            const payload = {};
+            for (const ext of Object.keys(group)) {
+              const compPath = `${input_path}/${group[ext]}`;
+              const b64 = (await fs.readFile(compPath)).toString('base64');
+              payload[ext] = b64;
+            }
+            // turn ./build/dir/name.* into ./build/dir/name_shapefile.js
+            const output_filename = `${base}_shapefile.ts`.replaceAll('-', '_');
+            const output_filepath = `${output_path}/${output_filename}`;
+            const finalcontents = `export default ${JSON.stringify(payload, null, 2)}`;
+
+            // Create equivalent path in the build/ folder
+            await fs.mkdir(output_path, { recursive: true });
+            await fs.writeFile(output_filepath, finalcontents);
+            console.log(
+              `Converted shapefile set at ${input_path}/${base}.* to default export at ${output_filepath}`
+            );
+
+            const output_js_filename = output_filename
+              .replace(/\.ts$/, '.js')
+            const output_varname = output_filename
+              .replace(/\.ts$/, '')
+            local_index += `export { default as ${output_varname} } from './${output_js_filename}';\n`;
+            local_all.push({
+              js: output_js_filename.replaceAll('-', '_'),
+              // dynamic imports must have a file extension in the static parts of the import, so get rid of it here
+              importpath: `${dir}/${output_js_filename.replace(/\.js$/, '')}`,
+              path: dir,
+              type: typedir,
+              lab: labdir,
+              filename: `${base}.*`,
+              isxml: false,
+              iscsv: false,
+              isjson: false,
+              isxlsx: false,
+              isshapefile: true,
+            });
+          }
+          continue; // skip individual components from normal handling
+        }
+
         if (!input_filepath.match(/\.(xml|json|csv|xlsx)$/)) {
           continue; // skip non-xml and non-json files
         }
@@ -70,7 +147,7 @@ import fs from 'fs/promises';
           // XLSX files become base64 encoded strings:
         } else if (isxlsx) {
           const str = (await fs.readFile(input_filepath)).toString('base64');
-          finalcontents = `export default "${str}"`;
+          finalcontents = `export default \"${str}\"`;
         }
 
         // Create equivalent path in the build/ folder
