@@ -119,3 +119,59 @@ export async function save(args: SaveArgs): Promise<void> {
       break;
   }
 }
+
+// Shared helper to prepare json.InputFile[] from arbitrary items using environment-provided I/O
+import { supportedFormats } from './fromCsvToModusV1.js';
+import { typeFromFilename, supportedFileTypes, type InputFile } from './json.js';
+
+export type PrepareDeps<T> = {
+  getName: (item: T) => string | undefined;
+  getFormat?: (item: T) => string | undefined;
+  readAsString: (item: T) => Promise<string>;
+  readAsArrayBuffer: (item: T) => Promise<ArrayBuffer | Buffer>;
+};
+
+export async function prepareInputFiles<T>(items: T[], deps: PrepareDeps<T>): Promise<InputFile[]> {
+  const out: (InputFile | null)[] = await Promise.all(items.map(async (it) => {
+    try {
+      const name = deps.getName(it);
+      if (!name) {
+        info('Input item missing name, skipping');
+        return null;
+      }
+      const type = typeFromFilename(name);
+      if (!type) {
+        info('File', name, 'has unknown type, skipping. Supported types are:', supportedFileTypes);
+        return null;
+      }
+      const format = deps.getFormat ? deps.getFormat(it) : undefined;
+      if (format && !supportedFormats.find((sf) => sf === format)) {
+        info('Input file format for file', name, 'must be one of the supported formats', supportedFormats);
+        return null;
+      }
+      const ret: InputFile = { filename: name };
+      if (format) ret.format = format as any;
+      switch (type) {
+        case 'xml':
+        case 'csv':
+        case 'json': {
+          ret.str = await deps.readAsString(it);
+          break;
+        }
+        case 'xlsx':
+        case 'zip':
+        case 'shp': {
+          const buf = await deps.readAsArrayBuffer(it);
+          // @ts-ignore allow Buffer or ArrayBuffer
+          ret.arrbuf = buf;
+          break;
+        }
+      }
+      return ret;
+    } catch (e: any) {
+      info('Failed to prepare input file, skipping. Error was:', e);
+      return null;
+    }
+  }));
+  return out.filter((v): v is InputFile => !!v);
+}

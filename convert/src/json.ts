@@ -14,6 +14,7 @@ import pointer from 'json-pointer';
 import { supportedFormats, SupportedFormats } from './fromCsvToModusV1.js';
 import { parseCsv as csvParse } from './csv.js';
 import { parseModusResult as xmlParseModusResult } from './xml.js';
+import { looseFilesToGroups, shpToSlim } from './shp.js';
 import type { NutrientResult } from '@modusjs/units';
 import type { LabConfig } from './labs/index.js';
 import { fromModusV1 } from './slim.js';
@@ -25,8 +26,8 @@ const warn = debug('@modusjs/convert#tojson:error');
 const info = debug('@modusjs/convert#tojson:info');
 const trace = debug('@modusjs/convert#tojson:trace');
 
-export type SupportedFileType = 'xml' | 'csv' | 'xlsx' | 'json' | 'zip';
-export const supportedFileTypes = ['xml', 'csv', 'xlsx', 'json', 'zip'];
+export type SupportedFileType = 'xml' | 'csv' | 'xlsx' | 'json' | 'zip' | 'shp';
+export const supportedFileTypes = ['xml', 'csv', 'xlsx', 'json', 'zip', 'shp'];
 
 export { Slim };
 export { ModusResult, assertModusResult };
@@ -46,9 +47,51 @@ export type InputFile = {
   // Do not use for other types, they should all just be strings.
   arrbuf?: ArrayBuffer;
   base64?: string;
+  // If present, this InputFile represents a grouped shapefile set
+  shpParts?: InputFile[];
 };
 
 // This function will attempt to convert all the input files into an array of Modus JSON files
+// Helper: flatten any zip files recursively into a flat list of non-zip InputFiles
+async function flattenZips(inputs: InputFile[], labFormat?: SupportedFormats): Promise<InputFile[]> {
+  const out: InputFile[] = [];
+  for (const file of inputs) {
+    const t = typeFromFilename(file.filename);
+    if (t !== 'zip') { out.push(file); continue; }
+    const data = file.arrbuf || file.base64;
+    const opts: any = file.base64 ? { base64: true } : {};
+    if (!data) continue;
+    const zip = await jszip.loadAsync(data as any, opts);
+    const inner: InputFile[] = [];
+    for (const zf of Object.values(zip.files)) {
+      if (zf.dir) continue;
+      const innerType = typeFromFilename(zf.name);
+      const filename = zf.name.replace(/^(.*[\/\\])*/g, '');
+      const convert_input: InputFile = { filename, format: labFormat } as any;
+      switch (innerType) {
+        case 'xlsx':
+        case 'zip':
+          convert_input.arrbuf = await zf.async('arraybuffer');
+          break;
+        case 'xml':
+        case 'csv':
+        case 'json':
+          convert_input.str = await zf.async('string');
+          break;
+        case 'shp':
+        default:
+          // For shapefile parts and unknown, prefer binary
+          convert_input.arrbuf = await zf.async('arraybuffer');
+          break;
+      }
+      inner.push(convert_input);
+    }
+    const flattenedInner = await flattenZips(inner, labFormat);
+    out.push(...flattenedInner);
+  }
+  return out;
+}
+
 export async function toJson(
   files: InputFile[] | InputFile,
   labConfigs?: LabConfig[],
@@ -56,6 +99,11 @@ export async function toJson(
   if (!Array.isArray(files)) {
     files = [files];
   }
+  // Step 1: flatten all zips recursively
+  files = await flattenZips(files as InputFile[], (files[0] as any)?.format);
+  // Step 2: group shapefile sidecar files into logical grouped inputs
+  files = looseFilesToGroups(files);
+
   let results: ModusJSONConversionResult[] = [];
   for (const file of files) {
     const format = file.format || 'generic';
@@ -73,12 +121,15 @@ export async function toJson(
     }
     switch (original_type) {
       case 'xlsx':
-      case 'zip':
         if (!file.arrbuf && !file.base64) {
           warn('Type of',file.filename,'was',original_type,'but that must be an ArrayBuffer or Base64 encoded string.  Skipping.');
           continue;
         }
         break;
+      case 'zip':
+        // Zips should have been flattened earlier
+        warn('Encountered zip after flattening, skipping', file.filename);
+        continue;
       case 'csv':
       case 'xml':
       case 'json':
@@ -95,8 +146,8 @@ export async function toJson(
     try {
       switch (original_type) {
         case 'zip':
-          const zip_modus = await zipParse(file);
-          results = [...results, ...zip_modus];
+          // Should not occur; already flattened
+          trace('zip encountered post-flatten, skipping', filename);
           break;
         case 'json':
           modus = typeof file.str! === 'string' ? JSON.parse(file.str!) : file.str!;
@@ -123,6 +174,15 @@ export async function toJson(
               modus = fromModusV1(modus);
             }
             results.push({ modus, output_filename, ...base }); // just one
+          }
+          break;
+        case 'shp':
+          const slims = await shpToSlim(file, labConfigs);
+          for (const [index, modus] of slims.entries()) {
+            const filename_args: FilenameArgs = { modus, type, filename };
+            if (slims.length > 1) filename_args.index = index;
+            output_filename = jsonFilenameFromOriginalFilename(filename_args);
+            results.push({ modus, output_filename, ...base });
           }
           break;
         case 'csv':
@@ -183,7 +243,7 @@ export function jsonFilenameFromOriginalFilename({
   type,
 }: FilenameArgs): string {
   const output_filename_base = filename.replace(
-    /\.(xml|csv|xlsx|zip)$/,
+    /\.(xml|csv|xlsx|zip|shp)$/,
     '.json'
   );
   let output_filename = output_filename_base;
@@ -212,6 +272,8 @@ export function typeFromFilename(filename: string): SupportedFileType | null {
   if (filename.match(/\.xlsx$/i)) return 'xlsx';
   if (filename.match(/\.json$/i)) return 'json';
   if (filename.match(/\.zip$/i)) return 'zip';
+  // Treat any of the shapefile components as a single logical 'shp' type
+  if (filename.match(/\.(shp|dbf|shx|prj|cpg)$/i)) return 'shp';
   return null;
 }
 
@@ -226,7 +288,7 @@ export type ZipFile = {
   format?: SupportedFormats;
 };
 
-export async function zipParse(file: ZipFile) {
+export async function zipParse(file: ZipFile, labConfigs?: LabConfig[]) {
   let opts = {};
   const data = file.arrbuf || file.base64;
   if (file.base64) {
@@ -242,11 +304,74 @@ export async function zipParse(file: ZipFile) {
   }
 
   const zip = await jszip.loadAsync(data, opts);
-  let all_convert_inputs = [];
+
+  // Detect shapefile groups (one or more .shp files)
+  const shpEntries = Object.values(zip.files).filter(f => !f.dir && f.name.match(/\.shp$/i));
+  if (shpEntries.length > 0) {
+    const out: ModusJSONConversionResult[] = [];
+
+    // For each shapefile base name, parse to GeoJSON and then to CSV -> Slim
+    for (const shpFile of shpEntries) {
+      const base = shpFile.name.replace(/^(.*[\/\\])*/g, '').replace(/\.shp$/i, '');
+      trace('Parsing shapefile set for base name', base);
+
+      // Browser path: use shpjs on the original data buffer
+      // Node path: use shapefile package reading buffers from the zip
+      let fc: any;
+      if (typeof window !== 'undefined') {
+        const arrayBuffer = file.arrbuf
+          ? (file.arrbuf as ArrayBuffer)
+          : (typeof file.base64 === 'string'
+            ? Uint8Array.from(atob(file.base64), c => c.charCodeAt(0)).buffer
+            : undefined);
+        if (!arrayBuffer) throw new Error('No zip data available to parse shapefile');
+        const shp = (await import('shpjs')).default as any;
+        fc = await shp(arrayBuffer);
+        // shpjs may return an array if multiple layers; normalize to FeatureCollection
+        if (Array.isArray(fc)) {
+          const features = fc.flatMap((g: any) => (g && g.features) ? g.features : []);
+          fc = { type: 'FeatureCollection', features };
+        }
+      } else {
+        // Node: extract matching .shp and .dbf from zip
+        const shpPath = shpFile.name;
+        const dbfPath = shpPath.replace(/\.shp$/i, '.dbf');
+        const shxPath = shpPath.replace(/\.shp$/i, '.shx');
+        const shpBuf = await zip.files[shpPath].async('nodebuffer');
+        const dbfBuf = zip.files[dbfPath] ? await zip.files[dbfPath].async('nodebuffer') : undefined;
+        const shxBuf = zip.files[shxPath] ? await zip.files[shxPath].async('nodebuffer') : undefined;
+        const shapefile = await import('shapefile');
+        const source = await shapefile.open(shpBuf, dbfBuf, { 'ignore-properties': false, 'encoding': 'utf8' } as any);
+        const features: any[] = [];
+        while (true) {
+          const result = await source.read();
+          if (result.done) break;
+          features.push({ type: 'Feature', geometry: result.value.geometry, properties: result.value.properties });
+        }
+        fc = { type: 'FeatureCollection', features };
+      }
+
+      // Convert GeoJSON to CSV
+      const { geojsonToCsv } = await import('./geojson.js');
+      const csvStr = geojsonToCsv(fc);
+
+      // Feed CSV into existing CSV parser
+      const all_modus = (await import('./csv.js')).parseCsv({ str: csvStr, format: file.format, filename: base + '.csv', labConfigs });
+      for (const [index, modus] of all_modus.entries()) {
+        const filename_args: FilenameArgs = { modus, type: 'zip', filename: base + '.zip' };
+        if (all_modus.length > 1) filename_args.index = index;
+        const output_filename = jsonFilenameFromOriginalFilename(filename_args);
+        out.push({ modus, output_filename, original_filename: base + '.zip', original_type: 'zip' });
+      }
+    }
+    return out;
+  }
+
+  // Fallback to previous behavior if no shapefiles present
+  let all_convert_inputs = [] as InputFile[];
   for (const zf of Object.values(zip.files)) {
     if (zf.dir) continue;
     const type = typeFromFilename(zf.name);
-    // Strip all path info from the filename:
     const filename = zf.name.replace(/^(.*[\/\\])*/g, '');
     trace('Found file', filename, 'of type', type, 'in zip');
     let convert_input: InputFile = { filename, format: file.format };
@@ -263,5 +388,5 @@ export async function zipParse(file: ZipFile) {
     }
     all_convert_inputs.push(convert_input);
   }
-  return toJson(all_convert_inputs);
+  return toJson(all_convert_inputs, labConfigs);
 }

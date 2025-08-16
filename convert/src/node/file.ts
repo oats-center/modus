@@ -2,6 +2,7 @@ import fs from 'fs/promises';
 import debug from 'debug';
 import { csv, json } from '../index.js';
 import prompts from 'prompts';
+import { prepareInputFiles } from '../file.js';
 import { LabConfig } from '../labs/index.js';
 
 import {
@@ -63,46 +64,13 @@ export async function fromFileNode(
   if (!Array.isArray(files)) {
     files = [files];
   }
-  const toconvert_promises: Promise<json.InputFile | null>[] = files.map(
-    async (file) => {
-      try {
-        const type = json.typeFromFilename(file.filename);
-        if (!type) {
-          error(
-            'File',
-            file.filename,
-            'has unknown type, skipping.  Supported types are:',
-            json.supportedFileTypes
-          );
-          return null;
-        }
-        const ret: json.InputFile = { ...file }; // filename, format if it exists
-        switch (type) {
-          case 'xml':
-          case 'csv':
-          case 'json':
-            ret.str = (await fs.readFile(file.filename)).toString();
-            break;
-          case 'xlsx':
-          case 'zip':
-            ret.arrbuf = await fs.readFile(file.filename);
-            break;
-        }
-        return ret;
-      } catch (e: any) {
-        error(
-          'File',
-          file.filename,
-          'failed to read.  Skipping. Error was:',
-          e
-        );
-        return null;
-      }
-    }
-  );
-  // Await all the promises that are reading files, and then filter any nulls (i.e. files skipped)
-  const toconvert = await Promise.all(toconvert_promises);
-  return json.toJson(toconvert.filter((f) => !!f) as json.InputFile[], labConfigs);
+  const toconvert = await prepareInputFiles(files, {
+    getName: (f) => f.filename,
+    getFormat: (f) => f.format,
+    readAsString: async (f) => (await fs.readFile(f.filename)).toString(),
+    readAsArrayBuffer: async (f) => await fs.readFile(f.filename),
+  });
+  return json.toJson(toconvert, labConfigs);
 }
 
 // We'll make a node-specific version of save here that
