@@ -207,11 +207,11 @@ export function jsonFilenameFromOriginalFilename({
 }
 
 export function typeFromFilename(filename: string): SupportedFileType | null {
-  if (filename.match(/\.xml$/)) return 'xml';
-  if (filename.match(/\.csv$/)) return 'csv';
-  if (filename.match(/\.xlsx$/)) return 'xlsx';
-  if (filename.match(/.json$/)) return 'json';
-  if (filename.match(/.zip/)) return 'zip';
+  if (filename.match(/\.xml$/i)) return 'xml';
+  if (filename.match(/\.csv$/i)) return 'csv';
+  if (filename.match(/\.xlsx$/i)) return 'xlsx';
+  if (filename.match(/\.json$/i)) return 'json';
+  if (filename.match(/\.zip$/i)) return 'zip';
   return null;
 }
 

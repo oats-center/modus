@@ -6,7 +6,7 @@ import { standardUnits } from '@modusjs/industry';
 import type { NutrientResults } from '@oada/types/modus/v1/global.js';
 import type { Merge, SetRequired } from 'type-fest';
 
-import ucum from '@lhncbc/ucum-lhc';
+import * as ucum from '@lhncbc/ucum-lhc';
 
 const error = debug('@modusjs/units:error');
 const warn = debug('@modusjs/units:warn');
@@ -91,6 +91,8 @@ export function simpleConvert(inValue: number, inUnits: string, outUnits: string
   //1. Alias units
   const inU = aliases[inUnits] ?? inUnits;
   const outU = aliases[outUnits] ?? outUnits;
+
+info('ucum = ', ucum);
 
   //2. Validate units
   let result = ucum.UcumLhcUtils.getInstance().validateUnitString(inU, true);

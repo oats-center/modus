@@ -4,8 +4,8 @@
   "repository": "git@github.com/oats-center/modus",
   "author": "Aaron Ault <aultac@gmail.com>",
   "license": "Apache-2.0",
-  "version": "1.0.4",
-  "packageManager": "yarn@4.1.1",
+  "version": "1.0.8",
+  "packageManager": "yarn@4.9.2",
   "scripts": {
     "build": "echo '--------> @modusjs/industry' && yarn workspace @modusjs/industry build && echo '--------> @modusjs/examples' && yarn workspace @modusjs/examples build > /dev/null && echo '--------> @modusjs/units' && yarn workspace @modusjs/units build &&  echo '--------> @modusjs/convert' && yarn workspace @modusjs/convert build &&  echo '--------> app' && yarn workspace app build"
   },

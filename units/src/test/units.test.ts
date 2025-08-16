@@ -5,7 +5,7 @@ import { deepdiff } from './util.js';
 // Only import the type here: use the lib passed to you from node or browser in run()
 import type * as MainLib from '../index.js';
 //@ts-ignore
-import ucum from '@lhncbc/ucum-lhc';
+import * as ucum from '@lhncbc/ucum-lhc';
 import * as industry from '@modusjs/industry';
 
 const trace = debug('@modusjs/convert#test-units:trace');
