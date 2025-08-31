@@ -30,14 +30,16 @@ The code for all repos is written in Typescript. Packages should be universal (n
 unless otherwise specified.
 
 ## Acknowledgements
-Thanks to our partners and sponsors, including the <a href="https://oatscenter.org>">OATS Center at Purdue University</a>, 
-<a href="https://farmfoundation.org">Farm Foundation</a>, 
-<a href="https://mixingbowlhub.com">Mixing Bowl Hub</a>, 
-<a href="https://aggateway.org">Ag Gateway</a>, 
-<a href="https://semios.com">Semios</a>, 
-and all of the participants in the 
-<a href="https://farmfoundation.swoogo.com/soilhealthtech">2022 "Fixing the Soil Health Tech Stack" Hackathon.</a>   
+Thanks to our partners and sponsors, including the <a href="https://oatscenter.org>">OATS Center at Purdue University</a>,
+<a href="https://farmfoundation.org">Farm Foundation</a>,
+<a href="https://mixingbowlhub.com">Mixing Bowl Hub</a>,
+<a href="https://aggateway.org">Ag Gateway</a>,
+<a href="https://semios.com">Semios</a>,
+and all of the participants in the
+<a href="https://farmfoundation.swoogo.com/soilhealthtech">2022 "Fixing the Soil Health Tech Stack" Hackathon.</a>
 
-This work was also funded in part by USDA AFRI grant 
-<a href="https://portal.nifa.usda.gov/web/crisprojectpages/1027697-national-ag-producer-data-cooperative-a-strategic-framework-for-innovation.html">2021-77039-35992</a> 
-through the <a href="https://agdatacoop.org">NAPDC</a> from the <a href="https://unl.edu">University of Nebraska-Lincoln</a> to the <a href="https://oatscenter.org">Open Ag Technology and Systems (OATS) Center</a> at <a href="https://purdue.edu">Purdue University</a>.
+This work was also funded in part by USDA AFRI grant
+<a href="https://portal.nifa.usda.gov/web/crisprojectpages/1027697-national-ag-producer-data-cooperative-a-strategic-framework-for-innovation.html">2021-77039-35992</a>,
+and in part by USDA NIFA grant 2024-77039-43724, Subaward No. 25-6231-0439-008, through the
+<a href="https://agdatacoop.org">NAPDC</a> from the <a href="https://unl.edu">University of Nebraska-Lincoln</a> to the
+<a href="https://oatscenter.org">Open Ag Technology and Systems (OATS) Center</a> at <a href="https://purdue.edu">Purdue University</a>.

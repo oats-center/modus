@@ -241,7 +241,7 @@ export default observer(function App() {
         <div style={{paddingTop: '30px', width: '50%', textAlign: 'center' }}>
           In addition to the partners above, this work was funded in part by USDA AFRI
           grant&nbsp;<a href="https://portal.nifa.usda.gov/web/crisprojectpages/1027697-national-ag-producer-data-cooperative-a-strategic-framework-for-innovation.html">2021-77039-35992</a>
-          <br/>
+          <br/>and in part by USDA NIFA grant 2024-77039-43724, Subaward No. 25-6231-0439-008,
           through the&nbsp;<a href="https://agdatacoop.org">NAPDC</a> from the&nbsp;<a href="https://unl.edu">University of Nebraska-Lincoln</a>&nbsp;
           <br/>
           to the&nbsp;<a href="https://oatscenter.org">Open Ag Technology and Systems (OATS) Center</a> at&nbsp;<a href="https://purdue.edu">Purdue University</a>.
