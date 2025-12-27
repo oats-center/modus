@@ -105,7 +105,9 @@ export async function toJson(
   files = looseFilesToGroups(files);
 
   let results: ModusJSONConversionResult[] = [];
+  info('toJson: starting file conversion');
   for (const file of files) {
+    info('toJson: converting file ', file.filename);
     const format = file.format || 'generic';
     let original_type = typeFromFilename(file.filename);
     if (!original_type) {
@@ -126,10 +128,6 @@ export async function toJson(
           continue;
         }
         break;
-      case 'zip':
-        // Zips should have been flattened earlier
-        warn('Encountered zip after flattening, skipping', file.filename);
-        continue;
       case 'csv':
       case 'xml':
       case 'json':
@@ -137,6 +135,7 @@ export async function toJson(
           warn('CSV, XML, and JSON input files must be strings, but file',file.filename,'is not.');
           continue;
         }
+      break;
     }
     const base = { original_filename: file.filename, original_type };
     const type = original_type; // just to make things shorter later in json filename determination
@@ -145,10 +144,6 @@ export async function toJson(
     let modus: Slim | any | null = null;
     try {
       switch (original_type) {
-        case 'zip':
-          // Should not occur; already flattened
-          trace('zip encountered post-flatten, skipping', filename);
-          break;
         case 'json':
           modus = typeof file.str! === 'string' ? JSON.parse(file.str!) : file.str!;
           if (modus._type === 'application/vnd.modus.v1.modus-result+json' || modus.Events) {
@@ -177,6 +172,7 @@ export async function toJson(
           }
           break;
         case 'shp':
+          info('toJson: converting shp file: ', file.filename);
           const slims = await shpToSlim(file, labConfigs);
           for (const [index, modus] of slims.entries()) {
             const filename_args: FilenameArgs = { modus, type, filename };
@@ -274,6 +270,8 @@ export function typeFromFilename(filename: string): SupportedFileType | null {
   if (filename.match(/\.zip$/i)) return 'zip';
   // Treat any of the shapefile components as a single logical 'shp' type
   if (filename.match(/\.(shp|dbf|shx|prj|cpg)$/i)) return 'shp';
+  // Some example metadata and group names may end with a wildcard like "base.*"; assume those are shapefile groups
+  if (filename.match(/\.\*$/)) return 'shp';
   return null;
 }
 
@@ -281,6 +279,9 @@ export function typeFromFilename(filename: string): SupportedFileType | null {
 // I moved all the Zip file stuff to json.ts because json.ts and zip.ts were a circular dependency, and
 // nothing but json.ts actually imported the zip.ts stuff.
 
+// Legacy zipParse helper retained only for backwards compatibility of the public API type surface.
+// The new pipeline uses flattenZips() + looseFilesToGroups() + shpToSlim() instead.
+// NOTE: zipParse is intentionally a no-op wrapper around toJson and should not be used for new code.
 export type ZipFile = {
   filename: string;
   arrbuf?: ArrayBuffer;
@@ -289,11 +290,7 @@ export type ZipFile = {
 };
 
 export async function zipParse(file: ZipFile, labConfigs?: LabConfig[]) {
-  let opts = {};
   const data = file.arrbuf || file.base64;
-  if (file.base64) {
-    opts = { base64: true };
-  }
   if (!data) {
     error(
       'ERROR: Zip input file had neither arrbuf nor base64.  At least one is required.'
@@ -303,90 +300,13 @@ export async function zipParse(file: ZipFile, labConfigs?: LabConfig[]) {
     );
   }
 
-  const zip = await jszip.loadAsync(data, opts);
+  // Treat this as a regular InputFile with a zip buffer; toJson/flattenZips will unpack it.
+  const convertInput: InputFile = {
+    filename: file.filename,
+    format: file.format,
+    // @ts-ignore allow Buffer or ArrayBuffer here; runtime code only cares that it's ArrayBuffer-ish
+    arrbuf: data as ArrayBuffer,
+  };
 
-  // Detect shapefile groups (one or more .shp files)
-  const shpEntries = Object.values(zip.files).filter(f => !f.dir && f.name.match(/\.shp$/i));
-  if (shpEntries.length > 0) {
-    const out: ModusJSONConversionResult[] = [];
-
-    // For each shapefile base name, parse to GeoJSON and then to CSV -> Slim
-    for (const shpFile of shpEntries) {
-      const base = shpFile.name.replace(/^(.*[\/\\])*/g, '').replace(/\.shp$/i, '');
-      trace('Parsing shapefile set for base name', base);
-
-      // Browser path: use shpjs on the original data buffer
-      // Node path: use shapefile package reading buffers from the zip
-      let fc: any;
-      if (typeof window !== 'undefined') {
-        const arrayBuffer = file.arrbuf
-          ? (file.arrbuf as ArrayBuffer)
-          : (typeof file.base64 === 'string'
-            ? Uint8Array.from(atob(file.base64), c => c.charCodeAt(0)).buffer
-            : undefined);
-        if (!arrayBuffer) throw new Error('No zip data available to parse shapefile');
-        const shp = (await import('shpjs')).default as any;
-        fc = await shp(arrayBuffer);
-        // shpjs may return an array if multiple layers; normalize to FeatureCollection
-        if (Array.isArray(fc)) {
-          const features = fc.flatMap((g: any) => (g && g.features) ? g.features : []);
-          fc = { type: 'FeatureCollection', features };
-        }
-      } else {
-        // Node: extract matching .shp and .dbf from zip
-        const shpPath = shpFile.name;
-        const dbfPath = shpPath.replace(/\.shp$/i, '.dbf');
-        const shxPath = shpPath.replace(/\.shp$/i, '.shx');
-        const shpBuf = await zip.files[shpPath].async('nodebuffer');
-        const dbfBuf = zip.files[dbfPath] ? await zip.files[dbfPath].async('nodebuffer') : undefined;
-        const shxBuf = zip.files[shxPath] ? await zip.files[shxPath].async('nodebuffer') : undefined;
-        const shapefile = await import('shapefile');
-        const source = await shapefile.open(shpBuf, dbfBuf, { 'ignore-properties': false, 'encoding': 'utf8' } as any);
-        const features: any[] = [];
-        while (true) {
-          const result = await source.read();
-          if (result.done) break;
-          features.push({ type: 'Feature', geometry: result.value.geometry, properties: result.value.properties });
-        }
-        fc = { type: 'FeatureCollection', features };
-      }
-
-      // Convert GeoJSON to CSV
-      const { geojsonToCsv } = await import('./geojson.js');
-      const csvStr = geojsonToCsv(fc);
-
-      // Feed CSV into existing CSV parser
-      const all_modus = (await import('./csv.js')).parseCsv({ str: csvStr, format: file.format, filename: base + '.csv', labConfigs });
-      for (const [index, modus] of all_modus.entries()) {
-        const filename_args: FilenameArgs = { modus, type: 'zip', filename: base + '.zip' };
-        if (all_modus.length > 1) filename_args.index = index;
-        const output_filename = jsonFilenameFromOriginalFilename(filename_args);
-        out.push({ modus, output_filename, original_filename: base + '.zip', original_type: 'zip' });
-      }
-    }
-    return out;
-  }
-
-  // Fallback to previous behavior if no shapefiles present
-  let all_convert_inputs = [] as InputFile[];
-  for (const zf of Object.values(zip.files)) {
-    if (zf.dir) continue;
-    const type = typeFromFilename(zf.name);
-    const filename = zf.name.replace(/^(.*[\/\\])*/g, '');
-    trace('Found file', filename, 'of type', type, 'in zip');
-    let convert_input: InputFile = { filename, format: file.format };
-    switch (type) {
-      case 'zip':
-      case 'xlsx':
-        convert_input.arrbuf = await zf.async('arraybuffer');
-        break;
-      case 'xml':
-      case 'csv':
-      case 'json':
-        convert_input.str = await zf.async('string');
-        break;
-    }
-    all_convert_inputs.push(convert_input);
-  }
-  return toJson(all_convert_inputs, labConfigs);
+  return toJson([convertInput], labConfigs);
 }

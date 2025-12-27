@@ -7,6 +7,8 @@ import type * as MainLib from '../index.js';
 import { all as examples } from '@modusjs/examples';
 import * as exs from '@modusjs/examples';
 import * as xlsx from 'xlsx';
+import jszip from 'jszip';
+import { Buffer } from 'buffer/';
 
 import type Slim from '@oada/types/modus/slim/v1/0.js';
 import type ModusResult from '@oada/types/modus/v1/modus-result.js';
@@ -65,27 +67,51 @@ export default async function run(lib: typeof MainLib) {
     //@ts-ignore
     for await (const [type, list] of Object.entries(types)) {
       //@ts-ignore
-      for await (const example of list) {
+      for await (const example of list as any[]) {
         // Note: this dynamic import does not seem to like slashes within template string placeholders (${})
-        let data = (await import(`../../../examples/dist/${example.lab}/${example.type}/${example.js.split('.')[0]}.js`)).default;
-        let exampleType = example.iscsv || example.isjson || example.isxml ? 'str' : 'base64';
+        const mod = await import(
+          `../../../examples/dist/${example.lab}/${example.type}/${example.js.split('.')[0]}.js`
+        );
+        const data = mod.default;
         console.log(`Processing ${lab} - ${example.filename}`);
+
+        // Skip certain XML/JSON examples that are known not to round-trip here
         if ((example.isxml && example.filename.includes('SUBMIT')) || example.isjson) {
           console.log(`Skipping ${example.filename}`);
           continue;
         }
-        //if (!example.lab.includes('tomkat')) continue;
-        let results = await lib.json.toJson({
-          [exampleType]: data,
-          format: 'generic',
-          filename: example.filename,
-        })
 
-        let slim = results[0]?.modus;
-        if (!slim) throw new Error(`Example ${example.filename} did not produce a Slim`)
+        let results;
+        if (example.isshapefile) {
+          // Shapefile examples: data is an object mapping extension -> base64 payload.
+          // Build an in-memory ZIP so json.toJson can use the standard shapefile pipeline.
+          const zip = new jszip();
+          const base = (example.filename as string).replace(/\.(\*|shp)$/i, '');
+          for (const [ext, b64] of Object.entries(data as Record<string, string>)) {
+            if (typeof b64 !== 'string') continue;
+            const fname = `${base}.${ext}`;
+            zip.file(fname, Buffer.from(b64, 'base64'));
+          }
+          const arrbuf = await zip.generateAsync({ type: 'arraybuffer' });
+          results = await lib.json.toJson({
+            arrbuf,
+            format: 'generic',
+            filename: `${base}.zip`,
+          });
+        } else {
+          const exampleType = example.iscsv || example.isjson || example.isxml ? 'str' : 'base64';
+          results = await lib.json.toJson({
+            [exampleType]: data,
+            format: 'generic',
+            filename: example.filename,
+          } as any);
+        }
 
-        let standardCsv = lib.json.slim.toStandardCsv(slim);
-        let backToSlim = lib.json.slim.fromStandardCsv(standardCsv);
+        const slim = results[0]?.modus;
+        if (!slim) throw new Error(`Example ${example.filename} did not produce a Slim`);
+
+        const standardCsv = lib.json.slim.toStandardCsv(slim);
+        const backToSlim = lib.json.slim.fromStandardCsv(standardCsv);
 
         if (!fde(slim, backToSlim)) {
           console.log(`Example ${example.filename} needs to be fixed`);

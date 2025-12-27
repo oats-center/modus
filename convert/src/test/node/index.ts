@@ -11,7 +11,6 @@ import fileTest from './file.test.js';
 import toCsvTests from '../toCsv.test.js';
 import csvTests from '../csv.test.js';
 import labConfigs from '../labConfigs.test.js';
-import { toGeoJson } from '../../geojson.js';
 import toSlimTests  from '../toslim.test.js';
 
 const info = debug('@modusjs/xml#test-node:info');

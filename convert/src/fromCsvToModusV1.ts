@@ -486,7 +486,7 @@ function isPointMetadataSheetname(name: string) {
     .match('POINTMETA');
 }
 
-//Preference here is overrides > sheet > labConfig
+//Preference here is overrides > sheet > labConfig > existing value
 function setNutrientResultUnits({
   nutrientResults,
   headers,
@@ -499,17 +499,25 @@ function setNutrientResultUnits({
   labConfig?: LabConfig,
 }) : NutrientResult[] {
   return nutrientResults.map(nr => {
-    const header = Object.values(headers).find(h => h.original === nr.CsvHeader);
-    const override = header?.original ? unitOverrides?.[header?.original] : undefined;
+    const header = nr.CsvHeader
+      ? Object.values(headers).find(h => h.original === nr.CsvHeader)
+      : undefined;
+    const override = header?.original ? unitOverrides?.[header.original] : undefined;
     const headerUnit = header?.units;
     const labConfigUnit = header ? labConfig?.units?.[header.original] : undefined;
+    const baseUnit = nr.ValueUnit; // from labConfig or previous steps
 
-    trace(`Ordered unit prioritization of ${nr.Element}: Override:[${override}] `
-      + `> Header:[${headerUnit}] > LabConfig:[${labConfigUnit}]`);
+    trace(
+      `Ordered unit prioritization of ${nr.Element}: Override:[${override}] ` +
+      `> Header:[${headerUnit}] > LabConfig:[${labConfigUnit}] > Existing:[${baseUnit}]`
+    );
+
+    const finalUnit = override || headerUnit || labConfigUnit || baseUnit;
+
     return {
       ...nr,
-      ValueUnit: override || headerUnit || labConfigUnit,
-    }
+      ValueUnit: finalUnit,
+    };
   });
 }
 
@@ -706,13 +714,15 @@ function parseNutrientResults({
         return {
           ...labConfig.analytes[key],
           Value,
+          // Preserve a link back to the original header for unit resolution
+          CsvHeader: headers?.[key]?.original ?? key,
         }
       } else {
         return {
           Element: headers[key]!.element,
           ValueUnit: headers?.[key]?.units,
           ModusTestID: headers?.[key]?.modusid,
-          CsvHeader: headers?.[key]?.original,
+          CsvHeader: headers?.[key]?.original ?? key,
           Value,
         }
       }

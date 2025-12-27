@@ -2,6 +2,8 @@ import debug from 'debug';
 import chalk from 'chalk';
 import { deepdiff } from './util.js';
 import { fromModusV1 } from '../slim.js';
+import jszip from 'jszip';
+import { Buffer } from 'buffer/';
 
 // Only import the type here: use the lib passed to you from node or browser in run()
 import type * as MainLib from '../index.js';
@@ -43,20 +45,44 @@ export default async function run(lib: typeof MainLib) {
   }
 
   test('Parsing all the examples with toJson()...');
-//@ts-ignore
+  // Iterate over all example metadata and ensure toJson can at least parse each one.
+  // Shapefile examples are handled specially by reconstructing a ZIP from per-ext base64 payloads.
+  // @ts-ignore examples is a nested object from @modusjs/examples
   for await (const [lab, types] of Object.entries(examples)) {
-//@ts-ignore
+    // @ts-ignore
     for await (const [type, list] of Object.entries(types)) {
-//@ts-ignore
-      for await (const example of list) {
-// Note: this dynamic import does not seem to like slashes within template string placeholders (${})
-        let data = (await import(`../../../examples/dist/${example.lab}/${example.type}/${example.js.split('.')[0]}.js`)).default;
-        let exampleType = example.iscsv || example.isjson ? 'str' : 'base64';
+      // @ts-ignore
+      for await (const example of list as any[]) {
+        // Note: this dynamic import does not seem to like slashes within template string placeholders (${})
+        const mod = await import(
+          `../../../examples/dist/${example.lab}/${example.type}/${example.js.split('.')[0]}.js`
+        );
+        const data = mod.default;
+
+        if (example.isshapefile) {
+          // data is an object mapping shapefile sidecar extension -> base64 payload
+          const zip = new jszip();
+          const base = (example.filename as string).replace(/\.(\*|shp)$/i, '');
+          for (const [ext, b64] of Object.entries(data as Record<string, string>)) {
+            if (typeof b64 !== 'string') continue;
+            const fname = `${base}.${ext}`;
+            zip.file(fname, Buffer.from(b64, 'base64'));
+          }
+          const arrbuf = await zip.generateAsync({ type: 'arraybuffer' });
+          await lib.json.toJson({
+            arrbuf,
+            format: 'generic',
+            filename: `${base}.zip`,
+          });
+          continue;
+        }
+
+        const exampleType = example.iscsv || example.isjson ? 'str' : 'base64';
         await lib.json.toJson({
           [exampleType]: data,
           format: 'generic',
           filename: example.filename,
-       })
+        } as any);
       }
     }
   }

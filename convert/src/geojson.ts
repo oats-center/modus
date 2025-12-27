@@ -32,13 +32,25 @@ export function geojsonToCsv(fc: FeatureCollection): string {
   const headersSet = new Set<string>();
   const features: Feature[] = fc.features || [];
 
+  // Determine if this FeatureCollection has only Point geometries
+  const hasOnlyPoints =
+    features.length > 0 &&
+    features.every((f) => f.geometry && f.geometry.type === 'Point');
+
   // Collect all property keys
   for (const f of features) {
-    const props = (f && f.properties) || {} as Record<string, any>;
+    const props = (f && f.properties) || ({} as Record<string, any>);
     for (const k of Object.keys(props)) headersSet.add(k);
   }
-  // Always include WKT column for geometry
-  headersSet.add('WKT');
+
+  if (hasOnlyPoints) {
+    // For point-only data, output Latitude/Longitude instead of WKT
+    headersSet.add('Latitude');
+    headersSet.add('Longitude');
+  } else {
+    // For non-point or mixed-geometry data, keep a single WKT column
+    headersSet.add('WKT');
+  }
 
   const headers = Array.from(headersSet);
   const escape = (v: any) => {
@@ -51,9 +63,32 @@ export function geojsonToCsv(fc: FeatureCollection): string {
   const rows: string[] = [];
   rows.push(headers.map(escape).join(','));
   for (const f of features) {
-    const props = (f && f.properties) || {} as Record<string, any>;
-    const wkt = geometryToWkt(f.geometry);
-    const row = headers.map((h) => h === 'WKT' ? wkt ?? '' : props[h]);
+    const props = (f && f.properties) || ({} as Record<string, any>);
+
+    let row: any[];
+    if (hasOnlyPoints) {
+      let lat: number | string = '';
+      let lon: number | string = '';
+      const geom = f.geometry;
+      if (
+        geom &&
+        geom.type === 'Point' &&
+        Array.isArray((geom as any).coordinates) &&
+        (geom as any).coordinates.length >= 2
+      ) {
+        // GeoJSON Point coordinates are [longitude, latitude]
+        [lon, lat] = (geom as any).coordinates as [number, number];
+      }
+      row = headers.map((h) => {
+        if (h === 'Latitude') return lat;
+        if (h === 'Longitude') return lon;
+        return props[h];
+      });
+    } else {
+      const wkt = geometryToWkt(f.geometry);
+      row = headers.map((h) => (h === 'WKT' ? wkt ?? '' : props[h]));
+    }
+
     rows.push(row.map(escape).join(','));
   }
   return rows.join('\n');
@@ -62,6 +97,7 @@ export function geojsonToCsv(fc: FeatureCollection): string {
 // Convert GeoJSON FeatureCollection to Slim[] via CSV pipeline
 export function toSlim(fc: FeatureCollection, labConfigs?: any, filenameBase = 'shapefile'): Slim[] {
   const csvStr = geojsonToCsv(fc);
+  trace('geojson.toSlim: conversion to CSV first before slim provides this CSV output: ', csvStr);
   // Reuse CSV parsing pipeline. Filename used only for downstream naming metadata.
   return parseCsv({ str: csvStr, format: 'generic', filename: `${filenameBase}.csv`, labConfigs });
 }

@@ -966,6 +966,7 @@ __metadata:
     "@types/md5": "npm:^2"
     "@types/node": "npm:^18.11.2"
     "@types/prompts": "npm:^2.4.1"
+    "@types/shpjs": "npm:^3.4.7"
     buffer: "npm:^6.0.3"
     chalk: "npm:^4.0.0"
     cheerio: "npm:^1.0.0-rc.12"
@@ -996,7 +997,7 @@ __metadata:
     rollup-plugin-typescript2: "npm:^0.34.1"
     save-file: "npm:^2.3.1"
     shapefile: "npm:^0.6.6"
-    shpjs: "npm:^6.1.0"
+    shpjs: "npm:^6.2.0"
     ts-node: "npm:^10.9.1"
     tslib: "npm:^2.4.0"
     typescript: "npm:^5.4.3"
@@ -1828,6 +1829,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/geojson@npm:*":
+  version: 7946.0.16
+  resolution: "@types/geojson@npm:7946.0.16"
+  checksum: 10/34d07421bdd60e7b99fa265441d17ac6e9aef48e3ce22d04324127d0de1daf7fbaa0bd3be1cece2092eb6995f21da84afa5231e24621a2910ff7340bc98f496f
+  languageName: node
+  linkType: hard
+
 "@types/geojson@npm:^7946.0.10":
   version: 7946.0.10
   resolution: "@types/geojson@npm:7946.0.10"
@@ -2100,6 +2108,16 @@ __metadata:
   dependencies:
     "@types/node": "npm:*"
   checksum: 10/0ce0eec20bf6ddefbe1e1243902d7e7e9db31f27b77d03936d69d7d604d96129a92c15cb3638b25dbf569627b2a360e2733605ac43c8eb754c2fe8f8ef10b313
+  languageName: node
+  linkType: hard
+
+"@types/shpjs@npm:^3.4.7":
+  version: 3.4.7
+  resolution: "@types/shpjs@npm:3.4.7"
+  dependencies:
+    "@types/geojson": "npm:*"
+    "@types/node": "npm:*"
+  checksum: 10/da6883f802e50bddfc00ae6446bee3947e76d56b01b8e633fd4be565b4021365dca35a3f8949f64f7e1e86c076a3afaeae75ee8e0563115425b56dd8137c0f40
   languageName: node
   linkType: hard
 
@@ -7483,14 +7501,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"shpjs@npm:^6.1.0":
-  version: 6.1.0
-  resolution: "shpjs@npm:6.1.0"
+"shpjs@npm:^6.2.0":
+  version: 6.2.0
+  resolution: "shpjs@npm:6.2.0"
   dependencies:
     but-unzip: "npm:^0.1.4"
     parsedbf: "npm:^2.0.0"
     proj4: "npm:^2.1.4"
-  checksum: 10/f70dfd59d412498b5a8e13242c3beb80f5ee3d7ce8765fdf2dc8ac3da19d8ab5f68cf7a11dec43e22e35625659fa4b6bfa0570d82e6fe0c32d5339042bb1d37f
+  checksum: 10/1e286dce9607ffda063885ff75ad291defb699db41799134863df18918ae0faebc2d0e3389cfd9ee75b342c409826e6e9834441709aae5355e108ee72d62515a
   languageName: node
   linkType: hard
 

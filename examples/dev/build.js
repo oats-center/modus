@@ -103,7 +103,8 @@ import fs from 'fs/promises';
               path: dir,
               type: typedir,
               lab: labdir,
-              filename: `${base}.*`,
+              // Use .shp extension to indicate this is a grouped shapefile set
+              filename: `${base}.shp`,
               isxml: false,
               iscsv: false,
               isjson: false,
