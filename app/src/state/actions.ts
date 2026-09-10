@@ -133,6 +133,40 @@ export const output = action('output', (output: State['output']) => {
   state.output = output;
 });
 
+export const setBusy = action('setBusy', (busy: string | null) => {
+  state.busy = busy;
+});
+
+export const keepResults = action('keepResults', (results: modusJson.ModusJSONConversionResult[]) => {
+  for (const result of results) {
+    const slim = result?.modus;
+    if (!slim) continue;
+    const hash = md5(serializeJSON(slim));
+    state.sessionResults[hash] = {
+      slim,
+      original_filename: result.original_filename,
+      tots: result.tots,
+    };
+  }
+});
+
+export const clearResults = action('clearResults', () => {
+  state.sessionResults = {};
+});
+
+export const setLastDownload = action('setLastDownload', (lastDownload: { filename: string, url: string } | null) => {
+  if (state.lastDownload?.url) URL.revokeObjectURL(state.lastDownload.url);
+  state.lastDownload = lastDownload;
+});
+
+// Hide the fallback download button without immediately revoking the blob URL,
+// so an in-flight <a download> can still read it.
+export const dismissLastDownload = action('dismissLastDownload', () => {
+  const url = state.lastDownload?.url;
+  state.lastDownload = null;
+  if (url) setTimeout(() => URL.revokeObjectURL(url), 2000);
+});
+
 export const trellisInfo = action('trellis', async ({domain, token}: { domain?: string, token?: string}) => {
   if (typeof domain !== 'undefined') state.trellis.domain = domain;
   if (typeof token !== 'undefined') state.trellis.token = token;

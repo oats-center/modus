@@ -2,10 +2,7 @@
 import * as React from 'react';
 import debug from 'debug';
 import './Table.css';
-import { connect } from '@oada/client';
-import { tree } from './trellisTree';
 import { observer } from 'mobx-react-lite';
-import { computed } from 'mobx';
 import { context } from './state';
 import { alpha } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -39,7 +36,7 @@ import jp from 'jsonpath';
 // @ts-ignore
 import { file as convertFile, units, Slim } from '@modusjs/convert';
 
-type Output = 'modusjson2' | 'json' | 'csv' | 'trellis';
+type Output = 'modusjson2' | 'json' | 'csv' | 'tots' | 'trellis';
 
 const trace = debug('@modusjs/table:trace');
 const info = debug('@modusjs/table:info');

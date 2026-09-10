@@ -9,9 +9,10 @@ import {
   save as universalSave,
   SaveArgs,
   computeSaveFilename,
+  buildTotsZip,
 } from '../file.js';
 
-export { computeSaveFilename, SaveArgs };
+export { computeSaveFilename, SaveArgs, buildTotsZip };
 
 const error = debug('@modusjs/convert#node/file:error');
 const info = debug('@modusjs/convert#node/file:info');

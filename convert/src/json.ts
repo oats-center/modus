@@ -18,6 +18,7 @@ import { looseFilesToGroups, shpToSlim } from './shp.js';
 import type { NutrientResult } from '@modusjs/units';
 import type { LabConfig } from './labs/index.js';
 import { fromModusV1 } from './slim.js';
+import { inputFileIsTots, totsFilesToJson } from './tots.js';
 
 export * as slim from './slim.js'
 
@@ -26,8 +27,8 @@ const warn = debug('@modusjs/convert#tojson:error');
 const info = debug('@modusjs/convert#tojson:info');
 const trace = debug('@modusjs/convert#tojson:trace');
 
-export type SupportedFileType = 'xml' | 'csv' | 'xlsx' | 'json' | 'zip' | 'shp';
-export const supportedFileTypes = ['xml', 'csv', 'xlsx', 'json', 'zip', 'shp'];
+export type SupportedFileType = 'xml' | 'csv' | 'xlsx' | 'json' | 'zip' | 'shp' | 'tots';
+export const supportedFileTypes = ['xml', 'csv', 'xlsx', 'json', 'zip', 'shp', 'tots'];
 
 export { Slim };
 export { ModusResult, assertModusResult };
@@ -37,11 +38,16 @@ export type ModusJSONConversionResult = {
   original_type: SupportedFileType;
   output_filename: string;
   modus: Slim;
+  tots?: {
+    totsPath: string;
+    pathContext: Record<string, string | number>;
+    leafPath: string;
+  };
 };
 
 export type InputFile = {
   filename: string; // can include the path on the front
-  format?: 'generic'; // only for CSV/XLSX files, default generic (same as generic for now)
+  format?: 'generic' | 'tots'; // only for CSV/XLSX files, default generic (same as generic for now)
   str?: string;
   // zip or xlsx can either be ArrayBuffer or base64 string of original file.
   // Do not use for other types, they should all just be strings.
@@ -99,12 +105,19 @@ export async function toJson(
   if (!Array.isArray(files)) {
     files = [files];
   }
-  // Step 1: flatten all zips recursively
-  files = await flattenZips(files as InputFile[], (files[0] as any)?.format);
+  const totsInputs: InputFile[] = [];
+  const otherInputs: InputFile[] = [];
+  for (const file of files as InputFile[]) {
+    if (await inputFileIsTots(file)) totsInputs.push(file);
+    else otherInputs.push(file);
+  }
+  const totsResults = totsInputs.length ? await totsFilesToJson(totsInputs) : [];
+  // Step 1: flatten remaining zips recursively (never flatten ToTs trees)
+  files = await flattenZips(otherInputs, (otherInputs[0] as any)?.format);
   // Step 2: group shapefile sidecar files into logical grouped inputs
   files = looseFilesToGroups(files);
 
-  let results: ModusJSONConversionResult[] = [];
+  let results: ModusJSONConversionResult[] = [...totsResults];
   info('toJson: starting file conversion');
   for (const file of files) {
     info('toJson: converting file ', file.filename);
@@ -184,16 +197,17 @@ export async function toJson(
         case 'csv':
         case 'xlsx':
           let parseargs;
-          if (original_type === 'csv') parseargs = { str: file.str, format, filename };
+          const csvFormat = 'generic' as const;
+          if (original_type === 'csv') parseargs = { str: file.str, format: csvFormat, filename };
           else {
             if (file.arrbuf)
               parseargs = {
                 arrbuf: file.arrbuf,
-                format,
+                format: csvFormat,
                 filename,
               };
             // checked for at least one of these above
-            else parseargs = { base64: file.base64, format, filename };
+            else parseargs = { base64: file.base64, format: csvFormat, filename };
           }
           const all_modus = csvParse({...parseargs, labConfigs});
           for (const [index, modus] of all_modus.entries()) {

@@ -4,8 +4,10 @@
 
 Universal library for reading/writing/validating Modus files/resources. Converts between:
 
-- Modus v1 XML -> Modus v1 JSON
-- CSV/XLSX -> Modus v1 JSON
+- Modus v1 XML -> Modus v1 JSON / Slim JSON
+- CSV/XLSX -> Modus Slim JSON
+- ToTs zip/xlsx trees (`ag/lab-results/soil/{year}/{field}.xlsx`) -> Slim JSON
+- Slim JSON -> standardized CSV or a ToTs zip tree
 
 This library works in the browser and in node.
 

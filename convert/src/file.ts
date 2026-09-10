@@ -8,6 +8,8 @@ import { toCsv } from './slim.js';
 import type { ModusJSONConversionResult, Slim } from './json.js';
 import saveFile from 'save-file';
 import jszip from 'jszip';
+import { serializeTotsTree } from '@treeoftables/lib';
+import { slimToTotsItems } from './tots.js';
 
 const error = debug('@modusjs/convert#file:error');
 const warn = debug('@modusjs/convert#file:error');
@@ -17,7 +19,7 @@ const trace = debug('@modusjs/convert#file:trace');
 // Since I couldn't find a universal "file reader" library, I split the "fromFile"
 // functionality into the platform-specific file.ts code under browser/ and node/
 
-export type SaveOutputType = 'xlsx' | 'csv' | 'json' | 'zip';
+export type SaveOutputType = 'xlsx' | 'csv' | 'json' | 'zip' | 'tots';
 export type SaveArgs = {
   modus: (ModusJSONConversionResult | Slim)[] | ModusJSONConversionResult | Slim;
   outputtype: SaveOutputType;
@@ -45,12 +47,54 @@ export function computeSaveFilename(args: SaveArgs): string {
   outdir = outdir?.trim().replace(/\/$/, '') || '.'; // handle trailing slashes
   if (outputtype !== 'json') {
     // json can have lots of files to save
-    filename = filename || `modus_conversion.${outputtype}`;
+    filename = filename || (outputtype === 'tots' ? 'modus_conversion.tots.zip' : `modus_conversion.${outputtype}`);
   } else {
     filename = filename || resultsArr[0]!.output_filename || 'modus_results.json';
   }
   if (!filename.match(/^\//) && haveoutdir) filename = `${outdir}/${filename}`;
   return filename;
+}
+
+export async function buildTotsZip(
+  modus: SaveArgs['modus']
+): Promise<{ filename: string; data: ArrayBuffer; workbookCount: number }> {
+  const list = Array.isArray(modus) ? modus : [modus];
+  const resultsArr: ModusJSONConversionResult[] = list.map((m) =>
+    (m as ModusJSONConversionResult).modus
+      ? (m as ModusJSONConversionResult)
+      : ({
+          modus: m as Slim,
+          output_filename: 'modus_results.json',
+          original_filename: '',
+          original_type: 'json',
+        })
+  );
+  const items = slimToTotsItems(resultsArr.map((result) => result.modus));
+  if (items.length < 1) {
+    throw new Error('ERROR: save failed, no ToTs workbooks were produced from the converted results.');
+  }
+  const zipBuf = await serializeTotsTree(items);
+  const bytes = zipBuf instanceof Uint8Array ? zipBuf : new Uint8Array(zipBuf as ArrayBuffer);
+  const data = bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) as ArrayBuffer;
+  return { filename: 'modus_conversion.tots.zip', data, workbookCount: items.length };
+}
+
+async function downloadBytes(data: ArrayBuffer, filename: string, mime: string): Promise<void> {
+  const doc = (globalThis as any).document;
+  if (doc) {
+    const blob = new Blob([new Uint8Array(data)], { type: mime });
+    const url = URL.createObjectURL(blob);
+    const a = doc.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.rel = 'noopener';
+    doc.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 2000);
+    return;
+  }
+  await saveFile(data, filename);
 }
 
 export async function save(args: SaveArgs): Promise<void> {
@@ -117,6 +161,14 @@ export async function save(args: SaveArgs): Promise<void> {
       await saveFile(arrbuf, filename);
       info('Saved zipfile successfully to', filename);
       break;
+
+    case 'tots': {
+      const built = await buildTotsZip(resultsArr);
+      const outName = filename.endsWith('.zip') ? filename : built.filename;
+      await downloadBytes(built.data, outName, 'application/zip');
+      info('Saved ToTs tree zip to', outName, 'with', built.workbookCount, 'workbook(s)');
+      break;
+    }
   }
 }
 

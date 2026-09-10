@@ -216,7 +216,12 @@ export function parse(xmlstring: string): any {
 
       // Otherwise, this tag's contents are just character data
       const str = $(child).text().trim();
-      if (str === '') continue; // ignore empty entries
+      if (str === '') {
+        // A&L Modus XML uses empty Grower/Farm/Field tags whose identity is the ID attribute.
+        const id = child.attribs?.ID || child.attribs?.id;
+        if (id) ret[child.tagName] = id;
+        continue;
+      }
       ret[child.tagName] = parseStringOrNumberOrBoolean({
         str,
         tagname: child.tagName,

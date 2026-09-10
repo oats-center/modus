@@ -8,6 +8,11 @@ export default defineConfig({
   assetsInclude: ['**/*.zip'],
   base: '/modus/',
   plugins: [react()],
+  resolve: {
+    alias: {
+      '@treeoftables/lib': '@treeoftables/lib/browser',
+    },
+  },
   build: {
     target,
     /*
@@ -16,6 +21,7 @@ export default defineConfig({
     }*/
   },
   optimizeDeps: {
+    exclude: ['@modusjs/convert', '@treeoftables/lib', '@treeoftables/lib/browser'],
     esbuildOptions: {
       target,
     },

@@ -12,6 +12,7 @@ import toCsvTests from '../toCsv.test.js';
 import csvTests from '../csv.test.js';
 import labConfigs from '../labConfigs.test.js';
 import toSlimTests  from '../toslim.test.js';
+import totsTests from '../tots.test.js';
 
 const info = debug('@modusjs/xml#test-node:info');
 const { red } = chalk;
@@ -57,6 +58,9 @@ const { red } = chalk;
 
     info('testing labconfigs');
     await labConfigs(mainlib);
+
+    info('testing tots');
+    await totsTests(mainlib);
 
     info('All tests passed!');
   } catch (e: any) {

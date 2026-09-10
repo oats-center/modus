@@ -68,6 +68,7 @@
     "@modusjs/units": "workspace:^",
     "@oada/types": "^3.5.3",
     "@overleaf/o-error": "^3.4.0",
+    "@treeoftables/lib": "portal:../../../treeoftables/monorepo/lib",
     "@types/geojson": "^7946.0.10",
     "@types/shpjs": "^3.4.7",
     "chalk": "^4.0.0",

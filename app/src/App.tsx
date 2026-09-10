@@ -4,17 +4,18 @@ import debug from 'debug';
 import './App.css';
 import { observer } from 'mobx-react-lite';
 import { Button, IconButton } from '@mui/material';
-import { FolderZip } from '@mui/icons-material';
+import { FolderZip, Public } from '@mui/icons-material';
 import { context } from './state';
 // @ts-ignore
 import { file as convertFile } from '@modusjs/convert';
 //import { file as convertFile } from '@modusjs/convert/dist-browser/bundle.mjs';
 import Messages from './Messages';
 import Table from './Table';
+import TotsViewer from './tots-viewer/TotsViewer';
 
 //localStorage.debug = '*';
 
-type Output = 'modusjson2' | 'json' | 'csv' | 'trellis';
+type Output = 'modusjson2' | 'json' | 'csv' | 'tots' | 'trellis';
 
 //const trace = debug('@modusjs/app#App:trace');
 const info = debug('@modusjs/app#App:info');
@@ -39,6 +40,7 @@ export default observer(function App() {
 
       case 'drop':
         info('file dropped, evt = ', evt);
+        actions.setBusy('Reading file...');
         actions.message('Reading file...');
         const files = [ ...evt.dataTransfer.files ]; // It is dumb that I have to do this
         const all_file_results = await Promise.all(files.map(async f => {
@@ -46,16 +48,24 @@ export default observer(function App() {
             return await convertFile.fromFile({ file: f}, Object.values(state.labConfig.list) );
           } catch(e: any) {
             info('Failed to convert file: ', f.name, '.  Error was: ', e);
+            console.error('Failed to convert file:', f.name, e);
+            actions.message({ type: 'bad', msg: `Failed to read ${f.name}: ${e?.message || e}` });
             return [];
           }
         }));
+        actions.setBusy('Converting...');
         actions.message('Converting...');
         const modus_results = all_file_results.reduce((acc, arr) => [ ...acc, ...arr], []);
+        if (modus_results.length < 1) {
+          actions.setBusy(null);
+          break;
+        }
+        actions.keepResults(modus_results);
         actions.message(`Successfully converted ${modus_results.length} result${modus_results.length === 1 ? '' : 's'} to Modus`);
 
         info('results: ', modus_results);
         info('Saving',state.output,' type from results');
-        const outputtype = state.output === 'modusjson2' ? 'json' : state.output;
+        const outputtype = state.output === 'modusjson2' ? 'json' : state.output === 'tots' ? 'tots' : state.output;
         /*if (state.output === 'modusjson2') {
           for (const mr of (modus_results as json.ModusJSONConversionResult[])) {
             mr.modus = toModus2QuickHack(mr.modus);
@@ -63,11 +73,51 @@ export default observer(function App() {
         }
         */
         if (outputtype === 'trellis') {
-          actions.toTrellis(modus_results);
+          actions.setBusy('Syncing to Trellis...');
+          try {
+            await actions.toTrellis(modus_results);
+          } finally {
+            actions.setBusy(null);
+          }
         } else {
-          await convertFile.save({ modus: modus_results, outputtype });
-          info('File successfully saved');
-          actions.message('Conversion result saved.');
+          try {
+            if (outputtype === 'tots') {
+              actions.setBusy('Writing ToTs tree...');
+              actions.message('Writing ToTs tree...');
+              const built = await convertFile.buildTotsZip(modus_results);
+              const blob = new Blob([built.data], { type: 'application/zip' });
+              const url = URL.createObjectURL(blob);
+              actions.setLastDownload({ filename: built.filename, url });
+              // Best-effort auto-download. After a long await this is often
+              // no longer a user gesture, so the Download button below is
+              // the fallback. If the click is accepted, hide that button.
+              try {
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = built.filename;
+                a.rel = 'noopener';
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                actions.dismissLastDownload();
+              } catch (clickErr) {
+                console.warn('Automatic download was blocked; use the Download button.', clickErr);
+              }
+              info('ToTs tree ready', built);
+              actions.message(`ToTs tree ready (${built.workbookCount} workbook${built.workbookCount === 1 ? '' : 's'}).`);
+            } else {
+              actions.setBusy('Saving...');
+              actions.message('Saving...');
+              await convertFile.save({ modus: modus_results, outputtype });
+              info('File successfully saved');
+              actions.message('Conversion result saved.');
+            }
+          } catch (e: any) {
+            console.error('Failed to save conversion result:', e);
+            actions.message({ type: 'bad', msg: `Save failed: ${e?.message || e}` });
+          } finally {
+            actions.setBusy(null);
+          }
         }
       break;
       }
@@ -84,15 +134,6 @@ export default observer(function App() {
           </h1>
         </div>
         <div style={{ flexGrow: 1 }}></div>
-        <div>
-          <a href="curateddemo.zip" download="curateddemo.zip" target='_blank'>
-              <IconButton
-                color="primary"
-                aria-label="download">
-                <FolderZip />
-              </IconButton>
-            </a>
-          </div>
       </div>
 
       <hr />
@@ -110,10 +151,10 @@ export default observer(function App() {
       <TabPanel value="1">
   */}
         <div className="output">
-          <Messages />
           <div className="tagline">
             Drop your soil, nutrient, water or nematode sample lab results here
-            and get back a standard set of Modus JSON files or a standard CSV.
+            (including ToTs zip trees or workbooks) and get back a standard set of
+            Modus JSON files, a standard CSV, or a ToTs tree.
             <br/><br/>
           </div>
 
@@ -126,6 +167,7 @@ export default observer(function App() {
               <option value="modusjson2">Modus JSON v2</option>
               <option value="json">Modus JSON v1</option>
               <option value="csv">Standardized CSV</option>
+              <option value="tots">ToTs (Tree of Tables)</option>
               <option value="trellis">Sync to Trellis</option>
             </select>
           </div>
@@ -183,7 +225,7 @@ export default observer(function App() {
 
       <Messages />
 
-      <div className="dropzone-container">
+      <div className={state.output === 'tots' ? 'dropzone-container compact' : 'dropzone-container'}>
         {state.output !== 'trellis' || state.trellis.connected ? <div
           className="dropzone"
           onDragOver={handleFile({ type: 'drag' })}
@@ -191,7 +233,7 @@ export default observer(function App() {
           onDragEnter={handleFile({ type: 'drag', inout: true })}
           onDragLeave={handleFile({ type: 'drag', inout: false })}
         >
-          Drop file here to download a standard MODUS output format.
+          {state.busy || 'Drop file here to download a standard MODUS output format.'}
         </div>
         : <div
           className="dropzone"
@@ -200,6 +242,27 @@ export default observer(function App() {
         </div>
 }
       </div>
+      {state.lastDownload ? (
+        <div style={{ textAlign: 'center', padding: '12px 10px 0' }}>
+          <a
+            id="last-download"
+            href={state.lastDownload.url}
+            download={state.lastDownload.filename}
+            onClick={() => setTimeout(() => actions.dismissLastDownload(), 0)}
+            style={{
+              display: 'inline-block',
+              padding: '10px 18px',
+              background: 'var(--highlight)',
+              color: 'white',
+              fontWeight: 700,
+              borderRadius: '6px',
+              textDecoration: 'none',
+            }}
+          >
+            Download {state.lastDownload.filename}
+          </a>
+        </div>
+      ) : null}
 
       <div style={{padding: '10px' }}>
         <hr />
@@ -210,7 +273,8 @@ export default observer(function App() {
       {/*
       </TabPanel>
         </TabContext>*/}
-      <Table />
+      {state.output === 'trellis' ? <Table /> : null}
+      {state.output === 'tots' ? <TotsViewer /> : null}
 
       <hr />
       <div className="footer">
@@ -231,13 +295,23 @@ export default observer(function App() {
                2022 "Fixing the Soil Health Tech Stack" Hackathon.
             </a>
         </div>
-        <a href="bigdemo.zip" download="bigdemo.zip" target='_blank'>
-          <IconButton
-            color="primary"
-            aria-label="download">
-            <FolderZip />
-          </IconButton>
-        </a>
+        <div className="demo-downloads">
+          <a href="curateddemo.zip" download="curateddemo.zip" title="Curated demo" target='_blank'>
+            <IconButton color="primary" aria-label="download curated demo" size="small">
+              <FolderZip fontSize="small" />
+            </IconButton>
+          </a>
+          <a href="bigdemo.zip" download="bigdemo.zip" title="Big demo" target='_blank'>
+            <IconButton color="primary" aria-label="download big demo" size="small">
+              <FolderZip fontSize="small" />
+            </IconButton>
+          </a>
+          <a href="horn235.tots.zip" download="horn235.tots.zip" title="Sample Modus data with GPS (Horn 235)" target='_blank'>
+            <IconButton color="primary" aria-label="download GPS sample data" size="small">
+              <Public fontSize="small" />
+            </IconButton>
+          </a>
+        </div>
         <div style={{paddingTop: '30px', width: '50%', textAlign: 'center' }}>
           In addition to the partners above, this work was funded in part by USDA AFRI
           grant&nbsp;<a href="https://portal.nifa.usda.gov/web/crisprojectpages/1027697-national-ag-producer-data-cooperative-a-strategic-framework-for-innovation.html">2021-77039-35992</a>

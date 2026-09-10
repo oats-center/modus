@@ -15,7 +15,7 @@ export type Message = {
   msg: string,
 };
 
-export type Output = 'modusjson2' | 'json' | 'csv' | 'trellis';
+export type Output = 'modusjson2' | 'json' | 'csv' | 'tots' | 'trellis';
 
 // Note to Sam: I just used your comment below to make this type
 export type LabConfig = {
@@ -46,6 +46,16 @@ export type TrellisFile = {
   farm: string,
 };
 
+export type SessionResult = {
+  slim: Slim,
+  original_filename?: string,
+  tots?: {
+    totsPath: string,
+    pathContext: Record<string, string | number>,
+    leafPath: string,
+  },
+};
+
 export type State = {
   tab: string,
   messages: Message[],
@@ -53,6 +63,8 @@ export type State = {
   trellis: { domain: string, token: string, connected: boolean },
   inzone: boolean,
   headless: boolean,
+  busy: string | null,
+  lastDownload: { filename: string, url: string } | null,
   // Note to Sam: I just used your comment below to make this type
   labConfig: {
     show: boolean,
@@ -63,6 +75,11 @@ export type State = {
   },
   files: {
     [hash: string]: Slim,
+  },
+  // Local drop conversions. Separate from `files` so Trellis delete/download
+  // cannot issue OADA calls for results that were never synced.
+  sessionResults: {
+    [hash: string]: SessionResult,
   },
   table: {
     order: 'asc' | 'desc',
@@ -95,6 +112,8 @@ export const state = observable<State>({
   trellis: { domain: 'https://localhost', token: 'god', connected: false },
   inzone: false,
   headless: false,
+  busy: null,
+  lastDownload: null,
   labConfig: {
     show: false,
     selected: { name: '', type: '' },
@@ -121,6 +140,7 @@ export const state = observable<State>({
     analyteEditor: { ValueUnit: '', CsvHeader: '' },
   },
   files: {},
+  sessionResults: {},
   table: {
     order: 'asc',
     orderBy: 'filename',

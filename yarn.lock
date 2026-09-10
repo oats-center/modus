@@ -957,6 +957,7 @@ __metadata:
     "@rollup/plugin-dynamic-import-vars": "npm:^2.0.1"
     "@rollup/plugin-json": "npm:^5.0.0"
     "@rollup/plugin-node-resolve": "npm:^15.0.0"
+    "@treeoftables/lib": "portal:../../../treeoftables/monorepo/lib"
     "@tsconfig/node16": "npm:^1.0.3"
     "@types/debug": "npm:^4.1.7"
     "@types/geojson": "npm:^7946.0.10"
@@ -1444,6 +1445,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-leaflet/core@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "@react-leaflet/core@npm:2.1.0"
+  peerDependencies:
+    leaflet: ^1.9.0
+    react: ^18.0.0
+    react-dom: ^18.0.0
+  checksum: 10/12ce28b85cf6712a1a7b7c49466b941fc619bc7b1535308bc5711a35f7e89eb16298babfd62f6b3a92e64abf94dcf517b2bc460f59fcf20599821bc6ab3b3048
+  languageName: node
+  linkType: hard
+
 "@rollup/plugin-commonjs@npm:^23.0.0":
   version: 23.0.0
   resolution: "@rollup/plugin-commonjs@npm:23.0.0"
@@ -1673,6 +1685,14 @@ __metadata:
   checksum: 10/ad87447820dd3f24825d2d947ebc03072b20a42bfc96cbafec16bff8bbda6c1a81fcb0be56d5b21968560c5359a0af4038a68ba150c3e1694fe4c109a063bed8
   languageName: node
   linkType: hard
+
+"@treeoftables/lib@portal:../../../treeoftables/monorepo/lib::locator=%40modusjs%2Fconvert%40workspace%3Aconvert":
+  version: 0.0.0-use.local
+  resolution: "@treeoftables/lib@portal:../../../treeoftables/monorepo/lib::locator=%40modusjs%2Fconvert%40workspace%3Aconvert"
+  dependencies:
+    xlsx: "npm:^0.18.5"
+  languageName: node
+  linkType: soft
 
 "@tsconfig/node10@npm:^1.0.7":
   version: 1.0.9
@@ -1913,6 +1933,15 @@ __metadata:
   dependencies:
     "@types/node": "npm:*"
   checksum: 10/e009a2bfb50e90ca9b7c6e8f648f8464067271fd99116f881073fa6fa76dc8d0133181dd65e6614d5fb1220d671d67b0124aef7d97dc02d7e342ab143a47779d
+  languageName: node
+  linkType: hard
+
+"@types/leaflet@npm:1.9.14":
+  version: 1.9.14
+  resolution: "@types/leaflet@npm:1.9.14"
+  dependencies:
+    "@types/geojson": "npm:*"
+  checksum: 10/70fbc69a4d6a3168a14072211e7738ad80954b8786105c4a0ec0615e88a5dbe131b1beff7b30594b293db2e1cb3f88a87d1ec1c89e128018bd42393dfcfcc69b
   languageName: node
   linkType: hard
 
@@ -2461,6 +2490,7 @@ __metadata:
     "@oada/list-lib": "npm:^5.0.1"
     "@types/debug": "npm:^4.1.12"
     "@types/jsonpath": "npm:^0.2.4"
+    "@types/leaflet": "npm:1.9.14"
     "@types/md5": "npm:^2"
     "@types/react": "npm:latest"
     "@types/react-dom": "npm:latest"
@@ -2469,12 +2499,14 @@ __metadata:
     debug: "npm:^4.3.4"
     gh-pages: "npm:^6.1.1"
     jsonpath: "npm:^1.1.1"
+    leaflet: "npm:1.9.4"
     md5: "npm:^2.3.0"
     mobx: "npm:^6.12.3"
     mobx-react-lite: "npm:^4.0.7"
     prettier: "npm:^3.2.5"
     react: "npm:^18.2.0"
     react-dom: "npm:^18.2.0"
+    react-leaflet: "npm:4.2.1"
     typescript: "npm:^5.4.3"
     vite: "npm:^5.2.7"
   languageName: unknown
@@ -5551,6 +5583,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"leaflet@npm:1.9.4":
+  version: 1.9.4
+  resolution: "leaflet@npm:1.9.4"
+  checksum: 10/7b6a74d503980961a85bdabebf9d1162c26db0e88195800ceea311682b653d621718f2ada3c9aab903a735af9862c9ae278ba550d4429acbd954d43449cd0d77
+  languageName: node
+  linkType: hard
+
 "levn@npm:~0.3.0":
   version: 0.3.0
   resolution: "levn@npm:0.3.0"
@@ -6842,6 +6881,19 @@ __metadata:
   version: 18.2.0
   resolution: "react-is@npm:18.2.0"
   checksum: 10/200cd65bf2e0be7ba6055f647091b725a45dd2a6abef03bf2380ce701fd5edccee40b49b9d15edab7ac08a762bf83cb4081e31ec2673a5bfb549a36ba21570df
+  languageName: node
+  linkType: hard
+
+"react-leaflet@npm:4.2.1":
+  version: 4.2.1
+  resolution: "react-leaflet@npm:4.2.1"
+  dependencies:
+    "@react-leaflet/core": "npm:^2.1.0"
+  peerDependencies:
+    leaflet: ^1.9.0
+    react: ^18.0.0
+    react-dom: ^18.0.0
+  checksum: 10/01cee12dc32e86d0153c989894fdba1c5c50fa41ad8d712352fa616f7b0dd32844aa17bb06c66f7569133675e2946c669090b4c496610cce3fa37c22254ca89f
   languageName: node
   linkType: hard
 

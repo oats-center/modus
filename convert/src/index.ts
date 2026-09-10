@@ -6,6 +6,7 @@ export { ModusResult, assertModusResult, InputFile } from './json.js';
 export { tree }  from './tree.js'; // trellis tree
 export { Slim, assertSlim } from './slim.js'
 export * as slim from './slim.js'
+export * as tots from './tots.js'
 
 // exported from the platform-specific code node/ and browser/
 //export * as html from './html.js';

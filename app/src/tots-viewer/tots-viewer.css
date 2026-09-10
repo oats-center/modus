@@ -1,0 +1,303 @@
+.tots-viewer {
+  margin: 10px;
+  min-height: 420px;
+  background: #fff;
+  border: 1px solid #e4dcd0;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.tots-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 12px;
+  border-bottom: 1px solid #eee;
+  background: #faf7f2;
+}
+
+.tots-tabs {
+  display: flex;
+  gap: 6px;
+}
+
+.tots-tabs button,
+.tots-clear {
+  border: 1px solid var(--highlight);
+  background: white;
+  color: var(--secondary);
+  font-weight: 700;
+  border-radius: 4px;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.tots-tabs button.active {
+  background: var(--highlight);
+  color: white;
+}
+
+.tots-tabs button:disabled,
+.tots-clear:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.tots-toolbar-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9em;
+  color: #444;
+}
+
+.tots-empty {
+  padding: 36px 16px;
+  text-align: center;
+  color: #666;
+}
+
+.tots-list {
+  display: flex;
+  min-height: 380px;
+  max-height: 62vh;
+}
+
+.tots-year-list {
+  width: 260px;
+  min-width: 200px;
+  overflow: auto;
+  border-right: 1px solid #eee;
+  padding: 8px 0;
+}
+
+.tots-year-label {
+  padding: 6px 12px 4px;
+  font-weight: 700;
+  color: var(--secondary);
+  font-size: 0.85em;
+}
+
+.tots-field-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.tots-field-item:hover,
+.tots-field-item.active {
+  background: var(--highlightTransparent);
+}
+
+.tots-field-name {
+  font-weight: 700;
+}
+
+.tots-field-meta {
+  font-size: 0.8em;
+  color: #666;
+}
+
+.tots-results {
+  flex: 1;
+  overflow: auto;
+  padding: 10px 12px;
+}
+
+.tots-results-title {
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.tots-table-wrap {
+  overflow: auto;
+}
+
+.tots-table {
+  border-collapse: collapse;
+  font-size: 0.85em;
+  min-width: 100%;
+}
+
+.tots-table th,
+.tots-table td {
+  border-bottom: 1px solid #eee;
+  padding: 4px 8px;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.tots-table th:first-child,
+.tots-table td:first-child,
+.tots-table th:nth-child(2),
+.tots-table td:nth-child(2) {
+  text-align: left;
+}
+
+.tots-caption {
+  padding: 8px 4px 0;
+  font-size: 0.8em;
+  color: #666;
+}
+
+.tots-map {
+  display: flex;
+  flex-direction: column;
+  min-height: 480px;
+}
+
+.tots-map-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 10px 12px;
+}
+
+.tots-map-controls label {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.8em;
+  font-weight: 700;
+  color: var(--secondary);
+  gap: 4px;
+}
+
+.tots-map-controls select {
+  min-width: 180px;
+  padding: 4px 6px;
+}
+
+.tots-map-canvas {
+  position: relative;
+  height: 40vh;
+  min-height: 320px;
+}
+
+.tots-legend {
+  position: absolute;
+  right: 12px;
+  bottom: 24px;
+  z-index: 500;
+  background: rgba(255, 255, 255, 0.94);
+  padding: 8px 10px;
+  border-radius: 4px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  min-width: 200px;
+  max-width: 240px;
+}
+
+.tots-legend-title {
+  font-size: 0.8em;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.tots-legend-bar {
+  height: 10px;
+  border-radius: 2px;
+}
+
+.tots-legend-scale {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75em;
+  margin-top: 2px;
+  gap: 6px;
+}
+
+.tots-legend-field {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.75em;
+  font-weight: 700;
+  color: var(--secondary);
+  gap: 3px;
+  margin-top: 8px;
+}
+
+.tots-legend-field select,
+.tots-legend-custom input {
+  font-weight: 400;
+  padding: 3px 4px;
+}
+
+.tots-legend-custom {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.tots-legend-custom label {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.75em;
+  font-weight: 700;
+  color: var(--secondary);
+  gap: 3px;
+  flex: 1;
+}
+
+.tots-legend-check {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  font-size: 0.75em;
+  font-weight: 700;
+  color: var(--secondary);
+  cursor: pointer;
+}
+
+.tots-legend-reset {
+  margin-top: 8px;
+  width: 100%;
+  border: 1px solid var(--highlight);
+  background: white;
+  color: var(--secondary);
+  font-weight: 700;
+  border-radius: 4px;
+  padding: 5px 8px;
+  cursor: pointer;
+  font-size: 0.75em;
+}
+
+.tots-slider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px 0;
+}
+
+.tots-slider input {
+  flex: 1;
+}
+
+.tots-slider-label {
+  min-width: 72px;
+  font-weight: 700;
+}
+
+@media (max-width: 720px) {
+  .tots-list {
+    flex-direction: column;
+    max-height: none;
+  }
+  .tots-year-list {
+    width: 100%;
+    max-height: 180px;
+    border-right: 0;
+    border-bottom: 1px solid #eee;
+  }
+  .tots-map-canvas {
+    height: 60vh;
+  }
+}
